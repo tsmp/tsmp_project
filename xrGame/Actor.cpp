@@ -953,12 +953,6 @@ float	NET_Jump = 0;
 
 void CActor::shedule_Update(u32 DT)
 {
-	if (g_dedicated_server)
-	{
-		Msg("! CActor::shedule_Update called on dedicated server! Something is wrong.");
-		return;
-	}
-
 	setSVU(OnServer());
 
 	//установить режим показа HUD для текущего активного слота
@@ -977,8 +971,7 @@ void CActor::shedule_Update(u32 DT)
 		inherited::shedule_Update		(DT);
 		return;
 	}
-
-	// 
+ 
 	clamp					(DT,0u,100u);
 	float	dt	 			=  float(DT)/1000.f;
 

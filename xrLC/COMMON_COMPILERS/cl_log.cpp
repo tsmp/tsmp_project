@@ -6,7 +6,7 @@
 
 #include <windows.h>
 
-//************************* Log-thread data
+//Log-thread data
 static xrCriticalSection	csLog
 #ifdef PROFILE_CRITICAL_SECTIONS
 	(MUTEX_PROFILE_ID(csLog))
@@ -23,8 +23,6 @@ static u32					stage_start_time	= 0;
 static bool					bStatusChange		= false;
 static u32					phase_total_time	= 0;
 
-static u32					uProgressItemsCCount = 0;
-
 static HWND hwLog		= 0;
 static HWND hwProgress	= 0;
 static HWND hwInfo		= 0;
@@ -32,8 +30,9 @@ static HWND hwStage		= 0;
 static HWND hwTime		= 0;
 static HWND hwPText		= 0;
 static HWND hwPhaseTime	= 0;
+static HWND logWindow	= 0;
 
-//************************* Log-thread data
+// Log-thread data
 static INT_PTR CALLBACK logDlgProc( HWND hw, UINT msg, WPARAM wp, LPARAM lp )
 {
 	switch( msg )
@@ -74,10 +73,9 @@ std::string make_time	(u32 sec)
 	return std::string(buf);
 }
 
-void __cdecl Status	(const u32 uItemsCount, const char *format, ...)
+void __cdecl Status	(const char *format, ...)
 {
 	csLog.Enter			();
-	uProgressItemsCCount = uItemsCount;
 
 	va_list				mark;
 	va_start			( mark, format );
@@ -88,11 +86,6 @@ void __cdecl Status	(const u32 uItemsCount, const char *format, ...)
 	stage_start_time = timeGetTime();
 
 	csLog.Leave			();
-}
-
-void Progress		(const u32 uProgress)
-{
-	progress		= (float)uProgress/(float)uProgressItemsCCount;
 }
 
 void Progress(const float F)
@@ -108,13 +101,15 @@ void Phase			(const char *phase_name)
 	
 	// Replace phase name with TIME:Name 
 	char	tbuf		[512];
-	phase_total_time	= timeGetTime()-phase_start_time;
+	u32		uCurTime	= timeGetTime();
+
+	phase_total_time	= uCurTime-phase_start_time;
 	sprintf				( tbuf,"%s : %s",make_time(phase_total_time/1000).c_str(),	phase);
 	SendMessage			( hwPhaseTime, LB_DELETESTRING, SendMessage(hwPhaseTime,LB_GETCOUNT,0,0)-1,0);
 	SendMessage			( hwPhaseTime, LB_ADDSTRING, 0, (LPARAM) tbuf);
 
 	// Start _new phase
-	phase_start_time	= timeGetTime();
+	phase_start_time	= uCurTime;
 	strcpy				(phase,  phase_name);
 	SetWindowText		( hwStage,		phase_name );
 	sprintf				( tbuf,"--:--:-- * %s",phase);
@@ -127,7 +122,6 @@ void Phase			(const char *phase_name)
 	csLog.Leave			();
 }
 
-HWND logWindow=0;
 
 void logThread(void *dummy)
 {
@@ -174,8 +168,11 @@ void logThread(void *dummy)
 			Sleep				(1);
 		}
 
-		if (progress>1.f)		progress = 1.f;
-		else if (progress<0)	progress = 0;
+		if (progress > 1.f)
+			progress = 1.f;
+		else
+			if (progress < 0.f)
+				progress = 0.f;
 
 		bool bHasChanges = false;
 		char tbuf		[256];

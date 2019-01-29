@@ -137,8 +137,8 @@ void SimplifyCFORM		(CDB::CollectorPacked& CL)
 	}
 
 	// save source CDB
-	string_path			fn;
-	SaveAsSMF(strconcat(sizeof(fn), fn, pBuild->path, "cform_optimized.smf"), CL);	
+	string_path			fn2;
+	SaveAsSMF(strconcat(sizeof(fn2), fn2, pBuild->path, "cform_optimized.smf"), CL);	
 
  	xr_delete				(slim);
 	xr_delete				(mdl);
