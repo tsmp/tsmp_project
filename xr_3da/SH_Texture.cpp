@@ -14,7 +14,6 @@
 #define		PRIORITY_NORMAL	8
 #define		PRIORITY_LOW	4
 
-extern bool g_dedicated_server;
 
 void resptrcode_texture::create(LPCSTR _name)
 {
@@ -157,11 +156,11 @@ void CTexture::Load		()
 	Preload							();
 
 
-	if (!g_dedicated_server)
-	{
+#ifndef DEDICATED_SERVER
 		// Check for OGM
 		string_path			fn;
-		if (FS.exist(fn, "$game_textures$", *cName, ".ogm")) {
+		if (FS.exist(fn, "$game_textures$", *cName, ".ogm")) 
+		{
 			// AVI
 			pTheora = xr_new<CTheoraSurface>();
 			m_play_time = 0xFFFFFFFF;
@@ -271,7 +270,7 @@ void CTexture::Load		()
 						flags.MemoryUsage = mem;
 					}
 				}
-	}
+#endif
 
 	PostLoad	()		;
 }

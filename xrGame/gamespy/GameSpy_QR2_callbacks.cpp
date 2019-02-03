@@ -19,8 +19,6 @@ void __cdecl callback_serverkey(int keyid, void* outbuf, void *userdata)
 	CGameSpy_QR2* pQR2 = pServer->QR2();
 	if (!pQR2) return;
 
-	//std::string nm = pServer->MapName.c_str();
-	//if (pServer->MapNameRus.c_str() != "no_name") 
 	std::string nm = pServer->MapNameRus.c_str();
 
 	game_sv_mp* gmMP = smart_cast<game_sv_mp*>(pServer->game);
@@ -34,8 +32,6 @@ void __cdecl callback_serverkey(int keyid, void* outbuf, void *userdata)
 	{
 	case HOSTNAME_KEY:		pQR2->BufferAdd(outbuf, pServer->HostName.c_str()); break;
 
-
-	//case MAPNAME_KEY:		pQR2->BufferAdd(outbuf, pServer->MapName.c_str()); break;
 	case MAPNAME_KEY:		pQR2->BufferAdd(outbuf, nm.c_str()); break;
 
 	case GAMEVER_KEY:		pQR2->BufferAdd(outbuf, pQR2->GetGameVersion(game_version)); break;
@@ -54,7 +50,7 @@ void __cdecl callback_serverkey(int keyid, void* outbuf, void *userdata)
 		}
 		break;
 	case G_USER_PASSWORD_KEY:
-		if ( pServer->HasProtected() )
+		if ( pServer->IsProtectedServer())
 		{
 			pQR2->BufferAdd_Int( outbuf, 1 );
 		}

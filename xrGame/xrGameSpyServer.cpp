@@ -32,7 +32,7 @@ xrGameSpyServer::~xrGameSpyServer()
 }
 
 bool	xrGameSpyServer::HasPassword()	{ return !!ServerFlags.test(server_flag_password); }
-bool	xrGameSpyServer::HasProtected()	{ return !!ServerFlags.test(server_flag_protected); }
+bool	xrGameSpyServer::IsProtectedServer() { return !!ServerFlags.test(server_flag_protected); }
 
 //----------- xrGameSpyClientData -----------------------
 IClient*		xrGameSpyServer::client_Create		()
@@ -281,7 +281,7 @@ u32				xrGameSpyServer::OnMessage(NET_Packet& P, ClientID sender)			// Non-Zero 
 
 bool xrGameSpyServer::Check_ServerAccess( IClient* CL, string512& reason )
 {
-	if( !HasProtected() )
+	if(!IsProtectedServer())
 	{
 		strcpy_s( reason, "Access successful by server. " );
 		return true;
@@ -379,7 +379,6 @@ void xrGameSpyServer::GetServerInfo( CServerInfo* si )
 
 	inf = inf + " ; Имя сервера = " + host;
 
-//	si->AddItem( "Имя сервера", HostName.c_str(), RGB(128,128,255) );
 	si->AddItem( "Карта", inf.c_str(), RGB(255,0,128) );
 	
 	
@@ -391,22 +390,6 @@ void xrGameSpyServer::GetServerInfo( CServerInfo* si )
 	string256 res;
 	si->AddItem( "Версия сервера", TSMP_VERSION, RGB(0,158,255) );
 	
-	/*
-
-	strcpy_s( res, "" );
-	if ( HasProtected() || Password.size() > 0 || HasBattlEye() )
-	{
-		if ( HasProtected() )			strcat_s( res, "protected  " );
-		if ( Password.size() > 0 )		strcat_s( res, "password  " );
-		if ( HasBattlEye() )			strcat_s( res, "battleye  " );
-	}
-	else
-	{
-		if ( xr_strlen( res ) == 0 )	strcat_s( res, "free" );
-	}
-	si->AddItem( "Access to server", res, RGB(200,155,155) );
-
-	*/
 	p2 = std::to_string(iGameSpyBasePort);
 	p3 = std::to_string(GetPort());
 	port ="GameSpy:"+ p2 +" Сервера:"+ p3;

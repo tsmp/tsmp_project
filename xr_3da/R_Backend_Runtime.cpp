@@ -8,36 +8,33 @@
 
 #include "frustum.h"
 
-extern bool g_dedicated_server;
-
 void CBackend::OnFrameEnd()
 {
-	if (!g_dedicated_server)
-	{
-		for (u32 stage = 0; stage < HW.Caps.raster.dwStages; stage++)
-			CHK_DX(HW.pDevice->SetTexture(0, 0));
-		
-		CHK_DX(HW.pDevice->SetStreamSource(0, 0, 0, 0));
-		CHK_DX(HW.pDevice->SetIndices(0));
-		CHK_DX(HW.pDevice->SetVertexShader(0));
-		CHK_DX(HW.pDevice->SetPixelShader(0));
-		Invalidate();
-	}
+#ifndef DEDICATED_SERVER
+	for (u32 stage = 0; stage < HW.Caps.raster.dwStages; stage++)
+		CHK_DX(HW.pDevice->SetTexture(0, 0));
+
+	CHK_DX(HW.pDevice->SetStreamSource(0, 0, 0, 0));
+	CHK_DX(HW.pDevice->SetIndices(0));
+	CHK_DX(HW.pDevice->SetVertexShader(0));
+	CHK_DX(HW.pDevice->SetPixelShader(0));
+	
+	Invalidate();	
+#endif
 }
 
-void CBackend::OnFrameBegin	()
+void CBackend::OnFrameBegin()
 {
-	if (!g_dedicated_server)
-	{
-		PGO(Msg("PGO:*****frame[%d]*****", Device.dwFrame));
-		Memory.mem_fill(&stat, 0, sizeof(stat));
-		Vertex.Flush();
-		Index.Flush();
-		set_Stencil(FALSE);
-	}
+#ifndef DEDICATED_SERVER
+	PGO(Msg("PGO:*****frame[%d]*****", Device.dwFrame));
+	Memory.mem_fill(&stat, 0, sizeof(stat));
+	Vertex.Flush();
+	Index.Flush();
+	set_Stencil(FALSE);	
+#endif
 }
 
-void CBackend::Invalidate	()
+void CBackend::Invalidate()
 {
 	pRT[0]						= NULL;
 	pRT[1]						= NULL;
@@ -61,29 +58,40 @@ void CBackend::Invalidate	()
 
 	colorwrite_mask				= u32(-1);
 
-	for (u32 ps_it =0; ps_it<16;)	textures_ps	[ps_it++]	= 0;
-	for (u32 vs_it =0; vs_it< 5;)	textures_vs	[vs_it++]	= 0;
+	for (u32 ps_it =0; ps_it<16;)	
+		textures_ps	[ps_it++]	= 0;
+
+	for (u32 vs_it =0; vs_it< 5;)	
+		textures_vs	[vs_it++]	= 0;
+
 #ifdef _EDITOR
 	for (u32 m_it =0; m_it< 8;)		matrices	[m_it++]	= 0;
 #endif
 }
 
-void	CBackend::set_ClipPlanes	(u32 _enable, Fplane*	_planes /*=NULL */, u32 count/* =0*/)
+void	CBackend::set_ClipPlanes(u32 _enable, Fplane* _planes, u32 count)
 {
-	if (0==HW.Caps.geometry.dwClipPlanes)	return;
-	if (!_enable)	{
+	if (0==HW.Caps.geometry.dwClipPlanes)	
+		return;
+
+	if (!_enable)	
+	{
 		CHK_DX	(HW.pDevice->SetRenderState(D3DRS_CLIPPLANEENABLE,FALSE));
 		return;
 	}
 
 	// Enable and setup planes
 	VERIFY	(_planes && count);
-	if		(count>HW.Caps.geometry.dwClipPlanes)	count=HW.Caps.geometry.dwClipPlanes;
+
+	if (count>HW.Caps.geometry.dwClipPlanes)	
+		count=HW.Caps.geometry.dwClipPlanes;
 
 	D3DXMATRIX			worldToClipMatrixIT;
 	D3DXMatrixInverse	(&worldToClipMatrixIT,NULL,(D3DXMATRIX*)&Device.mFullTransform);
 	D3DXMatrixTranspose	(&worldToClipMatrixIT,&worldToClipMatrixIT);
-	for		(u32 it=0; it<count; it++)		{
+
+	for (u32 it=0; it<count; it++)		
+	{
 		Fplane&		P			= _planes	[it];
 		D3DXPLANE	planeWorld	(-P.n.x,-P.n.y,-P.n.z,-P.d), planeClip;
 		D3DXPlaneNormalize		(&planeWorld,	&planeWorld);
@@ -95,6 +103,8 @@ void	CBackend::set_ClipPlanes	(u32 _enable, Fplane*	_planes /*=NULL */, u32 coun
 	u32		e_mask	= (1<<count)-1;
 	CHK_DX	(HW.pDevice->SetRenderState(D3DRS_CLIPPLANEENABLE,e_mask));
 }
+
+#pragma todo("это что такое?!");
 
 #ifndef DEDICATED_SREVER
 void	CBackend::set_ClipPlanes	(u32 _enable, Fmatrix*	_xform  /*=NULL */, u32 fmask/* =0xff */)
@@ -147,7 +157,8 @@ void CBackend::set_Textures			(STextureList* TT)
 #ifdef DEBUG
 				stat.textures	++;
 #endif
-				if (load_surf)	{
+				if (load_surf)	
+				{
 					PGO					(Msg("PGO:tex%d:%s",load_id,load_surf->cName.c_str()));
 					load_surf->bind		(load_id);
 				}
@@ -156,12 +167,15 @@ void CBackend::set_Textures			(STextureList* TT)
 	}
 
 	// clear remaining stages (PS)
-	for (++_last_ps; _last_ps<16 && textures_ps[_last_ps]; _last_ps++)	{
+	for (++_last_ps; _last_ps<16 && textures_ps[_last_ps]; _last_ps++)	
+	{
 		textures_ps[_last_ps]			= 0;
 		CHK_DX							(HW.pDevice->SetTexture(_last_ps,NULL));
 	}
+
 	// clear remaining stages (VS)
-	for (++_last_vs; _last_vs<5 && textures_vs[_last_vs]; _last_vs++)		{
+	for (++_last_vs; _last_vs<5 && textures_vs[_last_vs]; _last_vs++)		
+	{
 		textures_vs[_last_vs]			= 0;
 		CHK_DX							(HW.pDevice->SetTexture(_last_vs+256,NULL));
 	}

@@ -74,7 +74,7 @@ public:
 	CGameSpy_GCD_Server*		GCD_Server()					{ return &m_GCDServer; }
 	
 	virtual bool				HasPassword();
-	virtual bool				HasProtected();
+	virtual bool				IsProtectedServer();
 
 	virtual void				Assign_ServerType( string512& res );
 	virtual void				GetServerInfo( CServerInfo* si );

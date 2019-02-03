@@ -10,10 +10,9 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-extern bool g_dedicated_server;
 
-void __cdecl dummy		(void)	{
-};
+void __cdecl dummy		(void)	{};
+
 CEngineAPI::CEngineAPI	()
 {
 	hGame			= 0;
@@ -25,20 +24,17 @@ CEngineAPI::CEngineAPI	()
 	tune_resume		= dummy	;
 }
 
-CEngineAPI::~CEngineAPI()
-{
-}
+CEngineAPI::~CEngineAPI() {}
+
 extern u32 renderer_value; //con cmd
 
 void CEngineAPI::Initialize(void)
 {
-	//////////////////////////////////////////////////////////////////////////
 	// render
 	LPCSTR			r1_name	= "xrRender_R1.dll";
 	LPCSTR			r2_name	= "xrRender_R2.dll";
 
-	if (!g_dedicated_server)
-	{
+#ifndef DEDICATED_SERVER	
 		if (psDeviceFlags.test(rsR2))
 		{
 			// try to initialize R2
@@ -50,10 +46,11 @@ void CEngineAPI::Initialize(void)
 				// try to load R1
 				Msg("...Failed - incompatible hardware.");
 			}
-		}
-	}
+		}	
+#endif
 
-	if (0==hRender)		{
+	if (0==hRender)		
+	{
 		// try to load R1
 		psDeviceFlags.set	(rsR2,FALSE);
 		renderer_value		= 0; //con cmd
@@ -75,10 +72,11 @@ void CEngineAPI::Initialize(void)
 		pDestroy		= (Factory_Destroy*)	GetProcAddress(hGame,"xrFactory_Destroy"	);	R_ASSERT(pDestroy);
 	}
 
-	//////////////////////////////////////////////////////////////////////////
 	// vTune
 	tune_enabled		= FALSE;
-	if (strstr(Core.Params,"-tune"))	{
+
+	if (strstr(Core.Params,"-tune"))	
+	{
 		LPCSTR			g_name	= "vTuneAPI.dll";
 		Log				("Loading DLL:",g_name);
 		hTuner			= LoadLibrary	(g_name);
@@ -92,8 +90,18 @@ void CEngineAPI::Initialize(void)
 
 void CEngineAPI::Destroy	(void)
 {
-	if (hGame)				{ FreeLibrary(hGame);	hGame	= 0; }
-	if (hRender)			{ FreeLibrary(hRender); hRender = 0; }
+	if (hGame)				
+	{ 
+		FreeLibrary(hGame);	
+		hGame	= 0; 
+	}
+
+	if (hRender)			
+	{ 
+		FreeLibrary(hRender); 
+		hRender = 0; 
+	}
+
 	pCreate					= 0;
 	pDestroy				= 0;
 	Engine.Event._destroy	();

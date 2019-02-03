@@ -1,12 +1,30 @@
-#ifndef _SYSMSGS_H_
-#define _SYSMSGS_H_
+#pragma once
 
 #include "windows.h"
 
+struct SMyUserData 
+{
+	xrServer* server; 
+	ClientID idOfPlayer;
+};
+
 #pragma pack(push, 1)
 
-typedef void* FZSysmsgPayloadWriter;
-typedef void* FZSysMsgSender;
+using FZSysmsgPayloadWriter			= void*;
+using FZSysMsgSender				= void*;
+using FZSysMsgsProcessClientModDll	= void*;
+
+typedef bool(__stdcall *FZSysMsgsInit)();
+typedef bool(__stdcall *FZSysMsgsFlags)();
+typedef bool(__stdcall *FZSysMsgsFree)();
+
+typedef void(__stdcall *FZSysMsgsSendSysMessage_SOC)(void*, void*, FZSysMsgSender, void*);
+
+typedef int FZSysmsgsCommonFlags;
+const FZSysmsgsCommonFlags FZ_SYSMSGS_ENABLE_LOGS = 1;
+const FZSysmsgsCommonFlags FZ_SYSMSGS_PATCH_UI_PROGRESSBAR = 2;
+
+typedef void(__stdcall *SetCommonSysmsgsFlags)(FZSysmsgsCommonFlags);
 
 //Тип компрессии, использованный в находящемся на сервере файле   
 typedef DWORD FZArchiveCompressionType;
@@ -148,5 +166,3 @@ struct FZClientVotingMapList
 };
 
 #pragma pack(pop)
-
-#endif

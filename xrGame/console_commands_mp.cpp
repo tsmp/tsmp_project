@@ -15,16 +15,7 @@
 #include "date_time.h"
 #include "game_cl_base_weapon_usage_statistic.h"
 
-#include "xrcore.h"
-
 #include "..\TSMP_BuildConfig.h"
-
-XRCORE_API		xrCore	Core;
-XRCORE_API		u32		build_id;
-XRCORE_API		LPCSTR	build_date;
-
-
-ENGINE_API	bool	g_debug_msg;
 
 extern	float	g_cl_lvInterp;
 extern	int		g_cl_InterpolationType; //0 - Linear, 1 - BSpline, 2 - HSpline
@@ -36,9 +27,7 @@ extern	BOOL	g_b_COD_PickUpMode		;
 extern	int		g_iWeaponRemove			;
 extern	int		g_iCorpseRemove			;
 extern	BOOL	g_bCollectStatisticData ;
-//extern	BOOL	g_bStatisticSaveAuto	;
 extern	BOOL	g_SV_Disable_Auth_Check	;
-extern BOOL sv_debug_msg;
 
 extern  int		g_sv_mp_iDumpStatsPeriod;
 extern	BOOL	g_SV_Force_Artefact_Spawn;
@@ -100,7 +89,7 @@ extern	BOOL	g_sv_ah_bBearerCantSprint		;
 extern	BOOL	g_sv_ah_bShildedBases			;
 extern	BOOL	g_sv_ah_bAfReturnPlayersToBases ;
 extern	u32		g_dwDemoDeltaFrame;
-extern u32		g_sv_dwMaxClientPing;
+extern	u32		g_sv_dwMaxClientPing;
 extern	int		g_be_message_out;
 
 extern	int		g_sv_Skip_Winner_Waiting;
@@ -110,11 +99,14 @@ extern	int		g_sv_Pending_Wait_Time;
 extern	int		g_sv_Client_Reconnect_Time;
 		int		g_dwEventDelay			= 0	;
 
+		string64 NewChatSenderName = {'S','e','r','v','e','r','A','d','m','i','n'};
+
 void XRNETSERVER_API DumpNetCompressorStats	(bool brief);
 BOOL XRNETSERVER_API g_net_compressor_enabled;
 BOOL XRNETSERVER_API g_net_compressor_gather_stats;
 
-class CCC_Restart : public IConsole_Command {
+class CCC_Restart : public IConsole_Command 
+{
 public:
 					CCC_Restart		(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
 	virtual void	Execute			(LPCSTR args) 
@@ -129,7 +121,8 @@ public:
 	virtual void	Info	(TInfo& I){strcpy(I,"restart game");}
 };
 
-class CCC_RestartFast : public IConsole_Command {
+class CCC_RestartFast : public IConsole_Command 
+{
 public:
 					CCC_RestartFast	(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
 	virtual void	Execute			(LPCSTR args) 
@@ -145,7 +138,8 @@ public:
 	virtual void	Info			(TInfo& I) {strcpy(I,"restart game fast");}
 };
 
-class CCC_Kill : public IConsole_Command {
+class CCC_Kill : public IConsole_Command 
+{
 public:
 					CCC_Kill		(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
 	virtual void	Execute			(LPCSTR args) 
@@ -632,7 +626,6 @@ public:
 	CCC_GetVersion(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = true; };
 	virtual void	Execute(LPCSTR args)
 	{
-		Msg("'%s' build %d, %s\n", "xrCore", build_id, build_date);
 		Msg(TSMP_VERSION);
 	};
 
@@ -1391,11 +1384,14 @@ public:
 	virtual void	Info	(TInfo& I)	{strcpy(I,"player name"); }
 };
 
-class CCC_SvStatus : public IConsole_Command {
+class CCC_SvStatus : public IConsole_Command 
+{
 public:
 					CCC_SvStatus(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
-	virtual void	Execute(LPCSTR args) {
+	virtual void	Execute(LPCSTR args) 
+	{
 		if (!OnServer()) return;
+
 		if(Level().Server && Level().Server->game) 
 		{
 			Console->Execute		("cfg_load all_server_settings");
@@ -1404,17 +1400,49 @@ public:
 	virtual void	Info	(TInfo& I){strcpy(I,"Shows current server settings"); }
 };
 
-class CCC_SvChat : public IConsole_Command{
+class CCC_SvChat : public IConsole_Command
+{
 public:
 					CCC_SvChat(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = false; };
-	virtual void	Execute(LPCSTR args) {
+
+	virtual void	Execute(LPCSTR args) 
+	{
 		if (!OnServer())	return;
+
 		if(Level().Server && Level().Server->game) 
 		{
 			game_sv_mp* game = smart_cast<game_sv_mp*>(Level().Server->game);
 			if(game)
-				game->SvSendChatMessage(args);
+				game->SvSendChatMessage("ServerAdmin",args);
 		}
+	}
+};
+
+class CCC_SvChatNew : public IConsole_Command 
+{
+public:
+	CCC_SvChatNew(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = false; };
+
+	virtual void	Execute(LPCSTR args) 
+	{
+		if (!OnServer())	return;
+		if (Level().Server && Level().Server->game)
+		{
+			game_sv_mp* game = smart_cast<game_sv_mp*>(Level().Server->game);
+			if (game)
+				game->SvSendChatMessage(NewChatSenderName,args);
+		}
+	}
+};
+
+class CCC_SvChatNewSetName : public IConsole_Command
+{
+public:
+	CCC_SvChatNewSetName(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = false; };
+
+	virtual void	Execute(LPCSTR args)
+	{
+		strcpy(NewChatSenderName, args);
 	}
 };
 
@@ -1555,7 +1583,7 @@ void register_mp_console_commands()
 	CMD4(CCC_Integer,		"sv_wait_for_players_ready",	&g_sv_Wait_For_Players_Ready, 0, 1);
 #endif
 
-	CMD1(CCC_StartTeamMoney,"sv_startteammoney"		);		
+	CMD1(CCC_StartTeamMoney,"sv_startteammoney");		
 
 	CMD4(CCC_Integer,		"sv_hail_to_winner_time",		&G_DELAYED_ROUND_TIME, 0, 60);
 
@@ -1574,17 +1602,16 @@ void register_mp_console_commands()
 	
 	CMD4(CCC_SV_Integer,	"sv_vote_participants"		,	(int*)&g_sv_mp_bCountParticipants	,	0,	1);	
 	CMD4(CCC_SV_Float,		"sv_vote_quota"				,	&g_sv_mp_fVoteQuota					, 0.0f,1.0f);
-//	CMD4(CCC_SV_Float,		"sv_vote_time"				,	&g_sv_mp_fVoteTime					, 0.5f,10.0f);
 
 	CMD4(CCC_SV_Integer,	"sv_forcerespawn"			,	(int*)&g_sv_dm_dwForceRespawn		,	0,3600);	//sec
-	CMD4(CCC_SV_Integer,	"sv_fraglimit"				,	&g_sv_dm_dwFragLimit				,	0,100);
-	CMD4(CCC_SV_Integer,	"sv_timelimit"				,	&g_sv_dm_dwTimeLimit				,	0,180);		//min
+	CMD4(CCC_SV_Integer,	"sv_fraglimit"				,	&g_sv_dm_dwFragLimit				,	0,1000000);
+	CMD4(CCC_SV_Integer,	"sv_timelimit"				,	&g_sv_dm_dwTimeLimit				,	0,1800000);		//min
 	CMD4(CCC_SV_Integer,	"sv_dmgblockindicator"		,	(int*)&g_sv_dm_bDamageBlockIndicators,	0, 1);
 	CMD4(CCC_SV_Integer,	"sv_dmgblocktime"			,	(int*)&g_sv_dm_dwDamageBlockTime	,	0, 600);	//sec
 	CMD4(CCC_SV_Integer,	"sv_anomalies_enabled"		,	(int*)&g_sv_dm_bAnomaliesEnabled	,	0, 1);
 	CMD4(CCC_SV_Integer,	"sv_anomalies_length"		,	(int*)&g_sv_dm_dwAnomalySetLengthTime,	0, 180); //min
 	CMD4(CCC_SV_Integer,	"sv_pda_hunt"				,	(int*)&g_sv_dm_bPDAHunt				,	0, 1);
-	CMD4(CCC_SV_Integer,	"sv_warm_up"				,	(int*)&g_sv_dm_dwWarmUp_MaxTime		,	0, 3600); //sec
+	CMD4(CCC_SV_Integer,	"sv_warm_up"				,	(int*)&g_sv_dm_dwWarmUp_MaxTime		,	0,1000000); //sec
 
 	CMD4(CCC_Integer,		"sv_max_ping_limit"			,	(int*)&g_sv_dwMaxClientPing		,	1, 2000);
 
@@ -1638,6 +1665,8 @@ void register_mp_console_commands()
 	CMD1(CCC_Name,			"name");
 	CMD1(CCC_SvStatus,		"sv_status");
 	CMD1(CCC_SvChat,		"chat");
+	CMD1(CCC_SvChatNew,		"chat_new");
+	CMD1(CCC_SvChatNewSetName, "chat_new_set_name");
 #ifdef BATTLEYE
 	CMD1(CCC_BattlEyeSrv,	"beserver" );
 	CMD1(CCC_BattlEyeCl,	"beclient" );

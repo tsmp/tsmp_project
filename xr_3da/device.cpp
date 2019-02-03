@@ -27,33 +27,35 @@ ref_light	precache_light = 0;
 
 BOOL CRenderDevice::Begin	()
 {
-	if (!g_dedicated_server)
+#ifndef DEDICATED_SERVER
+	HW.Validate();
+	HRESULT	_hr = HW.pDevice->TestCooperativeLevel();
+	
+	if (FAILED(_hr))
 	{
-		HW.Validate();
-		HRESULT	_hr = HW.pDevice->TestCooperativeLevel();
-		if (FAILED(_hr))
+		// If the device was lost, do not render until we get it back
+		if (D3DERR_DEVICELOST == _hr) 
 		{
-			// If the device was lost, do not render until we get it back
-			if (D3DERR_DEVICELOST == _hr) {
-				Sleep(33);
-				return	FALSE;
-			}
-
-			// Check if the device is ready to be reset
-			if (D3DERR_DEVICENOTRESET == _hr)
-			{
-				Reset();
-			}
+			Sleep(33);
+			return	FALSE;
 		}
-
-		CHK_DX(HW.pDevice->BeginScene());
-		RCache.OnFrameBegin();
-		RCache.set_CullMode(CULL_CW);
-		RCache.set_CullMode(CULL_CCW);
-		if (HW.Caps.SceneMode)	overdrawBegin();
-		FPU::m24r();
-		g_bRendering = TRUE;
+		
+		// Check if the device is ready to be reset
+		if (D3DERR_DEVICENOTRESET == _hr)
+			Reset();
 	}
+	
+	CHK_DX(HW.pDevice->BeginScene());
+	RCache.OnFrameBegin();
+	RCache.set_CullMode(CULL_CW);
+	RCache.set_CullMode(CULL_CCW);
+	
+	if (HW.Caps.SceneMode)	
+		overdrawBegin();
+
+	FPU::m24r();
+	g_bRendering = TRUE;
+#endif
 
 	return		TRUE;
 }
@@ -73,12 +75,11 @@ extern void CheckPrivilegySlowdown();
 
 void CRenderDevice::End		(void)
 {
-
-	if (!g_dedicated_server)
-	{
-		VERIFY(HW.pDevice);
-
-		if (HW.Caps.SceneMode)	overdrawEnd();
+#ifndef DEDICATED_SERVER
+	VERIFY(HW.pDevice);
+	
+	if (HW.Caps.SceneMode)	
+		overdrawEnd();
 
 		// 
 		if (dwPrecacheFrame)
@@ -86,6 +87,7 @@ void CRenderDevice::End		(void)
 			::Sound->set_master_volume(0.f);
 			dwPrecacheFrame--;
 			pApp->load_draw_internal();
+
 			if (0 == dwPrecacheFrame)
 			{
 				Gamma.Update();
@@ -109,7 +111,7 @@ void CRenderDevice::End		(void)
 
 		HRESULT _hr = HW.pDevice->Present(NULL, NULL, NULL, NULL);
 		if (D3DERR_DEVICELOST == _hr)	return;			// we will handle this later
-	}
+#endif
 }
 
 
@@ -153,13 +155,13 @@ void CRenderDevice::PreCache(u32 amount)
 {
 	if (HW.Caps.bForceGPU_REF)	amount = 0;
 
-	if (g_dedicated_server)
-	{
+#ifdef DEDICATED_SERVER
 		amount = 0;
-	}
+#endif
 
 
 	dwPrecacheFrame	= dwPrecacheTotal = amount;
+
 	if(amount && !precache_light && g_pGameLevel)
 	{
 		precache_light					= ::Render->light_create();
@@ -197,8 +199,6 @@ void CRenderDevice::Run			()
 	}
 
 	// Start all threads
-//	InitializeCriticalSection	(&mt_csEnter);
-//	InitializeCriticalSection	(&mt_csLeave);
 	mt_csEnter.Enter			();
 	mt_bMustExit				= FALSE;
 
@@ -225,10 +225,9 @@ void CRenderDevice::Run			()
 			{
 				u32 FrameStartTime=0;
 
-				if (g_dedicated_server)
-				{
+#ifdef DEDICATED_SERVER
 					FrameStartTime = TimerGlobal.GetElapsed_ms();
-				}
+#endif
 
 				if (psDeviceFlags.test(rsStatistic))	g_bEnableStatGather = TRUE;
 				else									g_bEnableStatGather = FALSE;
@@ -269,26 +268,24 @@ void CRenderDevice::Run			()
 				mt_csEnter.Leave();
 				Sleep(0);
 
-				if (!g_dedicated_server)
-				{
+#ifndef DEDICATED_SERVER
 					Statistic->RenderTOTAL_Real.FrameStart();
 					Statistic->RenderTOTAL_Real.Begin();
 
-					if (b_is_Active)
+					if ((b_is_Active) && Begin())
 					{
-						if (Begin())
-						{
-
-							seqRender.Process(rp_Render);
-							if (psDeviceFlags.test(rsCameraPos) || psDeviceFlags.test(rsStatistic) || Statistic->errors.size())
-								Statistic->Show();
-							End();
-						}
+						seqRender.Process(rp_Render);
+						
+						if (psDeviceFlags.test(rsCameraPos) || psDeviceFlags.test(rsStatistic) || Statistic->errors.size())
+							Statistic->Show();
+						
+						End();
 					}
+					
 					Statistic->RenderTOTAL_Real.End();
 					Statistic->RenderTOTAL_Real.FrameEnd();
 					Statistic->RenderTOTAL.accum = Statistic->RenderTOTAL_Real.accum;
-				}
+#endif
 
 				// *** Suspend threads
 				// Capture startup point
@@ -301,21 +298,19 @@ void CRenderDevice::Run			()
 				{
 					for (u32 pit = 0; pit < Device.seqParallel.size(); pit++)
 						Device.seqParallel[pit]();
+
 					Device.seqParallel.clear_not_free();
 					seqFrameMT.Process(rp_Frame);
 				}
 
-				if (g_dedicated_server)
-				{
-					u32 FrameEndTime = TimerGlobal.GetElapsed_ms();
-					u32 FrameTime = (FrameEndTime - FrameStartTime);
+#ifdef DEDICATED_SERVER
+				u32 FrameEndTime = TimerGlobal.GetElapsed_ms();
+				u32 FrameTime = (FrameEndTime - FrameStartTime);
+				u32 DSUpdateDelta = 1000 / g_svDedicateServerUpdateReate;
 				
-					u32 DSUpdateDelta = 1000 / g_svDedicateServerUpdateReate;
-					if (FrameTime < DSUpdateDelta)
-					{
-						Sleep(DSUpdateDelta - FrameTime);
-				}
-				}
+				if (FrameTime < DSUpdateDelta)		
+					Sleep(DSUpdateDelta - FrameTime);				
+#endif
 
 			} 
 			else 
@@ -332,11 +327,10 @@ void CRenderDevice::Run			()
 	mt_bMustExit			= TRUE;
 	mt_csEnter.Leave		();
 	while (mt_bMustExit)	Sleep(0);
-//	DeleteCriticalSection	(&mt_csEnter);
-//	DeleteCriticalSection	(&mt_csLeave);
 }
 
 void ProcessLoading(RP_FUNC *f);
+
 void CRenderDevice::FrameMove()
 {
 	dwFrame			++;
@@ -356,7 +350,6 @@ void CRenderDevice::FrameMove()
 
 		if(Paused())		fTimeDelta = 0.0f;
 
-//		u64	qTime		= TimerGlobal.GetElapsed_clk();
 		fTimeGlobal		= TimerGlobal.GetElapsed_sec(); //float(qTime)*CPU::cycles2seconds;
 		u32	_old_global	= dwTimeGlobal;
 		dwTimeGlobal	= TimerGlobal.GetElapsed_ms	();	//u32((qTime*u64(1000))/CPU::cycles_per_second);
@@ -389,8 +382,7 @@ void CRenderDevice::Pause(BOOL bOn, BOOL bTimer, BOOL bSound, LPCSTR reason)
 	Msg("pause [%s] timer=[%s] sound=[%s] reason=%s",bOn?"ON":"OFF", bTimer?"ON":"OFF", bSound?"ON":"OFF", reason);
 #endif // DEBUG
 
-	if (!g_dedicated_server)
-	{
+#ifndef DEDICATED_SERVER
 		if (bOn)
 		{
 			if (!Paused())
@@ -428,7 +420,7 @@ void CRenderDevice::Pause(BOOL bOn, BOOL bTimer, BOOL bSound, LPCSTR reason)
 				}
 			}
 		}
-	}
+#endif
 
 }
 
@@ -451,10 +443,9 @@ void CRenderDevice::OnWM_Activate(WPARAM wParam, LPARAM lParam)
 		{
 			Device.seqAppActivate.Process(rp_AppActivate);
 
-			if (!g_dedicated_server)
-			{
-				ShowCursor(FALSE);
-			}
+#ifndef DEDICATED_SERVER
+			ShowCursor(FALSE);			
+#endif
 
 		}
 		else	

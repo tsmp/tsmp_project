@@ -49,15 +49,6 @@ static int start_day	= 31;	// 31
 static int start_month	= 1;	// January
 static int start_year	= 1999;	// 1999
 
-#ifdef NDEBUG
-//namespace std {
-//	void terminate()
-//	{
-//		abort();
-//	}
-//}
-#endif // #ifdef NDEBUG
-
 void compute_build_id	()
 {
 	build_date			= __DATE__;
@@ -70,7 +61,8 @@ void compute_build_id	()
 	strcpy_s				(buffer,__DATE__);
 	sscanf				(buffer,"%s %d %d",month,&days,&years);
 
-	for (int i=0; i<12; i++) {
+	for (int i=0; i<12; i++) 
+	{
 		if (_stricmp(month_id[i],month))
 			continue;
 
@@ -135,16 +127,14 @@ void InitSettings	()
 	pGameIni					= xr_new<CInifile>	(fname,TRUE);
 	CHECK_OR_EXIT				(!pGameIni->sections().empty(),make_string("Cannot find file %s.\nReinstalling application may fix this problem.",fname));
 }
+
 void InitConsole	()
 {
-	if (g_dedicated_server)
-	{
-		Console = xr_new<CTextConsole>();
-	}
-	else
-	{
-		Console = xr_new<CConsole>();
-	}
+#ifdef DEDICATED_SERVER
+	Console = xr_new<CTextConsole>();
+#else
+	Console = xr_new<CConsole>();	
+#endif
 
 	Console->Initialize			( );
 
@@ -154,7 +144,8 @@ void InitConsole	()
 	strcpy_s(Console->ConfigFile, "tsmp_user.ltx");
 #endif
 
-	if (strstr(Core.Params,"-ltx ")) {
+	if (strstr(Core.Params,"-ltx ")) 
+	{
 		string64				c_name;
 		sscanf					(strstr(Core.Params,"-ltx ")+5,"%[^ ] ",c_name);
 		strcpy_s					(Console->ConfigFile,c_name);
@@ -164,35 +155,41 @@ void InitConsole	()
 void InitInput		()
 {
 	BOOL bCaptureInput			= !strstr(Core.Params,"-i");
-	if(g_dedicated_server)
-		bCaptureInput			= FALSE;
+
+#ifdef DEDICATED_SERVER
+	bCaptureInput = FALSE;
+#endif
 
 	pInput						= xr_new<CInput>		(bCaptureInput);
 }
+
 void destroyInput	()
 {
 	xr_delete					( pInput		);
 }
+
 void InitSound		()
 {
 	CSound_manager_interface::_create					(u64(Device.m_hWnd));
-//	Msg				("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-//	ref_sound*	x	= 
 }
+
 void destroySound	()
 {
 	CSound_manager_interface::_destroy				( );
 }
+
 void destroySettings()
 {
 	xr_delete					( pSettings		);
 	xr_delete					( pGameIni		);
 }
+
 void destroyConsole	()
 {
 	Console->Destroy			( );
 	xr_delete					(Console);
 }
+
 void destroyEngine	()
 {
 	Device.Destroy				( );
@@ -206,6 +203,7 @@ void execUserScript				( )
 	Console->Execute			("unbindall");
 	Console->ExecuteScript		(Console->ConfigFile);
 }
+
 void slowdownthread	( void* )
 {
 //	Sleep		(30*1000);
@@ -218,6 +216,7 @@ void slowdownthread	( void* )
 		if (0==pApp)				return;
 	}
 }
+
 void CheckPrivilegySlowdown		( )
 {
 #ifdef DEBUG
@@ -234,7 +233,6 @@ void CheckPrivilegySlowdown		( )
 void Startup					( )
 {
 	execUserScript	();
-//.	InitInput		();
 	InitSound		();
 
 	// ...command line for auto start
@@ -306,78 +304,16 @@ static BOOL CALLBACK logDlgProc( HWND hw, UINT msg, WPARAM wp, LPARAM lp )
 	}
 	return TRUE;
 }
-/*
-void	test_rtc	()
-{
-	CStatTimer		tMc,tM,tC,tD;
-	u32				bytes=0;
-	tMc.FrameStart	();
-	tM.FrameStart	();
-	tC.FrameStart	();
-	tD.FrameStart	();
-	::Random.seed	(0x12071980);
-	for		(u32 test=0; test<10000; test++)
-	{
-		u32			in_size			= ::Random.randI(1024,256*1024);
-		u32			out_size_max	= rtc_csize		(in_size);
-		u8*			p_in			= xr_alloc<u8>	(in_size);
-		u8*			p_in_tst		= xr_alloc<u8>	(in_size);
-		u8*			p_out			= xr_alloc<u8>	(out_size_max);
-		for (u32 git=0; git<in_size; git++)			p_in[git] = (u8)::Random.randI	(8);	// garbage
-		bytes		+= in_size;
 
-		tMc.Begin	();
-		memcpy		(p_in_tst,p_in,in_size);
-		tMc.End		();
-
-		tM.Begin	();
-		CopyMemory(p_in_tst,p_in,in_size);
-		tM.End		();
-
-		tC.Begin	();
-		u32			out_size		= rtc_compress	(p_out,out_size_max,p_in,in_size);
-		tC.End		();
-
-		tD.Begin	();
-		u32			in_size_tst		= rtc_decompress(p_in_tst,in_size,p_out,out_size);
-		tD.End		();
-
-		// sanity check
-		R_ASSERT	(in_size == in_size_tst);
-		for (u32 tit=0; tit<in_size; tit++)			R_ASSERT(p_in[tit] == p_in_tst[tit]);	// garbage
-
-		xr_free		(p_out);
-		xr_free		(p_in_tst);
-		xr_free		(p_in);
-	}
-	tMc.FrameEnd	();	float rMc		= 1000.f*(float(bytes)/tMc.result)/(1024.f*1024.f);
-	tM.FrameEnd		(); float rM		= 1000.f*(float(bytes)/tM.result)/(1024.f*1024.f);
-	tC.FrameEnd		(); float rC		= 1000.f*(float(bytes)/tC.result)/(1024.f*1024.f);
-	tD.FrameEnd		(); float rD		= 1000.f*(float(bytes)/tD.result)/(1024.f*1024.f);
-	Msg				("* memcpy:        %5.2f M/s (%3.1f%%)",rMc,100.f*rMc/rMc);
-	Msg				("* mm-memcpy:     %5.2f M/s (%3.1f%%)",rM,100.f*rM/rMc);
-	Msg				("* compression:   %5.2f M/s (%3.1f%%)",rC,100.f*rC/rMc);
-	Msg				("* decompression: %5.2f M/s (%3.1f%%)",rD,100.f*rD/rMc);
-}
-*/
 extern void	testbed	(void);
 
-// video
-/*
-static	HINSTANCE	g_hInstance		;
-static	HINSTANCE	g_hPrevInstance	;
-static	int			g_nCmdShow		;
-void	__cdecl		intro_dshow_x	(void*)
-{
-	IntroDSHOW_wnd		(g_hInstance,g_hPrevInstance,"GameData\\Stalker_Intro.avi",g_nCmdShow);
-	g_bIntroFinished	= TRUE	;
-}
-*/
+
 #define dwStickyKeysStructSize sizeof( STICKYKEYS )
 #define dwFilterKeysStructSize sizeof( FILTERKEYS )
 #define dwToggleKeysStructSize sizeof( TOGGLEKEYS )
 
-struct damn_keys_filter {
+struct damn_keys_filter 
+{
 	BOOL bScreenSaverState;
 
 	// Sticky & Filter & Toggle keys
@@ -535,39 +471,6 @@ XRCORE_API DUMMY_STUFF	*g_temporary_stuff;
 
 //#define RUSSIAN_BUILD
 
-#if 0
-void foo	()
-{
-	typedef std::map<int,int>	TEST_MAP;
-	TEST_MAP					temp;
-	temp.insert					(std::make_pair(0,0));
-	TEST_MAP::const_iterator	I = temp.upper_bound(2);
-	if (I == temp.end())
-		OutputDebugString		("end() returned\r\n");
-	else
-		OutputDebugString		("last element returned\r\n");
-
-	typedef void*	pvoid;
-
-	LPCSTR			path = "d:\\network\\stalker_net2";
-	FILE			*f = fopen(path,"rb");
-	int				file_handle = _fileno(f);
-	u32				buffer_size = _filelength(file_handle);
-	pvoid			buffer = xr_malloc(buffer_size);
-	size_t			result = fread(buffer,buffer_size,1,f);
-	R_ASSERT3		(!buffer_size || (result && (buffer_size >= result)),"Cannot read from file",path);
-	fclose			(f);
-
-	u32				compressed_buffer_size = rtc_csize(buffer_size);
-	pvoid			compressed_buffer = xr_malloc(compressed_buffer_size);
-	u32				compressed_size = rtc_compress(compressed_buffer,compressed_buffer_size,buffer,buffer_size);
-
-	LPCSTR			compressed_path = "d:\\network\\stalker_net2.rtc";
-	FILE			*f1 = fopen(compressed_path,"wb");
-	fwrite			(compressed_buffer,compressed_size,1,f1);
-	fclose			(f1);
-}
-#endif // 0
 
 ENGINE_API	bool g_dedicated_server	= false;
 
@@ -577,17 +480,18 @@ int APIENTRY WinMain_impl(HINSTANCE hInstance,
 	int       nCmdShow)
 {
 	LPCSTR						prior = "-prioptity ";
-	LPCSTR						ded = "-dedicated ";
 
 	if (!strstr(lpCmdLine, prior) == NULL) SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_HIGHEST);
 
-	if (!strstr(lpCmdLine, ded) == NULL) g_dedicated_server = true;
 
 	HANDLE hCheckPresenceMutex=NULL;
 
-	if (!g_dedicated_server)
-	{
+#ifdef DEDICATED_SERVER
+	g_dedicated_server = true;
+#endif
 
+#ifndef DEDICATED_SERVER
+	
 		// Check for virtual memory
 
 		if ((strstr(lpCmdLine, "--skipmemcheck") == NULL) && IsOutOfVirtualMemory())
@@ -612,7 +516,7 @@ int APIENTRY WinMain_impl(HINSTANCE hInstance,
 			return 1;
 		}
 #endif
-	}
+#endif
 
 	SetThreadAffinityMask(GetCurrentThread(), 1);
 
@@ -657,11 +561,10 @@ int APIENTRY WinMain_impl(HINSTANCE hInstance,
 	Core._initialize("xray", NULL, TRUE, fsgame[0] ? fsgame : NULL);
 	InitSettings();
 
-	if (!g_dedicated_server)
-	{
+#ifndef DEDICATED_SERVER
 		damn_keys_filter		filter;
-		(void)filter;
-	}
+		(void)filter;	
+#endif
 
 	FPU::m24r();
 	InitEngine();
@@ -725,12 +628,11 @@ int APIENTRY WinMain_impl(HINSTANCE hInstance,
 		_spawnv(_P_NOWAIT, _args[0], _args);//, _envvar);
 	}
 
-	if (!g_dedicated_server)
-	{
+	#ifndef DEDICATED_SERVER
 #ifdef NO_MULTI_INSTANCES			
 		CloseHandle(hCheckPresenceMutex); // Delete application presence mutex
 #endif 
-	}
+#endif
 
 	return						0;
 }
@@ -756,14 +658,11 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 {
 	__try
 	{
-		if (g_dedicated_server)
-		{
-			Debug._initialize(true);
-		}
-		else
-		{
-			Debug._initialize(false);
-		}
+#ifdef DEDICATED_SERVER
+		Debug._initialize(true);	
+#else
+		Debug._initialize(false);		
+#endif
 
 		WinMain_impl		(hInstance,hPrevInstance,lpCmdLine,nCmdShow);
 	}
@@ -782,22 +681,17 @@ LPCSTR _GetFontTexName (LPCSTR section)
 	int def_idx		= 1;//default 1024x768
 	int idx			= def_idx;
 
-#if 0
-	u32 w = Device.dwWidth;
 
-	if(w<=800)		idx = 0;
-	else if(w<=1280)idx = 1;
-	else 			idx = 2;
-#else
 	u32 h = Device.dwHeight;
 
 	if(h<=600)		idx = 0;
 	else if(h<=900)	idx = 1;
 	else 			idx = 2;
-#endif
 
 
-	while(idx>=0){
+
+	while(idx>=0)
+	{
 		if( pSettings->line_exist(section,tex_names[idx]) )
 			return pSettings->r_string(section,tex_names[idx]);
 		--idx;
@@ -953,14 +847,14 @@ void CApplication::LoadBegin	()
 
 		g_appLoaded			= FALSE;
 
-		if (!g_dedicated_server)
-		{
+#ifndef DEDICATED_SERVER
 			_InitializeFont(pFontSystem, "ui_font_graffiti19_russian", 0);
 
 			ll_hGeom.create(FVF::F_TL, RCache.Vertex.Buffer(), RCache.QuadIB);
 			sh_progress.create("hud\\default", "ui\\ui_load");
 			ll_hGeom2.create(FVF::F_TL, RCache.Vertex.Buffer(), NULL);
-		}
+		
+#endif
 
 		phase_timer.Start	();
 		load_stage			= 0;

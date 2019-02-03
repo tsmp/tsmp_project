@@ -105,28 +105,23 @@ void	xrServer::SendConnectResult(IClient* CL, u8 res, u8 res1, char* ResultStr)
 		P.w_u8(0);
 	P.w_stringZ(Level().m_caServerOptions);
 	
-	SendTo		(CL->ID, P);
-	
+	SendTo(CL->ID, P);	
 };
 
 void xrServer::Check_GameSpy_CDKey_Success			(IClient* CL)
 {
-	if (NeedToCheckClient_BuildVersion(CL))				return;
-	//-------------------------------------------------------------
+	if (NeedToCheckClient_BuildVersion(CL))
+		return;
+
 	Check_BuildVersion_Success(CL);	
 };
 
 BOOL	g_SV_Disable_Auth_Check = FALSE;
 
-BOOL sv_debug_msg=FALSE;
-
 bool xrServer::NeedToCheckClient_BuildVersion		(IClient* CL)	
 {
-//#ifdef DEBUG
-	//return false; 
-//#else
-
 	if (g_SV_Disable_Auth_Check) return false;
+
 	CL->flags.bVerified = FALSE;
 	NET_Packet	P;
 	P.w_begin	(M_AUTH_CHALLENGE);

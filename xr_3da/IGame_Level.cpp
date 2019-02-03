@@ -29,7 +29,7 @@ IGame_Level::~IGame_Level	()
 {
 	if(strstr(Core.Params,"-nes_texture_storing") )
 		Device.Resources->StoreNecessaryTextures();
-//.	DEL_INSTANCE				( pHUD			);
+
 	xr_delete					( pLevel		);
 
 	// Render-level unload
@@ -52,7 +52,6 @@ void IGame_Level::net_Stop			()
 	bReady						= false;	
 }
 
-//-------------------------------------------------------------------------------------------
 extern CStatTimer				tscreate;
 
 BOOL IGame_Level::Load			(u32 dwNum) 
@@ -60,8 +59,10 @@ BOOL IGame_Level::Load			(u32 dwNum)
 	// Initialize level data
 	pApp->Level_Set				( dwNum );
 	string_path					temp;
+
 	if (!FS.exist(temp, "$level$", "level.ltx"))
 		Debug.fatal	(DEBUG_INFO,"Can't find level configuration file '%s'.",temp);
+
 	pLevel						= xr_new<CInifile>	( temp );
 	
 	// Open
@@ -81,7 +82,6 @@ BOOL IGame_Level::Load			(u32 dwNum)
 
 
 	// HUD + Environment
-//.	pHUD						= (CCustomHUD*)NEW_INSTANCE	(CLSID_HUDMANAGER);
 	if(g_hud)
 		pHUD					= g_hud;
 	else
@@ -90,7 +90,6 @@ BOOL IGame_Level::Load			(u32 dwNum)
 	// Render-level Load
 	Render->level_Load			(LL_Stream);
 	tscreate.FrameEnd			();
-	// Msg						("* S-CREATE: %f ms, %d times",tscreate.result,tscreate.count);
 
 	// Objects
 	g_pGamePersistent->Environment().mods_load	();
@@ -101,10 +100,11 @@ BOOL IGame_Level::Load			(u32 dwNum)
 	// Done
 	FS.r_close					( LL_Stream );
 	bReady						= true;
-	if (!g_dedicated_server)	IR_Capture();
 
-	if (!g_dedicated_server)
-		Device.seqRender.Add(this);
+#ifndef DEDICATED_SERVER
+	IR_Capture();
+	Device.seqRender.Add(this);
+#endif
 
 	Device.seqFrame.Add			(this);
 
@@ -112,30 +112,21 @@ BOOL IGame_Level::Load			(u32 dwNum)
 }
 
 int		psNET_DedicatedSleep	= 5;
-void	IGame_Level::OnRender		( ) 
+
+void	IGame_Level::OnRender() 
 {
-	if (!g_dedicated_server)
-	{
-			// Level render, only when no client output required
-		if (!g_dedicated_server) 
-		{
-			Render->Calculate();
-			Render->Render();
-		}
-		else 
-		{
-			Sleep(psNET_DedicatedSleep);
-		}
-	}
+#ifndef DEDICATED_SERVER
+	Render->Calculate();
+	Render->Render();
+#endif
 }
 
-void	IGame_Level::OnFrame		( ) 
+void IGame_Level::OnFrame() 
 {
-
 	// Update all objects
 	VERIFY						(bReady);
-	Objects.Update				( false );
-	pHUD->OnFrame				( );
+	Objects.Update				(false);
+	pHUD->OnFrame				();
 
 	// Ambience
 	if (Sounds_Random.size() && (Device.dwTimeGlobal > Sounds_Random_dwNextTime))
@@ -154,8 +145,6 @@ void	IGame_Level::OnFrame		( )
 	}
 }
 
-// ==================================================================================================
-
 void CServerInfo::AddItem( LPCSTR name_, LPCSTR value_, u32 color_ )
 {
 	shared_str s_name( name_ );
@@ -165,9 +154,7 @@ void CServerInfo::AddItem( LPCSTR name_, LPCSTR value_, u32 color_ )
 void CServerInfo::AddItem( shared_str& name_, LPCSTR value_, u32 color_ )
 {
 	SItem_ServerInfo it;
-//	shared_str s_name = CStringTable().translate( name_ );
-	
-//	strcpy_s( it.name, s_name.c_str() );
+
 	strcpy_s( it.name, name_.c_str() );
 	strcat_s( it.name, " = " );
 	strcat_s( it.name, value_ );

@@ -55,16 +55,10 @@ void xrServer::Perform_destroy(CSE_Abstract* object, u32 mode)
 
 void xrServer::SLS_Clear()
 {
-	Msg("sls_clear called");
-
 	u32 mode = net_flags(TRUE, TRUE);
-
-	Msg("sls_clear mode %i",mode);
 
 	while (!entities.empty())
 	{
-		Msg("sls_clear mode !entities_empty");
-
 		bool found = false;
 
 		xrS_entities::const_iterator I = entities.begin();
@@ -74,14 +68,10 @@ void xrServer::SLS_Clear()
 		{
 			if ((*I).second->ID_Parent != 0xffff)
 			{
-				Msg("sls_clear mode continue");
-
 				continue;
 			}
 
 			found = true;
-			Msg("sls_clear mode found =  true");
-
 			Perform_destroy((*I).second, mode);
 			break;
 		}

@@ -115,6 +115,7 @@ protected:
 public:
 	game_sv_GameState*		game;
 
+	void					CheckPlayerName			(string1024 &sName);
 	void					Export_game_type		(IClient* CL);
 	void					Perform_game_export		();
 	BOOL					PerformRP				(CSE_Abstract* E);
@@ -213,7 +214,7 @@ public:
 
 	virtual void			Assign_ServerType	( string512& res ) {};
 	virtual bool			HasPassword			()	{ return false; }
-	virtual bool			HasProtected		()	{ return false; }
+	virtual bool			IsProtectedServer()	{ return false; }
 			bool			HasBattlEye			();
 
 	virtual void			GetServerInfo		( CServerInfo* si );

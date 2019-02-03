@@ -13,14 +13,14 @@ Flags32 g_stats_flags		= {0};
 // stats
 DECLARE_RP(Stats);
 
-class	optimizer	{
+class	optimizer	
+{
 	float	average_	;
 	BOOL	enabled_	;
 public:
-	optimizer	()		{
+	optimizer	()		
+	{
 		average_	= 30.f;
-//		enabled_	= TRUE;
-//		disable		();
 		// because Engine is not exist
 		enabled_	= FALSE;
 	}
@@ -28,13 +28,14 @@ public:
 	BOOL	enabled	()	{ return enabled_;	}
 	void	enable	()	{ if (!enabled_)	{ Engine.External.tune_resume	();	enabled_=TRUE;	}}
 	void	disable	()	{ if (enabled_)		{ Engine.External.tune_pause	();	enabled_=FALSE; }}
-	void	update	(float value)	{
-		if (value < average_*0.7f)	{
-			// 25% deviation
-			enable	();
-		} else {
+
+	void	update	(float value)	
+	{
+		if (value < average_*0.7f)
+			enable	(); // 25% deviation
+		else 
 			disable	();
-		};
+		
 		average_	= 0.99f*average_ + 0.01f*value;
 	};
 };
@@ -131,18 +132,20 @@ void CStats::Show()
 	}
 
 	// calc FPS & TPS
-	if (Device.fTimeDelta>EPS_S) {
+	if (Device.fTimeDelta>EPS_S) 
+	{
 		float fps  = 1.f/Device.fTimeDelta;
-		//if (Engine.External.tune_enabled)	vtune.update	(fps);
 		float fOne = 0.3f;
 		float fInv = 1.f-fOne;
 		fFPS = fInv*fFPS + fOne*fps;
 
-		if (RenderTOTAL.result>EPS_S) {
+		if (RenderTOTAL.result>EPS_S) 
+		{
 			fTPS = fInv*fTPS + fOne*float(RCache.stat.polys)/(RenderTOTAL.result*1000.f);
 			fRFPS= fInv*fRFPS+ fOne*1000.f/RenderTOTAL.result;
 		}
 	}
+
 	{
 		float mem_count		= float	(Memory.stat_calls);
 		if (mem_count>fMem_calls)	fMem_calls	=	mem_count;
@@ -150,12 +153,15 @@ void CStats::Show()
 		Memory.stat_calls	= 0		;
 	}
 
-	////////////////////////////////////////////////
-	if (g_dedicated_server) return;
-	////////////////////////////////////////////////
+#ifdef DEDICATED_SERVER
+	return;
+#else
+
 	int frm = 2000;
 	div_t ddd = div(Device.dwFrame,frm);
-	if( ddd.rem < frm/2.0f ){
+
+	if( ddd.rem < frm/2.0f )
+	{
 		pFont->SetColor	(0xFFFFFFFF	);
 		pFont->OutSet	(0,0);
 		pFont->OutNext	(*eval_line_1);
@@ -165,10 +171,12 @@ void CStats::Show()
 	}
 
 	CGameFont& F = *pFont;
+
 	float		f_base_size	= 0.01f;
 				F.SetHeightI	(f_base_size);
 
-	if (vtune.enabled())	{
+	if (vtune.enabled())	
+	{
 		float sz		= pFont->GetHeight();
 		pFont->SetHeightI(0.02f);
 		pFont->SetColor	(0xFFFF0000	);
@@ -280,7 +288,6 @@ void CStats::Show()
 		F.OutNext	("qpc[%3d]",CPU::qpc_counter);
 		CPU::qpc_counter	=	0		;
 #endif // DEBUG_MEMORY_MANAGER
-//		F.OutSet	(640,0);
 		F.OutSkip	();
 		F.OutNext	("static:        %3.1f/%d",	RCache.stat.r.s_static.verts/1024.f,		RCache.stat.r.s_static.dips );
 		F.OutNext	("flora:         %3.1f/%d",	RCache.stat.r.s_flora.verts/1024.f,			RCache.stat.r.s_flora.dips );
@@ -311,10 +318,12 @@ void CStats::Show()
 		pFont->OnRender					();
 	};
 
-	if( psDeviceFlags.test(rsStatistic) || psDeviceFlags.test(rsCameraPos) ){
+	if( psDeviceFlags.test(rsStatistic) || psDeviceFlags.test(rsCameraPos) )
+	{
 		_draw_cam_pos					(pFont);
 		pFont->OnRender					();
 	};
+
 #ifdef DEBUG
 	//////////////////////////////////////////////////////////////////////////
 	// PERF ALERT
@@ -348,13 +357,10 @@ void CStats::Show()
 		F.SetColor	(color_rgba(255,16,16,191));
 		F.OutSet	(200,0);
 		F.SetHeightI	(f_base_size);
-#if 0
-		for (u32 it=0; it<errors.size(); it++)
-			F.OutNext("%s",errors[it].c_str());
-#else
+
 		for (u32 it=(u32)_max(int(0),(int)errors.size() - g_ErrorLineCount); it<errors.size(); it++)
 			F.OutNext("%s",errors[it].c_str());
-#endif
+
 		F.OnRender	();
 	}
 #endif
@@ -417,6 +423,8 @@ void CStats::Show()
 	}
 	dwSND_Played = dwSND_Allocated = 0;
 	Particles_starting = Particles_active = Particles_destroy = 0;
+
+#endif
 }
 
 void	_LogCallback				(LPCSTR string)
@@ -429,10 +437,9 @@ void CStats::OnDeviceCreate			()
 {
 	g_bDisableRedText				= strstr(Core.Params,"-xclsx")?TRUE:FALSE;
 
-	if (!g_dedicated_server)
-	{
-		pFont = xr_new<CGameFont>("stat_font", CGameFont::fsDeviceIndependent);
-	}
+#ifndef DEDICATED_SERVER
+	pFont = xr_new<CGameFont>("stat_font", CGameFont::fsDeviceIndependent);	
+#endif
 	
 	if(!pSettings->section_exist("evaluation")
 		||!pSettings->line_exist("evaluation","line1")

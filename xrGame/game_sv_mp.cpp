@@ -341,10 +341,6 @@ void	game_sv_mp::OnEvent (NET_Packet &P, u16 type, u32 time, ClientID sender )
 
 		Vte.resize(70);
 
-		string1024 debug_msg_vote;
-		strcpy(debug_msg_vote, Vte.c_str());
-
-		Msg(debug_msg_vote);
 		OnVoteStart(Vte.c_str(), sender);
 		break;
 	}
@@ -915,7 +911,8 @@ void game_sv_mp::OnVoteStart				(LPCSTR VoteCommand, ClientID sender)
 	string4096 CommandName;	
 	string1024 resVoteCommand = "";
 
-	char	CommandParams[256];	CommandParams[0]=0;	
+	char	CommandParams[256];	
+	CommandParams[0]=0;	
 
 	sscanf	(VoteCommand,"%s ", CommandName);
 
@@ -928,26 +925,31 @@ void game_sv_mp::OnVoteStart				(LPCSTR VoteCommand, ClientID sender)
 	
 	int i=0;
 	m_bVotingReal = false;
+
 	while (votecommands[i].command)
 	{
 		if (!stricmp(votecommands[i].name, CommandName))
 		{
 			m_bVotingReal = true;
-			if (!IsVotingEnabled(votecommands[i].flag)) return;
+
+			if (!IsVotingEnabled(votecommands[i].flag)) 
+				return;
 			break;
-		};
+		}
 		i++;
-	};
+	}
+
 	if (!m_bVotingReal && CommandName[0] != '$') 
 	{
 		Msg("Unknown Vote Command - %s", CommandName);
 		return;
 	};
 
-	//-----------------------------------------------------------------------------
 	SetVotingActive(true);
+
 	u32 CurTime = Level().timeServer();
 	m_uVoteStartTime = CurTime;
+
 	if (m_bVotingReal)
 	{
 		if (!stricmp(votecommands[i].name, "changeweather"))
@@ -971,6 +973,7 @@ void game_sv_mp::OnVoteStart				(LPCSTR VoteCommand, ClientID sender)
 
 	xrClientData *pStartedPlayer = NULL;
 	u32	cnt = get_players_count();	
+
 	for(u32 it=0; it<cnt; it++)	
 	{
 		xrClientData *l_pC = (xrClientData*)	m_server->client_Get	(it);
@@ -984,12 +987,15 @@ void game_sv_mp::OnVoteStart				(LPCSTR VoteCommand, ClientID sender)
 	};
 
 	signal_Syncronize();
-	//-----------------------------------------------------------------------------
+
 	NET_Packet P;
 	GenerateGameMessage (P);
 	P.w_u32(GAME_EVENT_VOTE_START);
-	if (m_bVotingReal) P.w_stringZ(resVoteCommand);
-	else P.w_stringZ(VoteCommand+1);
+
+	if (m_bVotingReal) 
+		P.w_stringZ(resVoteCommand);
+	else 
+		P.w_stringZ(VoteCommand+1);
 
 	string4096 Starter;
 	strcpy(Starter, pStartedPlayer ? pStartedPlayer->ps->getName() : "");
@@ -1011,10 +1017,13 @@ void game_sv_mp::OnVoteStart				(LPCSTR VoteCommand, ClientID sender)
 
 	Star.resize(70);
 
+	Msg("- Player %s started voting [ %s ]",Star.c_str(),resVoteCommand);
 
 	P.w_stringZ(Star.c_str());
 	P.w_u32(u32(g_sv_mp_fVoteTime*1000));
 	u_EventSend(P);
+
+#pragma todo("tsmp: переписать без std строк");
 };
 
 void		game_sv_mp::UpdateVote				()
@@ -1040,19 +1049,14 @@ void		game_sv_mp::UpdateVote				()
 	
 	if (m_uVoteStartTime + u32(g_sv_mp_fVoteTime *1000) > CurTime)
 	{
-		if (NumToCount == NumAgreed) VoteSucceed = true;
+		if (NumToCount == NumAgreed) 
+			VoteSucceed = true;
 		else
-			VoteSucceed = (float(NumAgreed)/float(NumToCount)) >= g_sv_mp_fVoteQuota;
-		if (!VoteSucceed) return;
-
+			VoteSucceed = (float(NumAgreed)/float(NumToCount)) >= g_sv_mp_fVoteQuota;		
+		
+		if (!VoteSucceed) 
+			return;
 	}
-	else
-	{
-	//	if (g_sv_mp_bCountParticipants) 
-	//		VoteSucceed = (float(NumAgreed)/float(NumParticipated)) >= g_sv_mp_fVoteQuota;
-	//	else
-	//		VoteSucceed = (float(NumAgreed)/float(NumToCount)) >= g_sv_mp_fVoteQuota;
-	};
 
 	SetVotingActive(false);
 
@@ -1299,65 +1303,8 @@ void	game_sv_mp::OnPlayerChangeName		(NET_Packet& P, ClientID sender)
 	}
 	else
 	{
-	string4096 NewName = "";
+	string1024 NewName = "";
 	P.r_stringZ(NewName);
-	std::string NameNew = NewName;
-	NameNew.resize(70);
-	// changename 
-	while (NameNew.find('%') != std::string::npos)
-	{
-		NameNew.replace(NameNew.find("%"), 1, " ");
-	}
-
-	while (NameNew.find('_') != std::string::npos)
-	{
-		NameNew.replace(NameNew.find("_"), 1, " ");
-	}
-	// чтобы хоть что то было в нике
-	while (NameNew.find(' ') != std::string::npos)
-	{
-		NameNew.replace(NameNew.find(" "), 1, ".");
-	}
-	// кхе кхе :) для того, чтобы читался ник базой.
-//	while (NameNew.find('-') != std::string::npos)
-	//{
-//		NameNew.replace(NameNew.find("-"), 1, "!");
-//	}
-	// тестовый набор, чтобы была возможность выбросить через голосование спец ники, без поломки ника.
-	while (NameNew.find('a') != std::string::npos)
-	{
-		//                             ENG       RUS
-		NameNew.replace(NameNew.find("a"), 1, "а");
-	}
-	while (NameNew.find('o') != std::string::npos)
-	{
-		//                             ENG       RUS
-		NameNew.replace(NameNew.find("o"), 1, "о");
-	}
-	while (NameNew.find('y') != std::string::npos)
-	{
-		//                             ENG       RUS
-		NameNew.replace(NameNew.find("y"), 1, "у");
-	}
-	while (NameNew.find('e') != std::string::npos)
-	{
-		//                             ENG       RUS
-		NameNew.replace(NameNew.find("e"), 1, "е");
-	}
-	while (NameNew.find('с') != std::string::npos)
-	{
-		//                             ENG       RUS
-		NameNew.replace(NameNew.find("с"), 1, "c");
-	}
-	while (NameNew.find('k') != std::string::npos)
-	{
-		//                             ENG       RUS
-		NameNew.replace(NameNew.find("k"), 1, "к");
-	}
-
-	if (strlen(NewName) > 70)	Msg("! too many symbols in name tried to write player - %s", NameNew.c_str());
-
-	strcpy(NewName, NameNew.c_str());
 
 	xrClientData*	pClient	= (xrClientData*)m_server->ID_to_client	(sender);
 	
@@ -1365,7 +1312,7 @@ void	game_sv_mp::OnPlayerChangeName		(NET_Packet& P, ClientID sender)
 	game_PlayerState* ps = pClient->ps;
 	if (!ps) return;
 
-	if( ((xrGameSpyServer*)m_server)->HasProtected() )
+	if(((xrGameSpyServer*)m_server)->IsProtectedServer())
 	{
 		Msg( "Player \"%s\" try to change name on \"%s\" at protected server.", ps->getName(), NewName );
 
@@ -1375,12 +1322,16 @@ void	game_sv_mp::OnPlayerChangeName		(NET_Packet& P, ClientID sender)
 		P.w_stringZ			("Server is protected. Can\'t change player name!");
 		m_server->SendTo( sender, P );
 		return;
-	}		
+	}			
+
+	m_server->CheckPlayerName(NewName);
 
 	if (NewPlayerName_Exists(pClient, NewName))
 	{
 		NewPlayerName_Generate(pClient, NewName);
 	};
+
+	Msg("- Player - [ %s ] changed name to [ %s ]", ps->name, NewName);
 
 	if (pClient->owner)
 	{
@@ -1860,13 +1811,13 @@ void game_sv_mp::DumpRoundStatistics()
 	Game().m_WeaponUsageStatistic->SaveDataLtx(ini);
 }
 
-void game_sv_mp::SvSendChatMessage(LPCSTR str)
+void game_sv_mp::SvSendChatMessage(LPCSTR SenderName, LPCSTR Msg)
 {
 	NET_Packet			P;	
 	P.w_begin			(M_CHAT_MESSAGE);
 	P.w_s16				(0);
-	P.w_stringZ			("ServerAdmin");
-	P.w_stringZ			(str);
+	P.w_stringZ			(SenderName);
+	P.w_stringZ			(Msg);
 	P.w_s16				(0);
 	u_EventSend			(P);
 }

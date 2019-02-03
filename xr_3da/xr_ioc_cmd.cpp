@@ -21,8 +21,6 @@
 
 #include <io.h>
 
-extern bool g_dedicated_server;
-
 xr_token							snd_freq_token							[ ]={
 	{ "22khz",						sf_22K										},
 	{ "44khz",						sf_44K										},
@@ -50,19 +48,19 @@ xr_token							vid_bpp_token							[ ]={
 	{ "32",							32											},
 	{ 0,							0											}
 };
-//-----------------------------------------------------------------------
+
 class CCC_Quit : public IConsole_Command
 {
 public:
 	CCC_Quit(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = TRUE; };
-	virtual void Execute(LPCSTR args) {
-//		TerminateProcess(GetCurrentProcess(),0);
+	virtual void Execute(LPCSTR args) 
+	{
 		Console->Hide();
 		Engine.Event.Defer("KERNEL:disconnect");
 		Engine.Event.Defer("KERNEL:quit");
 	}
 };
-//-----------------------------------------------------------------------
+
 #ifdef DEBUG_MEMORY_MANAGER
 class CCC_MemStat : public IConsole_Command
 {
@@ -476,10 +474,11 @@ public:
 
 	virtual void	Execute	(LPCSTR args)
 	{
-		if(g_dedicated_server)
+#ifdef DEDICATED_SERVER
 			inherited::Execute("renderer_r1");
-		else 
+#else
 			inherited::Execute	(args);
+#endif
 
 
 		psDeviceFlags.set	(rsR2, (renderer_value>0) );

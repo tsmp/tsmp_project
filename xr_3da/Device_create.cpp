@@ -4,7 +4,6 @@
 #include "xr_effgamma.h"
 #include "render.h"
 
-extern bool g_dedicated_server;
 
 void CRenderDevice::_SetupStates	()
 {
@@ -28,6 +27,7 @@ void CRenderDevice::_SetupStates	()
 		CHK_DX(HW.pDevice->SetSamplerState	( i, D3DSAMP_MAGFILTER,	D3DTEXF_LINEAR 		));
 		CHK_DX(HW.pDevice->SetSamplerState	( i, D3DSAMP_MIPFILTER,	D3DTEXF_LINEAR		));
 	}
+
 	CHK_DX(HW.pDevice->SetRenderState( D3DRS_DITHERENABLE,		TRUE				));
 	CHK_DX(HW.pDevice->SetRenderState( D3DRS_COLORVERTEX,		TRUE				));
 	CHK_DX(HW.pDevice->SetRenderState( D3DRS_ZENABLE,			TRUE				));
@@ -49,10 +49,14 @@ void CRenderDevice::_SetupStates	()
 	// ******************** Fog parameters
 	CHK_DX(HW.pDevice->SetRenderState( D3DRS_FOGCOLOR,			0					));
 	CHK_DX(HW.pDevice->SetRenderState( D3DRS_RANGEFOGENABLE,	FALSE				));
-	if (HW.Caps.bTableFog)	{
+
+	if (HW.Caps.bTableFog)	
+	{
 		CHK_DX(HW.pDevice->SetRenderState( D3DRS_FOGTABLEMODE,	D3DFOG_LINEAR		));
 		CHK_DX(HW.pDevice->SetRenderState( D3DRS_FOGVERTEXMODE,	D3DFOG_NONE			));
-	} else {
+	} 
+	else 
+	{
 		CHK_DX(HW.pDevice->SetRenderState( D3DRS_FOGTABLEMODE,	D3DFOG_NONE			));
 		CHK_DX(HW.pDevice->SetRenderState( D3DRS_FOGVERTEXMODE,	D3DFOG_LINEAR		));
 	}
@@ -73,13 +77,12 @@ void CRenderDevice::_Create	(LPCSTR shName)
 	::Render->create			();
 	Statistic->OnDeviceCreate	();
 
-	if (!g_dedicated_server)
-	{
-		m_WireShader.create("editor\\wire");
-		m_SelectionShader.create("editor\\selection");
-
-		DU.OnDeviceCreate();
-	}
+#ifndef DEDICATED_SERVER
+	m_WireShader.create("editor\\wire");
+	m_SelectionShader.create("editor\\selection");
+	   
+	DU.OnDeviceCreate();
+#endif
 
 	dwFrame						= 0;
 }
