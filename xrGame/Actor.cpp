@@ -956,7 +956,20 @@ void CActor::shedule_Update(u32 DT)
 	setSVU(OnServer());
 
 	//установить режим показа HUD для текущего активного слота
-	CHudItem* pHudItem = smart_cast<CHudItem*>(inventory().ActiveItem());	
+
+	CHudItem* pHudItem = nullptr;
+
+	try
+	{
+		pHudItem = smart_cast<CHudItem*>(inventory().ActiveItem());
+	}
+	catch (...)
+	{
+		Msg("! cant cast CHudItem");
+		return;
+	}
+
+	
 	if(pHudItem) 
 		pHudItem->SetHUDmode(HUDview());
 

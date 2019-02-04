@@ -41,10 +41,11 @@ IGame_Persistent::~IGame_Persistent	()
 void IGame_Persistent::OnAppActivate() {}
 void IGame_Persistent::OnAppDeactivate(){}
 
-void IGame_Persistent::OnAppStart	()
+void IGame_Persistent::OnAppStart()
 {
-	if(!g_dedicated_server)
-		Environment().load				();
+#ifndef DEDICATED_SERVER
+		Environment().load();
+#endif
 }
 
 void IGame_Persistent::OnAppEnd		()

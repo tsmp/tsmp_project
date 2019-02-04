@@ -24,9 +24,9 @@ void on_error_dialog			(bool before)
 	pInput->exclusive_mode		(!before);
 }
 
-CInput::CInput						( BOOL bExclusive, int deviceForInit)
+CInput::CInput(bool bExclusive, int deviceForInit)
 {
-	g_exclusive							= !!bExclusive;
+	g_exclusive	= bExclusive;
 
 	Log("Starting INPUT device...");
 

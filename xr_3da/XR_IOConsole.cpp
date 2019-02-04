@@ -169,7 +169,9 @@ void CConsole::OnRender()
 		g_pGamePersistent->m_pMainMenu && g_pGamePersistent->m_pMainMenu->IsActive()))
 		bGame = true;
 
-	if (g_dedicated_server)				bGame = false;
+#ifdef DEDICATED_SERVER
+	bGame = false;
+#endif
 
 	VERIFY(HW.pDevice);
 
@@ -550,8 +552,13 @@ void CConsole::Show()
 
 void CConsole::Hide()
 {
-	if (!bVisible)													return;
-	if (g_pGamePersistent && g_dedicated_server)	return;
+	if (!bVisible)
+		return;
+
+#ifdef DEDICATED_SERVER
+	if (g_pGamePersistent)	
+		return;
+#endif
 
 	bVisible = false;
 	Device.seqFrame.Remove(this);

@@ -70,7 +70,6 @@ void CRenderDevice::Clear	()
 		));
 }
 
-extern void CheckPrivilegySlowdown();
 #include "resourcemanager.h"
 
 void CRenderDevice::End		(void)
@@ -99,7 +98,6 @@ void CRenderDevice::End		(void)
 				Resources->DestroyNecessaryTextures();
 				Memory.mem_compact();
 				Msg("* MEMORY USAGE: %d K", Memory.mem_usage() / 1024);
-				CheckPrivilegySlowdown();
 			}
 		}
 

@@ -1,14 +1,6 @@
-//-----------------------------------------------------------------------------
-// File: x_ray.cpp
-//
-// Programmers:
-//	Oles		- Oles Shishkovtsov
-//	AlexMX		- Alexander Maksimchuk
-//-----------------------------------------------------------------------------
 #include "stdafx.h"
 #include "igame_level.h"
 #include "igame_persistent.h"
-
 #include "xr_input.h"
 #include "xr_ioconsole.h"
 #include "x_ray.h"
@@ -17,11 +9,9 @@
 #include "resource.h"
 #include "LightAnimLibrary.h"
 #include "ispatial.h"
-#include "CopyProtection.h"
 #include "Text_Console.h"
 #include <process.h>
 
-//---------------------------------------------------------------------
 ENGINE_API CInifile* pGameIni		= NULL;
 BOOL	g_bIntroFinished			= FALSE;
 extern	void	Intro				( void* fn );
@@ -41,7 +31,8 @@ static LPSTR month_id[12] =
 	"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"
 };
 
-static int days_in_month[12] = {
+static int days_in_month[12] = 
+{
 	31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
 };
 
@@ -49,7 +40,7 @@ static int start_day	= 31;	// 31
 static int start_month	= 1;	// January
 static int start_year	= 1999;	// 1999
 
-void compute_build_id	()
+void compute_build_id()
 {
 	build_date			= __DATE__;
 
@@ -78,27 +69,21 @@ void compute_build_id	()
 	for (int i=0; i<start_month-1; ++i)
 		build_id		-= days_in_month[i];
 }
-//---------------------------------------------------------------------
-// 2446363
-// umbt@ukr.net
-//////////////////////////////////////////////////////////////////////////
-struct _SoundProcessor	: public pureFrame
+
+struct _SoundProcessor : public pureFrame
 {
-	virtual void OnFrame	( )
+	virtual void OnFrame()
 	{
-		//Msg							("------------- sound: %d [%3.2f,%3.2f,%3.2f]",u32(Device.dwFrame),VPUSH(Device.vCameraPosition));
 		Device.Statistic->Sound.Begin();
 		::Sound->update				(Device.vCameraPosition,Device.vCameraDirection,Device.vCameraTop);
 		Device.Statistic->Sound.End	();
 	}
 }	SoundProcessor;
 
-//////////////////////////////////////////////////////////////////////////
 // global variables
 ENGINE_API	CApplication*	pApp			= NULL;
 static		HWND			logoWindow		= NULL;
 
-			int				doLauncher		();
 			void			doBenchmark		(LPCSTR name);
 ENGINE_API	bool			g_bBenchmark	= false;
 string512	g_sBenchmarkName;
@@ -106,17 +91,19 @@ string512	g_sBenchmarkName;
 
 ENGINE_API	string512		g_sLaunchOnExit_params;
 ENGINE_API	string512		g_sLaunchOnExit_app;
-// -------------------------------------------
+
 // startup point
-void InitEngine		()
+void InitEngine()
 {
-	Engine.Initialize			( );
-	while (!g_bIntroFinished)	Sleep	(100);
-	Device.Initialize			( );
-	CheckCopyProtection			( );
+	Engine.Initialize();
+
+	while (!g_bIntroFinished)	
+		Sleep(100);
+
+	Device.Initialize();
 }
 
-void InitSettings	()
+void InitSettings()
 {
 	string_path					fname; 
 	FS.update_path				(fname,"$game_config$","system.ltx");
@@ -136,7 +123,7 @@ void InitConsole	()
 	Console = xr_new<CConsole>();	
 #endif
 
-	Console->Initialize			( );
+	Console->Initialize();
 
 #ifdef TSMP_CLIENT
 	strcpy_s(Console->ConfigFile, "user.ltx");
@@ -152,98 +139,75 @@ void InitConsole	()
 	}
 }
 
-void InitInput		()
+void InitInput()
 {
-	BOOL bCaptureInput			= !strstr(Core.Params,"-i");
+	bool bCaptureInput;
 
 #ifdef DEDICATED_SERVER
-	bCaptureInput = FALSE;
+	bCaptureInput = false;
+#else
+	bCaptureInput = !strstr(Core.Params, "-i");
 #endif
 
-	pInput						= xr_new<CInput>		(bCaptureInput);
+	pInput = xr_new<CInput>(bCaptureInput);
 }
 
-void destroyInput	()
+void destroyInput()
 {
-	xr_delete					( pInput		);
+	xr_delete(pInput);
 }
 
-void InitSound		()
+void InitSound()
 {
-	CSound_manager_interface::_create					(u64(Device.m_hWnd));
+	CSound_manager_interface::_create(u64(Device.m_hWnd));
 }
 
-void destroySound	()
+void destroySound()
 {
-	CSound_manager_interface::_destroy				( );
+	CSound_manager_interface::_destroy();
 }
 
 void destroySettings()
 {
-	xr_delete					( pSettings		);
-	xr_delete					( pGameIni		);
+	xr_delete(pSettings);
+	xr_delete(pGameIni);
 }
 
-void destroyConsole	()
+void destroyConsole()
 {
-	Console->Destroy			( );
-	xr_delete					(Console);
+	Console->Destroy();
+	xr_delete(Console);
 }
 
-void destroyEngine	()
+void destroyEngine()
 {
-	Device.Destroy				( );
-	Engine.Destroy				( );
+	Device.Destroy();
+	Engine.Destroy();
 }
 
-void execUserScript				( )
+void execUserScript()
 {
 // Execute script
 
-	Console->Execute			("unbindall");
-	Console->ExecuteScript		(Console->ConfigFile);
+	Console->Execute("unbindall");
+	Console->ExecuteScript(Console->ConfigFile);
 }
 
-void slowdownthread	( void* )
-{
-//	Sleep		(30*1000);
-	for (;;)	{
-		if (Device.Statistic->fFPS<30) Sleep(1);
-		if (Device.mt_bMustExit)	return;
-		if (0==pSettings)			return;
-		if (0==Console)				return;
-		if (0==pInput)				return;
-		if (0==pApp)				return;
-	}
-}
-
-void CheckPrivilegySlowdown		( )
-{
-#ifdef DEBUG
-	if	(strstr(Core.Params,"-slowdown"))	{
-		thread_spawn(slowdownthread,"slowdown",0,0);
-	}
-	if	(strstr(Core.Params,"-slowdown2x"))	{
-		thread_spawn(slowdownthread,"slowdown",0,0);
-		thread_spawn(slowdownthread,"slowdown",0,0);
-	}
-#endif // DEBUG
-}
-
-void Startup					( )
+void Startup()
 {
 	execUserScript	();
 	InitSound		();
 
 	// ...command line for auto start
-	{
-		LPCSTR	pStartup			= strstr				(Core.Params,"-start ");
-		if (pStartup)				Console->Execute		(pStartup+1);
-	}
-	{
-		LPCSTR	pStartup			= strstr				(Core.Params,"-load ");
-		if (pStartup)				Console->Execute		(pStartup+1);
-	}
+	LPCSTR pStartup = strstr(Core.Params,"-start ");
+
+	if (pStartup)	
+		Console->Execute(pStartup+1);
+	
+	LPCSTR pStartup1 = strstr(Core.Params,"-load ");
+
+	if (pStartup1)			
+		Console->Execute(pStartup1+1);	
 
 	// Initialize APP
 	ShowWindow( Device.m_hWnd , SW_SHOWNORMAL );
@@ -259,8 +223,7 @@ void Startup					( )
 	logoWindow					= NULL;
 
 	// Main cycle
-	CheckCopyProtection			( );
-Memory.mem_usage();
+	Memory.mem_usage();
 	Device.Run					( );
 
 	// Destroy APP
@@ -289,24 +252,22 @@ Memory.mem_usage();
 
 static BOOL CALLBACK logDlgProc( HWND hw, UINT msg, WPARAM wp, LPARAM lp )
 {
-	switch( msg ){
+	switch(msg)
+	{
 		case WM_DESTROY:
 			break;
 		case WM_CLOSE:
-			DestroyWindow( hw );
+			DestroyWindow(hw);
 			break;
 		case WM_COMMAND:
-			if( LOWORD(wp)==IDCANCEL )
-				DestroyWindow( hw );
+			if(LOWORD(wp)==IDCANCEL)
+				DestroyWindow(hw);
 			break;
 		default:
 			return FALSE;
 	}
 	return TRUE;
 }
-
-extern void	testbed	(void);
-
 
 #define dwStickyKeysStructSize sizeof( STICKYKEYS )
 #define dwFilterKeysStructSize sizeof( FILTERKEYS )
@@ -385,19 +346,22 @@ struct damn_keys_filter
 			// Restoring screen saver
 			SystemParametersInfo( SPI_SETSCREENSAVEACTIVE , TRUE , NULL , 0 );
 
-		if ( dwStickyKeysFlags) {
+		if ( dwStickyKeysFlags) 
+		{
 			// Restore StickyKeys feature
 			StickyKeysStruct.dwFlags = dwStickyKeysFlags;
 			SystemParametersInfo( SPI_SETSTICKYKEYS , dwStickyKeysStructSize , ( PVOID ) &StickyKeysStruct , 0 );
 		}
 
-		if ( dwFilterKeysFlags ) {
+		if ( dwFilterKeysFlags ) 
+		{
 			// Restore FilterKeys feature
 			FilterKeysStruct.dwFlags = dwFilterKeysFlags;
 			SystemParametersInfo( SPI_SETFILTERKEYS , dwFilterKeysStructSize , ( PVOID ) &FilterKeysStruct , 0 );
 		}
 
-		if ( dwToggleKeysFlags ) {
+		if ( dwToggleKeysFlags ) 
+		{
 			// Restore FilterKeys feature
 			ToggleKeysStruct.dwFlags = dwToggleKeysFlags;
 			SystemParametersInfo( SPI_SETTOGGLEKEYS , dwToggleKeysStructSize , ( PVOID ) &ToggleKeysStruct , 0 );
@@ -410,56 +374,6 @@ struct damn_keys_filter
 #undef dwFilterKeysStructSize
 #undef dwToggleKeysStructSize
 
-// Приблудина для SecuROM-а
-#include "securom_api.h"
-
-// Фунция для тупых требований THQ и тупых американских пользователей
-BOOL IsOutOfVirtualMemory()
-{
-#define VIRT_ERROR_SIZE 256
-#define VIRT_MESSAGE_SIZE 512
-#ifndef _WIN64
-	SECUROM_MARKER_HIGH_SECURITY_ON(1)
-#endif
-
-	MEMORYSTATUSEX statex;
-	DWORD dwPageFileInMB = 0;
-	DWORD dwPhysMemInMB = 0;
-	HINSTANCE hApp = 0;
-	char	pszError[ VIRT_ERROR_SIZE ];
-	char	pszMessage[ VIRT_MESSAGE_SIZE ];
-
-	ZeroMemory( &statex , sizeof( MEMORYSTATUSEX ) );
-	statex.dwLength = sizeof( MEMORYSTATUSEX );
-	
-	if ( ! GlobalMemoryStatusEx( &statex ) )
-		return 0;
-
-	dwPageFileInMB = ( DWORD ) ( statex.ullTotalPageFile / ( 1024 * 1024 ) ) ;
-	dwPhysMemInMB = ( DWORD ) ( statex.ullTotalPhys / ( 1024 * 1024 ) ) ;
-
-	// Довольно отфонарное условие
-	if ( ( dwPhysMemInMB > 500 ) && ( ( dwPageFileInMB + dwPhysMemInMB ) > 2500  ) )
-		return 0;
-
-	hApp = GetModuleHandle( NULL );
-
-	if ( ! LoadString( hApp , RC_VIRT_MEM_ERROR , pszError , VIRT_ERROR_SIZE ) )
-		return 0;
- 
-	if ( ! LoadString( hApp , RC_VIRT_MEM_TEXT , pszMessage , VIRT_MESSAGE_SIZE ) )
-		return 0;
-
-	MessageBox( NULL , pszMessage , pszError , MB_OK | MB_ICONHAND );
-
-#ifdef _WIN64
-	//SECUROM_MARKER_HIGH_SECURITY_OFF(1)
-#else
-	SECUROM_MARKER_HIGH_SECURITY_OFF(1)
-#endif
-
-	return 1;
-}
 
 #include "xr_ioc_cmd.h"
 
@@ -491,11 +405,6 @@ int APIENTRY WinMain_impl(HINSTANCE hInstance,
 #endif
 
 #ifndef DEDICATED_SERVER
-	
-		// Check for virtual memory
-
-		if ((strstr(lpCmdLine, "--skipmemcheck") == NULL) && IsOutOfVirtualMemory())
-			return 0;
 
 		// Check for another instance
 #ifdef NO_MULTI_INSTANCES
@@ -579,14 +488,6 @@ int APIENTRY WinMain_impl(HINSTANCE hInstance,
 		doBenchmark(b_name);
 		return 0;
 	}
-
-	if (strstr(lpCmdLine, "-launcher"))
-	{
-		int l_res = doLauncher();
-		if (l_res != 0)
-			return 0;
-	};
-
 
 	if (strstr(Core.Params, "-r2a"))
 		Console->Execute("renderer renderer_r2a");
@@ -858,47 +759,47 @@ void CApplication::LoadBegin	()
 
 		phase_timer.Start	();
 		load_stage			= 0;
-
-		CheckCopyProtection	();
 	}
 }
 
 void CApplication::LoadEnd		()
 {
 	ll_dwReference--;
-	if (0==ll_dwReference)		{
+
+	if (0==ll_dwReference)		
+	{
 		Msg						("* phase time: %d ms",phase_timer.GetElapsed_ms());
 		Msg						("* phase cmem: %d K", Memory.mem_usage()/1024);
 		Console->Execute		("stat_memory");
 		g_appLoaded				= TRUE;
-//		DUMP_PHASE;
 	}
 }
 
 void CApplication::destroy_loading_shaders()
 {
-	hLevelLogo.destroy		();
-	sh_progress.destroy		();
-//.	::Sound->mute			(false);
+	hLevelLogo.destroy();
+	sh_progress.destroy();
 }
 
 u32 calc_progress_color(u32, u32, int, int);
 
-void CApplication::LoadDraw		()
+void CApplication::LoadDraw()
 {
-	if(g_appLoaded)				return;
-	Device.dwFrame				+= 1;
+	if(g_appLoaded)
+		return;
 
+	Device.dwFrame += 1;
 
-	if(!Device.Begin () )		return;
+	if(!Device.Begin())
+		return;
 
-	if	(g_dedicated_server)
-		Console->OnRender			();
-	else
-		load_draw_internal			();
+#ifdef DEDICATED_SERVER
+	Console->OnRender();	
+#else
+	load_draw_internal();
+#endif
 
-	Device.End					();
-	CheckCopyProtection			();
+	Device.End();
 }
 
 void CApplication::LoadTitleInt(LPCSTR str)
@@ -910,7 +811,6 @@ void CApplication::LoadTitleInt(LPCSTR str)
 	strcpy_s						(app_title, str);
 	Msg							("* phase time: %d ms",phase_timer.GetElapsed_ms());	phase_timer.Start();
 	Msg							("* phase cmem: %d K", Memory.mem_usage()/1024);
-//.	Console->Execute			("stat_memory");
 	Log							(app_title);
 	
 	if (g_pGamePersistent->GameType()==1 && strstr(Core.Params,"alife"))
@@ -921,23 +821,18 @@ void CApplication::LoadTitleInt(LPCSTR str)
 	LoadDraw					();
 }
 
-void CApplication::LoadSwitch	()
-{
-}
-
-void CApplication::SetLoadLogo			(ref_shader NewLoadLogo)
-{
-//	hLevelLogo = NewLoadLogo;
-//	R_ASSERT(0);
-};
+void CApplication::LoadSwitch() {}
+void CApplication::SetLoadLogo(ref_shader NewLoadLogo) {}
 
 // Sequential
-void CApplication::OnFrame	( )
+void CApplication::OnFrame()
 {
-	Engine.Event.OnFrame			();
-	g_SpatialSpace->update			();
-	g_SpatialSpacePhysic->update	();
-	if (g_pGameLevel)				g_pGameLevel->SoundEvent_Dispatch	( );
+	Engine.Event.OnFrame();
+	g_SpatialSpace->update();
+	g_SpatialSpacePhysic->update();
+
+	if (g_pGameLevel)
+		g_pGameLevel->SoundEvent_Dispatch();
 }
 
 void CApplication::Level_Append		(LPCSTR folder)
@@ -947,12 +842,11 @@ void CApplication::Level_Append		(LPCSTR folder)
 	strconcat	(sizeof(N2),N2,folder,"level.ltx");
 	strconcat	(sizeof(N3),N3,folder,"level.geom");
 	strconcat	(sizeof(N4),N4,folder,"level.cform");
-	if	(
-		FS.exist("$game_levels$",N1)		&&
-		FS.exist("$game_levels$",N2)		&&
-		FS.exist("$game_levels$",N3)		&&
-		FS.exist("$game_levels$",N4)	
-		)
+	
+	if(		FS.exist("$game_levels$",N1)		
+		&&	FS.exist("$game_levels$",N2)	
+		&&	FS.exist("$game_levels$",N3)	
+		&&	FS.exist("$game_levels$",N4))
 	{
 		sLevelInfo			LI;
 		LI.folder			= xr_strdup(folder);
@@ -968,6 +862,7 @@ void CApplication::Level_Scan()
 	R_ASSERT				(folder&&folder->size());
 	for (u32 i=0; i<folder->size(); i++)	Level_Append((*folder)[i]);
 	FS.file_list_close		(folder);
+
 #ifdef DEBUG
 	folder									= FS.file_list_open		("$game_levels$","$debug$\\",FS_ListFolders|FS_RootOnly);
 	if (folder){
@@ -985,7 +880,9 @@ void CApplication::Level_Scan()
 
 void CApplication::Level_Set(u32 L)
 {
-	if (L>=Levels.size())	return;
+	if (L>=Levels.size())	
+		return;
+
 	Level_Current = L;
 	FS.get_path	("$level$")->_set	(Levels[L].folder);
 
@@ -994,13 +891,11 @@ void CApplication::Level_Set(u32 L)
 	string_path					temp2;
 	strconcat					(sizeof(temp),temp,"intro\\intro_",Levels[L].folder);
 	temp[xr_strlen(temp)-1] = 0;
+
 	if (FS.exist(temp2, "$game_textures$", temp, ".dds"))
 		hLevelLogo.create	("font", temp);
 	else
-		hLevelLogo.create	("font", "intro\\intro_no_start_picture");
-		
-
-	CheckCopyProtection		();
+		hLevelLogo.create	("font", "intro\\intro_no_start_picture");		
 }
 
 int CApplication::Level_ID(LPCSTR name)
@@ -1014,60 +909,6 @@ int CApplication::Level_ID(LPCSTR name)
 	return -1;
 }
 
-
-//launcher stuff----------------------------
-extern "C"{
-	typedef int	 __cdecl LauncherFunc	(int);
-}
-HMODULE			hLauncher		= NULL;
-LauncherFunc*	pLauncher		= NULL;
-
-void InitLauncher(){
-	if(hLauncher)
-		return;
-	hLauncher	= LoadLibrary	("xrLauncher.dll");
-	if (0==hLauncher)	R_CHK	(GetLastError());
-	R_ASSERT2		(hLauncher,"xrLauncher DLL raised exception during loading or there is no xrLauncher.dll at all");
-
-	pLauncher = (LauncherFunc*)GetProcAddress(hLauncher,"RunXRLauncher");
-	R_ASSERT2		(pLauncher,"Cannot obtain RunXRLauncher function from xrLauncher.dll");
-};
-
-void FreeLauncher(){
-	if (hLauncher)	{ 
-		FreeLibrary(hLauncher); 
-		hLauncher = NULL; pLauncher = NULL; };
-}
-
-int doLauncher()
-{
-/*
-	execUserScript();
-	InitLauncher();
-	int res = pLauncher(0);
-	FreeLauncher();
-	if(res == 1) // do benchmark
-		g_bBenchmark = true;
-
-	if(g_bBenchmark){ //perform benchmark cycle
-		doBenchmark();
-	
-		// InitLauncher	();
-		// pLauncher	(2);	//show results
-		// FreeLauncher	();
-
-		Core._destroy			();
-		return					(1);
-
-	};
-	if(res==8){//Quit
-		Core._destroy			();
-		return					(1);
-	}
-*/
-	return 0;
-}
-
 void doBenchmark(LPCSTR name)
 {
 	g_bBenchmark = true;
@@ -1077,6 +918,7 @@ void doBenchmark(LPCSTR name)
 	int test_count = ini.line_count("benchmark");
 	LPCSTR test_name,t;
 	shared_str test_command;
+
 	for(int i=0;i<test_count;++i){
 		ini.r_line			( "benchmark", i, &test_name, &t);
 		strcpy_s				(g_sBenchmarkName, test_name);
@@ -1108,10 +950,12 @@ void doBenchmark(LPCSTR name)
 		Startup	 				();
 	}
 }
+
 #pragma optimize("g", off)
 void CApplication::load_draw_internal()
 {
-	if(!sh_progress){
+	if(!sh_progress)
+	{
 		CHK_DX			(HW.pDevice->Clear(0,0,D3DCLEAR_TARGET,D3DCOLOR_ARGB(0,0,0,0),1,0));
 		return;
 	}
@@ -1134,8 +978,8 @@ void CApplication::load_draw_internal()
 		Frect						back_text_coords;
 		Frect						back_coords;
 		Fvector2					back_size;
-
-//progress background
+		
+		//progress background
 		static float offs			= -0.5f;
 
 		back_size.set				(1024,768);

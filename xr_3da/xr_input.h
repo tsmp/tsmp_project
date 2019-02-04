@@ -57,7 +57,6 @@ private:
 													const DIDATAFORMAT* pdidDataFormat, u32 dwFlags,
 													u32 buf_size );
 
-//	xr_stack<IInputReceiver*>	cbStack;
 	xr_vector<IInputReceiver*>	cbStack;
 
 	void						MouseUpdate					( );
@@ -78,8 +77,8 @@ public:
 	BOOL						iGetAsyncBtnState			( int btn );
 	void						iGetLastMouseDelta			( Ivector2& p )	{ p.set(offs[0],offs[1]); }
 
-	CInput						( BOOL bExclusive = true, int deviceForInit = default_key);
-	~CInput						( );
+	CInput						(bool bExclusive, int deviceForInit = default_key);
+	~CInput						();
 
 	virtual void				OnFrame						(void);
 	virtual void				OnAppActivate				(void);

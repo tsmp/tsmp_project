@@ -104,23 +104,25 @@ void	CBackend::set_ClipPlanes(u32 _enable, Fplane* _planes, u32 count)
 	CHK_DX	(HW.pDevice->SetRenderState(D3DRS_CLIPPLANEENABLE,e_mask));
 }
 
-#pragma todo("это что такое?!");
-
-#ifndef DEDICATED_SREVER
-void	CBackend::set_ClipPlanes	(u32 _enable, Fmatrix*	_xform  /*=NULL */, u32 fmask/* =0xff */)
+#ifndef DEDICATED_SERVER
+void CBackend::set_ClipPlanes(u32 _enable, Fmatrix*	_xform, u32 fmask)
 {
-	if (0==HW.Caps.geometry.dwClipPlanes)	return;
-	if (!_enable)	{
+	if (0==HW.Caps.geometry.dwClipPlanes)	
+		return;
+
+	if (!_enable)	
+	{
 		CHK_DX	(HW.pDevice->SetRenderState(D3DRS_CLIPPLANEENABLE,FALSE));
 		return;
 	}
+
 	VERIFY		(_xform && fmask);
 	CFrustum	F;
 	F.CreateFromMatrix	(*_xform,fmask);
 	set_ClipPlanes		(_enable,F.planes,F.p_count);
 }
 
-void CBackend::set_Textures			(STextureList* TT)
+void CBackend::set_Textures(STextureList* TT)
 {
 	if (T == TT)	return;
 	T				= TT;
@@ -128,20 +130,27 @@ void CBackend::set_Textures			(STextureList* TT)
 	u32 _last_vs	= 0;
 	STextureList::iterator	_it		= TT->begin	();
 	STextureList::iterator	_end	= TT->end	();
+
 	for (; _it!=_end; ++_it)
 	{
 		std::pair<u32,ref_texture>&		loader	=	*_it;
 		u32			load_id		= loader.first		;
 		CTexture*	load_surf	= &*loader.second	;
-		if (load_id<256)		{
+
+		if (load_id<256)		
+		{
 			// ordinary pixel surface
-			if (load_id>_last_ps)		_last_ps	=	load_id;
-			if (textures_ps[load_id]!=load_surf)	{
+			if (load_id>_last_ps)		
+				_last_ps	=	load_id;
+
+			if (textures_ps[load_id]!=load_surf)	
+			{
 				textures_ps[load_id]	= load_surf			;
 #ifdef DEBUG
 				stat.textures			++;
 #endif
-				if (load_surf)			{
+				if (load_surf)			
+				{
 					PGO					(Msg("PGO:tex%d:%s",load_id,load_surf->cName.c_str()));
 					load_surf->bind		(load_id);
 				}
@@ -151,8 +160,11 @@ void CBackend::set_Textures			(STextureList* TT)
 		{
 			// d-map or vertex	
 			u32		load_id_remapped	= load_id-256;
-			if (load_id_remapped>_last_vs)	_last_vs	=	load_id_remapped;
-			if (textures_vs[load_id_remapped]!=load_surf)	{
+			if (load_id_remapped>_last_vs)	
+				_last_vs	=	load_id_remapped;
+
+			if (textures_vs[load_id_remapped]!=load_surf)	
+			{
 				textures_vs[load_id_remapped]	= load_surf			;
 #ifdef DEBUG
 				stat.textures	++;
@@ -182,7 +194,7 @@ void CBackend::set_Textures			(STextureList* TT)
 }
 #else
 
-void	CBackend::set_ClipPlanes	(u32 _enable, Fmatrix*	_xform  /*=NULL */, u32 fmask/* =0xff */) {}
-void CBackend::set_Textures			(STextureList* TT) {}
+void CBackend::set_ClipPlanes(u32 _enable, Fmatrix*	_xform, u32 fmask) {}
+void CBackend::set_Textures(STextureList* TT) {}
 
 #endif

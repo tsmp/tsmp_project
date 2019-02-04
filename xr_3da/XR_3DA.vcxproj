@@ -554,7 +554,7 @@
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;WIN32;DEDICATED_SERVER;_WINDOWS;ENGINE_BUILD;_SECURE_SCL=0;TSMP_CLIENT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;ENGINE_BUILD;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>
       </ExceptionHandling>
@@ -1155,7 +1155,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="_d3d_extensions.h" />
-    <ClInclude Include="CopyProtection.h" />
     <ClInclude Include="defines.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="trivial_encryptor.h" />
