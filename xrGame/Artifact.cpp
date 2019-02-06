@@ -12,6 +12,8 @@
 #include "restriction_space.h"
 #include "../IGame_Persistent.h"
 
+extern bool bIsDedicatedServer;
+
 #define	FASTMODE_DISTANCE (50.f)	//distance to camera from sphere, when zone switches to fast update sequence
 
 #define CHOOSE_MAX(x,inst_x,y,inst_y,z,inst_z)\
@@ -581,7 +583,7 @@ void SArtefactActivation::SpawnAnomaly()
 		m_af->Center(pos);
 		CSE_Abstract		*object = Level().spawn_item(	zone_sect,
 															pos,
-															(g_dedicated_server)?u32(-1):m_af->ai_location().level_vertex_id(),
+															(bIsDedicatedServer)?u32(-1):m_af->ai_location().level_vertex_id(),
 															0xffff,
 															true
 		);

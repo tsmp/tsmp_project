@@ -20,6 +20,8 @@
 #include "map_location.h"
 #include "../IGame_Persistent.h"
 
+extern bool bIsDedicatedServer;
+
 #ifdef DEBUG
 #	include "debug_renderer.h"
 #endif
@@ -82,7 +84,7 @@ BOOL CTeamBaseZone::net_Spawn	(CSE_Abstract* DC)
 		setEnabled				(TRUE);
 	}
 
-	if (GameID() != GAME_SINGLE && !g_dedicated_server)
+	if (GameID() != GAME_SINGLE && !bIsDedicatedServer)
 	{
 		char BaseMapLocation[1024];
 		sprintf_s (BaseMapLocation, "mp_team_base_%d_location", m_Team);
@@ -95,7 +97,7 @@ BOOL CTeamBaseZone::net_Spawn	(CSE_Abstract* DC)
 
 void CTeamBaseZone::net_Destroy			()
 {
-	if(!g_dedicated_server)
+	if(!bIsDedicatedServer)
 		Level().MapManager().RemoveMapLocationByObjectID(ID());
 
 	inherited::net_Destroy();

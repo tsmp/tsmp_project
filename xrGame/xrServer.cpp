@@ -19,10 +19,11 @@
 #include "../IGame_Persistent.h"
 
 
-
 #include "../XR_IOConsole.h"
 //#include "script_engine.h"
 #include "ui/UIInventoryUtilities.h"
+
+extern bool bIsDedicatedServer;
 
 #pragma warning(push)
 #pragma warning(disable:4995)
@@ -55,7 +56,7 @@ xrClientData::~xrClientData()
 }
 
 
-xrServer::xrServer():IPureServer(Device.GetTimerGlobal(), g_dedicated_server)
+xrServer::xrServer():IPureServer(Device.GetTimerGlobal(), bIsDedicatedServer)
 {
 	m_iCurUpdatePacket = 0;
 	m_aUpdatePackets.push_back(NET_Packet());

@@ -25,6 +25,8 @@
 #include "memory_manager.h"
 #include "../IGame_Persistent.h"
 
+extern bool bIsDedicatedServer;
+
 #ifndef MASTER_GOLD
 #	include "clsid_game.h"
 #	include "ai_debug.h"
@@ -475,7 +477,7 @@ void CSoundMemoryManager::load	(IReader &packet)
 
 		const CClientSpawnManager::CSpawnCallback	*spawn_callback = Level().client_spawn_manager().callback(delayed_object.m_object_id,m_object->ID());
 		if (!spawn_callback || !spawn_callback->m_object_callback)
-			if(!g_dedicated_server)
+			if(!bIsDedicatedServer)
 				Level().client_spawn_manager().add	(delayed_object.m_object_id,m_object->ID(),callback);
 #ifdef DEBUG
 		else {

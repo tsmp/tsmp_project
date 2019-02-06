@@ -52,6 +52,7 @@
 #endif
 
 extern int g_AI_inactive_time;
+extern bool bIsDedicatedServer;
 
 #ifndef MASTER_GOLD
 	Flags32		psAI_Flags	= {0};
@@ -98,11 +99,11 @@ CCustomMonster::~CCustomMonster	()
 
 #ifdef DEBUG
 	Msg							("dumping client spawn manager stuff for object with id %d",ID());
-	if(!g_dedicated_server)
+	if(!bIsDedicatedServer)
 		Level().client_spawn_manager().dump	(ID());
 #endif // DEBUG
 
-	if(!g_dedicated_server)
+	if(!bIsDedicatedServer)
 		Level().client_spawn_manager().clear(ID());
 }
 

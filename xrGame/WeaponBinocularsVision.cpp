@@ -15,6 +15,8 @@
 #include "AI/Monsters/BaseMonster/base_monster.h"
 #include "../igame_persistent.h"
 
+extern bool bIsDedicatedServer;
+
 #define RECT_SIZE	16
 
 extern u32 C_ON_ENEMY;
@@ -186,7 +188,7 @@ CBinocularsVision::~CBinocularsVision()
 
 void CBinocularsVision::Update()
 {
-	if (g_dedicated_server)
+	if (bIsDedicatedServer)
 		return;
 	//-----------------------------------------------------
 	const CActor* pActor = NULL;

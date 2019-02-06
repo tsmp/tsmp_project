@@ -36,6 +36,7 @@ u32		g_sv_dm_dwWarmUp_MaxTime		= 0;
 BOOL	g_sv_dm_bDMIgnore_Money_OnBuy	= FALSE;
 
 extern	int		g_sv_mp_LogHitsEnabled;
+extern bool bIsDedicatedServer;
 
 //-----------------------------------------------------------------
 BOOL				game_sv_Deathmatch::IsDamageBlockIndEnabled	() {return g_sv_dm_bDamageBlockIndicators; };
@@ -1871,7 +1872,7 @@ void game_sv_Deathmatch::OnPlayerConnect(ClientID id_who)
 	ps_who->resetFlag(GAME_PLAYER_FLAG_SKIP);
 	
 
-	if ( (g_dedicated_server||m_bSpectatorMode) && (xrCData == m_server->GetServerClient()) )
+	if ( (bIsDedicatedServer||m_bSpectatorMode) && (xrCData == m_server->GetServerClient()) )
 	{
 		ps_who->setFlag(GAME_PLAYER_FLAG_SKIP);
 		return;
@@ -2197,7 +2198,7 @@ void	game_sv_Deathmatch::ReadOptions				(shared_str &options)
 	g_sv_dm_dwAnomalySetLengthTime = get_option_i(*options, "anslen", g_sv_dm_dwAnomalySetLengthTime); //in (min)
 	//-----------------------------------------------------------------------
 	m_bSpectatorMode = false;
-	if (!g_dedicated_server && (get_option_i(*options,"spectr",-1) != -1))
+	if (!bIsDedicatedServer && (get_option_i(*options,"spectr",-1) != -1))
 	{
 		m_bSpectatorMode = true;
 		m_dwSM_SwitchDelta =  get_option_i(*options,"spectr",0)*1000;

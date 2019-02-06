@@ -15,7 +15,7 @@
 
 #include "debug_renderer.h"
 
-ENGINE_API	bool g_dedicated_server;
+extern	bool bIsDedicatedServer;
 
 #define			MAPROT_LIST_NAME		"maprot_list.ltx"
 string_path		MAPROT_LIST		= "";
@@ -383,7 +383,7 @@ void game_sv_GameState::Create					(shared_str &options)
 		FS.r_close	(F);
 	}
 
-	if (!g_dedicated_server)
+	if (!bIsDedicatedServer)
 	{
 		// loading scripts
 		ai().script_engine().remove_script_process(ScriptEngine::eScriptProcessorGame);
@@ -557,7 +557,7 @@ void game_sv_GameState::Update		()
 		C->ps->ping					= u16(C->stats.getPing());
 	}
 	
-	if (!g_dedicated_server)
+	if (!bIsDedicatedServer)
 	{
 		if (Level().game) {
 			CScriptProcess				*script_process = ai().script_engine().script_process(ScriptEngine::eScriptProcessorGame);
@@ -584,7 +584,7 @@ game_sv_GameState::game_sv_GameState()
 
 game_sv_GameState::~game_sv_GameState()
 {
-	if (!g_dedicated_server)
+	if (!bIsDedicatedServer)
 		ai().script_engine().remove_script_process(ScriptEngine::eScriptProcessorGame);
 	xr_delete(m_event_queue);
 

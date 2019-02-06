@@ -25,6 +25,8 @@
 #include "ui/UIProgressShape.h"
 #include "ui/UIXmlInit.h"
 
+extern bool bIsDedicatedServer;
+
 CUIProgressShape* g_MissileForceShape = NULL;
 
 void create_force_progress()
@@ -137,7 +139,7 @@ void CMissile::spawn_fake_missile()
 		CSE_Abstract		*object = Level().spawn_item(
 			*cNameSect(),
 			Position(),
-			(g_dedicated_server)?u32(-1):ai_location().level_vertex_id(),
+			(bIsDedicatedServer)?u32(-1):ai_location().level_vertex_id(),
 			ID(),
 			true
 		);

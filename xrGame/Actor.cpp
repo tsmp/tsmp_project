@@ -71,6 +71,8 @@ const float		respawn_auto	= 7.f;
 static float IReceived = 0;
 static float ICoincidenced = 0;
 
+extern bool bIsDedicatedServer;
+
 
 //skeleton
 
@@ -182,7 +184,7 @@ CActor::CActor() : CEntityAlive()
 	m_game_task_manager		= NULL;
 	m_statistic_manager		= NULL;
 	//-----------------------------------------------------------------------------------
-	m_memory				= g_dedicated_server ? 0 : xr_new<CActorMemory>(this);
+	m_memory				= bIsDedicatedServer ? 0 : xr_new<CActorMemory>(this);
 	m_bOutBorder			= false;
 	hit_probability			= 1.f;
 	m_feel_touch_characters = 0;
@@ -233,7 +235,7 @@ void CActor::reinit	()
 	material().reinit							();
 
 	m_pUsableObject								= NULL;
-	if (!g_dedicated_server)
+	if (!bIsDedicatedServer)
 		memory().reinit							();
 	
 	set_input_external_handler					(0);
@@ -246,7 +248,7 @@ void CActor::reload	(LPCSTR section)
 	CInventoryOwner::reload		(section);
 	material().reload			(section);
 	CStepManager::reload		(section);
-	if (!g_dedicated_server)
+	if (!bIsDedicatedServer)
 		memory().reload			(section);
 	m_location_manager->reload	(section);
 }
@@ -344,7 +346,7 @@ void CActor::Load	(LPCSTR section )
 
 	//Weapons				= xr_new<CWeaponList> (this);
 
-if(!g_dedicated_server)
+if(!bIsDedicatedServer)
 {
 	LPCSTR hit_snd_sect = pSettings->r_string(section,"hit_sounds");
 	for(int hit_type=0; hit_type<(int)ALife::eHitTypeMax; ++hit_type)
@@ -449,7 +451,7 @@ void	CActor::Hit							(SHit* pHDS)
 	bool bPlaySound = true;
 	if (!g_Alive()) bPlaySound = false;
 
-	if (!IsGameTypeSingle() && !g_dedicated_server)
+	if (!IsGameTypeSingle() && !bIsDedicatedServer)
 	{
 		game_PlayerState* ps = Game().GetPlayerByGameID(ID());
 		if (ps && ps->testFlag(GAME_PLAYER_FLAG_INVINCIBLE))
@@ -480,7 +482,7 @@ void	CActor::Hit							(SHit* pHDS)
 		last_hit_frame = Device.dwFrame;
 	};
 
-	if(	!g_dedicated_server	&& 
+	if(	!bIsDedicatedServer	&& 
 		!sndHit[HDS.hit_type].empty()			&& 
 		(ALife::eHitTypeTelepatic != HDS.hit_type))
 	{
@@ -518,7 +520,7 @@ void	CActor::Hit							(SHit* pHDS)
 	else
 		hit_slowmo = 0.f;
 	//---------------------------------------------------------------
-	if (Level().CurrentViewEntity() == this && !g_dedicated_server && HDS.hit_type == ALife::eHitTypeFireWound)
+	if (Level().CurrentViewEntity() == this && !bIsDedicatedServer && HDS.hit_type == ALife::eHitTypeFireWound)
 	{
 		CObject* pLastHitter = Level().Objects.net_Find(m_iLastHitterID);
 		CObject* pLastHittingWeapon = Level().Objects.net_Find(m_iLastHittingWeaponID);
@@ -533,7 +535,7 @@ void	CActor::Hit							(SHit* pHDS)
 //		mstate_real	&=~mcSprint;
 		mstate_wishful	&=~mcSprint;
 	};
-	if(!g_dedicated_server)
+	if(!bIsDedicatedServer)
 	{
 		HitMark			(HDS.damage(), HDS.dir, HDS.who, HDS.bone(), HDS.p_in_bone_space, HDS.impulse, HDS.hit_type);
 	}
@@ -764,7 +766,7 @@ void CActor::Die(CObject* who)
 	mstate_wishful	&=		~mcAnyMove;
 	mstate_real		&=		~mcAnyMove;
 
-	if(!g_dedicated_server)
+	if(!bIsDedicatedServer)
 	{
 		::Sound->play_at_pos	(sndDie[Random.randI(SND_DIE_COUNT)],this,Position());
 
@@ -1074,7 +1076,7 @@ void CActor::shedule_Update(u32 DT)
 	pCamBobbing->SetState						(mstate_real, conditions().IsLimping(), IsZoomAimingMode());
 
 	//звук тяжелого дыхания при уталости и хромании
-	if(this==Level().CurrentControlEntity() && !g_dedicated_server )
+	if(this==Level().CurrentControlEntity() && !bIsDedicatedServer )
 	{
 		if(conditions().IsLimping() && g_Alive())
 		{

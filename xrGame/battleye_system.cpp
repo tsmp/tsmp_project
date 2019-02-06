@@ -6,6 +6,8 @@
 #include "object_broker.h"
 #include "MainMenu.h"
 
+extern bool bIsDedicatedServer;
+
 #ifdef BATTLEYE
 
 #define BATTLEYE_DIR    "BattlEye"
@@ -271,7 +273,7 @@ void BattlEyeSystem::ReadPacketServer( u32 sender, NET_Packet* pack )
 bool BattlEyeSystem::TestLoadClient()
 {
 	m_test_load_client = false;
-	if ( g_dedicated_server )
+	if ( bIsDedicatedServer )
 	{
 		return true; //false = Error
 	}

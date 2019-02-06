@@ -169,7 +169,7 @@
 #	include "actor_mp_client.h"
 #endif // NO_XR_GAME
 
-ENGINE_API	bool g_dedicated_server;
+extern	bool bIsDedicatedServer;
 
 #ifndef NO_XR_GAME
 #	define ADD(a,b,c,d)			add<a,b>(c,d)
@@ -376,7 +376,7 @@ void CObjectFactory::register_classes	()
 	// and script functionality is not
 	// needed here
 
-	if (!g_dedicated_server)
+	if (!bIsDedicatedServer)
 		return;
 
 	ADD(CElectricBall			,CSE_ALifeItemArtefact			,TEXT2CLSID("SCRPTART")			,"artefact_s");

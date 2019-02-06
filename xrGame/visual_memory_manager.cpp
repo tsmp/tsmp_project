@@ -33,6 +33,8 @@
 #	include "ai_debug.h"
 #endif // MASTER_GOLD
 
+extern bool bIsDedicatedServer;
+
 struct SRemoveOfflinePredicate {
 	bool		operator()						(const CVisibleObject &object) const
 	{
@@ -760,7 +762,7 @@ void CVisualMemoryManager::load	(IReader &packet)
 		const CClientSpawnManager::CSpawnCallback	*spawn_callback = Level().client_spawn_manager().callback(delayed_object.m_object_id,m_object->ID());
 		if (!spawn_callback || !spawn_callback->m_object_callback)
 
-			if(!g_dedicated_server)
+			if(!bIsDedicatedServer)
 				Level().client_spawn_manager().add	(delayed_object.m_object_id,m_object->ID(),callback);
 
 #ifdef DEBUG

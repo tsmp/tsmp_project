@@ -14,6 +14,8 @@
 #include "..\TSMP_BuildConfig.h"
 //#define DEMO_BUILD
 
+extern bool bIsDedicatedServer;
+
 xrGameSpyServer::xrGameSpyServer()
 {
 	m_iReportToMasterServer = 0;
@@ -179,7 +181,7 @@ void			xrGameSpyServer::Update				()
 int	xrGameSpyServer::GetPlayersCount() 
 {
 	int NumPlayers = client_Count();
-	if (!g_dedicated_server || NumPlayers < 1)
+	if (!bIsDedicatedServer || NumPlayers < 1)
 	{
 	     return NumPlayers;		
 	}
@@ -197,7 +199,8 @@ bool			xrGameSpyServer::NeedToCheckClient_GameSpy_CDKey	(IClient* CL)
 {
 	if (0 != strstr(Core.Params, "-check_cd_key"))
 	{
-		if (!m_bCDKey_Initialized || (CL == GetServerClient() && g_dedicated_server))
+		if (!m_bCDKey_Initialized || (CL == GetServerClient() && 
+			bIsDedicatedServer))
 		{
 			return false;
 		};

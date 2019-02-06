@@ -58,11 +58,11 @@ void CObjectFactory::register_script_class			(LPCSTR unknown_class, LPCSTR clsid
 	);
 }
 
-ENGINE_API	bool g_dedicated_server;
+extern	bool bIsDedicatedServer;
 
 void CObjectFactory::register_script_classes()
 {
-	if (!g_dedicated_server)
+	if (!bIsDedicatedServer)
 		ai();
 }
 

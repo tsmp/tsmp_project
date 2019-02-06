@@ -15,16 +15,10 @@
 #pragma comment(lib,"ode.lib")
 #pragma comment(lib,"xr_3da.lib")
 
-#ifdef NDEBUG
-//namespace std {
-//	void terminate()
-//	{
-//		abort();
-//	}
-//}
-#endif // #ifdef NDEBUG
+bool bIsDedicatedServer;
 
-extern "C" {
+extern "C" 
+{
 	DLL_API DLL_Pure*	__cdecl xrFactory_Create		(CLASS_ID clsid)
 	{
 		DLL_Pure			*object = object_factory().client_object(clsid);
@@ -48,8 +42,10 @@ extern void CCC_RegisterCommands();
 
 BOOL APIENTRY DllMain(HANDLE hModule, u32 ul_reason_for_call, LPVOID lpReserved)
 {
-	switch (ul_reason_for_call) {
-		case DLL_PROCESS_ATTACH: {
+	switch (ul_reason_for_call) 
+	{
+		case DLL_PROCESS_ATTACH: 
+		{
 			// register console commands
 			CCC_RegisterCommands();
 			// keyboard binding
@@ -57,6 +53,7 @@ BOOL APIENTRY DllMain(HANDLE hModule, u32 ul_reason_for_call, LPVOID lpReserved)
 #ifdef DEBUG
 			g_profiler			= xr_new<CProfiler>();
 #endif
+			bIsDedicatedServer = g_dedicated_server;
 			break;
 		}
 

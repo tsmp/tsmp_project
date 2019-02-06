@@ -40,12 +40,14 @@ extern void dump_list_xmls							();
 extern void CreateUIGeom							();
 extern void DestroyUIGeom							();
 
+extern bool bIsDedicatedServer;
+
 #include "../IGame_Persistent.h"
 void init_game_globals()
 {
 	CreateUIGeom									();
 
-	if(!g_dedicated_server)
+	if(!bIsDedicatedServer)
 	{
 		CInfoPortion::InitInternal						();
 		CEncyclopediaArticle::InitInternal				();
@@ -78,7 +80,7 @@ void clean_game_globals()
 	story_ids.clear									();
 	spawn_story_ids.clear							();
 
-	if(!g_dedicated_server)
+	if(!bIsDedicatedServer)
 	{
 		CInfoPortion::DeleteSharedData					();
 		CInfoPortion::DeleteIdToIndexData				();

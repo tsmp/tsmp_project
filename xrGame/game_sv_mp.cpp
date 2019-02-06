@@ -48,6 +48,7 @@ std::string		g_sv_mp_loader_ip =  "0.0.0.0" ;
 std::string		g_sv_mp_loader_port = "4554" ;
 
 extern xr_token	round_end_result_str[];
+extern bool bIsDedicatedServer;
 
 #include "ui\UIBuyWndShared.h"
 
@@ -55,7 +56,7 @@ game_sv_mp::game_sv_mp() :inherited()
 {
 	m_strWeaponsData		= xr_new<CItemMgr>();
 
-	if (g_dedicated_server) OnTimersStart();
+	if (bIsDedicatedServer) OnTimersStart();
 	if (!(0 != strstr(Core.Params, "-enable_name_change"))) g_sv_mp_nickname_change_mode = 1;
 
 	m_aRanks.clear();	
@@ -1720,7 +1721,7 @@ void game_sv_mp::DumpOnlineStatistic()
 	{
 		xrClientData *l_pC			= (xrClientData*)m_server->client_Get(idx);
 		
-		if(m_server->GetServerClient()==l_pC && g_dedicated_server)  continue;
+		if(m_server->GetServerClient()==l_pC && bIsDedicatedServer)  continue;
 		
 		if(!l_pC->net_Ready) continue;
 
@@ -1799,7 +1800,7 @@ void game_sv_mp::DumpRoundStatistics()
 	for(u32 idx=0; idx<m_server->client_Count(); ++idx)
 	{
 		xrClientData *l_pC			= (xrClientData*)m_server->client_Get(idx);
-		if(m_server->GetServerClient()==l_pC && g_dedicated_server) continue;
+		if(m_server->GetServerClient()==l_pC && bIsDedicatedServer) continue;
 
 		string16					num_buf;
 		sprintf_s					(num_buf,"player_%d",idx);

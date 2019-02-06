@@ -13,8 +13,8 @@
 
 #ifdef BATTLEYE
 
-extern		int		g_be_message_out;
-ENGINE_API	bool	g_dedicated_server;
+extern	int		g_be_message_out;
+extern	bool	bIsDedicatedServer;
 
 BattlEyeServer::BattlEyeServer( xrServer* Server )
 {
@@ -39,9 +39,6 @@ BattlEyeServer::BattlEyeServer( xrServer* Server )
 		Msg( "! Error LoadLibrary %s", BATTLEYE_SERVER_DLL );
 		return;
 	}
-//	string_path		path_dll;
-//	GetModuleFileName( m_module, path_dll, sizeof(path_dll) );
-//	Level().battleye_system.SetServerPath( path_dll );
 
 	Init = (InitSrv_t)( GetProcAddress( m_module, "Init" ) );//=
 	if ( !Init )
@@ -106,7 +103,7 @@ void BattlEyeServer::AddConnectedPlayers() // if net_Ready
 
 void BattlEyeServer::AddConnected_OnePlayer( xrClientData* CL )
 {
-	if ( g_dedicated_server && (CL->ID.value() == Level().Server->GetServerClient()->ID.value()) )
+	if ( bIsDedicatedServer && (CL->ID.value() == Level().Server->GetServerClient()->ID.value()) )
 	{
 		return;
 	}

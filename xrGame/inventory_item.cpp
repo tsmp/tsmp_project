@@ -27,6 +27,8 @@
 #	include "debug_renderer.h"
 #endif
 
+extern bool bIsDedicatedServer;
+
 #define ITEM_REMOVE_TIME		30000
 struct net_update_IItem {	u32					dwTimeStamp;
 SPHNetState			State;};
@@ -303,7 +305,7 @@ bool CInventoryItem::Detach(const char* item_section_name, bool b_spawn_item)
 								smart_cast<CSE_ALifeDynamicObject*>(D);
 		R_ASSERT			(l_tpALifeDynamicObject);
 		
-		l_tpALifeDynamicObject->m_tNodeID = (g_dedicated_server)?u32(-1):object().ai_location().level_vertex_id();
+		l_tpALifeDynamicObject->m_tNodeID = (bIsDedicatedServer)?u32(-1):object().ai_location().level_vertex_id();
 			
 		// Fill
 		D->s_name			=	item_section_name;

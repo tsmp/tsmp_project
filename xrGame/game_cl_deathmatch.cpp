@@ -26,6 +26,8 @@
 
 #include "ActorCondition.h"
 
+extern bool bIsDedicatedServer;
+
 #ifdef _new_buy_wnd
 	#include	"ui\UIMpTradeWnd.h"
 #else
@@ -411,7 +413,7 @@ void game_cl_Deathmatch::shedule_Update			(u32 dt)
 
 	inherited::shedule_Update(dt);
 
-	if(g_dedicated_server)	return;
+	if(bIsDedicatedServer)	return;
 
 	//fake	
 	if(!m_game_ui && HUD().GetUI() ) m_game_ui = smart_cast<CUIGameDM*>( HUD().GetUI()->UIGame() );

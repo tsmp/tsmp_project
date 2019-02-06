@@ -34,7 +34,7 @@
 #	include "PHDebug.h"
 #endif
 
-ENGINE_API bool g_dedicated_server;
+extern bool bIsDedicatedServer;
 
 CGameObject::CGameObject		()
 {
@@ -44,7 +44,7 @@ CGameObject::CGameObject		()
 	m_dwCrPr_ActivationStep		= 0;
 	m_spawn_time				= 0;
 
-	m_ai_location				= !g_dedicated_server ? xr_new<CAI_ObjectLocation>() : 0;
+	m_ai_location				= !bIsDedicatedServer ? xr_new<CAI_ObjectLocation>() : 0;
 	m_server_flags.one			();
 
 	m_callbacks					= xr_new<CALLBACK_MAP>();
@@ -84,7 +84,7 @@ void CGameObject::reinit	()
 {
 	m_visual_callback.clear	();
 
-	if (!g_dedicated_server)
+	if (!bIsDedicatedServer)
         ai_location().reinit	();
 
 	// clear callbacks	
@@ -288,11 +288,11 @@ BOOL CGameObject::net_Spawn		(CSE_Abstract*	DC)
 	}
 
 	reload						(*cNameSect());
-	if(!g_dedicated_server)
+	if(!bIsDedicatedServer)
 		CScriptBinder::reload	(*cNameSect());
 	
 	reinit						();
-	if(!g_dedicated_server)
+	if(!bIsDedicatedServer)
 		CScriptBinder::reinit	();
 #ifdef DEBUG
 	if(ph_dbg_draw_mask1.test(ph_m1_DbgTrackObject)&&stricmp(PH_DBG_ObjectTrack(),*cName())==0)
@@ -805,7 +805,7 @@ void CGameObject::shedule_Update	(u32 dt)
 	// Msg							("-SUB-:[%x][%s] CGameObject::shedule_Update",smart_cast<void*>(this),*cName());
 	inherited::shedule_Update	(dt);
 	
-	if(!g_dedicated_server)
+	if(!bIsDedicatedServer)
 		CScriptBinder::shedule_Update(dt);
 }
 
@@ -868,7 +868,7 @@ u32	CGameObject::ef_detector_type		() const
 void CGameObject::net_Relcase			(CObject* O)
 {
 	inherited::net_Relcase		(O);
-	if(!g_dedicated_server)
+	if(!bIsDedicatedServer)
 		CScriptBinder::net_Relcase	(O);
 }
 

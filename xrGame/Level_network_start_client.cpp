@@ -10,6 +10,7 @@
 #include "ai_space.h"
 
 extern	pureFrame*				g_pNetProcessor;
+extern bool bIsDedicatedServer;
 
 BOOL CLevel::net_Start_client	( LPCSTR options )
 {
@@ -140,7 +141,7 @@ bool	CLevel::net_start_client5				()
 		// HUD
 
 		// Textures
-		if	(!g_dedicated_server)
+		if	(!bIsDedicatedServer)
 		{
 			pHUD->Load							();
 			g_pGamePersistent->LoadTitle				("st_loading_textures");

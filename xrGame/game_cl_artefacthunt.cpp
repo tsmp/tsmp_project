@@ -25,6 +25,8 @@
 #include "string_table.h"
 #include "CustomOutfit.h"
 
+extern bool bIsDedicatedServer;
+
 #define TEAM0_MENU		"artefacthunt_team0"
 #define	TEAM1_MENU		"artefacthunt_team1"
 #define	TEAM2_MENU		"artefacthunt_team2"
@@ -344,7 +346,7 @@ void game_cl_ArtefactHunt::shedule_Update			(u32 dt)
 
 	inherited::shedule_Update		(dt);
 
-	if(g_dedicated_server)	return;
+	if(bIsDedicatedServer)	return;
 
 	//out game information
 //	m_game_ui->SetReinforcementCaption("");

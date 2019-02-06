@@ -19,6 +19,8 @@
 
 #include "object_broker.h"
 
+extern bool bIsDedicatedServer;
+
 //#define DEMO_BUILD
 
 string128	ErrMsgBoxTemplate	[]	= {
@@ -69,7 +71,7 @@ CMainMenu::CMainMenu	()
 	m_NeedErrDialog					= ErrNoError;
 	m_start_time					= 0;
 
-	if(!g_dedicated_server)
+	if(!bIsDedicatedServer)
 	{
 		g_btnHint						= xr_new<CUIButtonHint>();
 		m_pGameSpyFull					= xr_new<CGameSpy_Full>();
@@ -133,7 +135,7 @@ void CMainMenu::Activate	(bool bActivate)
 
 	bool b_is_single		= IsGameTypeSingle();
 
-	if(g_dedicated_server && bActivate) return;
+	if(bIsDedicatedServer && bActivate) return;
 
 	if(bActivate)
 	{

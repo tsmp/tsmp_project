@@ -176,6 +176,7 @@ public:
 
 extern		ENGINE_API		CRenderDevice		Device;
 extern		ENGINE_API		bool				g_bBenchmark;
+extern		ENGINE_API		bool				g_dedicated_server;
 
 typedef fastdelegate::FastDelegate0<bool>		LOADING_EVENT;
 extern	ENGINE_API xr_list<LOADING_EVENT>		g_loading_events;

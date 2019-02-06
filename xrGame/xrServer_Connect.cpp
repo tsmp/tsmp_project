@@ -11,6 +11,7 @@
 
 #include "sysmsgs.h"
 
+extern bool bIsDedicatedServer;
 extern std::string g_sv_mp_loader_ip;
 extern int g_sv_mp_ModLoaderEnabled;
 bool bIsSysMsgsDllLoaded = false;
@@ -173,7 +174,7 @@ void xrServer::UnloadDll()
 
 void xrServer::AttachNewClient(IClient* CL)
 {
-	if (g_dedicated_server)
+	if (bIsDedicatedServer)
 	{
 		if (g_sv_mp_ModLoaderEnabled == 1)
 		{

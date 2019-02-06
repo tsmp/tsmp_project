@@ -17,6 +17,8 @@
 #include <fstream>
 #include <thread>
 
+extern bool bIsDedicatedServer;
+
 #define TSMP_MAPLIST_URL "http://dark-stalker.clan.su/tsmp/tsmp_maplist.txt"
 
 CMainMenu *Men;
@@ -271,7 +273,7 @@ bool xr_stdcall net_start_finalizer()
 			MainMenu()->OnLoadError("BattlEye/BEServer.dll");
 		}
 		else
-		if(g_connect_server_err==xrServer::ErrConnect && !psNET_direct_connect && !g_dedicated_server) 
+		if(g_connect_server_err==xrServer::ErrConnect && !psNET_direct_connect && !bIsDedicatedServer) 
 		{
 			MainMenu()->SwitchToMultiplayerMenu();
 		}else
@@ -297,6 +299,20 @@ bool xr_stdcall net_start_finalizer()
 
 				if (GetFileAttributes(Arch.c_str()) != DWORD(-1))
 				{
+					std::string SS = ln.c_str();
+					SS += ".xdb0";
+
+					IReader* r = FS.r_open("$app_data_root$", SS.c_str());
+					u32 m_crc32 = crc32(r->pointer(), r->length());
+					FS.r_close(r);
+
+					char str11[80];
+					sprintf(str11, "%x", m_crc32);
+
+					Msg("crc %i %s",m_crc32,str11);
+
+					
+
 					Msg("map exists, loading");
 
 					string_path sp;
@@ -472,7 +488,7 @@ bool CLevel::net_start6()
 			Console->Execute		(buf);
 		}
 
-		if	(!g_dedicated_server)
+		if	(!bIsDedicatedServer)
 		{
 			if (g_hud)
 				HUD().GetUI()->OnConnected();

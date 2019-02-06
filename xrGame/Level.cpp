@@ -54,7 +54,7 @@
 #	include "physicobject.h"
 #endif
 
-ENGINE_API bool g_dedicated_server;
+extern bool bIsDedicatedServer;
 
 extern BOOL	g_bDebugDumpPhysicsStep;
 
@@ -90,7 +90,7 @@ CLevel::CLevel():IPureClient	(Device.GetTimerGlobal())
 
 	m_pBulletManager			= xr_new<CBulletManager>();
 
-	if(!g_dedicated_server)
+	if(!bIsDedicatedServer)
 		m_map_manager				= xr_new<CMapManager>();
 	else
 		m_map_manager				= NULL;
@@ -106,7 +106,7 @@ CLevel::CLevel():IPureClient	(Device.GetTimerGlobal())
 	physics_step_time_callback	= (PhysicsStepTimeCallback*) &PhisStepsCallback;
 	m_seniority_hierarchy_holder= xr_new<CSeniorityHierarchyHolder>();
 
-	if(!g_dedicated_server)
+	if(!bIsDedicatedServer)
 	{
 		m_level_sound_manager		= xr_new<CLevelSoundManager>();
 		m_space_restriction_manager = xr_new<CSpaceRestrictionManager>();
@@ -243,7 +243,7 @@ CLevel::~CLevel()
 	xr_delete					(m_debug_renderer);
 #endif
 
-	if (!g_dedicated_server)
+	if (!bIsDedicatedServer)
 		ai().script_engine().remove_script_process(ScriptEngine::eScriptProcessorLevel);
 
 	xr_delete					(game);
@@ -483,13 +483,13 @@ void CLevel::OnFrame	()
 
 	if (m_bNeed_CrPr)					make_NetCorrectionPrediction();
 
-	if(!g_dedicated_server)
+	if(!bIsDedicatedServer)
 		MapManager().Update		();
 	// Inherited update
 	inherited::OnFrame		();
 
 	// Draw client/server stats
-	if ( !g_dedicated_server && psDeviceFlags.test(rsStatistic))
+	if ( !bIsDedicatedServer && psDeviceFlags.test(rsStatistic))
 	{
 		CGameFont* F = HUD().Font().pFontDI;
 		if (!psNET_direct_connect) 
@@ -554,7 +554,7 @@ void CLevel::OnFrame	()
 
 
 
-	if (!g_dedicated_server)
+	if (!bIsDedicatedServer)
 		ai().script_engine().script_process	(ScriptEngine::eScriptProcessorLevel)->update();
 	
 	m_ph_commander->update				();
@@ -566,7 +566,7 @@ void CLevel::OnFrame	()
 	Device.Statistic->TEST0.End			();
 
 	// update static sounds
-	if(!g_dedicated_server)
+	if(!bIsDedicatedServer)
 	{
 		if (g_mt_config.test(mtLevelSounds)) 
 			Device.seqParallel.push_back	(fastdelegate::FastDelegate0<>(m_level_sound_manager,&CLevelSoundManager::Update));
@@ -574,7 +574,7 @@ void CLevel::OnFrame	()
 			m_level_sound_manager->Update	();
 	}
 	// deffer LUA-GC-STEP
-	if (!g_dedicated_server)
+	if (!bIsDedicatedServer)
 	{
 		if (g_mt_config.test(mtLUA_GC))	Device.seqParallel.push_back	(fastdelegate::FastDelegate0<>(this,&CLevel::script_gc));
 		else							script_gc	()	;

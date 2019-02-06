@@ -7,6 +7,7 @@
 CUICursor*	GetUICursor		()	{return UI()->GetUICursor();};
 ui_core*	UI				()	{return GamePersistent().m_pUI_core;};
 extern ENGINE_API Fvector2		g_current_font_scale;
+extern bool bIsDedicatedServer;
 
 void S2DVert::rotate_pt(const Fvector2& pivot, float cosA, float sinA, float kx)
 {
@@ -191,7 +192,7 @@ void ui_core::PopScissor()
 
 ui_core::ui_core()
 {
-	if(!g_dedicated_server)
+	if(!bIsDedicatedServer)
 	{
 		m_pUICursor					= xr_new<CUICursor>();
 		m_pFontManager				= xr_new<CFontManager>();

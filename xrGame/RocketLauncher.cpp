@@ -11,6 +11,8 @@
 #include "ai_object_location.h"
 #include "../IGame_Persistent.h"
 
+extern bool bIsDedicatedServer;
+
 CRocketLauncher::CRocketLauncher()
 {
 //	m_pRocket =  NULL;
@@ -32,7 +34,7 @@ void CRocketLauncher::SpawnRocket(LPCSTR rocket_section, CGameObject* parent_roc
 	R_ASSERT			(D);
 	CSE_Temporary		*l_tpTemporary = smart_cast<CSE_Temporary*>(D);
 	R_ASSERT			(l_tpTemporary);
-	l_tpTemporary->m_tNodeID	= (g_dedicated_server)?u32(-1) : parent_rocket_launcher->ai_location().level_vertex_id();
+	l_tpTemporary->m_tNodeID	= (bIsDedicatedServer)?u32(-1) : parent_rocket_launcher->ai_location().level_vertex_id();
 	// Fill
 	D->s_name			= rocket_section;
 	D->set_name_replace	("");
