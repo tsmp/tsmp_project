@@ -14,12 +14,11 @@
 #include "client_spawn_manager.h"
 #include "seniority_hierarchy_holder.h"
 
-extern bool bIsDedicatedServer;
-
 const int max_objects_size = 2 * 1024;
 const int max_objects_size_in_save = 6 * 1024;
 
 extern bool	g_b_ClearGameCaptions;
+extern bool bIsDedicatedServer;
 
 void CLevel::remove_objects()
 {
@@ -186,13 +185,14 @@ void CLevel::ClientSend()
 			Send(P, net_flags(FALSE));
 			Device.Statistic->TEST3.End();
 		}
-		else break;
+		else 
+			break;
 	}
 }
 
 u32	CLevel::Objects_net_Save(NET_Packet* _Packet, u32 start, u32 max_object_size)
 {
-	NET_Packet& Packet = *_Packet;
+	NET_Packet &Packet = *_Packet;
 
 	u32	position;
 
@@ -244,12 +244,13 @@ void CLevel::ClientSave()
 	}
 }
 
-extern		float		phTimefactor;
-extern		BOOL		g_SV_Disable_Auth_Check;
+extern floa phTimefactor;
+extern BOOL g_SV_Disable_Auth_Check;
 
 void CLevel::Send(NET_Packet& P, u32 dwFlags, u32 dwTimeout)
 {
-	if (IsDemoPlay() && m_bDemoStarted) return;
+	if (IsDemoPlay() && m_bDemoStarted) 
+		return;
 	// optimize the case when server located in our memory
 
 	if (psNET_direct_connect) 
@@ -353,7 +354,10 @@ BOOL CLevel::Connect2Server(LPCSTR options)
 		}
 	}
 
-	Msg("%c client : connection %s - <%s>", m_bConnectResult ? '*' : '!', m_bConnectResult ? "accepted" : "rejected", m_sConnectResult.c_str());
+	if(m_bConnectResult)
+		Msg("* client : connection accepted - <%s>", m_sConnectResult.c_str());
+	else 
+		Msg("! client : connection rejected - <%s>", m_sConnectResult.c_str());
 	
 	if (!m_bConnectResult)
 	{
