@@ -82,7 +82,7 @@
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">X:\include\dx9sdk\include;X:\include;$(IncludePath)</IncludePath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">X:\libraries\Debug;X:\libraries;$(LibraryPath)</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">X:\libraries;$(LibraryPath)</LibraryPath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)\components\libogg\include;$(SolutionDir)\components\libvorbis\include;$(SolutionDir)\components\loki;$(SolutionDir)\xrLua\src;$(SolutionDir)\components\luabind;$(SolutionDir)\xrOpenAL\include\AL;$(SolutionDir)\components\eax\Include;$(SolutionDir)\components;$(SolutionDir)\components\dx9sdk\include;$(SolutionDir)\xrCore;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)\components\libogg\include;$(SolutionDir)\components\libvorbis\include;$(SolutionDir)\components\loki;$(SolutionDir)\xrLua\src;$(SolutionDir)\components\luabind;$(SolutionDir)\components\OpenAL\include\AL;$(SolutionDir)\components\eax\Include;$(SolutionDir)\components;$(SolutionDir)\components\dx9sdk\include;$(SolutionDir)\xrCore;$(IncludePath)</IncludePath>
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">X:\components\libvorbis\include;X:\components\loki;X:\xrLua\src;X:\components\luabind;X:\xrOpenAL\include\AL;X:\components\eax\Include;X:\components;X:\components\dx9sdk\include;X:\xrCore;$(IncludePath)</IncludePath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)\components\libs;X:\components\dx9sdk\lib;$(SolutionDir)\output\libraries_Release\;$(LibraryPath)</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">X:\components\dx9sdk\lib64;X:\output\libraries_x64;$(LibraryPath)</LibraryPath>
@@ -361,10 +361,6 @@
     </ProjectReference>
     <ProjectReference Include="..\xrCore\xrCore.vcxproj">
       <Project>{a0f7d1fb-59a7-4717-a7e4-96f37e91998e}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-    <ProjectReference Include="..\xrOpenAL\OpenAL-Windows\Router\Router.vcxproj">
-      <Project>{566551f4-4ef1-4cb4-a131-f982e7606907}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
   </ItemGroup>

@@ -242,9 +242,9 @@ void CLevel::ClientSave()
 		else
 			break;
 	}
-}
+};
 
-extern floa phTimefactor;
+extern float phTimefactor;
 extern BOOL g_SV_Disable_Auth_Check;
 
 void CLevel::Send(NET_Packet& P, u32 dwFlags, u32 dwTimeout)
