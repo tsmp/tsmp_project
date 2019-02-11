@@ -2,11 +2,12 @@
 #include <fstream>
 #include <vector>
 #include <string>
+#include <algorithm>
 
 using namespace std;
 
-std::vector<std::string> StrVec;
-std::vector<std::string> StrVec2;
+std::vector<std::string>	StrVec;
+std::vector<std::string>	StrVec2;
 
 std::vector<std::string>	WeaponVec;
 std::vector<int>			WeaponCount;
@@ -14,26 +15,23 @@ std::vector<int>			WeaponCount;
 std::vector<std::string>	PlayerVec;
 std::vector<int>			PlayerCount;
 
-void SortWeapons()
+std::string					Path;
+std::ofstream				Log;
+
+void SortVectors(std::vector<int> &iVec, std::vector<std::string> &sVec)
 {
 	bool changed = true;
 
 	while (changed)
 	{
-		for (size_t i = 0; i < (WeaponCount.size() - 1); i++)
+		changed = false;
+
+		for (size_t i = 0; i < (iVec.size() - 1); i++)
 		{
-			changed = false;
-
-			if (WeaponCount[i] < WeaponCount[i + 1])
+			if (iVec[i] < iVec[i + 1])
 			{
-				int temp = WeaponCount[i];
-				std::string tempstr= WeaponVec[i];
-
-				WeaponCount[i] = WeaponCount[i + 1];
-				WeaponCount[i + 1] = temp;
-
-				WeaponVec[i] = WeaponVec[i + 1];
-				WeaponVec[i + 1] = temp;
+				std::swap(iVec[i], iVec[i + 1]);
+				std::swap(sVec[i], sVec[i + 1]);
 
 				changed = true;
 			}
@@ -41,41 +39,41 @@ void SortWeapons()
 	}
 }
 
-void AddWeapon(std::string str)
+void AddElement(std::string Name, std::vector<int> &iVec, std::vector<std::string> &sVec)
 {
 	bool bFound = false;
-	
-	for (size_t i = 0; i < WeaponVec.size(); ++i)
+
+	for (size_t i = 0; i < sVec.size(); ++i)
 	{
-		if (WeaponVec[i] == str)
+		if (sVec[i] == Name)
 		{
-			WeaponCount[i]++;
+			iVec[i]++;
 			bFound = true;
-		}	
+		}
 	}
 
-	if(!bFound)
-	{	
-		WeaponVec.push_back(str);
-		WeaponCount.push_back(1);
-	}
-};
-
-void ShowWeaponStats()
-{
-	for (size_t i = 0; i < WeaponVec.size(); i++)
+	if (!bFound)
 	{
-		cout << WeaponCount[i] <<" "<< WeaponVec[i] << endl;
+		sVec.push_back(Name);
+		iVec.push_back(1);
 	}
-};
+}
 
-void Read()
+void LogStatisticsFromVectors(std::vector<int> &iVec, std::vector<std::string> &sVec)
 {
-	cout << "reading log"<<endl;
+	for (size_t i = 0; i < sVec.size(); i++)
+	{
+		Log << i + 1 << ". " << iVec[i] << " " << sVec[i] << endl;
+	}
+}
+
+void ReadLog()
+{
+	cout << "Чтение лога"<<endl;
 
 	int same = 0;
 	std::string s, s1;
-	std::ifstream file("C:\\logs\\log1.txt");
+	std::ifstream file(Path);
 
 	while (true)
 	{
@@ -96,13 +94,11 @@ void Read()
 	}
 
 	file.close();
-
-	cout << "reading finished" << endl;	
 }
 
-void Process()
+void RemoveUnused()
 {
-	cout << "processing log" << endl;
+	cout << "Обработка лога" << endl;
 
 	for (long i = 0; i < StrVec.size(); ++i)
 	{
@@ -128,7 +124,7 @@ void Process()
 		}
 	}
 
-	cout << "detaching weapon names" << endl;
+	cout << "Сбор статистики оружия" << endl;
 
 	for (long i = 0; i < StrVec2.size(); ++i)
 	{		
@@ -141,52 +137,15 @@ void Process()
 		strcpy(tmp_ch, src+ot.size());
 		wpn = tmp_ch;
 
-		AddWeapon(wpn);		
+		AddElement(wpn, WeaponCount, WeaponVec);		
 	}
-	
-	cout <<"Строк: "<< StrVec.size() << endl;
-	cout <<"Убийств: "<< StrVec2.size() << endl;
 
-	SortWeapons();
-	ShowWeaponStats();
+	SortVectors(WeaponCount, WeaponVec);
 }
-
-void AddPlayer(std::string str)
-{
-	bool bFound = false;
-
-	for (size_t i = 0; i < PlayerVec.size(); ++i)
-	{
-		if (PlayerVec[i] == str)
-		{
-			PlayerCount[i]++;
-			bFound = true;
-		}
-	}
-
-	if (!bFound)
-	{
-		PlayerVec.push_back(str);
-		PlayerCount.push_back(1);
-	}
-};
-
-void ShowPlayersStats()
-{
-	for (size_t i = 0; i < PlayerVec.size(); i++)
-	{
-		cout << PlayerCount[i] << " " << PlayerVec[i] << endl;
-	}
-};
 
 void ProcessPlayers()
 {
-//	killed himself
-//		killed by anomaly
-//	админ killed Maksim от ИЛ86в голову!!!
-
-	std::ofstream output;
-	output.open("C:\\logs\\players_stats.txt");
+	cout << "Сбор статистики игроков" << endl;
 
 	for (long i = 0; i < StrVec2.size(); ++i)
 	{
@@ -218,33 +177,48 @@ void ProcessPlayers()
 		strncpy(tmp_ch, StrVec2[i].c_str(), Move);
 		pl = tmp_ch;
 
-		//cout << pl << endl;
-		AddPlayer(pl);
+		AddElement(pl, PlayerCount, PlayerVec);
 	}
-
-	ShowPlayersStats();
-
 	
-		for (size_t i = 0; i < PlayerVec.size(); i++)
-		{
-			output << PlayerCount[i] << " " << PlayerVec[i] << endl;
-		}
-	
+	SortVectors(PlayerCount, PlayerVec);
+}
 
-	cout <<"Игроков : "<< PlayerVec.size() << endl;
+void ShowResults()
+{
+	Log.open(Path + "_xrStats.txt");
 
-	output.close();
+	Log << endl << "		Общая статистика:" << endl;
+	Log << "Строк: " << StrVec.size() << endl;
+	Log << "Убийств: " << StrVec2.size() << endl;
+	Log << "Игроков : " << PlayerVec.size() << endl;
 
+	Log << endl << "		Статистика использования оружия:" << endl;
+	LogStatisticsFromVectors(WeaponCount, WeaponVec);
+
+	Log << endl << "		Статистика фрагов игроков:" << endl;
+	LogStatisticsFromVectors(PlayerCount,PlayerVec);
+
+	Log.close();
+
+	cout << "Готово" << endl;
+}
+
+void InputPath()
+{
+	cout << " Введите путь к логу " << endl;
+	cin >> Path;
 }
 
 int main()
 {
 	setlocale(LC_ALL, "rus");
 
-	Read();
-	Process();
-//	ProcessPlayers();
-	
+	InputPath		();
+	ReadLog			();
+	RemoveUnused	();
+	ProcessPlayers	();
+	ShowResults		();
+
 	system("pause");
 	return 0;
 }
