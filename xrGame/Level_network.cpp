@@ -140,33 +140,30 @@ void CLevel::ClientSend()
 
 	CObject* pObj = CurrentControlEntity();
 
-	if (pObj)
+	if (pObj && !pObj->getDestroy() && pObj->net_Relevant())
 	{
-		if (!pObj->getDestroy() && pObj->net_Relevant())
+		P.w_begin(M_CL_UPDATE);
+
+		P.w_u16(u16(pObj->ID()));
+		P.w_u32(0);	//reserved place for client's ping
+
+		pObj->net_Export(P);
+
+		if (P.B.count > 9)
 		{
-			P.w_begin(M_CL_UPDATE);
-
-			P.w_u16(u16(pObj->ID()));
-			P.w_u32(0);	//reserved place for client's ping
-
-			pObj->net_Export(P);
-
-			if (P.B.count > 9)
+			if (OnServer())
 			{
-				if (OnServer())
+				if (net_IsSyncronised() && IsDemoSave())
 				{
-					if (net_IsSyncronised() && IsDemoSave())
-					{
-						DemoCS.Enter();
-						Demo_StoreData(P.B.data, P.B.count, DATA_CLIENT_PACKET);
-						DemoCS.Leave();
-					}
+					DemoCS.Enter();
+					Demo_StoreData(P.B.data, P.B.count, DATA_CLIENT_PACKET);
+					DemoCS.Leave();
 				}
-				else
-					Send(P, net_flags(FALSE));
 			}
+			else
+				Send(P, net_flags(FALSE));
 		}
-	};
+	}
 
 	if (OnClient())
 	{

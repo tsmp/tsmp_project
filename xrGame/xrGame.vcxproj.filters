@@ -6542,6 +6542,7 @@
     </ClInclude>
     <ClInclude Include="..\xr_3da\doug_lea_memory_allocator.h" />
     <ClInclude Include="TSMP_Timers.h" />
+    <ClInclude Include="TSMP_HitProcessor.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="damage_manager.cpp">
@@ -9666,6 +9667,7 @@
     </ClCompile>
     <ClCompile Include="..\xr_3da\doug_lea_memory_allocator.c" />
     <ClCompile Include="TSMP_Timers.cpp" />
+    <ClCompile Include="TSMP_HitProcessor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuildStep Include="graph_abstract.h">

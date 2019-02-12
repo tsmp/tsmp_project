@@ -5,6 +5,7 @@
 #include "../../xrNetServer/client_id.h"
 #include "Hit.h"
 #include "../pure_relcase.h"
+#include "TSMP_HitProcessor.h"
 
 class	game_sv_Deathmatch			: public game_sv_mp,private pure_relcase
 {
@@ -35,6 +36,8 @@ protected:
 	u32								m_TeamEliminatedDelay;
 
 	shared_str							m_sBaseWeaponCostSection;
+
+	HitProcessor hit_proc;
 		
 	xr_vector<game_TeamState>		teams;//dm,tdm,ah	
 

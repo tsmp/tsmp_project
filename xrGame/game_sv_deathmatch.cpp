@@ -21,9 +21,10 @@
 #include "ui\UIBuyWndShared.h"
 #include "../xr_ioconsole.h"
 
+
+
 #define UNBUYABLESLOT		20
 
-//-----------------------------------------------------------------
 u32		g_sv_dm_dwForceRespawn			= 0;
 s32		g_sv_dm_dwFragLimit				= 10;
 s32		g_sv_dm_dwTimeLimit				= 0;
@@ -38,7 +39,6 @@ BOOL	g_sv_dm_bDMIgnore_Money_OnBuy	= FALSE;
 extern	int		g_sv_mp_LogHitsEnabled;
 extern bool bIsDedicatedServer;
 
-//-----------------------------------------------------------------
 BOOL				game_sv_Deathmatch::IsDamageBlockIndEnabled	() {return g_sv_dm_bDamageBlockIndicators; };
 s32					game_sv_Deathmatch::GetTimeLimit			() {return g_sv_dm_dwTimeLimit; };
 s32					game_sv_Deathmatch::GetFragLimit			() {return g_sv_dm_dwFragLimit; };
@@ -47,178 +47,6 @@ u32					game_sv_Deathmatch::GetForceRespawn			() {return g_sv_dm_dwForceRespawn;
 u32					game_sv_Deathmatch::GetWarmUpTime			() {return g_sv_dm_dwWarmUp_MaxTime; };
 BOOL				game_sv_Deathmatch::IsAnomaliesEnabled		() {return g_sv_dm_bAnomaliesEnabled; };
 u32					game_sv_Deathmatch::GetAnomaliesTime		() {return g_sv_dm_dwAnomalySetLengthTime; };
-//-----------------------------------------------------------------
-
-struct HitInfo
-{
-	float fImpulse;
-	float fPower;
-	float fAP;
-	string32 StrPlayerName;
-	string32 StrWeaponName;
-	int iBoneID;
-	int iHitType;
-	int iPlayerID;
-	u32 uTime;
-	
-};
-
-std::vector<HitInfo> Buffer1;
-std::vector<HitInfo> Buffer2;
-
-xrCriticalSection	HitLogger_CS;
-
-volatile bool bUseFirstBuffer = true;
-volatile bool bProcessingHitsThreadWorking = false;
-
-void HitProcessingThread(void* P)
-{
-	HitInfo LastHit = {};
-	int iPartedBullet = 0;
-
-	bProcessingHitsThreadWorking = true;
-	SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_BELOW_NORMAL);
-
-	while (true)
-	{
-		if (!bUseFirstBuffer)
-		{
-			if (Buffer2.size() > 100)
-			{
-				bUseFirstBuffer = true;
-
-				for (int i = 0; i < (int)Buffer2.size(); i++)
-				{
-					if (Buffer2[i].iPlayerID == LastHit.iPlayerID, Buffer2[i].fPower==LastHit.fPower && Buffer2[i].fImpulse==LastHit.fImpulse && Buffer2[i].fAP==LastHit.fAP && Buffer2[i].iBoneID==LastHit.iBoneID)
-					{
-						iPartedBullet++;
-						continue;
-					}
-
-					int imp, iap, pow;
-
-					if (iPartedBullet > 1)
-					{
-						imp = (int)(LastHit.fImpulse * (float)100);
-						iap = (int)(LastHit.fAP * (float)100);
-						pow = (int)(LastHit.fPower * (float)10);
-
-
-						Msg("! parted hit found. Cheater?");
-
-						Msg("# %s [%s] HT %i HP %i+%i.%i - | BT %i | HIM %i.%i | K_AP %i.%i0"
-							, LastHit.StrPlayerName
-							, LastHit.StrWeaponName
-							, LastHit.iHitType
-							, iPartedBullet
-							, pow / 100
-							, pow % 100
-							, LastHit.iBoneID
-							, imp / 100
-							, imp % 100
-							, iap / 100
-							, iap % 10);
-
-					}
-					else
-					{
-
-						imp = (int)(Buffer2[i].fImpulse * (float)100);
-						iap = (int)(Buffer2[i].fAP * (float)100);
-						pow = (int)(Buffer2[i].fPower * (float)10);
-
-						Msg("# %s [%s] HT %i HP 1+%i.%i - | BT %i | HIM %i.%i | K_AP %i.%i0"
-							, Buffer2[i].StrPlayerName
-							, Buffer2[i].StrWeaponName
-							, Buffer2[i].iHitType
-							, pow / 100
-							, pow % 100
-							, Buffer2[i].iBoneID
-							, imp / 100
-							, imp % 100
-							, iap / 100
-							, iap % 10);
-
-					}
-
-
-					LastHit = Buffer2[i];
-				}
-				iPartedBullet = 0;
-				Buffer2.clear();
-			}
-		}
-		else
-		{
-
-			if (Buffer1.size() > 100)
-			{
-				bUseFirstBuffer = false;
-
-				for (int i = 0; i < (int)Buffer1.size(); i++)
-				{
-					if (Buffer1[i].iPlayerID == LastHit.iPlayerID, Buffer1[i].fPower == LastHit.fPower && Buffer1[i].fImpulse == LastHit.fImpulse && Buffer1[i].fAP == LastHit.fAP && Buffer1[i].iBoneID == LastHit.iBoneID)
-					{
-						iPartedBullet++;
-						continue;
-					}
-
-					int imp, iap, pow;
-
-					if (iPartedBullet > 1)
-					{
-						imp = (int)(LastHit.fImpulse * (float)100);
-						iap = (int)(LastHit.fAP * (float)100);
-						pow = (int)(LastHit.fPower * (float)10);
-
-
-						Msg("! parted hit found");
-						Msg("# %s [%s] HT %i HP %i+%i.%i - | BT %i | HIM %i.%i | K_AP %i.%i0"
-							, LastHit.StrPlayerName
-							, LastHit.StrWeaponName
-							, LastHit.iHitType
-							, iPartedBullet
-							, pow / 100
-							, pow % 100
-							, LastHit.iBoneID
-							, imp / 100
-							, imp % 100
-							, iap / 100
-							, iap % 10);
-
-					}
-					else
-					{
-
-						imp = (int)(Buffer1[i].fImpulse * (float)100);
-						iap = (int)(Buffer1[i].fAP * (float)100);
-						pow = (int)(Buffer1[i].fPower * (float)10);
-
-						Msg("# %s [%s] HT %i HP 1+%i.%i - | BT %i | HIM %i.%i | K_AP %i.%i0"
-							, Buffer1[i].StrPlayerName
-							, Buffer1[i].StrWeaponName
-							, Buffer1[i].iHitType
-							, pow / 100
-							, pow % 100
-							, Buffer1[i].iBoneID
-							, imp / 100
-							, imp % 100
-							, iap / 100
-							, iap % 10);
-					}
-					iPartedBullet = 0;
-
-					LastHit = Buffer1[i];
-				}
-				Buffer1.clear();
-
-			}
-
-		}
-		Sleep(60000);
-	}
-}
-
 
 game_sv_Deathmatch::game_sv_Deathmatch()
 :pure_relcase(&game_sv_Deathmatch::net_Relcase)
@@ -237,13 +65,10 @@ game_sv_Deathmatch::game_sv_Deathmatch()
 	m_pSM_CurViewEntity = NULL;
 	m_dwSM_LastSwitchTime = 0;
 
-	//-------------------------------
 	m_vFreeRPoints.clear();
 	m_dwLastRPoint = u32(-1);
-	//-------------------------------
 	m_dwWarmUp_CurTime = 0;
 	m_bInWarmUp = false;
-	//-------------------------------
 };
 
 game_sv_Deathmatch::~game_sv_Deathmatch()
@@ -1240,53 +1065,33 @@ void	game_sv_Deathmatch::OnPlayerHitPlayer		(u16 id_hitter, u16 id_hitted, NET_P
 
 	HitS.whoID	= ps_hitter->GameID;
 
-
-	if (g_sv_mp_LogHitsEnabled == 1)
+	if (g_sv_mp_LogHitsEnabled)
 	{
-
 		CObject* pWeapon = Level().Objects.net_Find(HitS.weaponID);
+
 		if (pWeapon)
 		{
+			HitProcessor::HitInfo HIT;
 
-			HitInfo HIT;
+			HIT.fImpulse	= HitS.impulse;
+			HIT.fPower		= HitS.power;
+			HIT.fAP			= HitS.ap;
 
-			HIT.fImpulse = HitS.impulse;
-			HIT.fPower = HitS.power;
-			HIT.fAP = HitS.ap;
+			HIT.iBoneID		= HitS.boneID;
+			HIT.iHitType	= (int)HitS.hit_type;
+			HIT.uTime		= HitS.Time;
+			HIT.iPlayerID	= HitS.whoID;
 
 			strcpy(HIT.StrWeaponName, pWeapon->cName().c_str());
-			strcpy(HIT.StrPlayerName, ps_hitter->getName());
+			strcpy(HIT.StrPlayerName, ps_hitter->getName());	
 
-			HIT.iBoneID = HitS.boneID;
-			HIT.iHitType = (int)HitS.hit_type;
-			HIT.uTime = HitS.Time;
-			HIT.iPlayerID = HitS.whoID;
-
-			if (bUseFirstBuffer)
-			{
-				HitLogger_CS.Enter();
-				Buffer1.push_back(HIT);
-				HitLogger_CS.Leave();
-			}
-			else
-			{
-				HitLogger_CS.Enter();
-				Buffer2.push_back(HIT);
-				HitLogger_CS.Leave();
-			}
-
-			if (!bProcessingHitsThreadWorking)
-			{
-				thread_spawn(HitProcessingThread, "hits-processing thread", 0, this);
-			}
+			hit_proc.AddHit(HIT);
 		}
-		else Msg("cant get weapon");
+		else Msg("! cant get weapon");	
 	}
-
 
 	OnPlayerHitPlayer_Case(ps_hitter, ps_hitted, &HitS);
 
-	//---------------------------------------
 	if (HitS.power > 0)
 	{
 		ps_hitted->lasthitter = ps_hitter->GameID;
