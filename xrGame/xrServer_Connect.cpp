@@ -101,13 +101,13 @@ void xrServer::CheckPlayerName(string1024 &sName)
 		switch (sName[i])
 		{
 		case '%':
-		case '_':
+		case ' ':
 		case '#':
 		case '!':
 		case '~':
 		case '*':
 		{
-			sName[i] = ' ';
+			sName[i] = '_';
 		}
 		}
 	}

@@ -1055,8 +1055,19 @@ void	game_sv_Deathmatch::OnPlayerHitPlayer		(u16 id_hitter, u16 id_hitted, NET_P
 	if (!e_hitter || !e_hitted) return;
 	if (e_hitted->m_tClassID != CLSID_OBJECT_ACTOR) return;
 
-	game_PlayerState*	ps_hitter = get_eid(id_hitter);
-	game_PlayerState*	ps_hitted = get_eid(id_hitted);
+	game_PlayerState *ps_hitter = nullptr;
+	game_PlayerState *ps_hitted = nullptr;
+
+	try
+	{
+		ps_hitter = get_eid(id_hitter);
+		ps_hitted = get_eid(id_hitted);
+	}
+	catch (...)
+	{
+		Msg("! error, Cant get eid");
+		return;
+	}
 
 	if (!ps_hitter || !ps_hitted) return;
 
@@ -1087,7 +1098,8 @@ void	game_sv_Deathmatch::OnPlayerHitPlayer		(u16 id_hitter, u16 id_hitted, NET_P
 
 			hit_proc.AddHit(HIT);
 		}
-		else Msg("! cant get weapon");	
+		else 
+			Msg("! cant get weapon");	
 	}
 
 	OnPlayerHitPlayer_Case(ps_hitter, ps_hitted, &HitS);

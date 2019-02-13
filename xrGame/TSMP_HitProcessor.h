@@ -35,6 +35,7 @@ public:
 	std::vector<HitInfo> Buffer2;
 
 	void AddHitPrivate(HitInfo &HitToAdd, std::vector<HitInfo> &Buf);
+	void CheckForCheats(HitInfo &Hit, int Bullets);
 
 	xrCriticalSection HitLogger_CS;
 };
