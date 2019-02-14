@@ -82,7 +82,7 @@ xrServer::EConnect xrServer::Connect(shared_str &session_name)
 }
 
 void xrServer::CheckPlayerName(string1024 &sName)
-{
+{	
 	if (strlen(sName) > 70)
 	{
 		string128 sTemp;
@@ -92,12 +92,31 @@ void xrServer::CheckPlayerName(string1024 &sName)
 		Msg("! Player tried to everride max nickname length");
 	}
 
-	int iLen = strlen(sName);
+	int iLen = strlen(sName);	
 
-	if (iLen < 2) strcpy(sName, "Игрок");
+	bool bAllSpaces = true;
+
+	static std::map<char, char> Symbols =
+	{
+		{'Q','q'}, {'W','w'}, {'E','e'}, {'R','r'}, {'T','t'}, {'Y','y'}, 
+		{'U','u'}, {'I','i'}, {'O','o'}, {'P','p'}, {'A','a'}, {'S','s'},
+		{'D','d'}, {'F','f'}, {'G','g'}, {'H','h'}, {'J','j'}, {'K','k'}, 
+		{'L','l'}, {'Z','z'}, {'X','x'}, {'C','c'}, {'V','v'}, {'B','b'},
+		{'N','n'}, {'M','m'}, {'Ё','ё'}, {'Й','й'}, {'Ц','ц'}, {'У','у'}, 
+		{'К','к'}, {'Е','е'}, {'Н','н'}, {'Г','г'}, {'Ш','ш'}, {'Щ','щ'},
+		{'З','з'}, {'Х','х'}, {'Ъ','ъ'}, {'Ф','ф'}, {'Ы','ы'}, {'В','в'}, 
+		{'А','а'}, {'П','п'}, {'Р','р'}, {'О','о'}, {'Л','л'}, {'Д','д'},
+		{'Ж','ж'}, {'Э','э'}, {'Я','я'}, {'Ч','ч'}, {'С','с'}, {'М','м'}, 
+		{'И','и'}, {'Т','т'}, {'Ь','ь'}, {'Б','б'}, {'Ю','ю'}
+	};
 
 	for (int i = 0; i < iLen; ++i)
 	{
+		auto It = Symbols.find(sName[i]);
+
+		if (It != Symbols.end())
+			sName[i] = It->second;
+		
 		switch (sName[i])
 		{
 		case '%':
@@ -110,7 +129,13 @@ void xrServer::CheckPlayerName(string1024 &sName)
 			sName[i] = '_';
 		}
 		}
+
+		if (sName[i] != '_')
+			bAllSpaces = false;
 	}
+
+	if ((iLen < 2)||(bAllSpaces)) 
+		strcpy(sName, "игрок");
 }
 
 

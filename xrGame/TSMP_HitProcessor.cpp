@@ -188,7 +188,7 @@ void HitProcessor::CheckForCheats(HitInfo &Hit, int Bullets)
 
 	if (Hit.fAP < 0.001)
 	{
-		if (Hit.fImpulse > WPN[WpnIdx].HitImpulse)
+		if (Hit.fImpulse-0.1 > WPN[WpnIdx].HitImpulse)
 			Msg("! Cheater detected. Player: %s had %0.2f impulse from %s (max: %0.2f)"
 				, Hit.StrPlayerName
 				, Hit.fImpulse
@@ -196,7 +196,7 @@ void HitProcessor::CheckForCheats(HitInfo &Hit, int Bullets)
 				, WPN[WpnIdx].HitImpulse
 			);
 
-		if (Hit.fPower > WPN[WpnIdx].HitPower)
+		if (Hit.fPower-0.1 > WPN[WpnIdx].HitPower)
 			Msg("! Cheater detected. Player: %s had %0.2f power from %s (max: %0.2f)"
 				, Hit.StrPlayerName
 				, Hit.fPower
@@ -206,7 +206,7 @@ void HitProcessor::CheckForCheats(HitInfo &Hit, int Bullets)
 	}
 	else
 	{
-		if (Hit.fImpulse > WPN[WpnIdx].bHitImpulse)
+		if (Hit.fImpulse-0.1 > WPN[WpnIdx].bHitImpulse)
 			Msg("! Cheater detected. Player: %s had %0.2f impulse from %s b (max: %0.2f)"
 				, Hit.StrPlayerName
 				, Hit.fImpulse
@@ -214,7 +214,7 @@ void HitProcessor::CheckForCheats(HitInfo &Hit, int Bullets)
 				, WPN[WpnIdx].bHitImpulse
 			);
 
-		if (Hit.fPower > WPN[WpnIdx].bHitPower)
+		if (Hit.fPower-0.1 > WPN[WpnIdx].bHitPower)
 			Msg("! Cheater detected. Player: %s had %0.2f power from %s b (max: %0.2f)"
 				, Hit.StrPlayerName
 				, Hit.fPower
