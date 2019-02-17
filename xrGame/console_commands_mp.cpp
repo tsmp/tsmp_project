@@ -287,6 +287,8 @@ public:
 			return;
 		}
 
+#pragma todo("tsmp: переписать")
+
 		string4096 PlayerName	= "";
 
 		bool bIsNewKick = false;
@@ -523,6 +525,10 @@ public:
 
 class CCC_TSMP_SetPort : public IConsole_Command {
 public:
+
+#pragma todo("tsmp: удалить")
+
+	// чекнуть net_Address_server и  dump_URL для ip
 	CCC_TSMP_SetPort(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = false; };
 	virtual void	Execute(LPCSTR args_)
 	{
@@ -574,17 +580,25 @@ public:
 		u32	cnt = Level().Server->game->get_players_count();
 		Msg("------------------------");
 		Msg("- Total Players : %d", cnt);
+
 		for(u32 it=0; it<cnt; it++)	
 		{
 			xrClientData *l_pC	= (xrClientData*)	Level().Server->client_Get	(it);
-			if (!l_pC)			continue;
+		
+			if (!l_pC)			
+				continue;
+
 			ip_address			Address;
 			DWORD dwPort		= 0;
 
 			Level().Server->GetClientAddress(l_pC->ID, Address, &dwPort);
-			Msg("%d (name: %s), (session_id: %i), (hash: @), (ip: %s), (ping: %u);", it + 1, l_pC->ps->getName(), (int)l_pC->ps->GameID, 
-				Address.to_string().c_str(),				
-				l_pC->ps->ping);
+
+			Msg("%d (name: %s), (session_id: %u), (hash: @), (ip: %s), (ping: %u);"
+				, it + 1
+				, l_pC->ps->getName()
+				, l_pC->ID.value()
+				, Address.to_string().c_str()
+				, l_pC->ps->ping);
 		};
 		Msg("------------------------");
 	};

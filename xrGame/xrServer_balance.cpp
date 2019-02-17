@@ -4,6 +4,8 @@
 class xrClientData;
 class CSE_Abstract;
 
+#pragma todo("tsmp: ??")
+
 xrClientData* xrServer::SelectBestClientToMigrateTo	(CSE_Abstract* E, BOOL bForceAnother)
 {
 	return (xrClientData*)SV_Client;

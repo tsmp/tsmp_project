@@ -5,6 +5,7 @@
 
 void	game_sv_TeamDeathmatch::OnEvent (NET_Packet &P, u16 type, u32 time, ClientID sender )
 {
+#pragma todo("tsmp: remove")
 
 	inherited::OnEvent(P, type, time, sender);
 	/*
