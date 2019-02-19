@@ -17,11 +17,8 @@
 #include "Missile.h"
 #include "game_cl_base_weapon_usage_statistic.h"
 
-//#define DELAYED_ROUND_TIME	7000
 #include "ui\UIBuyWndShared.h"
 #include "../xr_ioconsole.h"
-
-
 
 #define UNBUYABLESLOT		20
 
@@ -36,8 +33,8 @@ BOOL	g_sv_dm_bPDAHunt				= TRUE;
 u32		g_sv_dm_dwWarmUp_MaxTime		= 0;
 BOOL	g_sv_dm_bDMIgnore_Money_OnBuy	= FALSE;
 
-extern	int		g_sv_mp_LogHitsEnabled;
 extern bool bIsDedicatedServer;
+extern int g_sv_mp_LogHitsEnabled;
 
 BOOL				game_sv_Deathmatch::IsDamageBlockIndEnabled	() {return g_sv_dm_bDamageBlockIndicators; };
 s32					game_sv_Deathmatch::GetTimeLimit			() {return g_sv_dm_dwTimeLimit; };
@@ -1087,11 +1084,26 @@ void	game_sv_Deathmatch::OnPlayerHitPlayer		(u16 id_hitter, u16 id_hitted, NET_P
 			HIT.fImpulse	= HitS.impulse;
 			HIT.fPower		= HitS.power;
 			HIT.fAP			= HitS.ap;
-
 			HIT.iBoneID		= HitS.boneID;
 			HIT.iHitType	= (int)HitS.hit_type;
-			HIT.uTime		= HitS.Time;
-			HIT.iPlayerID	= HitS.whoID;
+			HIT.uTime		= HitS.Time;			
+			HIT.iPlayerID	= 0;
+
+			u32	cnt = Level().Server->game->get_players_count();
+
+			for (u32 it = 0; it < cnt; it++)
+			{
+				xrClientData *l_pC = (xrClientData*)Level().Server->client_Get(it);
+
+				if (!l_pC)
+					continue;
+
+				if (l_pC->ps->GameID == ps_hitter->GameID)
+				{
+					HIT.iPlayerID =l_pC->ID.value();
+					break;
+				}
+			};
 
 			strcpy(HIT.StrWeaponName, pWeapon->cName().c_str());
 			strcpy(HIT.StrPlayerName, ps_hitter->getName());	
@@ -1117,6 +1129,7 @@ void	game_sv_Deathmatch::OnPlayerHitPlayer		(u16 id_hitter, u16 id_hitted, NET_P
 void	game_sv_Deathmatch::LoadTeams			()
 {
 	m_sBaseWeaponCostSection._set("deathmatch_base_cost");
+
 	if (!pSettings->section_exist(m_sBaseWeaponCostSection))
 	{
 		R_ASSERT2(0, "No section for base weapon cost for this type of the Game!");

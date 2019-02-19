@@ -13,7 +13,7 @@ public:
 		string32	StrWeaponName;
 		int			iBoneID;
 		int			iHitType;
-		int			iPlayerID;
+		u32			iPlayerID;
 		u32			uTime;
 
 		bool operator==(const HitInfo &HI)

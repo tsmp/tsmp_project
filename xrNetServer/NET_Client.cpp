@@ -29,8 +29,7 @@ void	dump_URL	(LPCSTR p, IDirectPlay8Address* A)
 	R_CHK		(A->GetURLA(aaaa,&aaaa_s));
 	Log			(p,aaaa);
 }
-
-// 
+ 
 INetQueue::INetQueue()		
 #ifdef PROFILE_CRITICAL_SECTIONS
 	:cs(MUTEX_PROFILE_ID(INetQueue))

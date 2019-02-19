@@ -2284,6 +2284,9 @@
     <Filter Include="AI\AScript\ScriptClasses\UI\Tutorial">
       <UniqueIdentifier>{a4d07a04-4e41-43ee-8008-83ba0764e679}</UniqueIdentifier>
     </Filter>
+    <Filter Include="TSMP">
+      <UniqueIdentifier>{1ee40d02-2ed9-4339-9687-ecb42d5dc711}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mt_config.h">
@@ -6541,8 +6544,12 @@
       <Filter>AI\AScript\ScriptClasses\UI\Tutorial</Filter>
     </ClInclude>
     <ClInclude Include="..\xr_3da\doug_lea_memory_allocator.h" />
-    <ClInclude Include="TSMP_Timers.h" />
-    <ClInclude Include="TSMP_HitProcessor.h" />
+    <ClInclude Include="TSMP_HitProcessor.h">
+      <Filter>TSMP</Filter>
+    </ClInclude>
+    <ClInclude Include="TSMP_Timers.h">
+      <Filter>TSMP</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="damage_manager.cpp">
@@ -9666,8 +9673,12 @@
       <Filter>AI\AScript\ScriptClasses\UI\Tutorial</Filter>
     </ClCompile>
     <ClCompile Include="..\xr_3da\doug_lea_memory_allocator.c" />
-    <ClCompile Include="TSMP_Timers.cpp" />
-    <ClCompile Include="TSMP_HitProcessor.cpp" />
+    <ClCompile Include="TSMP_HitProcessor.cpp">
+      <Filter>TSMP</Filter>
+    </ClCompile>
+    <ClCompile Include="TSMP_Timers.cpp">
+      <Filter>TSMP</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuildStep Include="graph_abstract.h">

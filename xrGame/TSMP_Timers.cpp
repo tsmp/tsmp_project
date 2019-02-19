@@ -55,9 +55,10 @@ void TimerThread(void*)
 
 void OnTimersStart()
 {
-	if (bIsRunning) return;
+	if (bIsRunning) 
+		return;
+
 	bIsRunning = true;
 
 	thread_spawn(TimerThread, "TimerThread", 0, 0);
 }
-

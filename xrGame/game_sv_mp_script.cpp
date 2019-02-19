@@ -33,6 +33,7 @@ float game_sv_mp_script::GetHitParamsPower (NET_Packet* P)
 	P->r_pos = PowRPos;	
 	float res = P->r_float();
 	P->r_pos = bk;
+
 	return res;
 }
 
@@ -44,6 +45,7 @@ float game_sv_mp_script::GetHitParamsImpulse (NET_Packet* P)
 	P->r_pos = ImpRPos;	
 	float res = P->r_float();
 	P->r_pos = bk;
+
 	return res;
 }
 
@@ -52,7 +54,6 @@ void game_sv_mp_script::Create	(shared_str &options)
 	inherited::Create(options);
 	LPCSTR lpcstr_options = options.c_str();
 	Create(lpcstr_options);
-
 }
 
 void	game_sv_mp_script::SpawnPlayer				(ClientID id, LPCSTR N, LPCSTR SkinName, RPoint rp)
@@ -61,10 +62,10 @@ void	game_sv_mp_script::SpawnPlayer				(ClientID id, LPCSTR N, LPCSTR SkinName, 
 	game_PlayerState*	ps_who	=	CL->ps;
 	ps_who->setFlag(GAME_PLAYER_FLAG_VERY_VERY_DEAD);
 
-
 	CSE_Abstract* pOldOwner = CL->owner;
-	if (pOldOwner && pOldOwner->owner == CL ){
-	
+
+	if (pOldOwner && pOldOwner->owner == CL )
+	{	
 		CSE_ALifeCreatureActor	*pOldActor			=	smart_cast<CSE_ALifeCreatureActor*>(pOldOwner);
 		CSE_Spectator			*pOldSpectator		=	smart_cast<CSE_Spectator*>(pOldOwner);
 
@@ -72,7 +73,8 @@ void	game_sv_mp_script::SpawnPlayer				(ClientID id, LPCSTR N, LPCSTR SkinName, 
 		{
 			AllowDeadBodyRemove(id, pOldActor->ID);
 			m_CorpseList.push_back(pOldOwner->ID);
-		};
+		}
+
 		if (pOldSpectator)
 		{
 			pOldSpectator->owner = (xrClientData*)m_server->GetServerClient();
@@ -108,19 +110,23 @@ void	game_sv_mp_script::SpawnPlayer				(ClientID id, LPCSTR N, LPCSTR SkinName, 
 		E->o_Angle.set		(rp.A);
 	}
 	else
+	{
 		if (pS)
 		{
 			Fvector Pos, Angle;
-///			ps_who->setFlag(GAME_PLAYER_FLAG_CS_SPECTATOR);
-			if (!GetPosAngleFromActor(id, Pos, Angle)) assign_RP				(E, ps_who);
+
+			if (!GetPosAngleFromActor(id, Pos, Angle)) 
+				assign_RP(E, ps_who);
 			else
 			{
 				E->o_Angle.set(Angle);
 				E->o_Position.set(Pos);
 			}
 		};
+	}
 
 	Msg		("* %s respawned as %s", get_name_id(id), (0 == pA) ? "spectator" : "actor");
+
 	spawn_end				(E,id);
 	
 	ps_who->SetGameID(CL->owner->ID);
@@ -144,22 +150,23 @@ void game_sv_mp_script::OnEvent (NET_Packet &P, u16 type, u32 time, ClientID sen
 {
 	inherited::OnEvent(P,type,time,sender);
 };
+
 void game_sv_mp_script::OnPlayerConnect (ClientID id_who)
 {
 	inherited::OnPlayerConnect (id_who);
 };
+
 void game_sv_mp_script::OnPlayerDisconnect (ClientID id_who, LPSTR Name, u16 GameID)
 {
 	inherited::OnPlayerDisconnect (id_who, Name, GameID);
 };
 
-
-
 #pragma warning(push)
 #pragma warning(disable:4709)
 
 template <typename T>
-struct CWrapperBase : public T, public luabind::wrap_base {
+struct CWrapperBase : public T, public luabind::wrap_base 
+{
 	typedef T inherited;
 	typedef CWrapperBase<T>	self_type;
 	DEFINE_LUA_WRAPPER_CONST_METHOD_0(type_name, LPCSTR)
@@ -170,7 +177,6 @@ struct CWrapperBase : public T, public luabind::wrap_base {
 	DEFINE_LUA_WRAPPER_METHOD_R2P1_V2(net_Export_State, NET_Packet, ClientID)
 
 	DEFINE_LUA_WRAPPER_METHOD_V0(OnRoundStart)
-//	DEFINE_LUA_WRAPPER_METHOD_V1(OnDelayedRoundEnd, ERoundEnd_Result)
 	DEFINE_LUA_WRAPPER_METHOD_V0(OnRoundEnd)
 
 	virtual game_PlayerState* createPlayerState()
@@ -202,7 +208,6 @@ void game_sv_mp_script::script_register(lua_State *L)
 	typedef CWrapperBase<game_sv_mp_script> WrapType;
 	typedef game_sv_mp_script BaseType;
 
-
 	module(L)
 	[
 		class_< game_sv_mp_script, WrapType, game_sv_mp >("game_sv_mp_script")
@@ -222,7 +227,6 @@ void game_sv_mp_script::script_register(lua_State *L)
 			.def("OnPlayerHitPlayer",	&BaseType::OnPlayerHitPlayer,	&WrapType::OnPlayerHitPlayer_static)
 
 			.def("OnRoundStart",		&BaseType::OnRoundStart, &WrapType::OnRoundStart_static)
-//			.def("OnDelayedRoundEnd",	&BaseType::OnDelayedRoundEnd, &WrapType::OnDelayedRoundEnd_static)
 			.def("OnRoundEnd",			&BaseType::OnRoundEnd, &WrapType::OnRoundEnd_static)
 
 			.def("net_Export_State",	&BaseType::net_Export_State, &WrapType::net_Export_State_static)

@@ -1,7 +1,10 @@
 #include "StdAfx.h"
 #include "TSMP_HitProcessor.h"
+#include "../XR_IOConsole.h"
 
 volatile int g_sv_mp_CheckHitsEnabled = 0;
+volatile int g_sv_mp_AutoBanHitCheaters = 0;
+volatile int g_sv_mp_ShowHits = 1;
 
 #define MinHitsToProcess 100
 
@@ -31,10 +34,13 @@ void HitProcessor::AddHitPrivate(HitInfo &HitToAdd, std::vector<HitInfo> &Buf)
 
 void ProcessHits(HitProcessor *P, std::vector<HitProcessor::HitInfo> Buffer)
 {
-	if (Buffer.size() < MinHitsToProcess)
+	if (Buffer.size() <= MinHitsToProcess)
 		return;
 
-	P->UseBuffer1 = (P->UseBuffer1) ? false : true;
+	if (P->UseBuffer1)
+		P->UseBuffer1 = false;
+	else
+		P->UseBuffer1 = true;
 
 	HitProcessor::HitInfo LastHit		= { 0 };
 	HitProcessor::HitInfo CurrentHit	= { 0 };
@@ -51,27 +57,29 @@ void ProcessHits(HitProcessor *P, std::vector<HitProcessor::HitInfo> Buffer)
 		
 		if (iBulletCount > 1)
 		{
-			Msg("! Parted hit detected. Cheater?");
 			CurrentHit = LastHit;
 			i--;
 		}
 		else
 			CurrentHit = Buffer[i];
 
-		string128 Message;
+		if (g_sv_mp_ShowHits)
+		{
+			string128 Message;
 
-		sprintf(Message, "# %s [%s] HT %i HP %i+%0.2f - | BT %i | HIM %0.2f | K_AP %0.2f"
-			, CurrentHit.StrPlayerName
-			, CurrentHit.StrWeaponName
-			, CurrentHit.iHitType
-			, iBulletCount
-			, CurrentHit.fPower
-			, CurrentHit.iBoneID
-			, CurrentHit.fImpulse
-			, CurrentHit.fAP
+			sprintf(Message, "# %s [%s] HT %i HP %i+%0.2f - | BT %i | HIM %0.2f | K_AP %0.2f"
+				, CurrentHit.StrPlayerName
+				, CurrentHit.StrWeaponName
+				, CurrentHit.iHitType
+				, iBulletCount
+				, CurrentHit.fPower
+				, CurrentHit.iBoneID
+				, CurrentHit.fImpulse
+				, CurrentHit.fAP
 			);
 
-		Msg(Message);
+			Msg(Message);
+		}
 
 		if (g_sv_mp_CheckHitsEnabled)
 			P->CheckForCheats(CurrentHit, iBulletCount);
@@ -80,7 +88,7 @@ void ProcessHits(HitProcessor *P, std::vector<HitProcessor::HitInfo> Buffer)
 		LastHit = CurrentHit;
 	}
 
-	Buffer.clear();
+	Buffer.erase(Buffer.begin(), Buffer.end());
 	Buffer.reserve(MinHitsToProcess);
 }
 
@@ -161,10 +169,24 @@ static std::vector<Weapon> WPN = {
 { "mp_wpn_gauss"			, 5.00 , 3000.8		, 5.00, 3000.8	, false }
 };
 
+void BanCheater(u32 id, string128 Message)
+{
+	string1024 Mes;
+	Console->Execute(Mes);
+	sprintf(Mes, "chat_tsmp %s", Message);
+
+	if (g_sv_mp_AutoBanHitCheaters)
+	{
+		string1024 Arg;
+		sprintf(Arg, "sv_banplayer_id %u 99999999", id);
+		Console->Execute(Arg);		
+	}
+}
 
 void HitProcessor::CheckForCheats(HitInfo &Hit, int Bullets)
 {
 	int WpnIdx = -1;
+	string256 message{ 0 };
 
 	for (int i = 0; i < WPN.size(); i++)
 	{
@@ -180,46 +202,64 @@ void HitProcessor::CheckForCheats(HitInfo &Hit, int Bullets)
 
 	if (!WPN[WpnIdx].Drob && (Bullets > 4))
 	{
-		Msg("! Cheater detected. Player: %s had %i bullets from %s"
+		sprintf(message, "Cheater detected. Player: %s had %i bullets from %s"
 			, Hit.StrPlayerName
 			, Bullets
 			, Hit.StrWeaponName);
+
+		BanCheater(Hit.iPlayerID, message);
 	}
 
 	if (Hit.fAP < 0.001)
 	{
-		if (Hit.fImpulse-0.1 > WPN[WpnIdx].HitImpulse)
-			Msg("! Cheater detected. Player: %s had %0.2f impulse from %s (max: %0.2f)"
+		if (Hit.fImpulse - 0.1 > WPN[WpnIdx].HitImpulse)
+		{
+			sprintf(message,"Cheater detected. Player: %s had %0.2f impulse from %s (max: %0.2f)"
 				, Hit.StrPlayerName
 				, Hit.fImpulse
 				, Hit.StrWeaponName
 				, WPN[WpnIdx].HitImpulse
 			);
 
-		if (Hit.fPower-0.1 > WPN[WpnIdx].HitPower)
-			Msg("! Cheater detected. Player: %s had %0.2f power from %s (max: %0.2f)"
+			BanCheater(Hit.iPlayerID, message);
+		}
+
+		if (Hit.fPower - 0.1 > WPN[WpnIdx].HitPower)
+		{
+			sprintf(message, "Cheater detected. Player: %s had %0.2f power from %s (max: %0.2f)"
 				, Hit.StrPlayerName
 				, Hit.fPower
 				, Hit.StrWeaponName
 				, WPN[WpnIdx].HitPower
 			);
+
+			BanCheater(Hit.iPlayerID, message);
+		}
 	}
 	else
 	{
-		if (Hit.fImpulse-0.1 > WPN[WpnIdx].bHitImpulse)
-			Msg("! Cheater detected. Player: %s had %0.2f impulse from %s b (max: %0.2f)"
+		if (Hit.fImpulse - 0.1 > WPN[WpnIdx].bHitImpulse)
+		{
+			sprintf(message, "Cheater detected. Player: %s had %0.2f impulse from %s b (max: %0.2f)"
 				, Hit.StrPlayerName
 				, Hit.fImpulse
 				, Hit.StrWeaponName
 				, WPN[WpnIdx].bHitImpulse
 			);
 
-		if (Hit.fPower-0.1 > WPN[WpnIdx].bHitPower)
-			Msg("! Cheater detected. Player: %s had %0.2f power from %s b (max: %0.2f)"
+			BanCheater(Hit.iPlayerID, message);
+		}
+
+		if (Hit.fPower - 0.1 > WPN[WpnIdx].bHitPower)
+		{
+			sprintf(message, "Cheater detected. Player: %s had %0.2f power from %s b (max: %0.2f)"
 				, Hit.StrPlayerName
 				, Hit.fPower
 				, Hit.StrWeaponName
 				, WPN[WpnIdx].bHitPower
 			);
+
+			BanCheater(Hit.iPlayerID, message);
+		}
 	}
 }

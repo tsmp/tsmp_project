@@ -60,7 +60,9 @@ extern	std::string	g_sv_mp_loader_port			;
 extern	int		g_sv_mp_ModLoaderEnabled		;
 extern	int		g_sv_mp_DisablerEnabled			;
 extern 	int		g_sv_mp_LogHitsEnabled			;
-extern volatile	int		g_sv_mp_CheckHitsEnabled		;
+extern volatile	int		g_sv_mp_CheckHitsEnabled;
+extern volatile	int		g_sv_mp_AutoBanHitCheaters;
+extern volatile	int		g_sv_mp_ShowHits;
 extern	int		g_sv_mp_nickname_change_mode	;
 
 
@@ -446,7 +448,8 @@ public:
 						Level().Server->BanClient(l_pC, ban_time);
 						Level().Server->DisconnectClient(l_pC);
 						break;
-					}else
+					}
+					else
 					{
 						Msg("! Can't disconnect server's client");
 						break;
@@ -464,13 +467,15 @@ public:
 };
 
 
-class CCC_BanPlayerByIP : public IConsole_Command {
+class CCC_BanPlayerByIP : public IConsole_Command 
+{
 public:
 					CCC_BanPlayerByIP	(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = false; };
 	virtual void	Execute				(LPCSTR args_) 
 	{
-		if (!g_pGameLevel || !Level().Server) return;
-//-----------
+		if (!g_pGameLevel || !Level().Server) 
+			return;
+
 		string4096				buff;
 		strcpy					(buff, args_);
 		u32 len					= xr_strlen(buff);
@@ -480,20 +485,26 @@ public:
 
 		string1024				digits;
 		LPSTR					p = buff+len-1;
+
 		while(isdigit(*p))
 		{
-			if (p == buff) break;
+			if (p == buff) 
+				break;
 			--p;
 		}
+
 		R_ASSERT				(p>=buff);
 		strcpy					(digits,p);
 		*p						= 0;
+
 		if (!xr_strlen(buff))
 		{
 			Msg("incorrect parameter passed. bad IP address.");
 			return;
 		}
+
 		u32 ban_time			= atol(digits);
+
 		if(ban_time==0)
 		{
 			Msg("incorrect parameters passed.  IP and time required");
@@ -502,7 +513,6 @@ public:
 
 		string1024				s_ip_addr;
 		strcpy					(s_ip_addr, buff);
-//-----------
 
 		ip_address							Address;
 		Address.set							(s_ip_addr);
@@ -510,7 +520,7 @@ public:
 		if (Address.to_string()=="0.0.0.0")
 		{
 			Msg("! attempt to ban server ip");
-		return;
+			return;
 		}
 
 		Level().Server->clients_Lock		();
@@ -523,7 +533,98 @@ public:
 	virtual void	Info	(TInfo& I){strcpy(I,"Ban Player by IP"); }
 };
 
-class CCC_TSMP_SetPort : public IConsole_Command {
+class CCC_BanPlayerByID : public IConsole_Command
+{
+public:
+	CCC_BanPlayerByID(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = false; };
+	virtual void	Execute(LPCSTR args_)
+	{
+		if (!g_pGameLevel || !Level().Server)
+			return;
+
+		string4096 buff;
+		strcpy(buff, args_);
+
+		u32 len = xr_strlen(buff);
+
+		if (0 == len)
+			return;
+
+		string1024				digits;
+		LPSTR					p = buff + len - 1;
+
+		while (isdigit(*p))
+		{
+			if (p == buff)
+				break;
+
+			--p;
+		}
+
+		R_ASSERT(p >= buff);
+		strcpy(digits, p);
+
+		*p = 0;
+
+		if (!xr_strlen(buff))
+		{
+			Msg("incorrect parameter passed. bad ban time");
+			return;
+		}
+
+		u32 ban_time = atol(digits);		
+
+		if (ban_time == 0)
+		{
+			Msg("incorrect parameters passed.  ID and time required");
+			return;
+		}
+
+		string1024 s_id;
+		strcpy(s_id, buff);
+
+		u32 volatile id = static_cast<u32>(atoll(s_id));
+
+		if (id == 0)
+		{
+			Msg("invalid id");
+			return;
+		}
+		
+		u32	cnt = Level().Server->game->get_players_count();
+
+		for (u32 it = 0; it < cnt; it++)
+		{
+			xrClientData *l_pC = (xrClientData*)Level().Server->client_Get(it);
+
+			if (!l_pC)
+				continue;
+
+			if (l_pC->ID.value() == id)
+			{
+				if (Level().Server->GetServerClient() != l_pC)
+				{
+					Msg("Disconnecting and Banning: %s id: %u", l_pC->ps->getName(), l_pC->ID.value());
+					Level().Server->BanClient(l_pC, ban_time);
+					Level().Server->DisconnectClient(l_pC);
+					return;
+				}
+				else
+				{
+					Msg("! Can't disconnect server's client");
+					return;
+				}
+			}
+		}
+
+		Msg("client with this id not found");
+	};
+
+	virtual void	Info(TInfo& I) { strcpy(I, "Ban Player by IP"); }
+};
+
+class CCC_TSMP_SetPort : public IConsole_Command 
+{
 public:
 
 #pragma todo("tsmp: удалить")
@@ -650,16 +751,19 @@ public:
 class CCC_ListPlayers_Banned : public IConsole_Command 
 {
 public:
-					CCC_ListPlayers_Banned	(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
-	virtual void	Execute					(LPCSTR args) 
+	CCC_ListPlayers_Banned	(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
+	
+	virtual void Execute(LPCSTR args) 
 	{
-		if (!OnServer())	return;
+		if (!OnServer())	
+			return;
+
 		Msg("------------------------");
         Level().Server->Print_Banned_Addreses();
 		Msg("------------------------");
 	};
 
-	virtual void	Info	(TInfo& I){strcpy(I,"List of Banned Players"); }
+	virtual void Info (TInfo& I){strcpy(I,"List of Banned Players"); }
 };
 
 class CCC_ChangeLevelGameType : public IConsole_Command 
@@ -692,14 +796,13 @@ public:
 					Msg ("! Unknown gametype - %s", GameType);
 					return;
 				};
-		//-----------------------------------------
+
 		s32 GameTypeID = 0;
 		if (!xr_strcmp(GameType, "deathmatch")) GameTypeID = GAME_DEATHMATCH;
 		else
 			if (!xr_strcmp(GameType, "teamdeathmatch")) GameTypeID = GAME_TEAMDEATHMATCH;
 			else
 				if (!xr_strcmp(GameType, "artefacthunt")) GameTypeID = GAME_ARTEFACTHUNT;
-		//-----------------------------------------
 
 		const SGameTypeMaps& M		= gMapListHelper.GetMapListFor((EGameTypes)GameTypeID);
 		u32 cnt						= M.m_map_names.size();
@@ -708,6 +811,7 @@ public:
 		for(u32 i=0; i<cnt; ++i)
 		{
 			const shared_str& _map_name = M.m_map_names[i];
+
 			if ( 0==xr_strcmp(_map_name.c_str(), LevelName) )
 			{
 				bMapFound = true;
@@ -738,8 +842,8 @@ public:
 					CCC_ChangeGameType	(LPCSTR N) : CCC_ChangeLevelGameType(N)  { bEmptyArgsHandled = false; };
 	virtual void	Execute				(LPCSTR args) 
 	{
-
-		if (!OnServer())	return;
+		if (!OnServer())	
+			return;
 
 		string256			GameType;	
 		GameType[0]			=0;
@@ -754,12 +858,14 @@ public:
 	virtual void	Info	(TInfo& I)	{strcpy(I,"Changing Game Type"); };
 };
 
-class CCC_ChangeLevel : public CCC_ChangeLevelGameType {
+class CCC_ChangeLevel : public CCC_ChangeLevelGameType 
+{
 public:
 					CCC_ChangeLevel	(LPCSTR N) : CCC_ChangeLevelGameType(N)  { bEmptyArgsHandled = false; };
 	virtual void	Execute			(LPCSTR args) 
 	{
-		if (!OnServer())	return;
+		if (!OnServer())	
+			return;
 
 		string256		LevelName;	
 		LevelName[0]	=0;
@@ -774,7 +880,8 @@ public:
 	virtual void	Info	(TInfo& I){	strcpy(I,"Changing Game Type"); }
 };
 
-class CCC_AddMap : public IConsole_Command {
+class CCC_AddMap : public IConsole_Command 
+{
 public:
 	CCC_AddMap(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = false; };
 	virtual void Execute(LPCSTR args) 
@@ -1085,16 +1192,8 @@ public:
 	  virtual void	Save			(IWriter *F)	{};
 };
 
-//class CCC_Deb : public CCC_Integer {
-//public:
-//					CCC_Deb	(LPCSTR N, int* V, int _min=0, int _max=999) :CCC_Integer(N,V,_min,_max){};
-//	  virtual void	Save			(IWriter *F)	{};
-////	extern ENGINE_API  bool 
-//	//DBG=true;
-
-//};
-
-class CCC_ReturnToBase: public IConsole_Command {
+class CCC_ReturnToBase: public IConsole_Command 
+{
 public:
 					CCC_ReturnToBase(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = false; };
 	virtual void	Execute(LPCSTR args) 
@@ -1107,7 +1206,8 @@ public:
 	}
 };
 
-class CCC_GetServerAddress : public IConsole_Command {
+class CCC_GetServerAddress : public IConsole_Command 
+{
 public:
 					CCC_GetServerAddress	(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
 	virtual void	Execute					(LPCSTR args) 
@@ -1193,6 +1293,7 @@ public:
 		  Level().Server->game->signal_Syncronize();
 	  }
 };
+
 class CCC_RadminCmd: public IConsole_Command
 {
 public:
@@ -1433,6 +1534,24 @@ public:
 	}
 };
 
+class CCC_SvChatTSMP : public IConsole_Command
+{
+public:
+	CCC_SvChatTSMP(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = false; };
+
+	virtual void	Execute(LPCSTR args)
+	{
+		if (!OnServer())	return;
+
+		if (Level().Server && Level().Server->game)
+		{
+			game_sv_mp* game = smart_cast<game_sv_mp*>(Level().Server->game);
+			if (game)
+				game->SvSendChatForRadmins(args);
+		}
+	}
+};
+
 class CCC_SvChatNew : public IConsole_Command 
 {
 public:
@@ -1540,6 +1659,7 @@ void register_mp_console_commands()
 
 	CMD1(CCC_BanPlayerByName,	"sv_banplayer"				);
 	CMD1(CCC_BanPlayerByIP,		"sv_banplayer_ip"			);
+	CMD1(CCC_BanPlayerByID,		"sv_banplayer_id");
 
 	CMD1(CCC_UnBanPlayerByIP,	"sv_unbanplayer_ip"			);
 
@@ -1656,6 +1776,8 @@ void register_mp_console_commands()
 
 	CMD4(CCC_SV_Integer,	"tsmp_weapon_disabler_enabled", (int*)&g_sv_mp_DisablerEnabled, 0, 1);
 	CMD4(CCC_SV_Integer,	"tsmp_weapon_hits_log"		,	(int*)&g_sv_mp_LogHitsEnabled, 0, 1);
+	CMD4(CCC_SV_Integer,	"tsmp_weapon_hits_autoban"	,	(int*)&g_sv_mp_AutoBanHitCheaters, 0, 1);
+	CMD4(CCC_SV_Integer,	"tsmp_weapon_hits_show"	,	(int*)&g_sv_mp_ShowHits, 0, 1);	
 	CMD4(CCC_SV_Integer,	"tsmp_weapon_hits_check"	,	(int*)&g_sv_mp_CheckHitsEnabled, 0, 1);
 
 	CMD4(CCC_SV_Integer,	"tsmp_nickname_change_mode"	,	(int*)&g_sv_mp_nickname_change_mode, 1, 3);
@@ -1682,6 +1804,7 @@ void register_mp_console_commands()
 	CMD1(CCC_SvStatus,		"sv_status");
 	CMD1(CCC_SvChat,		"chat");
 	CMD1(CCC_SvChatNew,		"chat_new");
+	CMD1(CCC_SvChatTSMP,	"chat_tsmp");
 	CMD1(CCC_SvChatNewSetName, "chat_new_set_name");
 #ifdef BATTLEYE
 	CMD1(CCC_BattlEyeSrv,	"beserver" );

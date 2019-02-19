@@ -150,6 +150,7 @@ public:
 
 	virtual		void				DumpOnlineStatistic		();
 	void							SvSendChatMessage		(LPCSTR SenderName, LPCSTR Msg);
+	void							SvSendChatForRadmins	(LPCSTR Msg);
 protected:
 	virtual		void				WriteGameState			(CInifile& ini, LPCSTR sect, bool bRoundResult);
 	virtual		void				WritePlayerStats		(CInifile& ini, LPCSTR sect, xrClientData* pCl);

@@ -221,7 +221,11 @@ void xrServer::Process_event	(NET_Packet& P, ClientID sender)
 
 		xrClientData*		c_src = e_src->owner;				// клиент, чей юнит убил
 
-		if (!(c_src->owner)) Msg("! error, lost ptr to owner on die");
+		if (!(c_src->owner))
+		{
+			Msg("! error, lost ptr to owner on die");
+			return;
+		}
 
 		if (c_src->owner->ID == id_src)
 		{

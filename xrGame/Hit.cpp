@@ -89,6 +89,13 @@ void SHit::Read_Packet_Cont		(NET_Packet	Packet)
 	Packet.r_u16			(boneID);
 	Packet.r_vec3			(p_in_bone_space);
 	Packet.r_float			(impulse);
+
+	if (impulse > 10000)
+	{
+		Msg("! Huge impulse decreased");
+		impulse = 4000;
+	}
+
 	if (IsGameTypeSingle())
 		aim_bullet				= Packet.r_u16()!=0;
 	else

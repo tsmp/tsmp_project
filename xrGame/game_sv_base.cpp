@@ -792,31 +792,21 @@ u32 game_sv_GameState::getRPcount (u16 team_idx)
 
 RPoint game_sv_GameState::getRP (u16 team_idx, u32 rp_idx)
 {
-	if( (team_idx<TEAM_COUNT) && (rp_idx<rpoints[team_idx].size()) )
-	return rpoints[team_idx][rp_idx];
+	if((team_idx<TEAM_COUNT) && (rp_idx<rpoints[team_idx].size()))
+		return rpoints[team_idx][rp_idx];
 	else 
 		return RPoint();
 };
 
-void game_sv_GameState::teleport_object	(NET_Packet &packet, u16 id)
-{
-}
-
-void game_sv_GameState::add_restriction	(NET_Packet &packet, u16 id)
-{
-}
-
-void game_sv_GameState::remove_restriction(NET_Packet &packet, u16 id)
-{
-}
-
-void game_sv_GameState::remove_all_restrictions	(NET_Packet &packet, u16 id)
-{
-}
+void game_sv_GameState::teleport_object	(NET_Packet &packet, u16 id) {}
+void game_sv_GameState::add_restriction	(NET_Packet &packet, u16 id) {}
+void game_sv_GameState::remove_restriction(NET_Packet &packet, u16 id) {}
+void game_sv_GameState::remove_all_restrictions	(NET_Packet &packet, u16 id) {}
 
 void game_sv_GameState::MapRotation_AddMap		(LPCSTR MapName)
 {
 	m_pMapRotation_List.push_back(MapName);
+
 	if (m_pMapRotation_List.size() > 1)
 		m_bMapRotation = true;
 	else
@@ -830,16 +820,20 @@ void game_sv_GameState::MapRotation_ListMaps	()
 		Msg ("- Currently there are no any maps in list.");
 		return;
 	}
+
 	CStringTable st;
 	Msg("- ----------- Maps ---------------");
+
 	for (u32 i=0; i<m_pMapRotation_List.size(); i++)
 	{
 		xr_string MapName = m_pMapRotation_List[i];
+
 		if (i==0)
 			Msg("~   %d. %s (%s) (current)", i+1, *st.translate(MapName.c_str()), MapName.c_str());
 		else
 			Msg("  %d. %s (%s)", i+1, *st.translate(MapName.c_str()), MapName.c_str());
 	}
+
 	Msg("- --------------------------------");
 };
 
@@ -862,15 +856,12 @@ void game_sv_GameState::OnRoundStart			()
 void game_sv_GameState::OnRoundEnd()
 { 
 	if ( round_end_reason == eRoundEnd_GameRestarted || round_end_reason == eRoundEnd_GameRestartedFast )
-	{
-		m_bMapNeedRotation = false;
-	}
+		m_bMapNeedRotation = false;	
 	else
-	{
-		m_bMapNeedRotation = true;
-	}
+		m_bMapNeedRotation = true;	
 
 	m_bFastRestart = false;
+
 	if ( round_end_reason == eRoundEnd_GameRestartedFast )
 	{
 		m_bFastRestart = true;
@@ -879,16 +870,19 @@ void game_sv_GameState::OnRoundEnd()
 
 void game_sv_GameState::SaveMapList				()
 {
-	if (0==MAPROT_LIST[0])				return;
-	if (m_pMapRotation_List.empty())	return;
+	if ((0==MAPROT_LIST[0])|| (m_pMapRotation_List.empty()))	
+		return;
+
 	IWriter*		fs	= FS.w_open(MAPROT_LIST);
+
 	while(m_pMapRotation_List.size())
 	{
 		xr_string MapName = m_pMapRotation_List.front();
 		m_pMapRotation_List.pop_front();
 
 		fs->w_printf("sv_addmap %s\n", MapName.c_str());
-	};
+	}
+
 	FS.w_close		(fs);
 };
 
@@ -896,12 +890,15 @@ shared_str game_sv_GameState::level_name		(const shared_str &server_options) con
 {
 	string64			l_name = "";
 	VERIFY				(_GetItemCount(*server_options,'/'));
-	return				(_GetItem(*server_options,0,l_name,'/'));
+
+	return				
+		(_GetItem(*server_options,0,l_name,'/'));
 }
 
 void game_sv_GameState::on_death	(CSE_Abstract *e_dest, CSE_Abstract *e_src)
 {
 	CSE_ALifeCreatureAbstract	*creature = smart_cast<CSE_ALifeCreatureAbstract*>(e_dest);
+
 	if (!creature)
 		return;
 

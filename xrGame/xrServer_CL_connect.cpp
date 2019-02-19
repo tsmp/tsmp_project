@@ -10,13 +10,14 @@ xr_vector<u16> g_perform_spawn_ids;
 void xrServer::Perform_connect_spawn(CSE_Abstract* E, xrClientData* CL, NET_Packet& P)
 {
 	xr_vector<u16>::iterator it = std::find(g_perform_spawn_ids.begin(), g_perform_spawn_ids.end(), E->ID);
+
 	if(it!=g_perform_spawn_ids.end())
 		return;
 	
 	g_perform_spawn_ids.push_back(E->ID);
 
-	if (E->net_Processed)						return;
-	if (E->s_flags.is(M_SPAWN_OBJECT_PHANTOM))	return;
+	if (E->net_Processed || E->s_flags.is(M_SPAWN_OBJECT_PHANTOM))
+		return;
 
 	// Connectivity order
 	CSE_Abstract* Parent = ID_to_entity	(E->ID_Parent);
@@ -24,9 +25,9 @@ void xrServer::Perform_connect_spawn(CSE_Abstract* E, xrClientData* CL, NET_Pack
 
 	// Process
 	Flags16			save = E->s_flags;
-	//-------------------------------------------------
 	E->s_flags.set	(M_SPAWN_UPDATE,TRUE);
-	if (0==E->owner)	
+
+	if (!E->owner)	
 	{
 		// PROCESS NAME; Name this entity
 		if (E->s_flags.is(M_SPAWN_OBJECT_ASPLAYER))
@@ -46,7 +47,7 @@ void xrServer::Perform_connect_spawn(CSE_Abstract* E, xrClientData* CL, NET_Pack
 		E->Spawn_Write	(P,FALSE);
 		E->UPDATE_Write	(P);
 	}
-	//-----------------------------------------------------
+
 	E->s_flags			= save;
 	SendTo				(CL->ID,P,net_flags(TRUE,TRUE));
 	E->net_Processed	= TRUE;
@@ -60,6 +61,7 @@ void xrServer::SendConnectionData(IClient* _CL)
 	u32			mode				= net_flags(TRUE,TRUE);
 	// Replicate current entities on to this client
 	xrS_entities::iterator	I=entities.begin(),E=entities.end();
+
 	for (; I!=E; ++I)						I->second->net_Processed	= FALSE;
 	for (I=entities.begin(); I!=E; ++I)		Perform_connect_spawn		(I->second,CL,P);
 
@@ -72,22 +74,20 @@ void xrServer::OnCL_Connected		(IClient* _CL)
 {
 	xrClientData*	CL				= (xrClientData*)_CL;
 	CL->net_Accepted = TRUE;
-///	Server_Client_Check(CL); 
 
 	csPlayers.Enter					();
 
 	Export_game_type(CL);
 	Perform_game_export();
 	SendConnectionData(CL);
-
-	//
+	
 	NET_Packet P;
 	P.B.count = 0;
 	P.w_clientID(CL->ID);
 	P.r_pos = 0;
 
 	ClientID clientID;
-	clientID.set	(0);
+	clientID.set(0);
 
 	game->AddDelayedEvent			(P,GAME_EVENT_PLAYER_CONNECTED, 0, clientID);
 	csPlayers.Leave					();
@@ -106,6 +106,7 @@ void	xrServer::SendConnectResult(IClient* CL, u8 res, u8 res1, char* ResultStr)
 		P.w_u8(1);
 	else
 		P.w_u8(0);
+
 	P.w_stringZ(Level().m_caServerOptions);
 	
 	SendTo(CL->ID, P);	
@@ -123,15 +124,15 @@ BOOL	g_SV_Disable_Auth_Check = FALSE;
 
 bool xrServer::NeedToCheckClient_BuildVersion		(IClient* CL)	
 {
-	if (g_SV_Disable_Auth_Check) return false;
+	if (g_SV_Disable_Auth_Check) 
+		return false;
 
 	CL->flags.bVerified = FALSE;
 	NET_Packet	P;
 	P.w_begin	(M_AUTH_CHALLENGE);
 	SendTo		(CL->ID, P);
-	return true;
 
-//#endif
+	return true;
 };
 
 void xrServer::OnBuildVersionRespond(IClient* CL, NET_Packet& P)
@@ -142,26 +143,17 @@ void xrServer::OnBuildVersionRespond(IClient* CL, NET_Packet& P)
 	u64 _him = P.r_u64();
 
 	u64 _our_new = 1189233227;
-
-#ifdef DEBUG
-	Msg("_our = %d", _our);
-	Msg("_him = %d", _him);
-#endif // DEBUG
-
+	
 	if (( _our_new == _him )||(_our == _him))
 	{				
 		bool bAccessUser = false;
 		string512 res_check;
 		
-		if ( !CL->flags.bLocal )
-		{
-			bAccessUser	= Check_ServerAccess( CL, res_check );
-		}
+		if (!CL->flags.bLocal)
+			bAccessUser	= Check_ServerAccess( CL, res_check );		
 				
 		if( CL->flags.bLocal || bAccessUser )
-		{
-			Check_BuildVersion_Success( CL );
-		}
+			Check_BuildVersion_Success( CL );		
 		else
 		{
 			Msg( res_check );
@@ -174,11 +166,9 @@ void xrServer::OnBuildVersionRespond(IClient* CL, NET_Packet& P)
 	}
 	else
 	{
-	Msg("! Data verification failed. Cheater? Someone tried to connect with this data = %d", _him);
-
-	SendConnectResult(CL, 0, 0, "Data verification failed. Cheater? [3]");
-}
-	
+		Msg("! Data verification failed. Cheater? Someone tried to connect with this data = %d", _him);
+		SendConnectResult(CL, 0, 0, "Data verification failed. Cheater? [3]");
+	}	
 };
 
 void xrServer::Check_BuildVersion_Success			( IClient* CL )

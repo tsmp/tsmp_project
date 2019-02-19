@@ -948,8 +948,7 @@ void game_sv_mp::OnVoteStart				(LPCSTR VoteCommand, ClientID sender)
 
 	SetVotingActive(true);
 
-	u32 CurTime = Level().timeServer();
-	m_uVoteStartTime = CurTime;
+	m_uVoteStartTime = Level().timeServer();
 
 	if (m_bVotingReal)
 	{
@@ -1821,6 +1820,32 @@ void game_sv_mp::SvSendChatMessage(LPCSTR SenderName, LPCSTR Msg)
 	P.w_stringZ			(Msg);
 	P.w_s16				(0);
 	u_EventSend			(P);
+}
+
+void game_sv_mp::SvSendChatForRadmins(LPCSTR Mes)
+{
+	NET_Packet P;
+
+	P.w_begin(M_CHAT_MESSAGE);
+	P.w_s16(0);
+	P.w_stringZ("%c[red] TSMP");
+	P.w_stringZ(Mes);
+	P.w_s16(0);
+
+	Msg("! TSMP: %s", Mes);
+	
+	u32	cnt = Level().Server->game->get_players_count();
+
+	for (u32 it = 0; it < cnt; it++)
+	{
+		xrClientData *l_pC = (xrClientData*)Level().Server->client_Get(it);
+
+		if (!l_pC)
+			continue;
+
+		if(l_pC->m_admin_rights.m_has_admin_rights)
+			m_server->SendTo_LL(l_pC->ID ,P.B.data, P.B.count);
+	}
 }
 
 #include "UIGameCustom.h"
