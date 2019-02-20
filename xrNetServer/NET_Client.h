@@ -15,19 +15,14 @@ public:
 	~INetQueue();
 
 	NET_Packet*			CreateGet	();
-//.	NET_Packet*			CreateGet	(const NET_Packet& _other);
 	void				CreateCommit(NET_Packet*);
 
 	NET_Packet*			Retreive();
 	void				Release	();
 };
 
-//==============================================================================
 
-class XRNETSERVER_API 
-IPureClient
-  : private MultipacketReciever,
-    private MultipacketSender
+class XRNETSERVER_API IPureClient : private MultipacketReciever, private MultipacketSender
 {
 	enum ConnectionState
 	{
@@ -125,4 +120,3 @@ private:
     virtual void    _SendTo_LL( const void* data, u32 size, u32 flags, u32 timeout );
 
 };
-

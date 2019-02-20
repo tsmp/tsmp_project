@@ -623,28 +623,15 @@ public:
 	virtual void	Info(TInfo& I) { strcpy(I, "Ban Player by IP"); }
 };
 
-class CCC_TSMP_SetPort : public IConsole_Command 
+class CCC_TSMP_SetIp : public IConsole_Command 
 {
-public:
-
-#pragma todo("tsmp: удалить")
-
-	// чекнуть net_Address_server и  dump_URL для ip
-	CCC_TSMP_SetPort(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = false; };
-	virtual void	Execute(LPCSTR args_)
-	{
-		g_sv_mp_loader_port = args_;
-	}
-
-	virtual void	Info(TInfo& I) { strcpy(I, "Ban Player by IP"); }
-};
-
-class CCC_TSMP_SetIp : public IConsole_Command {
 public:
 	CCC_TSMP_SetIp(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = false; };
 	virtual void	Execute(LPCSTR args_)
 	{
 		g_sv_mp_loader_ip = args_;
+
+#pragma todo("tsmp: переписать")
 	}
 
 	virtual void	Info(TInfo& I) { strcpy(I, "Ban Player by IP"); }
@@ -1785,7 +1772,6 @@ void register_mp_console_commands()
 	CMD1(CCC_WeaponDisable, "tsmp_weapon_disable");
 	CMD4(CCC_SV_Integer,	"tsmp_loader_enabled"		,	(int*)&g_sv_mp_ModLoaderEnabled, 0, 1);
 	CMD1(CCC_TSMP_SetIp,	"tsmp_loader_reconnect_ip");
-	CMD1(CCC_TSMP_SetPort,	"tsmp_loader_reconnect_port");
 
 
 	CMD4(CCC_SV_Integer,	"sv_artefact_stay_time"		,	(int*)&g_sv_ah_dwArtefactStayTime		, 0,180);	//min
