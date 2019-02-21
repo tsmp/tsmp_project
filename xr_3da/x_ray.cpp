@@ -89,8 +89,8 @@ ENGINE_API	bool			g_bBenchmark	= false;
 string512	g_sBenchmarkName;
 
 
-ENGINE_API	string512		g_sLaunchOnExit_params;
-ENGINE_API	string512		g_sLaunchOnExit_app;
+ENGINE_API string512 g_sLaunchOnExit_params;
+ENGINE_API string512 g_sLaunchOnExit_app;
 
 // startup point
 void InitEngine()

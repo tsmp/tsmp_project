@@ -5,8 +5,6 @@
 #include "net_messages.h"
 #include "NET_Log.h"
 
-#define  BATTLEYE
-
 #pragma warning(disable:4577)
 
 #pragma warning(push)
@@ -197,21 +195,10 @@ void  IPureClient::_Recieve( const void* data, u32 data_size, u32 /*param*/ )
 		
 		if (data_size == sizeof(MSYS_CONFIG))
 		{
-			MSYS_CONFIG* msys_cfg = (MSYS_CONFIG*)data;
-
-			if ( msys_cfg->is_battleye )
-			{
-#ifdef BATTLEYE
-				if ( !TestLoadBEClient() )
-				{
-					net_Connected = EnmConnectionFails;
-					return;
-				}
-#endif // BATTLEYE
-			}
 			net_Connected = EnmConnectionCompleted;
 			return;
 		}
+
 		Msg( "! Unknown system message" );
 		return;
 	} 

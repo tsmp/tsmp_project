@@ -1,5 +1,4 @@
-#ifndef _D3D_EXT_internal
-#define _D3D_EXT_internal
+#pragma once
 
 #ifndef NO_XR_LIGHT
 struct Flight 
@@ -116,6 +115,4 @@ struct	VDeclarator	: public svector<D3DVERTEXELEMENT9, MAXD3DDECLLENGTH+1>
 		else					return 0==memcmp(begin(),d.begin(),size()*sizeof(D3DVERTEXELEMENT9));
 	}
 };
-#endif
-
 #endif

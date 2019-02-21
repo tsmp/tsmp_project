@@ -57,27 +57,6 @@ xrServer::EConnect xrServer::Connect(shared_str &session_name)
 	game->Create			(session_name);
 	csPlayers.Leave			();
 	
-#ifdef BATTLEYE
-	if ( game->get_option_i( *session_name, "battleye", 1) != 0 ) // default => battleye enable (always)
-	{
-		// if level exist & if server in internet
-		if ( g_pGameLevel && (game->get_option_i( *session_name, "public", 0) != 0)  )
-		{
-			if ( Level().battleye_system.server )
-			{
-				Msg( "Warning: BattlEye already loaded!" );
-			}
-			else
-			{
-				if ( !Level().battleye_system.LoadServer( this ) )
-				{
-					return ErrBELoad;
-				}
-			}
-		}//g_pGameLevel
-	}
-#endif // BATTLEYE
-	
 	return IPureServer::Connect(*session_name);
 }
 
@@ -292,9 +271,6 @@ void xrServer::AttachNewClient(IClient* CL)
 	msgConfig.sign2 = 0x26111975;
 	msgConfig.is_battleye = 0;
 
-#ifdef BATTLEYE
-		msgConfig.is_battleye = (g_pGameLevel && Level().battleye_system.server != 0)? 1 : 0;
-#endif // BATTLEYE
 	
 			if (psNET_direct_connect)  //single_game
 			{

@@ -7,9 +7,6 @@
 #include "UIEditBox.h"
 #include "UI3tButton.h"
 
-#define  BATTLEYE
-
-
 class CUIXml;
 class CGameSpy_Browser;
 class CUIColorAnimatorWrapper;
@@ -23,7 +20,8 @@ struct ServerInfo;
 #define DIF_HEIGHT		180
 #define LST_COLUMN_COUNT	7
 
-class SServerFilters{
+class SServerFilters
+{
 public:
 	bool	empty;
 	bool	full;

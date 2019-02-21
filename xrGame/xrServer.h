@@ -1,24 +1,14 @@
-#pragma once
 // xrServer.h: interface for the xrServer class.
-//
-//////////////////////////////////////////////////////////////////////
 
-#if !defined(AFX_XRSERVER_H__65728A25_16FC_4A7B_8CCE_D798CA5EC64E__INCLUDED_)
-#define AFX_XRSERVER_H__65728A25_16FC_4A7B_8CCE_D798CA5EC64E__INCLUDED_
 #pragma once
 
 #include "../../xrNetServer/net_server.h"
 #include "game_sv_base.h"
 #include "id_generator.h"
 
-#define  BATTLEYE
-
 #ifdef DEBUG
 //. #define SLOW_VERIFY_ENTITIES
 #endif
-
-//#pragma once
-//BOOL DBGM;
 
 class CSE_Abstract;
 
@@ -38,25 +28,31 @@ public:
 	u32						net_LastMoveUpdateTime;
 	
 	game_PlayerState*		ps;
-	struct{
+
+	struct
+	{
 		u8						m_maxPingWarnings;
 		u32						m_dwLastMaxPingWarningTime;		
 	}m_ping_warn;
-	struct{
+
+	struct
+	{
 		BOOL					m_has_admin_rights;
 		u32						m_dwLoginTime;
 	}m_admin_rights;
-	struct {
+
+	struct 
+	{
 		u32						m_UsageHistory[60];
 		int						m_Counter;
 		bool					m_HasBan;
 		u32						m_BanSince;
 	}m_radio_usage;
+
 	xrClientData();
 	virtual					~xrClientData			();
 	virtual void			Clear					();
 };
-
 
 // main
 struct	svs_respawn
@@ -64,6 +60,7 @@ struct	svs_respawn
 	u32		timestamp;
 	u16		phantom;
 };
+
 IC bool operator < (const svs_respawn& A, const svs_respawn& B)	{ return A.timestamp<B.timestamp; }
 
 class xrServer	: public IPureServer  
@@ -125,10 +122,12 @@ public:
 	{
 		m_tID_Generator		= id_generator_type();
 	}
+
 	IC u16					PerformIDgen			(u16 ID)
 	{
 		return				(m_tID_Generator.tfGetID(ID));
 	}
+
 	IC void					FreeID					(u16 ID, u32 time)
 	{
 		return				(m_tID_Generator.vfFreeID(ID, time));
@@ -155,6 +154,7 @@ public:
 	void					UnloadDll();
 	static void	__stdcall				SendCB(void* msg, unsigned int len, void* userdata);
 	virtual void			OnBuildVersionRespond				(IClient* CL, NET_Packet& P);
+
 protected:
 	bool					CheckAdminRights		(const shared_str& user, const shared_str& pass, string512 reason);
 	virtual IClient*		new_client				( SClientConnectData* cl_data );
@@ -171,8 +171,7 @@ protected:
 	void					OnChatMessage			(NET_Packet* P, xrClientData* CL);
 
 public:
-	// constr / destr
-	xrServer				();
+	xrServer();
 	virtual ~xrServer();
 
 	// extended functionality
@@ -225,5 +224,3 @@ public:
 			void			verify_entity		(const CSE_Abstract *entity) const;
 #endif
 };
-
-#endif // !defined(AFX_XRSERVER_H__65728A25_16FC_4A7B_8CCE_D798CA5EC64E__INCLUDED_)

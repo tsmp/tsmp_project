@@ -6,7 +6,8 @@
 // CL	== client 2 server message
 // SV	== server 2 client message
 
-enum {
+enum 
+{
 	M_UPDATE			= 0,	// DUAL: Update state
 	M_SPAWN,					// DUAL: Spawning, full state
 
@@ -24,7 +25,7 @@ enum {
 	//----------- for E3 -----------------------------
 	M_CL_UPDATE,
 	M_UPDATE_OBJECTS,
-	//-------------------------------------------------
+
 	M_CLIENTREADY,				// Client has finished to load level and are ready to play
 	
 	M_CHANGE_LEVEL,				// changing level
@@ -37,7 +38,6 @@ enum {
 	M_GAMEMESSAGE,					// Game Message
 	M_EVENT_PACK,					// Pack of M_EVENT
 
-	//-----------------------------------------------------
 	M_GAMESPY_CDKEY_VALIDATION_CHALLENGE,
 	M_GAMESPY_CDKEY_VALIDATION_CHALLENGE_RESPOND,
 	M_CLIENT_CONNECT_RESULT,
@@ -46,22 +46,22 @@ enum {
 	M_CHAT_MESSAGE,
 	M_CLIENT_WARN,
 	M_CHANGE_LEVEL_GAME,
-	//-----------------------------------------------------
+
 	M_CL_PING_CHALLENGE,
 	M_CL_PING_CHALLENGE_RESPOND,
-	//-----------------------------------------------------
+
 	M_AUTH_CHALLENGE,
 	M_CL_AUTH,
 	M_BULLET_CHECK_RESPOND,
-	//-----------------------------------------------------
+
 	M_STATISTIC_UPDATE,
 	M_STATISTIC_UPDATE_RESPOND,
-	//-----------------------------------------------------
+
 	M_PLAYER_FIRE,
-	//-----------------------------------------------------
+
 	M_MOVE_PLAYERS,
 	M_MOVE_PLAYERS_RESPOND,
-	//-----------------------------------------------------
+
 	M_CHANGE_SELF_NAME,
 	M_REMOTE_CONTROL_AUTH,
 	M_REMOTE_CONTROL_CMD,

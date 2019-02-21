@@ -14,7 +14,6 @@
 #include "game_sv_artefacthunt.h"
 #include "date_time.h"
 #include "game_cl_base_weapon_usage_statistic.h"
-
 #include "..\TSMP_BuildConfig.h"
 
 extern	float	g_cl_lvInterp;
@@ -23,48 +22,47 @@ extern	u32		g_cl_InterpolationMaxPoints;
 extern string64	gsCDKey;
 extern	u32		g_dwMaxCorpses;
 extern	float	g_fTimeFactor;
-extern	BOOL	g_b_COD_PickUpMode		;
-extern	int		g_iWeaponRemove			;
-extern	int		g_iCorpseRemove			;
-extern	BOOL	g_bCollectStatisticData ;
-extern	BOOL	g_SV_Disable_Auth_Check	;
+extern	BOOL	g_b_COD_PickUpMode;
+extern	int		g_iWeaponRemove;
+extern	int		g_iCorpseRemove;
+extern	BOOL	g_bCollectStatisticData;
+extern	BOOL	g_SV_Disable_Auth_Check;
 
 extern  int		g_sv_mp_iDumpStatsPeriod;
 extern	BOOL	g_SV_Force_Artefact_Spawn;
 extern	int		g_Dump_Update_Write;
 extern	int		g_Dump_Update_Read;
-extern	u32		g_sv_base_dwRPointFreezeTime	;
-extern	int		g_sv_base_iVotingEnabled		;
-extern	BOOL	g_sv_mp_bSpectator_FreeFly		;
-extern	BOOL	g_sv_mp_bSpectator_FirstEye		;
-extern	BOOL	g_sv_mp_bSpectator_LookAt		;
-extern	BOOL	g_sv_mp_bSpectator_FreeLook		;
-extern	BOOL	g_sv_mp_bSpectator_TeamCamera	;
-extern	BOOL	g_sv_mp_bCountParticipants		;
-extern	float	g_sv_mp_fVoteQuota				;
-extern	int		g_sv_mp_fVoteTime				;
+extern	u32		g_sv_base_dwRPointFreezeTime;
+extern	int		g_sv_base_iVotingEnabled;
+extern	BOOL	g_sv_mp_bSpectator_FreeFly;
+extern	BOOL	g_sv_mp_bSpectator_FirstEye;
+extern	BOOL	g_sv_mp_bSpectator_LookAt;
+extern	BOOL	g_sv_mp_bSpectator_FreeLook;
+extern	BOOL	g_sv_mp_bSpectator_TeamCamera;
+extern	BOOL	g_sv_mp_bCountParticipants;
+extern	float	g_sv_mp_fVoteQuota;
+extern	int		g_sv_mp_fVoteTime;
 
-extern	int		TSMP_Timer1Interval				;
-extern	int		TSMP_Timer2Interval				;
-extern	int		TSMP_Timer3Interval				;
-extern	int		TSMP_Timer1Enabled				;
-extern	int		TSMP_Timer2Enabled				;
-extern	int		TSMP_Timer3Enabled				;
+extern	int		TSMP_Timer1Interval;
+extern	int		TSMP_Timer2Interval;
+extern	int		TSMP_Timer3Interval;
+extern	int		TSMP_Timer1Enabled;
+extern	int		TSMP_Timer2Enabled;
+extern	int		TSMP_Timer3Enabled;
 
-extern	int		g_sv_mp_RadioInterval			;
-extern	int		g_sv_mp_RadioMuteInterval		;
-extern	int		g_sv_mp_RadioAntiSpam			;
-extern	int		g_sv_mp_RadioMaxMsgs			;
-extern	std::string	g_sv_mp_loader_ip			;
-extern	std::string	g_sv_mp_loader_port			;
-extern	int		g_sv_mp_ModLoaderEnabled		;
-extern	int		g_sv_mp_DisablerEnabled			;
-extern 	int		g_sv_mp_LogHitsEnabled			;
+extern	int		g_sv_mp_RadioInterval;
+extern	int		g_sv_mp_RadioMuteInterval;
+extern	int		g_sv_mp_RadioAntiSpam;
+extern	int		g_sv_mp_RadioMaxMsgs;
+extern	std::string	g_sv_mp_loader_ip;
+extern	std::string	g_sv_mp_loader_port;
+extern	int		g_sv_mp_ModLoaderEnabled;
+extern	int		g_sv_mp_DisablerEnabled;
+extern 	int		g_sv_mp_LogHitsEnabled;
 extern volatile	int		g_sv_mp_CheckHitsEnabled;
 extern volatile	int		g_sv_mp_AutoBanHitCheaters;
 extern volatile	int		g_sv_mp_ShowHits;
-extern	int		g_sv_mp_nickname_change_mode	;
-
+extern	int		g_sv_mp_nickname_change_mode;
 
 extern	u32		g_sv_dm_dwForceRespawn			;
 extern	s32		g_sv_dm_dwFragLimit				;
@@ -105,97 +103,116 @@ extern	int		g_sv_Client_Reconnect_Time;
 		string64 NewChatSenderName = {'S','e','r','v','e','r','A','d','m','i','n'};
 
 void XRNETSERVER_API DumpNetCompressorStats	(bool brief);
+
 BOOL XRNETSERVER_API g_net_compressor_enabled;
 BOOL XRNETSERVER_API g_net_compressor_gather_stats;
 
 class CCC_Restart : public IConsole_Command 
 {
 public:
-					CCC_Restart		(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
-	virtual void	Execute			(LPCSTR args) 
+	CCC_Restart(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = true; };
+
+	virtual void Execute(LPCSTR args) 
 	{
-		if (!OnServer())			return;
+		if (!OnServer())
+			return;
+
 		if(Level().Server)
 		{
 			Level().Server->game->round_end_reason = eRoundEnd_GameRestarted;
 			Level().Server->game->OnRoundEnd();
 		}
 	}
-	virtual void	Info	(TInfo& I){strcpy(I,"restart game");}
+	virtual void Info(TInfo& I) {strcpy(I,"restart game");}
 };
 
 class CCC_RestartFast : public IConsole_Command 
 {
 public:
-					CCC_RestartFast	(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
-	virtual void	Execute			(LPCSTR args) 
+	CCC_RestartFast(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = true; };
+
+	virtual void Execute(LPCSTR args) 
 	{
-		if (!OnServer())		
-									return;
+		if (!OnServer())
+			return;
+
 		if(Level().Server)
 		{
 			Level().Server->game->round_end_reason = eRoundEnd_GameRestartedFast;
 			Level().Server->game->OnRoundEnd();
 		}
 	}
-	virtual void	Info			(TInfo& I) {strcpy(I,"restart game fast");}
+
+	virtual void Info(TInfo& I) {strcpy(I,"restart game fast");}
 };
 
 class CCC_Kill : public IConsole_Command 
 {
 public:
-					CCC_Kill		(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
-	virtual void	Execute			(LPCSTR args) 
+	CCC_Kill(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = true; };
+
+	virtual void Execute(LPCSTR args) 
 	{
-		if (IsGameTypeSingle())		
+		if (IsGameTypeSingle())	
+			return;
+		
+		if (Game().local_player 
+			&& Game().local_player->testFlag(GAME_PLAYER_FLAG_VERY_VERY_DEAD)) 
 										return;
 		
-		if (Game().local_player && 
-			Game().local_player->testFlag(GAME_PLAYER_FLAG_VERY_VERY_DEAD)) 
-										return;
-		
-		CObject *l_pObj					= Level().CurrentControlEntity();
-		CActor *l_pPlayer				= smart_cast<CActor*>(l_pObj);
+		CObject *l_pObj		= Level().CurrentControlEntity();
+		CActor *l_pPlayer	= smart_cast<CActor*>(l_pObj);
+
 		if(l_pPlayer) 
 		{
-			NET_Packet					P;
-			l_pPlayer->u_EventGen		(P,GE_GAME_EVENT,l_pPlayer->ID()	);
-			P.w_u16						(GAME_EVENT_PLAYER_KILL);
-			P.w_u16						(u16(l_pPlayer->ID())	);
-			l_pPlayer->u_EventSend		(P);
+			NET_Packet P;
+			l_pPlayer->u_EventGen(P,GE_GAME_EVENT,l_pPlayer->ID());
+			P.w_u16(GAME_EVENT_PLAYER_KILL);
+			P.w_u16(u16(l_pPlayer->ID()));
+			l_pPlayer->u_EventSend(P);
 		}
 	}
-	virtual void	Info	(TInfo& I)	{ strcpy(I,"player kill"); }
+
+	virtual void Info(TInfo& I)	{ strcpy(I,"player kill"); }
 };
 
-class CCC_Net_CL_Resync : public IConsole_Command {
+class CCC_Net_CL_Resync : public IConsole_Command 
+{
 public:
-						CCC_Net_CL_Resync	(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
-	virtual void		Execute				(LPCSTR args) 
+	CCC_Net_CL_Resync(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
+
+	virtual void Execute(LPCSTR args) 
 	{
 		Level().net_Syncronize();
 	}
-	virtual void	Info	(TInfo& I)		{strcpy(I,"resyncronize client");}
+
+	virtual void Info(TInfo& I) {strcpy(I,"resyncronize client");}
 };
 
-class CCC_Net_CL_ClearStats : public IConsole_Command {
+class CCC_Net_CL_ClearStats : public IConsole_Command 
+{
 public:
-						CCC_Net_CL_ClearStats	(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
-	virtual void		Execute					(LPCSTR args)
+	CCC_Net_CL_ClearStats(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
+
+	virtual void Execute(LPCSTR args)
 	{
 		Level().ClearStatistic();
 	}
-	virtual void		Info	(TInfo& I){strcpy(I,"clear client net statistic");}
+
+	virtual void Info(TInfo& I){strcpy(I,"clear client net statistic");}
 };
 
-class CCC_Net_SV_ClearStats : public IConsole_Command {
+class CCC_Net_SV_ClearStats : public IConsole_Command 
+{
 public:
-						CCC_Net_SV_ClearStats	(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
-	virtual void		Execute					(LPCSTR args) 
+	CCC_Net_SV_ClearStats(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
+
+	virtual void Execute(LPCSTR args) 
 	{
 		Level().Server->ClearStatistic();
 	}
-	virtual void	Info	(TInfo& I){strcpy(I,"clear server net statistic"); }
+
+	virtual void Info(TInfo& I){strcpy(I,"clear server net statistic"); }
 };
 
 #ifdef DEBUG
@@ -261,28 +278,34 @@ public:
 };
 #endif // DEBUG
 
-class CCC_GSCDKey: public CCC_String{
+class CCC_GSCDKey: public CCC_String
+{
 public:
-						CCC_GSCDKey		(LPCSTR N, LPSTR V, int _size) : CCC_String(N, V, _size)  { bEmptyArgsHandled = false; };
-	virtual void		Execute			(LPCSTR arguments)
+	CCC_GSCDKey(LPCSTR N, LPSTR V, int _size) : CCC_String(N, V, _size)  { bEmptyArgsHandled = false; };
+
+	virtual void Execute(LPCSTR arguments)
 	{
 		CCC_String::Execute(arguments);	
 
 		WriteRegistry_StrValue(REGISTRY_VALUE_GSCDKEY, value);
 
-		if (g_pGamePersistent && MainMenu()) MainMenu()->ValidateCDKey();
+		if (g_pGamePersistent && MainMenu()) 
+			MainMenu()->ValidateCDKey();
 	}
-	virtual void		Save			(IWriter *F)	{};
+
+	virtual void Save(IWriter *F) {};
 };
 
-class CCC_KickPlayerByName : public IConsole_Command {
+class CCC_KickPlayerByName : public IConsole_Command 
+{
 public:
-					CCC_KickPlayerByName(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = false; };
-	virtual void	Execute				(LPCSTR args) 
-	{
-		if (!OnServer())		return;
+	CCC_KickPlayerByName(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = false; };
 
-		if (!xr_strlen(args))	return;
+	virtual void Execute(LPCSTR args) 
+	{
+		if (!OnServer() || !xr_strlen(args))
+			return;
+
 		if (strchr(args, '/'))
 		{
 			Msg("!  '/' is not allowed in names!");
@@ -308,10 +331,14 @@ public:
 
 			char *p = strtok(s, "_");
 			int iii = 0;
-			while (p!= NULL) {
-			//	cout << p << endl;
-				if (iii == 0) Argum = p;
-				else Reason = p;
+
+			while (p!= NULL) 
+			{
+				if (iii == 0) 
+					Argum = p;
+				else 
+					Reason = p;
+
 				p = strtok(NULL, "_");
 				iii++;
 			}
@@ -319,32 +346,31 @@ public:
 			delete[] s;
 		}
 
-
 		Msg(Argum.c_str());
 		Msg(Reason.c_str());
-	//	PlayerName = Argum.c_str();
 
 		string512 Reason512;
 		strcpy(Reason512, Reason.c_str());
-		//strcpy(args, Argum.c_str());
 
 		if (xr_strlen(args)>17)
 		{
-		//	strncpy				(PlayerName, args, 17);
 			strncpy				(PlayerName, Argum.c_str(), 17);
 			PlayerName[17]		= 0;
-		}else
-		//	strcpy(PlayerName, args);
-		strcpy(PlayerName, Argum.c_str());
+		}
+		else
+			strcpy(PlayerName, Argum.c_str());
 
-		xr_strlwr			(PlayerName);
+		xr_strlwr(PlayerName);
 
 		Level().Server->clients_Lock();
+
 		u32	cnt					= Level().Server->game->get_players_count();
 		u32 it;
+
 		for(it=0; it<cnt; it++)	
 		{
 			xrClientData *l_pC = (xrClientData*)	Level().Server->client_Get	(it);
+			
 			if (l_pC)
 			{
 				string64			_low_name;
@@ -356,39 +382,41 @@ public:
 					if (Level().Server->GetServerClient() != l_pC)
 					{
 						Msg("Disconnecting : %s", l_pC->ps->getName());
-						if (bIsNewKick)	Level().Server->DisconnectClient(l_pC, Reason512);
-						//if (bIsNewKick)
-						//{
-							//string512* Re = Reason512;
 
-						//	if (bIsNewKick)	Level().Server->DisconnectClient(l_pC, Reason512);
-
-//						}
+						if (bIsNewKick)	
+							Level().Server->DisconnectClient(l_pC, Reason512);					
 						else 
 							Level().Server->DisconnectClient(l_pC);
+
 						break;
-					}else
+					}
+					else
 						Msg("! Can't disconnect server's client");
 				}
 			}			
-		};
+		}
+
 		if (it == cnt) 
 		{
 			Msg("! No such player found : %s", PlayerName);
 		}
+
 		Level().Server->clients_Unlock();		
 	};
 
-	virtual void	Info	(TInfo& I)	{strcpy(I,"Kick Player by name"); }
+	virtual void Info(TInfo& I)	{strcpy(I,"Kick Player by name"); }
 };
 
-
-class CCC_BanPlayerByName : public IConsole_Command {
+class CCC_BanPlayerByName : public IConsole_Command 
+{
 public:
-					CCC_BanPlayerByName	(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = false; };
-	virtual void	Execute				(LPCSTR args_) 
+	CCC_BanPlayerByName	(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = false; };
+
+	virtual void Execute(LPCSTR args_) 
 	{
-		if (!g_pGameLevel || !Level().Server || !Level().Server->game) return;
+		if (!g_pGameLevel || !Level().Server || !Level().Server->game) 
+			return;
+
 		string4096				buff;
 		strcpy					(buff, args_);
 		u32 len					= xr_strlen(buff);
@@ -398,32 +426,39 @@ public:
 
 		string1024				digits;
 		LPSTR					p = buff+len-1;
+
 		while(isdigit(*p))
 		{
 			if (p == buff) break;
 			--p;
 		}
+
 		R_ASSERT				(p>=buff);
 		strcpy					(digits,p);
 		*p						= 0;
+
 		if (!xr_strlen(buff))
 		{
 			Msg("incorrect parameter passed. bad name.");
 			return;
 		}
+
 		u32 ban_time			= atol(digits);
+
 		if(ban_time==0)
 		{
 			Msg("incorrect parameters passed.  name and time required");
 			return;
 		}
+
 		string4096 PlayerName		= "";
+
 		if (xr_strlen(buff)>17)
 		{
-
 			strncpy				(PlayerName, buff, 17);
 			PlayerName[17]		= 0;
-		}else
+		}
+		else
 			strcpy				(PlayerName, buff);
 
 		xr_strlwr			(PlayerName);
@@ -431,9 +466,11 @@ public:
 		Level().Server->clients_Lock();
 		u32	cnt					= Level().Server->game->get_players_count();
 		u32 it;
+
 		for(it=0; it<cnt; it++)	
 		{
 			xrClientData *l_pC = (xrClientData*)	Level().Server->client_Get	(it);
+
 			if (l_pC)
 			{
 				string64			_low_name;
@@ -456,22 +493,23 @@ public:
 					}
 				}
 			}			
-		};
+		}
+
 		if (it == cnt)
 			Msg("! No such player found : %s", PlayerName);
 
 		Level().Server->clients_Unlock();	
 	};
 
-	virtual void	Info	(TInfo& I){strcpy(I,"Ban Player by Name"); }
+	virtual void Info(TInfo& I){strcpy(I,"Ban Player by Name"); }
 };
-
 
 class CCC_BanPlayerByIP : public IConsole_Command 
 {
 public:
-					CCC_BanPlayerByIP	(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = false; };
-	virtual void	Execute				(LPCSTR args_) 
+	CCC_BanPlayerByIP(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = false; };
+
+	virtual void Execute(LPCSTR args_) 
 	{
 		if (!g_pGameLevel || !Level().Server) 
 			return;
@@ -530,14 +568,15 @@ public:
 		Level().Server->clients_Unlock		();
 	};
 
-	virtual void	Info	(TInfo& I){strcpy(I,"Ban Player by IP"); }
+	virtual void Info(TInfo& I){strcpy(I,"Ban Player by IP"); }
 };
 
 class CCC_BanPlayerByID : public IConsole_Command
 {
 public:
 	CCC_BanPlayerByID(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = false; };
-	virtual void	Execute(LPCSTR args_)
+
+	virtual void Execute(LPCSTR args_)
 	{
 		if (!g_pGameLevel || !Level().Server)
 			return;
@@ -583,7 +622,7 @@ public:
 		string1024 s_id;
 		strcpy(s_id, buff);
 
-		u32 volatile id = static_cast<u32>(atoll(s_id));
+		u32 id = static_cast<u32>(atoll(s_id));
 
 		if (id == 0)
 		{
@@ -620,31 +659,33 @@ public:
 		Msg("client with this id not found");
 	};
 
-	virtual void	Info(TInfo& I) { strcpy(I, "Ban Player by IP"); }
+	virtual void Info(TInfo& I) { strcpy(I, "Ban Player by ClientID"); }
 };
 
 class CCC_TSMP_SetIp : public IConsole_Command 
 {
 public:
 	CCC_TSMP_SetIp(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = false; };
-	virtual void	Execute(LPCSTR args_)
+
+	virtual void Execute(LPCSTR args_)
 	{
 		g_sv_mp_loader_ip = args_;
 
 #pragma todo("tsmp: переписать")
 	}
 
-	virtual void	Info(TInfo& I) { strcpy(I, "Ban Player by IP"); }
+	virtual void Info(TInfo& I) { strcpy(I, "Set reconnect IP for clients who use downloader"); }
 };
 
-class CCC_UnBanPlayerByIP : public IConsole_Command {
+class CCC_UnBanPlayerByIP : public IConsole_Command 
+{
 public:
-					CCC_UnBanPlayerByIP	(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = false; };
-	virtual void	Execute				(LPCSTR args) 
-	{
-		if (!g_pGameLevel || !Level().Server) return;
+	CCC_UnBanPlayerByIP(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = false; };
 
-		if (!xr_strlen(args)) return;
+	virtual void Execute(LPCSTR args) 
+	{
+		if (!g_pGameLevel || !Level().Server || !xr_strlen(args)) 
+			return;
 
 		ip_address						Address;
 		Address.set						(args);
@@ -653,17 +694,18 @@ public:
 		Level().Server->clients_Unlock	();
 	};
 
-	virtual void	Info	(TInfo& I){strcpy(I,"UnBan Player by IP");}
+	virtual void Info(TInfo& I){strcpy(I,"UnBan Player by IP");}
 };
-
 
 class CCC_ListPlayers : public IConsole_Command 
 {
 public:
-					CCC_ListPlayers	(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
-	virtual void	Execute			(LPCSTR args) 
+	CCC_ListPlayers(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
+
+	virtual void Execute(LPCSTR args) 
 	{
-		if (!OnServer())	return;
+		if (!OnServer())	
+			return;
 		
 		u32	cnt = Level().Server->game->get_players_count();
 		Msg("------------------------");
@@ -691,24 +733,30 @@ public:
 		Msg("------------------------");
 	};
 
-	virtual void	Info	(TInfo& I){strcpy(I,"List Players"); }
+	virtual void Info(TInfo& I){strcpy(I,"List Players like on controller"); }
 };
 
 class CCC_ListPlayersOriginal : public IConsole_Command
 {
 public:
 	CCC_ListPlayersOriginal(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = true; };
-	virtual void	Execute(LPCSTR args)
+
+	virtual void Execute(LPCSTR args)
 	{
-		if (!OnServer())	return;
+		if (!OnServer())	
+			return;
 
 		u32	cnt = Level().Server->game->get_players_count();
 		Msg("------------------------");
 		Msg("- Total Players : %d", cnt);
+
 		for (u32 it = 0; it<cnt; it++)
 		{
 			xrClientData *l_pC = (xrClientData*)Level().Server->client_Get(it);
-			if (!l_pC)			continue;
+
+			if (!l_pC)			
+				continue;
+
 			ip_address			Address;
 			DWORD dwPort = 0;
 
@@ -721,24 +769,26 @@ public:
 		Msg("------------------------");
 	};
 
-	virtual void	Info(TInfo& I) { strcpy(I, "List Players Original"); }
+	virtual void Info(TInfo& I) { strcpy(I, "List Players original"); }
 };
 
-class CCC_GetVersion : public IConsole_Command {
+class CCC_GetVersion : public IConsole_Command 
+{
 public:
 	CCC_GetVersion(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = true; };
-	virtual void	Execute(LPCSTR args)
+
+	virtual void Execute(LPCSTR args)
 	{
 		Msg(TSMP_VERSION);
 	};
 
-	virtual void	Info(TInfo& I) { strcpy(I, "List Players"); }
+	virtual void Info(TInfo& I) { strcpy(I, "Watch tsmp version"); }
 };
 
 class CCC_ListPlayers_Banned : public IConsole_Command 
 {
 public:
-	CCC_ListPlayers_Banned	(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
+	CCC_ListPlayers_Banned(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
 	
 	virtual void Execute(LPCSTR args) 
 	{
@@ -750,16 +800,18 @@ public:
 		Msg("------------------------");
 	};
 
-	virtual void Info (TInfo& I){strcpy(I,"List of Banned Players"); }
+	virtual void Info(TInfo& I){strcpy(I,"List of Banned Players"); }
 };
 
 class CCC_ChangeLevelGameType : public IConsole_Command 
 {
 public:
-					CCC_ChangeLevelGameType	(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = false; };
-	virtual void	Execute					(LPCSTR args) 
+	CCC_ChangeLevelGameType	(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = false; };
+
+	virtual void Execute(LPCSTR args) 
 	{
-		if (!OnServer())	return;
+		if (!OnServer())	
+			return;
 
 		string256		LevelName;	
 		LevelName[0]	=0;
@@ -768,7 +820,8 @@ public:
 		
 		sscanf	(args,"%s %s", LevelName, GameType);
 
-		if (!xr_strcmp(GameType, "dm")) sprintf_s(GameType, "deathmatch");
+		if (!xr_strcmp(GameType, "dm")) 
+			sprintf_s(GameType, "deathmatch");
 		else
 			if (!xr_strcmp(GameType, "tdm")) sprintf_s(GameType, "teamdeathmatch");
 			else
@@ -805,12 +858,11 @@ public:
 				break;
 			}
 		}
+
 		if (!bMapFound)
 		{
 			Msg("! Level [%s] not registered for [%s]!", LevelName, GameType);
-#ifdef NDEBUG
 			return;
-#endif
 		}
 
 		NET_Packet			P;
@@ -820,14 +872,15 @@ public:
 		Level().Send		(P);
 	};
 
-	virtual void	Info	(TInfo& I)	{strcpy(I,"Changing level and game type"); }
+	virtual void Info(TInfo& I)	{strcpy(I,"Changing level and game type"); }
 };
 
 class CCC_ChangeGameType : public CCC_ChangeLevelGameType 
 {
 public:
-					CCC_ChangeGameType	(LPCSTR N) : CCC_ChangeLevelGameType(N)  { bEmptyArgsHandled = false; };
-	virtual void	Execute				(LPCSTR args) 
+	CCC_ChangeGameType(LPCSTR N) : CCC_ChangeLevelGameType(N) { bEmptyArgsHandled = false; };
+
+	virtual void Execute(LPCSTR args) 
 	{
 		if (!OnServer())	
 			return;
@@ -842,14 +895,15 @@ public:
 		CCC_ChangeLevelGameType::Execute((LPCSTR)argsNew);
 	};
 
-	virtual void	Info	(TInfo& I)	{strcpy(I,"Changing Game Type"); };
+	virtual void Info(TInfo& I)	{strcpy(I,"Changing Game Type"); };
 };
 
 class CCC_ChangeLevel : public CCC_ChangeLevelGameType 
 {
 public:
-					CCC_ChangeLevel	(LPCSTR N) : CCC_ChangeLevelGameType(N)  { bEmptyArgsHandled = false; };
-	virtual void	Execute			(LPCSTR args) 
+	CCC_ChangeLevel	(LPCSTR N) : CCC_ChangeLevelGameType(N)  { bEmptyArgsHandled = false; };
+
+	virtual void Execute(LPCSTR args) 
 	{
 		if (!OnServer())	
 			return;
@@ -864,87 +918,105 @@ public:
 		CCC_ChangeLevelGameType::Execute((LPCSTR)argsNew);
 	};
 
-	virtual void	Info	(TInfo& I){	strcpy(I,"Changing Game Type"); }
+	virtual void Info(TInfo& I){ strcpy(I,"Changing Game Type"); }
 };
 
 class CCC_AddMap : public IConsole_Command 
 {
 public:
-	CCC_AddMap(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = false; };
+	CCC_AddMap(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = false; };
+
 	virtual void Execute(LPCSTR args) 
 	{
 		char	MapName[256] = {0};
 		sscanf	(args,"%s", MapName);
-		if (!g_pGameLevel || !Level().Server || !Level().Server->game) return;
+
+		if (!g_pGameLevel || !Level().Server || !Level().Server->game) 
+			return;
+
 		Level().Server->game->MapRotation_AddMap(MapName);
 	};
 
-	virtual void	Info	(TInfo& I)		
-	{
-		strcpy(I,"Adds map to map rotation list"); 
-	}
+	virtual void Info(TInfo& I) { strcpy(I, "Adds map to map rotation list"); }	
 };
 
-class CCC_ListMaps : public IConsole_Command {
+class CCC_ListMaps : public IConsole_Command 
+{
 public:
-					CCC_ListMaps	(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
-	virtual void	Execute			(LPCSTR args) 
+	CCC_ListMaps(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = true; };
+
+	virtual void Execute(LPCSTR args) 
 	{
-		if (!g_pGameLevel || !Level().Server || !Level().Server->game) return;
+		if (!g_pGameLevel || !Level().Server || !Level().Server->game) 
+			return;
+
 		Level().Server->game->MapRotation_ListMaps();
 	};
 
-	virtual void	Info	(TInfo& I){strcpy(I,"List maps in map rotation list"); }
+	virtual void Info(TInfo& I){strcpy(I,"List maps in map rotation list"); }
 };
 
-class CCC_NextMap : public IConsole_Command {
+class CCC_NextMap : public IConsole_Command 
+{
 public:
-					CCC_NextMap		(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
-	virtual void	Execute			(LPCSTR args) 
+	CCC_NextMap(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = true; };
+
+	virtual void Execute(LPCSTR args) 
 	{
-		if (!OnServer())	return;
+		if (!OnServer())	
+			return;
 
 		Level().Server->game->OnNextMap();
 	};
 
-	virtual void	Info	(TInfo& I){strcpy(I,"Switch to Next Map in map rotation list"); }
+	virtual void Info(TInfo& I){strcpy(I,"Switch to Next Map in map rotation list"); }
 };
 
-class CCC_PrevMap : public IConsole_Command {
+class CCC_PrevMap : public IConsole_Command 
+{
 public:
-	CCC_PrevMap(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
+	CCC_PrevMap(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = true; };
+
 	virtual void Execute(LPCSTR args) 
 	{
-		if (!OnServer())	return;
+		if (!OnServer())	
+			return;
 
 		Level().Server->game->OnPrevMap();
 	};
 
-	virtual void	Info	(TInfo& I)	{strcpy(I,"Switch to Previous Map in map rotation list"); }
+	virtual void Info(TInfo& I)	{strcpy(I,"Switch to Previous Map in map rotation list"); }
 };
 
-class CCC_AnomalySet : public IConsole_Command {
+class CCC_AnomalySet : public IConsole_Command 
+{
 public:
-	CCC_AnomalySet(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = false; };
+	CCC_AnomalySet(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = false; };
+
 	virtual void Execute(LPCSTR args) 
 	{
-		if (!OnServer())		return;
+		if (!OnServer())	
+			return;
 
 		game_sv_Deathmatch* gameDM = smart_cast<game_sv_Deathmatch *>(Level().Server->game);
-		if (!gameDM) return;
+
+		if (!gameDM) 
+			return;
 
 		string256			AnomalySet;		
 		sscanf				(args,"%s", AnomalySet);
 		gameDM->StartAnomalies(atol(AnomalySet));
 	};
 
-	virtual void	Info	(TInfo& I)	{strcpy(I,"Activating pointed Anomaly set"); }
+	virtual void Info(TInfo& I)	{strcpy(I,"Activating pointed Anomaly set"); }
 };
 
-class CCC_Vote_Start : public IConsole_Command {
+class CCC_Vote_Start : public IConsole_Command 
+{
 public:
-					CCC_Vote_Start		(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = false; };
-	virtual void	Execute				(LPCSTR args) 
+	CCC_Vote_Start(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = false; };
+
+	virtual void Execute(LPCSTR args) 
 	{
 		if (IsGameTypeSingle())
 		{
@@ -957,6 +1029,7 @@ public:
 			Msg("! Voting is disabled by server!");
 			return;
 		}
+
 		if (Game().IsVotingActive())
 		{
 			Msg("! There is voting already!");
@@ -967,20 +1040,23 @@ public:
 		{
 			Msg("! Voting is allowed only when game is in progress!");
 			return;
-		};
+		}
 
 		Game().SendStartVoteMessage(args);		
 	};
 
-	virtual void	Info	(TInfo& I){strcpy(I,"Starts Voting"); };
+	virtual void Info(TInfo& I){strcpy(I,"Starts Voting"); };
 };
 
-class CCC_Vote_Stop : public IConsole_Command {
+class CCC_Vote_Stop : public IConsole_Command 
+{
 public:
-					CCC_Vote_Stop	(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
-	virtual void	Execute			(LPCSTR args) 
+	CCC_Vote_Stop(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = true; };
+
+	virtual void Execute(LPCSTR args) 
 	{
-		if (!OnServer()) return;
+		if (!OnServer()) 
+			return;
 
 		if (IsGameTypeSingle())
 		{
@@ -1004,21 +1080,23 @@ public:
 		{
 			Msg("! Voting is allowed only when game is in progress!");
 			return;
-		};
+		}
 
 		Level().Server->game->OnVoteStop();
 	};
 
-	virtual void	Info	(TInfo& I)	{strcpy(I,"Stops Current Voting"); };
+	virtual void Info(TInfo& I)	{strcpy(I,"Stops Current Voting"); };
 };
 
-
-class CCC_Vote_Succ : public IConsole_Command {
+class CCC_Vote_Success : public IConsole_Command 
+{
 public:
-	CCC_Vote_Succ(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = true; };
-	virtual void	Execute(LPCSTR args)
+	CCC_Vote_Success(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = true; };
+
+	virtual void Execute(LPCSTR args)
 	{
-		if (!OnServer()) return;
+		if (!OnServer()) 
+			return;
 
 		if (IsGameTypeSingle())
 		{
@@ -1045,18 +1123,17 @@ public:
 		};
 
 		Level().Server->game->OnVoteSuccess();
-
 	}
 
-	};
+	virtual void Info(TInfo& I) { strcpy(I, "Make current vote stop successfully"); };
+};
 
-
-
-
-class CCC_Vote_Yes : public IConsole_Command {
+class CCC_Vote_Yes : public IConsole_Command 
+{
 public:
-					CCC_Vote_Yes(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
-	virtual void	Execute(LPCSTR args) 
+	CCC_Vote_Yes(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = true; };
+
+	virtual void Execute(LPCSTR args) 
 	{
 		if (IsGameTypeSingle())
 		{
@@ -1080,18 +1157,20 @@ public:
 		{
 			Msg("! Voting is allowed only when game is in progress!");
 			return;
-		};
+		}
 
 		Game().SendVoteYesMessage();
 	};
 
-	virtual void	Info	(TInfo& I){strcpy(I,"Vote Yes"); };
+	virtual void Info(TInfo& I){strcpy(I,"Vote Yes"); };
 };
 
-class CCC_Vote_No : public IConsole_Command {
+class CCC_Vote_No : public IConsole_Command 
+{
 public:
-					CCC_Vote_No	(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
-	virtual void	Execute		(LPCSTR args) 
+	CCC_Vote_No	(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = true; };
+
+	virtual void Execute(LPCSTR args) 
 	{
 		if (IsGameTypeSingle())
 		{
@@ -1120,13 +1199,15 @@ public:
 		Game().SendVoteNoMessage();
 	};
 
-	virtual void	Info	(TInfo& I)	{strcpy(I,"Vote No"); };
+	virtual void Info(TInfo& I)	{strcpy(I,"Vote No"); };
 };
 
-class CCC_StartTimeEnvironment: public IConsole_Command {
+class CCC_StartTimeEnvironment: public IConsole_Command 
+{
 public:
-					CCC_StartTimeEnvironment	(LPCSTR N) : IConsole_Command(N) {};
-	virtual void	Execute						(LPCSTR args)
+	CCC_StartTimeEnvironment(LPCSTR N) : IConsole_Command(N) {};
+
+	virtual void Execute(LPCSTR args)
 	{
 		u32 year = 1, month = 1, day = 1, hours = 0, mins = 0, secs = 0, milisecs = 0;
 		
@@ -1145,59 +1226,77 @@ public:
 		Level().Server->game->SetEnvironmentGameTimeFactor(NewTime,g_fTimeFactor);
 		Level().Server->game->SetGameTimeFactor(NewTime,g_fTimeFactor);
 	}
+
+	virtual void Info(TInfo& I) { strcpy(I, "I dont know what is it :)"); };
 };
-class CCC_SetWeather : public IConsole_Command {
+
+class CCC_SetWeather : public IConsole_Command 
+{
 public:
-					CCC_SetWeather	(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = false; };
-	virtual void	Execute			(LPCSTR args) 
+	CCC_SetWeather(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = false; };
+
+	virtual void Execute(LPCSTR args) 
 	{
-		if (!g_pGamePersistent) return;
-		if (!OnServer())		return;
+		if (!g_pGamePersistent || !OnServer())	
+			return;
 
 		string256				weather_name;		
 		weather_name[0]			= 0;
 		sscanf					(args,"%s", weather_name);
-		if (!weather_name[0])	return;
+
+		if (!weather_name[0])	
+			return;
+
 		g_pGamePersistent->Environment().SetWeather(weather_name);		
 	};
 
-	virtual void	Info	(TInfo& I){strcpy(I,"Set new weather"); }
+	virtual void Info(TInfo& I){strcpy(I,"Set new weather"); }
 };
 
-class CCC_SaveStatistic : public IConsole_Command {
+class CCC_SaveStatistic : public IConsole_Command 
+{
 public:
-					CCC_SaveStatistic	(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
-	virtual void	Execute				(LPCSTR args) {
+	CCC_SaveStatistic(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
+
+	virtual void Execute(LPCSTR args) 
+	{
 		Game().m_WeaponUsageStatistic->SaveData();
 	}
-	virtual void	Info	(TInfo& I)	{strcpy(I,"saving statistic data"); }
+
+	virtual void Info(TInfo& I)	{strcpy(I,"saving statistic data"); }
 };
 
-class CCC_AuthCheck : public CCC_Integer {
+class CCC_AuthCheck : public CCC_Integer 
+{
 public:
-					CCC_AuthCheck	(LPCSTR N, int* V, int _min=0, int _max=999) :CCC_Integer(N,V,_min,_max){};
-	  virtual void	Save			(IWriter *F)	{};
+	CCC_AuthCheck(LPCSTR N, int* V, int _min=0, int _max=999) :CCC_Integer(N,V,_min,_max) {};
+	
+	virtual void Save(IWriter *F) {};
 };
 
 class CCC_ReturnToBase: public IConsole_Command 
 {
 public:
-					CCC_ReturnToBase(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = false; };
-	virtual void	Execute(LPCSTR args) 
+	CCC_ReturnToBase(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = false; };
+
+	virtual void Execute(LPCSTR args) 
 	{
-		if (!OnServer())						return;
-		if (GameID() != GAME_ARTEFACTHUNT)		return;
+		if (!OnServer() || GameID() != GAME_ARTEFACTHUNT)
+			return;
 
 		game_sv_ArtefactHunt* g = smart_cast<game_sv_ArtefactHunt*>(Level().Server->game);
 		g->MoveAllAlivePlayers();
 	}
+
+	virtual void Info(TInfo& I) { strcpy(I, "Immediately return players to bases (AH only)"); }
 };
 
 class CCC_GetServerAddress : public IConsole_Command 
 {
 public:
-					CCC_GetServerAddress	(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
-	virtual void	Execute					(LPCSTR args) 
+	CCC_GetServerAddress(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
+
+	virtual void Execute(LPCSTR args) 
 	{
 		ip_address Address;
 		DWORD dwPort = 0;
@@ -1207,18 +1306,23 @@ public:
 		Msg("Server Address - %s:%i",Address.to_string().c_str(), dwPort);
 	};
 
-	virtual void	Info	(TInfo& I){strcpy(I,"List Players"); }
+	virtual void Info(TInfo& I){strcpy(I,"List Players"); }
 };
 
-class CCC_StartTeamMoney : public IConsole_Command {
+class CCC_StartTeamMoney : public IConsole_Command 
+{
 public:
-					CCC_StartTeamMoney(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
-	virtual void	Execute(LPCSTR args) 
-	{
-		if (!OnServer())	return;
+	CCC_StartTeamMoney(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = true; };
 
-		game_sv_mp* pGameMP		= smart_cast<game_sv_Deathmatch *>(Level().Server->game);
-		if (!pGameMP)		return;
+	virtual void Execute(LPCSTR args) 
+	{
+		if (!OnServer())	
+			return;
+
+		game_sv_mp* pGameMP	= smart_cast<game_sv_Deathmatch *>(Level().Server->game);
+
+		if (!pGameMP)		
+			return;
 
 		string128			Team = "";
 		s32 TeamMoney		= 0;
@@ -1229,25 +1333,33 @@ public:
 			Msg("- --------------------");
 			Msg("Teams start money:");
 			u32 TeamCount = pGameMP->GetTeamCount();
+
 			for (u32 i=0; i<TeamCount; i++)
 			{
 				TeamStruct* pTS = pGameMP->GetTeamData(i);
-				if (!pTS) continue;
+
+				if (!pTS) 
+					continue;
 				Msg ("Team %d: %d", i, pTS->m_iM_Start);
 			}
+
 			Msg("- --------------------");
 			return;
-		}else
+		}
+		else
 		{
 			u32 TeamID			= 0;
 			s32 TeamStartMoney	= 0;
 			int cnt = sscanf				(args,"%i %i", &TeamID, &TeamStartMoney);
+
 			if(cnt!=2)
 			{
 				Msg("invalid args. (int int) expected");
 				return;
 			}
+
 			TeamStruct* pTS		= pGameMP->GetTeamData(TeamID);
+
 			if (pTS) 
 				pTS->m_iM_Start = TeamStartMoney;
 		}
@@ -1255,28 +1367,35 @@ public:
 
 	virtual void	Info	(TInfo& I)	{strcpy(I,"Set Start Team Money");}
 };
-class CCC_SV_Integer : public CCC_Integer {
+
+class CCC_SV_Integer : public CCC_Integer 
+{
 public:
 	CCC_SV_Integer(LPCSTR N, int* V, int _min=0, int _max=999) :CCC_Integer(N,V,_min,_max)  {};
 
-	  virtual void	Execute	(LPCSTR args)
+	  virtual void Execute(LPCSTR args)
 	  {
 		  CCC_Integer::Execute(args);
 
-		  if (!g_pGameLevel || !Level().Server || !Level().Server->game) return;
+		  if (!g_pGameLevel || !Level().Server || !Level().Server->game) 
+			  return;
 
 		  Level().Server->game->signal_Syncronize();
 	  }
 };
 
-class CCC_SV_Float : public CCC_Float {
+class CCC_SV_Float : public CCC_Float 
+{
 public:
 	CCC_SV_Float(LPCSTR N, float* V, float _min=0, float _max=1) : CCC_Float(N,V,_min,_max) {};
 
-	  virtual void	Execute	(LPCSTR args)
+	  virtual void Execute(LPCSTR args)
 	  {
 		  CCC_Float::Execute(args);
-		  if (!g_pGameLevel || !Level().Server || !Level().Server->game) return;
+
+		  if (!g_pGameLevel || !Level().Server || !Level().Server->game)
+			  return;
+
 		  Level().Server->game->signal_Syncronize();
 	  }
 };
@@ -1285,6 +1404,7 @@ class CCC_RadminCmd: public IConsole_Command
 {
 public:
 	CCC_RadminCmd(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = false; };
+
 	virtual void Execute(LPCSTR arguments)
 	{
 		if(IsGameTypeSingle())
@@ -1294,6 +1414,7 @@ public:
 		{
 			string256			user;
 			string256			pass;
+
 			if(2==sscanf		(arguments+xr_strlen("login")+1, "%s %s", user, pass))
 			{
 				NET_Packet		P;			
@@ -1302,7 +1423,8 @@ public:
 				P.w_stringZ		(pass);
 
 				Level().Send(P,net_flags(TRUE,TRUE));
-			}else
+			}
+			else
 				Msg("2 args(user pass) needed");
 		}
 		else
@@ -1323,17 +1445,24 @@ public:
 			Level().Send(P,net_flags(TRUE,TRUE));
 		}
 	}
-	virtual void	Save	(IWriter *F)	{};
+
+	virtual void Save(IWriter *F) {};
 };
 
-class CCC_SwapTeams : public IConsole_Command {
+class CCC_SwapTeams : public IConsole_Command 
+{
 public:
-					CCC_SwapTeams(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
-	virtual void	Execute(LPCSTR args) {
-		if (!OnServer()) return;
+	CCC_SwapTeams(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = true; };
+
+	virtual void Execute(LPCSTR args) 
+	{
+		if (!OnServer()) 
+			return;
+
 		if(Level().Server && Level().Server->game) 
 		{
 			game_sv_ArtefactHunt* pGame = smart_cast<game_sv_ArtefactHunt *>(Level().Server->game);
+
 			if (pGame)
 			{
 				pGame->SwapTeams();
@@ -1342,133 +1471,43 @@ public:
 			}			
 		}
 	}
-	virtual void	Info	(TInfo& I){strcpy(I,"swap teams for artefacthunt game"); }
+
+	virtual void Info(TInfo& I){strcpy(I,"swap teams for artefacthunt game"); }
 };
-
-
-#ifdef BATTLEYE
-
-class CCC_BattlEyeSrv : public IConsole_Command
-{
-public:
-	CCC_BattlEyeSrv( LPCSTR N ) : IConsole_Command(N)  { bEmptyArgsHandled = true; }
-	bool  ExecuteGetState( LPCSTR args )
-	{
-		if ( args[0] == 0 )
-		{
-			if ( Level().battleye_system.server )
-			{
-				Msg( "BattlEye Server is enabled" );
-			}
-			else
-			{
-				Msg( "BattlEye Server is disabled" );
-			}
-			return true;
-		}
-		return false;
-	}
-	bool  ExecuteBattlEyeServerCmd( LPCSTR args )
-	{
-		if ( Level().battleye_system.server )
-		{
-			Level().battleye_system.server->Command( (char*)args );
-			return true;
-		}
-		return false;
-	}
-	virtual void  Execute( LPCSTR args )
-	{
-		if ( !g_pGameLevel || !OnServer() )
-		{
-			return;
-		}
-		if ( ExecuteGetState( args ) ) return;
-		ExecuteBattlEyeServerCmd( args );
-	}
-	virtual void Info( TInfo& I )
-	{
-		strcpy( I, "BattlEye Server commands" );
-	}
-};
-
-class CCC_BattlEyeCl : public IConsole_Command
-{
-public:
-	CCC_BattlEyeCl( LPCSTR N ) : IConsole_Command(N)  { bEmptyArgsHandled = true; }
-	bool  ExecuteGetState( LPCSTR args )
-	{
-		if ( args[0] == 0 )
-		{
-			if ( Level().battleye_system.client )
-			{
-				Msg("BattlEye Client is enabled");
-			}
-			else
-			{
-				Msg("BattlEye Client is disabled");
-			}
-			return true;
-		}
-		return false;
-	}
-	bool ExecuteBattlEyeClientCmd( LPCSTR args )
-	{
-		if ( Level().battleye_system.client )
-		{
-			Level().battleye_system.client->Command( (char*)args );
-			return true;
-		}
-		return false;
-	}
-	virtual void Execute( LPCSTR args )
-	{
-		if ( !g_pGameLevel )
-		{
-			return;
-		}
-		if ( ExecuteGetState( args ) ) return;
-		ExecuteBattlEyeClientCmd( args );
-	}
-
-	virtual void  Info( TInfo& I )
-	{
-		strcpy( I, "BattlEye Client commands" );
-	}
-};
-
-#endif // BATTLEYE
 
 class CCC_Name : public IConsole_Command
 {
 public:
-	CCC_Name(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = false; };
-	virtual void	Status	(TStatus& S)
+	CCC_Name(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = false; };
+
+	virtual void Status(TStatus& S)
 	{ 
 		S[0]=0;
-		if( IsGameTypeSingle() )									return;
-		if (!(&Level()))											return;
-		if (!(&Game()))												return;
-		if( !Game().local_player || !Game().local_player->name )	return;
+
+		if(IsGameTypeSingle() || !(&Level()) || !(&Game()) || !Game().local_player || !Game().local_player->name )	
+			return;
+
 		sprintf_s( S, "is \"%s\" ", Game().local_player->name );
 	}
 
-	virtual void	Save	(IWriter *F)	{}
+	virtual void Save(IWriter *F) {}
 
 	virtual void Execute(LPCSTR args) 
 	{
 		if (IsGameTypeSingle())		return;
 		if (!(&Level()))			return;
 		if (!(&Game()))				return;
-		if (!Game().local_player)	return;
-		
-		if (!xr_strlen(args)) return;
+		if (!Game().local_player)	return;		
+		if (!xr_strlen(args)) 		return;
+
 		if (strchr(args, '/'))
 		{
 			Msg("!  '/' is not allowed in names!");
 			return;
 		}
+
 		string4096 NewName = "";
+
 		if (xr_strlen(args)>17)
 		{
 			strncpy(NewName, args, 17);
@@ -1484,37 +1523,42 @@ public:
 		Game().u_EventSend		(P);
 	}
 
-	virtual void	Info	(TInfo& I)	{strcpy(I,"player name"); }
+	virtual void Info(TInfo& I)	{strcpy(I,"player name"); }
 };
 
 class CCC_SvStatus : public IConsole_Command 
 {
 public:
-					CCC_SvStatus(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
-	virtual void	Execute(LPCSTR args) 
+	CCC_SvStatus(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = true; };
+
+	virtual void Execute(LPCSTR args) 
 	{
-		if (!OnServer()) return;
+		if (!OnServer()) 
+			return;
 
 		if(Level().Server && Level().Server->game) 
 		{
 			Console->Execute		("cfg_load all_server_settings");
 		}
 	}
-	virtual void	Info	(TInfo& I){strcpy(I,"Shows current server settings"); }
+
+	virtual void Info(TInfo& I){strcpy(I,"Shows current server settings"); }
 };
 
 class CCC_SvChat : public IConsole_Command
 {
 public:
-					CCC_SvChat(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = false; };
+	CCC_SvChat(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = false; };
 
-	virtual void	Execute(LPCSTR args) 
+	virtual void Execute(LPCSTR args) 
 	{
-		if (!OnServer())	return;
+		if (!OnServer())	
+			return;
 
 		if(Level().Server && Level().Server->game) 
 		{
 			game_sv_mp* game = smart_cast<game_sv_mp*>(Level().Server->game);
+
 			if(game)
 				game->SvSendChatMessage("ServerAdmin",args);
 		}
@@ -1526,13 +1570,15 @@ class CCC_SvChatTSMP : public IConsole_Command
 public:
 	CCC_SvChatTSMP(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = false; };
 
-	virtual void	Execute(LPCSTR args)
+	virtual void Execute(LPCSTR args)
 	{
-		if (!OnServer())	return;
+		if (!OnServer())	
+			return;
 
 		if (Level().Server && Level().Server->game)
 		{
 			game_sv_mp* game = smart_cast<game_sv_mp*>(Level().Server->game);
+
 			if (game)
 				game->SvSendChatForRadmins(args);
 		}
@@ -1546,10 +1592,13 @@ public:
 
 	virtual void	Execute(LPCSTR args) 
 	{
-		if (!OnServer())	return;
+		if (!OnServer())
+			return;
+
 		if (Level().Server && Level().Server->game)
 		{
 			game_sv_mp* game = smart_cast<game_sv_mp*>(Level().Server->game);
+
 			if (game)
 				game->SvSendChatMessage(NewChatSenderName,args);
 		}
@@ -1561,41 +1610,51 @@ class CCC_SvChatNewSetName : public IConsole_Command
 public:
 	CCC_SvChatNewSetName(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = false; };
 
-	virtual void	Execute(LPCSTR args)
+	virtual void Execute(LPCSTR args)
 	{
 		strcpy(NewChatSenderName, args);
 	}
 };
 
 
-class CCC_WeaponDisable : public IConsole_Command {
+class CCC_WeaponDisable : public IConsole_Command 
+{
 public:
 	CCC_WeaponDisable(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = false; };
-	virtual void	Execute(LPCSTR args) {
-		if (!OnServer())	return;
 
-	Level().Server->game->Tsmp_weapon_disabler(args);
+	virtual void Execute(LPCSTR args) 
+	{
+		if (!OnServer())
+			return;
 
-
+		Level().Server->game->Tsmp_weapon_disabler(args);
 	}
 };
 
-class CCC_MpStatistics : public IConsole_Command {
+class CCC_MpStatistics : public IConsole_Command 
+{
 public:
-					CCC_MpStatistics(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
-	virtual void	Execute(LPCSTR args) {
-		if (!OnServer()) return;
+	CCC_MpStatistics(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = true; };
+
+	virtual void Execute(LPCSTR args) 
+	{
+		if (!OnServer()) 
+			return;
+
 		if(Level().Server && Level().Server->game) 
 		{
 			Level().Server->game->DumpOnlineStatistic	();
 		}
 	}
-	virtual void	Info	(TInfo& I){strcpy(I,"Shows current server settings"); }
+	virtual void Info(TInfo& I){strcpy(I,"Shows current server settings"); }
 };
-class CCC_CompressorStatus : public IConsole_Command {
+
+class CCC_CompressorStatus : public IConsole_Command 
+{
 public:
-					CCC_CompressorStatus(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = false; };
-	virtual void	Execute(LPCSTR args) 
+	CCC_CompressorStatus(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = false; };
+
+	virtual void Execute(LPCSTR args) 
 	{
 		if(strstr(args,"info_full"))
 			DumpNetCompressorStats	(false);
@@ -1603,9 +1662,10 @@ public:
 		if(strstr(args,"info"))
 			DumpNetCompressorStats	(true);
 		else
-			InvalidSyntax		();
+			InvalidSyntax();
 	}
-	virtual void	Info	(TInfo& I){strcpy(I,"valid arguments is [info info_full on off]"); }
+
+	virtual void Info(TInfo& I){strcpy(I,"valid arguments is [info info_full on off]"); }
 };
 
 void register_mp_console_commands()
@@ -1669,7 +1729,7 @@ void register_mp_console_commands()
 
 	CMD1(CCC_Vote_Start,	"cl_votestart"				);
 	CMD1(CCC_Vote_Stop,		"sv_votestop"				);
-	CMD1(CCC_Vote_Succ, "tsmp_votesuccess");
+	CMD1(CCC_Vote_Success,	"tsmp_votesuccess");
 	CMD1(CCC_Vote_Yes,		"cl_voteyes"				);
 	CMD1(CCC_Vote_No,		"cl_voteno"				);
 
@@ -1684,10 +1744,8 @@ void register_mp_console_commands()
 
 	CMD4(CCC_Integer,		"sv_statistic_collect", &g_bCollectStatisticData, 0, 1);
 	CMD1(CCC_SaveStatistic,	"sv_statistic_save");
-//	CMD4(CCC_Integer,		"sv_statistic_save_auto", &g_bStatisticSaveAuto, 0, 1);
 
 	CMD4(CCC_AuthCheck,		"sv_no_auth_check",				&g_SV_Disable_Auth_Check, 0, 1);
-//		CMD4(CCC_Deb,		"sv_show_debug_messages",				&DBGM, 0, 1);
 
 	CMD4(CCC_Integer,		"sv_artefact_spawn_force",		&g_SV_Force_Artefact_Spawn, 0, 1);
 
@@ -1708,8 +1766,6 @@ void register_mp_console_commands()
 	CMD1(CCC_StartTeamMoney,"sv_startteammoney");		
 
 	CMD4(CCC_Integer,		"sv_hail_to_winner_time",		&G_DELAYED_ROUND_TIME, 0, 60);
-
-	//. CMD4(CCC_Integer,		"sv_pending_wait_time",		&g_sv_Pending_Wait_Time, 0, 60000);
 
 	CMD4(CCC_Integer,		"sv_client_reconnect_time",		&g_sv_Client_Reconnect_Time, 0, 60);
 
@@ -1773,13 +1829,13 @@ void register_mp_console_commands()
 	CMD4(CCC_SV_Integer,	"tsmp_loader_enabled"		,	(int*)&g_sv_mp_ModLoaderEnabled, 0, 1);
 	CMD1(CCC_TSMP_SetIp,	"tsmp_loader_reconnect_ip");
 
-
 	CMD4(CCC_SV_Integer,	"sv_artefact_stay_time"		,	(int*)&g_sv_ah_dwArtefactStayTime		, 0,180);	//min
 	CMD4(CCC_SV_Integer,	"sv_reinforcement_time"		,	(int*)&g_sv_ah_iReinforcementTime		, -1,3600); //sec
 	CMD4(CCC_SV_Integer,	"sv_bearercantsprint"		,	(int*)&g_sv_ah_bBearerCantSprint				, 0, 1)	;
 	CMD4(CCC_SV_Integer,	"sv_shieldedbases"			,	(int*)&g_sv_ah_bShildedBases					, 0, 1)	;
 	CMD4(CCC_SV_Integer,	"sv_returnplayers"			,	(int*)&g_sv_ah_bAfReturnPlayersToBases		, 0, 1)	;
 	CMD1(CCC_SwapTeams,		"g_swapteams"				);
+
 #ifdef DEBUG
 	CMD4(CCC_SV_Integer,	"sv_demo_delta_frame"	,	(int*)&g_dwDemoDeltaFrame	,	0,100);
 	CMD4(CCC_SV_Integer,	"sv_ignore_money_on_buy"	,	(int*)&g_sv_dm_bDMIgnore_Money_OnBuy,	0, 1);
@@ -1792,11 +1848,6 @@ void register_mp_console_commands()
 	CMD1(CCC_SvChatNew,		"chat_new");
 	CMD1(CCC_SvChatTSMP,	"chat_tsmp");
 	CMD1(CCC_SvChatNewSetName, "chat_new_set_name");
-#ifdef BATTLEYE
-	CMD1(CCC_BattlEyeSrv,	"beserver" );
-	CMD1(CCC_BattlEyeCl,	"beclient" );
-	CMD4(CCC_SV_Integer,	"bemsg"    , (int*)&g_be_message_out, 0, 1 );
-#endif // BATTLEYE
 	
 	CMD1(CCC_CompressorStatus,"net_compressor_status");
 	CMD4(CCC_SV_Integer,	"net_compressor_enabled"		,	(int*)&g_net_compressor_enabled	,	0,1);

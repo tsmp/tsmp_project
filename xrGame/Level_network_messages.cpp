@@ -16,7 +16,6 @@
 
 void CLevel::ClientReceive()
 {
-
 	Demo_StartFrame();
 
 	Demo_Update();
@@ -26,13 +25,13 @@ void CLevel::ClientReceive()
 
 	for (NET_Packet* P = net_msg_Retreive(); P; P=net_msg_Retreive())
 	{
-		//-----------------------------------------------------
 		m_dwRPC++;
 		m_dwRPS += P->B.count;
-		//-----------------------------------------------------
+
 		u16			m_type;
 		u16			ID;
 		P->r_begin	(m_type);
+
 		switch (m_type)
 		{
 		case M_MAP_SYNC:
@@ -326,16 +325,11 @@ void CLevel::ClientReceive()
 			}break;
 		case M_BATTLEYE:
 			{
-#ifdef BATTLEYE
-			battleye_system.ReadPacketClient( P );
-#endif // BATTLEYE
 			}break;
 		}
 
 		net_msg_Release();
 	}	
-
-//	if (!g_bDebugEvents) ProcessGameSpawns();
 }
 
 void				CLevel::OnMessage				(void* data, u32 size)

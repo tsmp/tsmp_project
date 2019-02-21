@@ -131,10 +131,6 @@ void CLevel::ClientSend()
 	if ((GameID() == GAME_SINGLE || OnClient()) && !net_HasBandwidth())
 		return;
 
-#ifdef BATTLEYE
-	battleye_system.UpdateClient();
-#endif // BATTLEYE
-
 	NET_Packet P;
 	u32	start = 0;
 

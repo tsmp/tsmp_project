@@ -1,11 +1,8 @@
 #include "StdAfx.h"
-
 #include "../xrGameSpyServer.h"
 #include "GameSpy_Keys.h"
 #include "../Level.h"
-
 #include "../game_sv_artefacthunt.h"
-
 
 //--------------------------- QR2 callbacks ---------------------------------------
 #define ADD_KEY_VAL(g, q, qf, o, gf)		{if (g) {q->qf(o, g->gf);} else q->BufferAdd(o, "");}
@@ -60,16 +57,9 @@ void __cdecl callback_serverkey(int keyid, void* outbuf, void *userdata)
 		}
 		break;
 	case G_BATTLEYE_KEY:
-#ifdef BATTLEYE
-		if ( g_pGameLevel && Level().battleye_system.server )
-		{
-			pQR2->BufferAdd_Int( outbuf, 1 );
-		}
-		else
-		{
-			pQR2->BufferAdd_Int( outbuf, 0 );
-		}
-#endif // BATTLEYE
+	{
+		pQR2->BufferAdd_Int(outbuf, 1);
+	}
 		break;
 	case HOSTPORT_KEY:		pQR2->BufferAdd_Int(outbuf, pServer->GetPort()); break;
 
@@ -201,9 +191,9 @@ void __cdecl callback_keylist(qr2_key_type keytype, void* keybuffer, void *userd
 			pQR2->KeyBufferAdd(keybuffer, GAMETYPE_NAME_KEY);
 			pQR2->KeyBufferAdd(keybuffer, NUMTEAMS_KEY);
 			pQR2->KeyBufferAdd(keybuffer, G_MAX_PING_KEY);
-#ifdef BATTLEYE
+
 			pQR2->KeyBufferAdd(keybuffer, G_BATTLEYE_KEY);
-#endif // BATTLEYE
+
 			//---- game_sv_base ---
 			pQR2->KeyBufferAdd(keybuffer, G_MAP_ROTATION_KEY);
 			pQR2->KeyBufferAdd(keybuffer, G_VOTING_ENABLED_KEY);
