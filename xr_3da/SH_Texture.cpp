@@ -27,7 +27,7 @@ void resptrcode_texture::create(LPCSTR _name)
 CTexture::CTexture		()
 {
 	pSurface			= NULL;
-	pAVI				= NULL;
+//	pAVI				= NULL;
 	pTheora				= NULL;
 	desc_cache			= 0;
 	seqMSPF				= 0;
@@ -64,7 +64,7 @@ IDirect3DBaseTexture9*	CTexture::surface_get	()
 void CTexture::PostLoad	()
 {
 	if (pTheora)				bind		= fastdelegate::FastDelegate1<u32>(this,&CTexture::apply_theora);
-	else if (pAVI)				bind		= fastdelegate::FastDelegate1<u32>(this,&CTexture::apply_avi);
+//	else if (pAVI)				bind		= fastdelegate::FastDelegate1<u32>(this,&CTexture::apply_avi);
 	else if (!seqDATA.empty())	bind		= fastdelegate::FastDelegate1<u32>(this,&CTexture::apply_seq);
 	else						bind		= fastdelegate::FastDelegate1<u32>(this,&CTexture::apply_normal);
 }
@@ -98,7 +98,7 @@ void CTexture::apply_theora	(u32 dwStage)	{
 	CHK_DX(HW.pDevice->SetTexture(dwStage,pSurface));
 };
 void CTexture::apply_avi	(u32 dwStage)	{
-	if (pAVI->NeedUpdate()){
+/*	if (pAVI->NeedUpdate()){
 		R_ASSERT(D3DRTYPE_TEXTURE == pSurface->GetType());
 		IDirect3DTexture9*	T2D		= (IDirect3DTexture9*)pSurface;
 
@@ -113,7 +113,7 @@ void CTexture::apply_avi	(u32 dwStage)	{
 
 		R_CHK	(T2D->UnlockRect(0));
 	}
-	CHK_DX(HW.pDevice->SetTexture(dwStage,pSurface));
+	CHK_DX(HW.pDevice->SetTexture(dwStage,pSurface)); */
 };
 void CTexture::apply_seq	(u32 dwStage)	{
 	// SEQ
@@ -192,7 +192,7 @@ void CTexture::Load		()
 
 			}
 		}
-		else
+/*		else
 			if (FS.exist(fn, "$game_textures$", *cName, ".avi")) {
 				// AVI
 				pAVI = xr_new<CAviPlayerCustom>();
@@ -220,7 +220,7 @@ void CTexture::Load		()
 					}
 
 				}
-			}
+			} */
 			else
 				if (FS.exist(fn, "$game_textures$", *cName, ".seq"))
 				{
@@ -299,7 +299,7 @@ void CTexture::Unload	()
 #endif // DEBUG
 	_RELEASE		(pSurface);
 
-	xr_delete		(pAVI);
+//	xr_delete		(pAVI);
 	xr_delete		(pTheora);
 
 	bind			= fastdelegate::FastDelegate1<u32>(this,&CTexture::apply_load);

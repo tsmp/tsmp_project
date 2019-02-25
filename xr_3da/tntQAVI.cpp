@@ -1,4 +1,8 @@
 #include "stdafx.h"
+
+/*
+
+
 #pragma hdrstop
 
 //#include <crtdbg.h>
@@ -41,7 +45,7 @@ BOOL CAviPlayerCustom::Load (char* fname)
 	}
 
 	// Открыть через mmioOpen( ) AVI файл
-	HMMIO hmmioFile = mmioOpen( fname, NULL, MMIO_READ /*MMIO_EXCLUSIVE*/ );
+	HMMIO hmmioFile = mmioOpen( fname, NULL, MMIO_READ );
 	if( hmmioFile == NULL ) {
 
 		return FALSE;
@@ -293,11 +297,11 @@ BOOL CAviPlayerCustom::DecompressFrame( DWORD dwFrameNum )
 	return	TRUE;
 }
 
-/*
-GetFrame
 
-возвращает TRUE если кадр изменился, иначе FALSE
-*/
+//GetFrame
+
+//возвращает TRUE если кадр изменился, иначе FALSE
+
 BOOL CAviPlayerCustom::GetFrame( BYTE **pDest )
 {
 	R_ASSERT( pDest );
@@ -371,7 +375,7 @@ VOID CAviPlayerCustom::PreRoll( DWORD dwFrameNum )
 				m_biInFormat.biSizeImage = pCurrFrameIndex->dwChunkLength;
 				dwFlags |= (m_biInFormat.biSizeImage) ? 0 : ICDECOMPRESS_NULLFRAME;
 
-				res = ICDecompress(m_aviIC, dwFlags, &m_biInFormat, (m_pMovieData + pCurrFrameIndex->dwChunkOffset + 8) /*m_pCompressedBuf*/, &m_biOutFormat, m_pDecompressedBuf);
+				res = ICDecompress(m_aviIC, dwFlags, &m_biInFormat, (m_pMovieData + pCurrFrameIndex->dwChunkOffset + 8) , &m_biOutFormat, m_pDecompressedBuf);
 				if( ICERR_OK != res && ICERR_DONTDRAW != res ) {	// проверка на ICERR_DONTDRAW введена из-за indeo 5.11
 
 					R_ASSERT( 0 );
@@ -390,7 +394,7 @@ VOID CAviPlayerCustom::PreRoll( DWORD dwFrameNum )
 	R_ASSERT( m_biInFormat.biSizeImage );
 
 	// декомпрессим ключевой кадр с флагом ICDECOMPRESS_PREROLL 
-	res = ICDecompress(m_aviIC, ICDECOMPRESS_PREROLL | ICDECOMPRESS_HURRYUP, &m_biInFormat, m_pMovieData + pCurrFrameIndex->dwChunkOffset + 8/*m_pCompressedBuf*/, &m_biOutFormat, m_pDecompressedBuf);
+	res = ICDecompress(m_aviIC, ICDECOMPRESS_PREROLL | ICDECOMPRESS_HURRYUP, &m_biInFormat, m_pMovieData + pCurrFrameIndex->dwChunkOffset + 8, &m_biOutFormat, m_pDecompressedBuf);
 	if( ICERR_OK != res && ICERR_DONTDRAW != res ) {
 
 		R_ASSERT( 0 );
@@ -406,7 +410,7 @@ VOID CAviPlayerCustom::PreRoll( DWORD dwFrameNum )
 		m_biInFormat.biSizeImage = pCurrFrameIndex->dwChunkLength;
 		dwFlags |= (m_biInFormat.biSizeImage) ? 0 : ICDECOMPRESS_NULLFRAME;
 
-		res = ICDecompress(m_aviIC, dwFlags, &m_biInFormat, (m_pMovieData + pCurrFrameIndex->dwChunkOffset + 8) /*m_pCompressedBuf*/, &m_biOutFormat, m_pDecompressedBuf);
+		res = ICDecompress(m_aviIC, dwFlags, &m_biInFormat, (m_pMovieData + pCurrFrameIndex->dwChunkOffset + 8) , &m_biOutFormat, m_pDecompressedBuf);
 		if( ICERR_OK != res && ICERR_DONTDRAW != res ) {	// проверка на ICERR_DONTDRAW введена из-за indeo 5.11
 
 			R_ASSERT( 0 );
@@ -436,3 +440,5 @@ DWORD CAviPlayerCustom::CalcFrame()
 
 	return DWORD( floor( (Device.dwTimeContinual-m_dwFirstFrameOffset) * m_fCurrentRate / 1000.0f) ) % m_dwFrameTotal; 
 }
+
+*/

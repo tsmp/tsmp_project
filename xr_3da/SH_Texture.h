@@ -4,7 +4,7 @@
 
 #include "xr_resource.h"
 
-class ENGINE_API CAviPlayerCustom;
+//class ENGINE_API CAviPlayerCustom;
 class ENGINE_API CTheoraSurface;
 
 class ENGINE_API CTexture			: public xr_resource_named				{
@@ -20,7 +20,7 @@ public:
 	fastdelegate::FastDelegate1<u32>	bind;
 
 	IDirect3DBaseTexture9*				pSurface;
-	CAviPlayerCustom*					pAVI;
+	//CAviPlayerCustom*					pAVI;
 	CTheoraSurface*						pTheora;
 	float								m_material;
 	shared_str							m_bumpmap;

@@ -12,30 +12,29 @@
 
 void xrServer::Process_event	(NET_Packet& P, ClientID sender)
 {
-#	ifdef SLOW_VERIFY_ENTITIES
-			VERIFY					(verify_entities());
-#	endif
+#ifdef SLOW_VERIFY_ENTITIES
+	VERIFY(verify_entities());
+#endif
 
-	u32			timestamp;
-	u16			type;
-	u16			destination;
-	u32			MODE			= net_flags(TRUE,TRUE);
+	u32	timestamp;
+	u16	type;
+	u16	destination;
+	u32	MODE = net_flags(TRUE,TRUE);
 
 	// correct timestamp with server-unique-time (note: direct message correction)
-	P.r_u32		(timestamp	);
+	P.r_u32(timestamp);
+	P.r_u16(type);
+	P.r_u16(destination);
 
-	// read generic info
-	P.r_u16		(type		);
-	P.r_u16		(destination);
+	CSE_Abstract* receiver = game->get_entity_from_eid(destination);
 
-	CSE_Abstract*	receiver	= game->get_entity_from_eid	(destination);
 	if (receiver)	
 	{
 		R_ASSERT(receiver->owner);
 		receiver->OnEvent						(P,type,timestamp,sender);
-	};
+	}
 
-	switch		(type)
+	switch(type)
 	{
 	case GE_GAME_EVENT:
 	{
@@ -66,8 +65,13 @@ void xrServer::Process_event	(NET_Packet& P, ClientID sender)
 	case GE_INV_ACTION:
 	{
 		xrClientData* CL = ID_to_client(sender);
-		if (CL)	CL->net_Ready = TRUE;
-		if (SV_Client) SendTo(SV_Client->ID, P, net_flags(TRUE, TRUE));
+
+		if (CL)	
+			CL->net_Ready = TRUE;
+
+		if (SV_Client) 
+			SendTo(SV_Client->ID, P, net_flags(TRUE, TRUE));
+
 		break;
 	}
 
@@ -79,7 +83,7 @@ void xrServer::Process_event	(NET_Packet& P, ClientID sender)
 		{
 			R_ASSERT(E->s_flags.is(M_SPAWN_OBJECT_PHANTOM));
 
-			svs_respawn			R;
+			svs_respawn R;
 			R.timestamp = timestamp + E->RespawnTime * 1000;
 			R.phantom = destination;
 			q_respawn.insert(R);
@@ -120,13 +124,14 @@ void xrServer::Process_event	(NET_Packet& P, ClientID sender)
 
 	case GE_TRANSFER_AMMO:
 	{
-		u16					id_entity;
+		u16	id_entity;
 		P.r_u16(id_entity);
-		CSE_Abstract*		e_parent = receiver;	// кто забирает (для своих нужд)
-		CSE_Abstract*		e_entity = game->get_entity_from_eid(id_entity);	// кто отдает
 
-		if (!e_entity)		break;
-		if (0xffff != e_entity->ID_Parent)	break;						// this item already taken
+		CSE_Abstract* e_parent = receiver;	// кто забирает (для своих нужд)
+		CSE_Abstract* e_entity = game->get_entity_from_eid(id_entity);	// кто отдает
+
+		if (!e_entity || 0xffff != e_entity->ID_Parent)	
+			break;						// this item already taken
 
 		xrClientData*		c_parent = e_parent->owner;
 		xrClientData*		c_from = ID_to_client(sender);
@@ -145,11 +150,13 @@ void xrServer::Process_event	(NET_Packet& P, ClientID sender)
 	case GE_HIT_STATISTIC:
 	{
 		P.r_pos -= 2;
+
 		if (type == GE_HIT_STATISTIC)
 		{
 			P.B.count -= 4;
 			P.w_u32(sender.value());
-		};
+		}
+
 		game->AddDelayedEvent(P, GAME_EVENT_ON_HIT, 0, ClientID());
 		break;
 	}
@@ -173,7 +180,9 @@ void xrServer::Process_event	(NET_Packet& P, ClientID sender)
 
 	case GE_CHANGE_VISUAL:
 	{
-		CSE_Visual* visual = smart_cast<CSE_Visual*>(receiver); VERIFY(visual);
+		CSE_Visual* visual = smart_cast<CSE_Visual*>(receiver); 
+		VERIFY(visual);
+
 		string256 tmp;
 		P.r_stringZ(tmp);
 		visual->set_visual(tmp);
@@ -196,7 +205,7 @@ void xrServer::Process_event	(NET_Packet& P, ClientID sender)
 			&& l_pC->owner)
 			Msg("* [%2d] killed by [%2d] - sended by [%s:%2d]", id_dest, id_src, l_pC->name.c_str(), l_pC->owner->ID);
 
-		CSE_Abstract*		e_dest = receiver;	// кто умер
+		CSE_Abstract* e_dest = receiver;	// кто умер
 		// this is possible when hit event is sent before destroy event
 		if (!e_dest)
 			break;
@@ -204,13 +213,13 @@ void xrServer::Process_event	(NET_Packet& P, ClientID sender)
 		if (game->Type() != GAME_SINGLE)
 			Msg("* [%2d] is [%s:%s]", id_dest, *e_dest->s_name, e_dest->name_replace());
 
-		CSE_Abstract*		e_src = game->get_entity_from_eid(id_src);	// кто убил
+		CSE_Abstract* e_src = game->get_entity_from_eid(id_src);	// кто убил
 
 		if (!e_src)
 		{
-			xrClientData*	C = (xrClientData*)game->get_client(id_src);
+			xrClientData* C = (xrClientData*)game->get_client(id_src);
 			if (C) e_src = C->owner;
-		};
+		}
 
 		VERIFY(e_src);
 
@@ -289,7 +298,6 @@ void xrServer::Process_event	(NET_Packet& P, ClientID sender)
 
 	case GE_TELEPORT_OBJECT:
 	{
-
 		game->teleport_object(P, destination);
 		break;
 	}

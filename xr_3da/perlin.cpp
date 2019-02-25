@@ -4,7 +4,9 @@
 #include "stdafx.h"
 #pragma hdrstop
 
+
 #include "perlin.h"
+
 
 #define B SAMPLE_SIZE
 #define BM (SAMPLE_SIZE-1)
@@ -33,13 +35,13 @@ void CPerlinNoise1D::init()
 	for (i = 0 ; i < B ; i++)
 	{
 		p[i] = i;
-		g1[i] = (float)((rand() % (B + B)) - B) / B;
+		g1[i] = (float)((std::rand() % (B + B)) - B) / B;
 	}
 
 	while (--i)
 	{
 		k = p[i];
-		p[i] = p[j = rand() % B];
+		p[i] = p[j = std::rand() % B];
 		p[j] = k;
 	}
 
@@ -58,7 +60,7 @@ float CPerlinNoise1D::noise(float arg)
 	vec[0] = arg;
 
 	if (!mReady){ 
-		srand(mSeed);
+		std::srand(mSeed);
 		mReady = true;
 		init();
 	}
@@ -118,14 +120,14 @@ void CPerlinNoise2D::init()
 	{
 		p[i] = i;
 		for (j = 0 ; j < 2 ; j++)
-			g2[i][j] = (float)((rand() % (B + B)) - B) / B;
+			g2[i][j] = (float)((std::rand() % (B + B)) - B) / B;
 		normalize(g2[i]);
 	}
 
 	while (--i)
 	{
 		k = p[i];
-		p[i] = p[j = rand() % B];
+		p[i] = p[j = std::rand() % B];
 		p[j] = k;
 	}
 
@@ -144,7 +146,7 @@ float CPerlinNoise2D::noise(const Fvector2& vec)
 	int i, j;
 
 	if (!mReady){ 
-		srand(mSeed);
+		std::srand(mSeed);
 		mReady = true;
 		init();
 	}
@@ -217,14 +219,14 @@ void CPerlinNoise3D::init()
 	{
 		p[i] = i;
 		for (j = 0 ; j < 3 ; j++)
-			g3[i][j] = (float)((rand() % (B + B)) - B) / B;
+			g3[i][j] = (float)((std::rand() % (B + B)) - B) / B;
 		normalize(g3[i]);
 	}
 
 	while (--i)
 	{
 		k = p[i];
-		p[i] = p[j = rand() % B];
+		p[i] = p[j = std::rand() % B];
 		p[j] = k;
 	}
 
@@ -243,7 +245,7 @@ float CPerlinNoise3D::noise(const Fvector3& vec)
 	int i, j;
 
 	if (!mReady){ 
-		srand(mSeed);
+		std::srand(mSeed);
 		mReady = true;
 		init();
 	}
