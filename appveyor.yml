@@ -8,8 +8,7 @@ platform:
 shallow_clone: true
 build:
   project: 
-- components.sln
-- tsmp_project.sln
+  all.sln
   publish_wap: true
   parallel: true
   verbosity: minimal
