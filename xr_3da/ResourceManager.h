@@ -84,7 +84,6 @@ public:
 	map_Blender&					_GetBlenders		()		{	return m_blenders;	}
 
 	// Debug
-	void							DBG_VerifyGeoms		();
 	void							DBG_VerifyTextures	();
 
 	// Editor cooperation

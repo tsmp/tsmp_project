@@ -1,0 +1,13 @@
+version: 1.0.{build}
+skip_tags: true
+image: Previous Visual Studio 2017
+configuration:
+- Release
+platform:
+- x86
+shallow_clone: true
+build:
+  project: tsmp_project.sln
+  publish_wap: true
+  parallel: true
+  verbosity: minimal
