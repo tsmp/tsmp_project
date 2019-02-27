@@ -7,7 +7,9 @@ platform:
 - win32
 shallow_clone: true
 build:
-  project: tsmp_project.sln
+  project: 
+- components.sln
+- tsmp_project.sln
   publish_wap: true
   parallel: true
   verbosity: minimal
