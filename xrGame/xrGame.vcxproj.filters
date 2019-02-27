@@ -1195,9 +1195,6 @@
     <Filter Include="AI\AScript\ScriptClasses\ScriptSoundType">
       <UniqueIdentifier>{59d30ee1-9bbf-4117-9f7e-51143bf5e328}</UniqueIdentifier>
     </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI">
-      <UniqueIdentifier>{daf5488e-7664-453b-a071-bc5b64f57bc5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="AI\AScript\ScriptClasses\KeyBindings">
       <UniqueIdentifier>{17ff4d9d-6d4c-4a13-aa47-cd02c968c358}</UniqueIdentifier>
     </Filter>
@@ -1374,36 +1371,6 @@
     </Filter>
     <Filter Include="Core\Client\Objects\base\CollideValidator">
       <UniqueIdentifier>{b89d5ff6-05ec-4aaf-9e91-a06d4f162ba7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Objects\physics">
-      <UniqueIdentifier>{a081ed83-2b92-4122-b1eb-9bfb852eec88}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Objects\physics\PHSkeleton">
-      <UniqueIdentifier>{c6a3dc94-3042-47a9-80f3-913f86366b3c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Objects\physics\PHDestroyable">
-      <UniqueIdentifier>{448aedb7-4548-4b19-8026-768bdc51e940}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Objects\physics\PhysicsSkeletonObject">
-      <UniqueIdentifier>{ebe35bf7-be37-423e-a879-32aebe1c0ce8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Objects\physics\PhysicsShellHolder">
-      <UniqueIdentifier>{e2b076e0-d42c-45e9-9335-4d2822aa63d9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Objects\physics\Climable">
-      <UniqueIdentifier>{750692be-d84e-4919-b6d7-91bfad5fe7d6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Objects\physics\Breakable">
-      <UniqueIdentifier>{c7cd936d-0445-4b94-bcfa-6dadc38e09a9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Objects\physics\CollisionDamageReceiver">
-      <UniqueIdentifier>{af6e0dee-0a63-4e97-ac4d-a008c95f24fa}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Objects\physics\DestroyablePhysicsObject">
-      <UniqueIdentifier>{95070fbf-1090-4403-8f75-6292f209bc3b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Objects\physics\PhysicObject">
-      <UniqueIdentifier>{09db5933-ffe4-42b7-a5f4-51f2b91cfdc6}</UniqueIdentifier>
     </Filter>
     <Filter Include="Core\Client\Objects\hanging_lamp">
       <UniqueIdentifier>{617f63fd-48aa-435d-8d73-936631772838}</UniqueIdentifier>
@@ -1918,374 +1885,410 @@
     <Filter Include="Core\Server\xrGameSpyServer">
       <UniqueIdentifier>{118cf945-7465-4c7a-9dfb-b7792acfa2dc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Client\Objects\physics\Base">
-      <UniqueIdentifier>{d1490bd8-19fa-48ef-8f2d-c7c481c5371d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Objects\physics\Base\Objects">
-      <UniqueIdentifier>{50276ca8-f109-49d3-a695-7f49dc9f9d45}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Objects\physics\Base\Objects\Utils">
-      <UniqueIdentifier>{25311ab7-581d-483a-afdd-86a5a892032c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Objects\physics\Base\Objects\BodyEffectors">
-      <UniqueIdentifier>{197246c3-afaf-40f6-984d-6304b35cbafd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Objects\physics\Base\Objects\PHNet">
-      <UniqueIdentifier>{3585d978-23f8-4b4e-a293-c2801b7e7d23}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Objects\physics\Base\Objects\MoveStorage">
-      <UniqueIdentifier>{851d501e-283b-40ff-a02e-de31c3d5063a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Objects\physics\Base\Objects\Disabling">
-      <UniqueIdentifier>{919408b4-57e9-4faa-a1d0-c7151a84d4fd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Objects\physics\Base\Objects\PhyMove">
-      <UniqueIdentifier>{48151c98-a829-4c57-8366-d8c84501e1ad}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Objects\physics\Base\Objects\PhyMove\ActorCaracter">
-      <UniqueIdentifier>{960ec4ca-8ad8-4f31-921d-0930d45d6560}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Objects\physics\Base\Objects\PhyMove\AICharacter">
-      <UniqueIdentifier>{9feeabd4-08cc-428c-829e-83d8974037de}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Objects\physics\Base\Objects\PhyMove\Capture">
-      <UniqueIdentifier>{f68f04ce-e747-4d7c-a476-624dad0b80e8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Objects\physics\Base\Objects\PhyMove\MovementControl">
-      <UniqueIdentifier>{12748005-d50d-4a58-87b4-8a3748f0daa3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Objects\physics\Base\Objects\PhyMove\SipmpleCharacter">
-      <UniqueIdentifier>{24e54e22-05a2-47cd-ba07-cbb897f76c75}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Objects\physics\Base\Objects\PhyMove\BaseCharacter">
-      <UniqueIdentifier>{9ec72240-0776-4d63-9447-2e092c70173e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Objects\physics\Base\Objects\BaseShell">
-      <UniqueIdentifier>{454dd59d-83df-4fe7-af50-2a5dde875aca}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Objects\physics\Base\Objects\BaseShell\PhysicsShellAnimator">
-      <UniqueIdentifier>{3176e532-0f36-4e68-b960-ea8d73533bde}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Objects\physics\Base\Objects\BaseShell\animation_movement_controller">
-      <UniqueIdentifier>{4dc017a0-7db2-4e47-8598-48c4e73c4ba3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Objects\physics\Base\Objects\Elemenet">
-      <UniqueIdentifier>{b76793db-990c-463e-8a4b-53afec3e0b17}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Objects\physics\Base\Objects\Joint">
-      <UniqueIdentifier>{524d255f-5ff6-4261-95bf-09820ec69d4d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Objects\physics\Base\Objects\Shell">
-      <UniqueIdentifier>{5c5b4994-8b39-48f8-b80b-ed99f8c2861a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Objects\physics\Base\Objects\Breakable">
-      <UniqueIdentifier>{b0868a76-b86f-440f-bf07-b72597327b90}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Objects\physics\Base\Objects\SplitedShell">
-      <UniqueIdentifier>{9e59c5f7-8e8c-4133-84fe-97bf395e2453}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Objects\physics\Base\Objects\PHObject">
-      <UniqueIdentifier>{b904fb5a-24f6-48dd-a7c2-6db7505965a5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Objects\physics\Base\Objects\PHObject\Geom">
-      <UniqueIdentifier>{9149cbc9-939e-4811-9508-ce5885a73324}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Objects\physics\Base\Objects\PHIsland">
-      <UniqueIdentifier>{f90f1f51-246e-47a7-9ce4-e0a40d5fd155}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Objects\physics\Base\Objects\PHCommander">
-      <UniqueIdentifier>{310545d5-7dd3-4db7-b7f4-eda73484ab31}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Objects\physics\Base\Impact">
-      <UniqueIdentifier>{76cb567a-4505-48b3-9054-a51ba6f31fda}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Objects\physics\CharacterSupport">
-      <UniqueIdentifier>{ccabf43e-cf07-49c2-a910-4adc4be074df}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Objects\physics\Colliders">
-      <UniqueIdentifier>{92b9eaef-4da2-40e1-b647-a09405e96187}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Objects\physics\Colliders\Tri-Collider">
-      <UniqueIdentifier>{43c0ba35-d6e6-4849-a682-46fe95c30fc8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Objects\physics\Colliders\Cyl_Collider">
-      <UniqueIdentifier>{9525bdff-3fd2-4b4e-a697-8d1c5e6928b0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Objects\physics\Colliders\RayMotions-Collider">
-      <UniqueIdentifier>{662ae366-c437-43e2-906c-b9eda7b65d41}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Objects\physics\DamagableItem">
-      <UniqueIdentifier>{792529c0-8dc8-4d33-b3ab-7079a42f527c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Objects\physics\PhysicsSoundPlayer">
-      <UniqueIdentifier>{54db5632-1437-465d-940c-c9d455001413}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Objects\physics\ActivationBox">
-      <UniqueIdentifier>{97e66f4d-7668-421a-8bf0-c41350f5c469}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Objects\physics\Hit">
-      <UniqueIdentifier>{d13eb8bf-7596-41ae-b53e-fdd87665d551}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Objects\physics\IK">
-      <UniqueIdentifier>{ddb35d1c-58ff-461f-aefd-e7c686398136}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Common">
-      <UniqueIdentifier>{f3b3dd7c-779a-4944-b09a-a92e1eeb01ce}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Common\InventoryWnd">
-      <UniqueIdentifier>{6e31fa30-c37b-4183-a929-091f34120917}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Common\TradeWnd">
-      <UniqueIdentifier>{20534bf0-6f2c-4c57-90d0-94226356fe25}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Common\PdaWnd">
-      <UniqueIdentifier>{52a83f5f-4a08-42f4-8d2f-47e1ff526234}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Common\MapWnd">
-      <UniqueIdentifier>{be9c7c27-a8c1-4eda-8543-956262cd4d36}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Common\TalkWnd">
-      <UniqueIdentifier>{2713ea58-5143-4836-bf3b-ade362b75267}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Common\CarBodyWnd">
-      <UniqueIdentifier>{c4704ab2-aa50-4924-955e-5d921be5d6bb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Common\Diary">
-      <UniqueIdentifier>{20bacec7-3048-4670-8d1a-c0600c40f9fd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Common\MainIngame">
-      <UniqueIdentifier>{72c6c4c3-fe46-4303-b2f0-776a35731f62}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Common\Animations">
-      <UniqueIdentifier>{9823d418-b241-4f15-81c0-0f885c963c14}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Common\Statistics">
-      <UniqueIdentifier>{05665fe2-481c-4ff1-8608-428d70073f2e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Common\_Debug Fonts">
-      <UniqueIdentifier>{dc5428fc-1b6c-4e29-938f-a2d84bc3e886}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Common\OptionsItem">
-      <UniqueIdentifier>{84587c5b-6985-45a1-8857-4c2a0a8fc5c1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Common\OptionsConsoleCommands">
-      <UniqueIdentifier>{feace745-8e05-4420-8ff7-5d46d41dd113}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Common\EventsWnd">
-      <UniqueIdentifier>{23c0b138-5694-4104-ab26-d5ef8e0baef3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Common\MM">
-      <UniqueIdentifier>{1338fd16-9964-48ea-8307-4c157fa26316}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Common\MM\KeyBinding">
-      <UniqueIdentifier>{b3f37312-2b8e-4fdb-8cd5-15b2bcb2ab85}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Common\CharacterInfo">
-      <UniqueIdentifier>{2acf03a6-fa45-487b-8814-01239040fa8d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Common\ItemInfo">
-      <UniqueIdentifier>{2f4832ed-5167-4f7a-9b50-c20cb0d5a60e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Common\OutfitInfo">
-      <UniqueIdentifier>{d4bc60f8-1a55-415d-b82e-ae79da2449e4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Common\TimeWnd">
-      <UniqueIdentifier>{cb6e99b0-094e-4418-9283-f67bdeb2babf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Common\SleepWnd">
-      <UniqueIdentifier>{0124f3c5-ecf5-46c9-944f-e3c4afc709a8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Common\InventoryUtilities">
-      <UniqueIdentifier>{ec4d3a6c-f876-4d28-9718-fdda385274c2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\UIWindows">
-      <UniqueIdentifier>{f1cbbe30-1d77-4eae-b8e7-c33f8adb3bdd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\UIWindows\XML">
-      <UniqueIdentifier>{bb614661-072f-4236-8a50-59bac8648981}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\UIWindows\MessageBox">
-      <UniqueIdentifier>{cd4f2aef-0af2-4332-a0be-ef47ee5f92fe}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\UIWindows\PropertiesBox">
-      <UniqueIdentifier>{8d3eb16f-9f0f-40fa-9c61-581ca52c4673}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\UIWindows\Static">
-      <UniqueIdentifier>{bb6c0120-e62f-4f53-bbc7-d68d1d8acd2c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\UIWindows\EditBox">
-      <UniqueIdentifier>{baf859ea-c98e-4ce7-8a6f-bcbdb6a12f71}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\UIWindows\EditBox\customEB">
-      <UniqueIdentifier>{6011135d-2184-47e0-a479-21d5802b191e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\UIWindows\Windows">
-      <UniqueIdentifier>{c861ca4c-f0bf-4c5e-8b0f-3bcd15404839}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\UIWindows\ProgressBar">
-      <UniqueIdentifier>{aae74a49-ab93-4907-b9c9-3d201b773fae}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\UIWindows\TabControl">
-      <UniqueIdentifier>{c180025f-fb1b-4dc8-a407-ca0f9643d1b9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\UIWindows\TreeView">
-      <UniqueIdentifier>{cefbb3ee-8483-49b2-991c-1cf4b1268a97}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\UIWindows\ScriptWnd">
-      <UniqueIdentifier>{3d609052-e227-4def-b74c-dce86eb46ed9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\UIWindows\Buttons">
-      <UniqueIdentifier>{9b0c16bf-9711-4b5a-b3f0-2f3e25336355}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\UIWindows\ComboBox">
-      <UniqueIdentifier>{b7370ee1-1a36-46ef-bc7b-0f1c59aa751f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\UIWindows\InteractiveBackground">
-      <UniqueIdentifier>{617d75b8-371d-4229-8fcf-3ef8b017cafc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\UIWindows\TrackBar">
-      <UniqueIdentifier>{def8154f-f94c-4009-acac-75694a0f50b2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\UIWindows\Frames">
-      <UniqueIdentifier>{650393be-1089-412e-aa26-94b197fe1240}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\UIWindows\ScrollView">
-      <UniqueIdentifier>{e9b14c79-459f-4573-8857-f50c520b3742}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\UIWindows\ScrollView\ListBox">
-      <UniqueIdentifier>{4ea57c50-a005-4702-a623-853be7541f55}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\UIWindows\Lines">
-      <UniqueIdentifier>{30f5c437-42eb-4eda-9f34-f9be8db34284}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\UIWindows\VideoPlayer">
-      <UniqueIdentifier>{b7e1bc11-6e4f-4000-ab7f-9688ee11da2a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\UIWindows\DragDrop2">
-      <UniqueIdentifier>{5bbffb9c-bea4-4da6-8277-ca5b69ad979f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\UIWindows\Label">
-      <UniqueIdentifier>{a0ace015-0eaa-4529-a2bc-4a2e48b915a1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\UIWindows\ScrollBar">
-      <UniqueIdentifier>{ff4d0c5f-d566-410b-a8c2-030607f3cde5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\UIWindows\SpinBox">
-      <UniqueIdentifier>{60ca77ce-1c80-4a69-9bac-7414a6996a47}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\UIWindows\ListBox">
-      <UniqueIdentifier>{07a449b9-b622-47b8-86a7-865208e3a37b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\UIWindows\ListBox\Ex">
-      <UniqueIdentifier>{10cf2ca7-4fa9-497e-acb4-66fb408a19a7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\HUD">
-      <UniqueIdentifier>{0fae0174-279f-4802-8d1b-50ce387900fe}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\GameTypes">
-      <UniqueIdentifier>{a0beec91-2966-43bd-a961-e9853c6f34c6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\GameTypes\GameCustom">
-      <UniqueIdentifier>{ef3946a6-4073-4073-9f07-2e404dca0b0f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\GameTypes\Deathmatch">
-      <UniqueIdentifier>{c8f92a1f-35d2-478a-aadd-ea1111accffc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\GameTypes\Single">
-      <UniqueIdentifier>{5999f0bc-4df9-4168-ae1f-1901fc57cc2f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\GameTypes\TeamDeathmatch">
-      <UniqueIdentifier>{eafc832b-bfb5-465e-bd2c-0960263d5538}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\GameTypes\ArtefactHunt">
-      <UniqueIdentifier>{820022fe-89ad-4d07-8c9e-bcabf657daaa}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\GameTypes\Game_custom_script">
-      <UniqueIdentifier>{759d8943-787f-492b-a7bb-19426baeaad7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Multiplayer">
-      <UniqueIdentifier>{5980d7c7-6928-41e4-95ad-8c149849acc5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Multiplayer\MM_MP">
-      <UniqueIdentifier>{2abe15d4-2827-4d63-891a-86497fcea22e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Multiplayer\MM_MP\CDkey">
-      <UniqueIdentifier>{4ab2b32e-3104-4b9e-93a0-41edef8d4400}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Multiplayer\MM_MP\MapList">
-      <UniqueIdentifier>{e5b893a1-fbd5-4b31-895c-5f358d27e3af}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Multiplayer\MM_MP\ServerList">
-      <UniqueIdentifier>{e4ba0628-a563-41c8-8b7b-4444378ff5a1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Multiplayer\MM_MP\TeamInfo">
-      <UniqueIdentifier>{24007ad9-8b53-429c-a8d5-7399fb352758}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Multiplayer\HUD">
-      <UniqueIdentifier>{2f5f26a9-043f-448e-8b76-e58bf3a87f03}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Multiplayer\HUD\Stats">
-      <UniqueIdentifier>{59fc4c69-957b-4a82-96b2-4f1e45bb456a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Multiplayer\HUD\Stats\icons">
-      <UniqueIdentifier>{fa3de066-bb31-480d-811a-50be6bde1dcb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Multiplayer\HUD\Stats\frag_wnd">
-      <UniqueIdentifier>{f28bc9f2-4cd4-4bb6-b7cf-ec137c6aad66}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Multiplayer\HUD\Stats\old">
-      <UniqueIdentifier>{e56a127d-6c5e-4abd-829c-5fd207209fce}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Multiplayer\HUD\Chat">
-      <UniqueIdentifier>{b4a73bbf-c334-4589-a431-717d130817ac}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Multiplayer\HUD\GameLog">
-      <UniqueIdentifier>{a1f77418-6f57-45d3-82b6-c74869cbc57e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Multiplayer\HUD\SpeechMenu">
-      <UniqueIdentifier>{fc2860dd-0d00-4589-bc9f-cb6217ebb1d8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Multiplayer\HUD\common">
-      <UniqueIdentifier>{b33c0f07-b5d5-45ab-b53a-51d987757894}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Multiplayer\BuyWeaponWnd">
-      <UniqueIdentifier>{9a11eabd-5b14-45ab-acfa-00b234d8c18d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Multiplayer\BuyWeaponWnd\rank_restrictions">
-      <UniqueIdentifier>{a599ac08-d543-4e35-8f92-6e719b1593f8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Multiplayer\BuyWeaponWnd\TAB">
-      <UniqueIdentifier>{24132c6d-eee9-4912-a868-4fa0bfe24f99}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Multiplayer\BuyWeaponWnd\buy_wnd">
-      <UniqueIdentifier>{b626eff3-5fb6-4a31-ba02-d279bcd04373}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Multiplayer\team_skin_info">
-      <UniqueIdentifier>{660325a3-58a4-4e71-a3bf-244e9e0f9456}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Multiplayer\team_skin_info\MapDesc">
-      <UniqueIdentifier>{936e5370-ed84-45db-984b-b02e3f61c6c0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Multiplayer\team_skin_info\MapDesc\MapInfo">
-      <UniqueIdentifier>{a059513e-4388-416a-8ad1-e40e032fd38a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Multiplayer\team_skin_info\Spawn">
-      <UniqueIdentifier>{c3503f9b-b5d9-40e7-a700-5508835bc736}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Multiplayer\team_skin_info\SkinSelector">
-      <UniqueIdentifier>{a009cd77-507c-4fe7-a0fa-8eab7d7cdf35}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Multiplayer\Voting">
-      <UniqueIdentifier>{d5fe0914-040b-4d38-9351-3c09f67a5793}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Cursor">
-      <UniqueIdentifier>{2f7b5014-dd50-49c0-a75f-36b0e2e31efd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Tutorial">
-      <UniqueIdentifier>{a4d07a04-4e41-43ee-8008-83ba0764e679}</UniqueIdentifier>
-    </Filter>
     <Filter Include="TSMP">
       <UniqueIdentifier>{1ee40d02-2ed9-4339-9687-ecb42d5dc711}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics">
+      <UniqueIdentifier>{a081ed83-2b92-4122-b1eb-9bfb852eec88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\PHSkeleton">
+      <UniqueIdentifier>{c6a3dc94-3042-47a9-80f3-913f86366b3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\PHDestroyable">
+      <UniqueIdentifier>{448aedb7-4548-4b19-8026-768bdc51e940}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\PhysicsSkeletonObject">
+      <UniqueIdentifier>{ebe35bf7-be37-423e-a879-32aebe1c0ce8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\PhysicsShellHolder">
+      <UniqueIdentifier>{e2b076e0-d42c-45e9-9335-4d2822aa63d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\Climable">
+      <UniqueIdentifier>{750692be-d84e-4919-b6d7-91bfad5fe7d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\Breakable">
+      <UniqueIdentifier>{c7cd936d-0445-4b94-bcfa-6dadc38e09a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\CollisionDamageReceiver">
+      <UniqueIdentifier>{af6e0dee-0a63-4e97-ac4d-a008c95f24fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\DestroyablePhysicsObject">
+      <UniqueIdentifier>{95070fbf-1090-4403-8f75-6292f209bc3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\PhysicObject">
+      <UniqueIdentifier>{09db5933-ffe4-42b7-a5f4-51f2b91cfdc6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\Base">
+      <UniqueIdentifier>{d1490bd8-19fa-48ef-8f2d-c7c481c5371d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\Base\Objects">
+      <UniqueIdentifier>{50276ca8-f109-49d3-a695-7f49dc9f9d45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\Base\Objects\Utils">
+      <UniqueIdentifier>{25311ab7-581d-483a-afdd-86a5a892032c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\Base\Objects\BodyEffectors">
+      <UniqueIdentifier>{197246c3-afaf-40f6-984d-6304b35cbafd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\Base\Objects\PHNet">
+      <UniqueIdentifier>{3585d978-23f8-4b4e-a293-c2801b7e7d23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\Base\Objects\MoveStorage">
+      <UniqueIdentifier>{851d501e-283b-40ff-a02e-de31c3d5063a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\Base\Objects\Disabling">
+      <UniqueIdentifier>{919408b4-57e9-4faa-a1d0-c7151a84d4fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\Base\Objects\PhyMove">
+      <UniqueIdentifier>{48151c98-a829-4c57-8366-d8c84501e1ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\Base\Objects\PhyMove\ActorCaracter">
+      <UniqueIdentifier>{960ec4ca-8ad8-4f31-921d-0930d45d6560}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\Base\Objects\PhyMove\AICharacter">
+      <UniqueIdentifier>{9feeabd4-08cc-428c-829e-83d8974037de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\Base\Objects\PhyMove\Capture">
+      <UniqueIdentifier>{f68f04ce-e747-4d7c-a476-624dad0b80e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\Base\Objects\PhyMove\MovementControl">
+      <UniqueIdentifier>{12748005-d50d-4a58-87b4-8a3748f0daa3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\Base\Objects\PhyMove\SipmpleCharacter">
+      <UniqueIdentifier>{24e54e22-05a2-47cd-ba07-cbb897f76c75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\Base\Objects\PhyMove\BaseCharacter">
+      <UniqueIdentifier>{9ec72240-0776-4d63-9447-2e092c70173e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\Base\Objects\BaseShell">
+      <UniqueIdentifier>{454dd59d-83df-4fe7-af50-2a5dde875aca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\Base\Objects\BaseShell\PhysicsShellAnimator">
+      <UniqueIdentifier>{3176e532-0f36-4e68-b960-ea8d73533bde}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\Base\Objects\BaseShell\animation_movement_controller">
+      <UniqueIdentifier>{4dc017a0-7db2-4e47-8598-48c4e73c4ba3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\Base\Objects\Elemenet">
+      <UniqueIdentifier>{b76793db-990c-463e-8a4b-53afec3e0b17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\Base\Objects\Joint">
+      <UniqueIdentifier>{524d255f-5ff6-4261-95bf-09820ec69d4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\Base\Objects\Shell">
+      <UniqueIdentifier>{5c5b4994-8b39-48f8-b80b-ed99f8c2861a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\Base\Objects\Breakable">
+      <UniqueIdentifier>{b0868a76-b86f-440f-bf07-b72597327b90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\Base\Objects\SplitedShell">
+      <UniqueIdentifier>{9e59c5f7-8e8c-4133-84fe-97bf395e2453}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\Base\Objects\PHObject">
+      <UniqueIdentifier>{b904fb5a-24f6-48dd-a7c2-6db7505965a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\Base\Objects\PHObject\Geom">
+      <UniqueIdentifier>{9149cbc9-939e-4811-9508-ce5885a73324}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\Base\Objects\PHIsland">
+      <UniqueIdentifier>{f90f1f51-246e-47a7-9ce4-e0a40d5fd155}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\Base\Objects\PHCommander">
+      <UniqueIdentifier>{310545d5-7dd3-4db7-b7f4-eda73484ab31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\Base\Impact">
+      <UniqueIdentifier>{76cb567a-4505-48b3-9054-a51ba6f31fda}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\CharacterSupport">
+      <UniqueIdentifier>{ccabf43e-cf07-49c2-a910-4adc4be074df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\Colliders">
+      <UniqueIdentifier>{92b9eaef-4da2-40e1-b647-a09405e96187}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\Colliders\Tri-Collider">
+      <UniqueIdentifier>{43c0ba35-d6e6-4849-a682-46fe95c30fc8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\Colliders\Cyl_Collider">
+      <UniqueIdentifier>{9525bdff-3fd2-4b4e-a697-8d1c5e6928b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\Colliders\RayMotions-Collider">
+      <UniqueIdentifier>{662ae366-c437-43e2-906c-b9eda7b65d41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\DamagableItem">
+      <UniqueIdentifier>{792529c0-8dc8-4d33-b3ab-7079a42f527c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\PhysicsSoundPlayer">
+      <UniqueIdentifier>{54db5632-1437-465d-940c-c9d455001413}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\ActivationBox">
+      <UniqueIdentifier>{97e66f4d-7668-421a-8bf0-c41350f5c469}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\Hit">
+      <UniqueIdentifier>{d13eb8bf-7596-41ae-b53e-fdd87665d551}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\IK">
+      <UniqueIdentifier>{ddb35d1c-58ff-461f-aefd-e7c686398136}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{daf5488e-7664-453b-a071-bc5b64f57bc5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Common">
+      <UniqueIdentifier>{f3b3dd7c-779a-4944-b09a-a92e1eeb01ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Common\InventoryWnd">
+      <UniqueIdentifier>{6e31fa30-c37b-4183-a929-091f34120917}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Common\TradeWnd">
+      <UniqueIdentifier>{20534bf0-6f2c-4c57-90d0-94226356fe25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Common\PdaWnd">
+      <UniqueIdentifier>{52a83f5f-4a08-42f4-8d2f-47e1ff526234}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Common\MapWnd">
+      <UniqueIdentifier>{be9c7c27-a8c1-4eda-8543-956262cd4d36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Common\TalkWnd">
+      <UniqueIdentifier>{2713ea58-5143-4836-bf3b-ade362b75267}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Common\CarBodyWnd">
+      <UniqueIdentifier>{c4704ab2-aa50-4924-955e-5d921be5d6bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Common\Diary">
+      <UniqueIdentifier>{20bacec7-3048-4670-8d1a-c0600c40f9fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Common\MainIngame">
+      <UniqueIdentifier>{72c6c4c3-fe46-4303-b2f0-776a35731f62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Common\Animations">
+      <UniqueIdentifier>{9823d418-b241-4f15-81c0-0f885c963c14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Common\Statistics">
+      <UniqueIdentifier>{05665fe2-481c-4ff1-8608-428d70073f2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Common\_Debug Fonts">
+      <UniqueIdentifier>{dc5428fc-1b6c-4e29-938f-a2d84bc3e886}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Common\OptionsItem">
+      <UniqueIdentifier>{84587c5b-6985-45a1-8857-4c2a0a8fc5c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Common\OptionsConsoleCommands">
+      <UniqueIdentifier>{feace745-8e05-4420-8ff7-5d46d41dd113}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Common\EventsWnd">
+      <UniqueIdentifier>{23c0b138-5694-4104-ab26-d5ef8e0baef3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Common\MM">
+      <UniqueIdentifier>{1338fd16-9964-48ea-8307-4c157fa26316}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Common\MM\KeyBinding">
+      <UniqueIdentifier>{b3f37312-2b8e-4fdb-8cd5-15b2bcb2ab85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Common\CharacterInfo">
+      <UniqueIdentifier>{2acf03a6-fa45-487b-8814-01239040fa8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Common\ItemInfo">
+      <UniqueIdentifier>{2f4832ed-5167-4f7a-9b50-c20cb0d5a60e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Common\OutfitInfo">
+      <UniqueIdentifier>{d4bc60f8-1a55-415d-b82e-ae79da2449e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Common\TimeWnd">
+      <UniqueIdentifier>{cb6e99b0-094e-4418-9283-f67bdeb2babf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Common\SleepWnd">
+      <UniqueIdentifier>{0124f3c5-ecf5-46c9-944f-e3c4afc709a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Common\InventoryUtilities">
+      <UniqueIdentifier>{ec4d3a6c-f876-4d28-9718-fdda385274c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\UIWindows">
+      <UniqueIdentifier>{f1cbbe30-1d77-4eae-b8e7-c33f8adb3bdd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\UIWindows\XML">
+      <UniqueIdentifier>{bb614661-072f-4236-8a50-59bac8648981}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\UIWindows\MessageBox">
+      <UniqueIdentifier>{cd4f2aef-0af2-4332-a0be-ef47ee5f92fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\UIWindows\PropertiesBox">
+      <UniqueIdentifier>{8d3eb16f-9f0f-40fa-9c61-581ca52c4673}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\UIWindows\Static">
+      <UniqueIdentifier>{bb6c0120-e62f-4f53-bbc7-d68d1d8acd2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\UIWindows\EditBox">
+      <UniqueIdentifier>{baf859ea-c98e-4ce7-8a6f-bcbdb6a12f71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\UIWindows\EditBox\customEB">
+      <UniqueIdentifier>{6011135d-2184-47e0-a479-21d5802b191e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\UIWindows\Windows">
+      <UniqueIdentifier>{c861ca4c-f0bf-4c5e-8b0f-3bcd15404839}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\UIWindows\ProgressBar">
+      <UniqueIdentifier>{aae74a49-ab93-4907-b9c9-3d201b773fae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\UIWindows\TabControl">
+      <UniqueIdentifier>{c180025f-fb1b-4dc8-a407-ca0f9643d1b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\UIWindows\TreeView">
+      <UniqueIdentifier>{cefbb3ee-8483-49b2-991c-1cf4b1268a97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\UIWindows\ScriptWnd">
+      <UniqueIdentifier>{3d609052-e227-4def-b74c-dce86eb46ed9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\UIWindows\Buttons">
+      <UniqueIdentifier>{9b0c16bf-9711-4b5a-b3f0-2f3e25336355}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\UIWindows\ComboBox">
+      <UniqueIdentifier>{b7370ee1-1a36-46ef-bc7b-0f1c59aa751f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\UIWindows\InteractiveBackground">
+      <UniqueIdentifier>{617d75b8-371d-4229-8fcf-3ef8b017cafc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\UIWindows\TrackBar">
+      <UniqueIdentifier>{def8154f-f94c-4009-acac-75694a0f50b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\UIWindows\Frames">
+      <UniqueIdentifier>{650393be-1089-412e-aa26-94b197fe1240}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\UIWindows\ScrollView">
+      <UniqueIdentifier>{e9b14c79-459f-4573-8857-f50c520b3742}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\UIWindows\ScrollView\ListBox">
+      <UniqueIdentifier>{4ea57c50-a005-4702-a623-853be7541f55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\UIWindows\Lines">
+      <UniqueIdentifier>{30f5c437-42eb-4eda-9f34-f9be8db34284}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\UIWindows\VideoPlayer">
+      <UniqueIdentifier>{b7e1bc11-6e4f-4000-ab7f-9688ee11da2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\UIWindows\DragDrop2">
+      <UniqueIdentifier>{5bbffb9c-bea4-4da6-8277-ca5b69ad979f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\UIWindows\Label">
+      <UniqueIdentifier>{a0ace015-0eaa-4529-a2bc-4a2e48b915a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\UIWindows\ScrollBar">
+      <UniqueIdentifier>{ff4d0c5f-d566-410b-a8c2-030607f3cde5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\UIWindows\SpinBox">
+      <UniqueIdentifier>{60ca77ce-1c80-4a69-9bac-7414a6996a47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\UIWindows\ListBox">
+      <UniqueIdentifier>{07a449b9-b622-47b8-86a7-865208e3a37b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\UIWindows\ListBox\Ex">
+      <UniqueIdentifier>{10cf2ca7-4fa9-497e-acb4-66fb408a19a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\HUD">
+      <UniqueIdentifier>{0fae0174-279f-4802-8d1b-50ce387900fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\GameTypes">
+      <UniqueIdentifier>{a0beec91-2966-43bd-a961-e9853c6f34c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\GameTypes\GameCustom">
+      <UniqueIdentifier>{ef3946a6-4073-4073-9f07-2e404dca0b0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\GameTypes\Deathmatch">
+      <UniqueIdentifier>{c8f92a1f-35d2-478a-aadd-ea1111accffc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\GameTypes\Single">
+      <UniqueIdentifier>{5999f0bc-4df9-4168-ae1f-1901fc57cc2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\GameTypes\TeamDeathmatch">
+      <UniqueIdentifier>{eafc832b-bfb5-465e-bd2c-0960263d5538}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\GameTypes\ArtefactHunt">
+      <UniqueIdentifier>{820022fe-89ad-4d07-8c9e-bcabf657daaa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\GameTypes\Game_custom_script">
+      <UniqueIdentifier>{759d8943-787f-492b-a7bb-19426baeaad7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Multiplayer">
+      <UniqueIdentifier>{5980d7c7-6928-41e4-95ad-8c149849acc5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Multiplayer\MM_MP">
+      <UniqueIdentifier>{2abe15d4-2827-4d63-891a-86497fcea22e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Multiplayer\MM_MP\CDkey">
+      <UniqueIdentifier>{4ab2b32e-3104-4b9e-93a0-41edef8d4400}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Multiplayer\MM_MP\MapList">
+      <UniqueIdentifier>{e5b893a1-fbd5-4b31-895c-5f358d27e3af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Multiplayer\MM_MP\ServerList">
+      <UniqueIdentifier>{e4ba0628-a563-41c8-8b7b-4444378ff5a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Multiplayer\MM_MP\TeamInfo">
+      <UniqueIdentifier>{24007ad9-8b53-429c-a8d5-7399fb352758}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Multiplayer\HUD">
+      <UniqueIdentifier>{2f5f26a9-043f-448e-8b76-e58bf3a87f03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Multiplayer\HUD\Stats">
+      <UniqueIdentifier>{59fc4c69-957b-4a82-96b2-4f1e45bb456a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Multiplayer\HUD\Stats\icons">
+      <UniqueIdentifier>{fa3de066-bb31-480d-811a-50be6bde1dcb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Multiplayer\HUD\Stats\frag_wnd">
+      <UniqueIdentifier>{f28bc9f2-4cd4-4bb6-b7cf-ec137c6aad66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Multiplayer\HUD\Stats\old">
+      <UniqueIdentifier>{e56a127d-6c5e-4abd-829c-5fd207209fce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Multiplayer\HUD\Chat">
+      <UniqueIdentifier>{b4a73bbf-c334-4589-a431-717d130817ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Multiplayer\HUD\GameLog">
+      <UniqueIdentifier>{a1f77418-6f57-45d3-82b6-c74869cbc57e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Multiplayer\HUD\SpeechMenu">
+      <UniqueIdentifier>{fc2860dd-0d00-4589-bc9f-cb6217ebb1d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Multiplayer\HUD\common">
+      <UniqueIdentifier>{b33c0f07-b5d5-45ab-b53a-51d987757894}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Multiplayer\BuyWeaponWnd">
+      <UniqueIdentifier>{9a11eabd-5b14-45ab-acfa-00b234d8c18d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Multiplayer\BuyWeaponWnd\rank_restrictions">
+      <UniqueIdentifier>{a599ac08-d543-4e35-8f92-6e719b1593f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Multiplayer\BuyWeaponWnd\TAB">
+      <UniqueIdentifier>{24132c6d-eee9-4912-a868-4fa0bfe24f99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Multiplayer\BuyWeaponWnd\buy_wnd">
+      <UniqueIdentifier>{b626eff3-5fb6-4a31-ba02-d279bcd04373}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Multiplayer\team_skin_info">
+      <UniqueIdentifier>{660325a3-58a4-4e71-a3bf-244e9e0f9456}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Multiplayer\team_skin_info\MapDesc">
+      <UniqueIdentifier>{936e5370-ed84-45db-984b-b02e3f61c6c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Multiplayer\team_skin_info\MapDesc\MapInfo">
+      <UniqueIdentifier>{a059513e-4388-416a-8ad1-e40e032fd38a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Multiplayer\team_skin_info\Spawn">
+      <UniqueIdentifier>{c3503f9b-b5d9-40e7-a700-5508835bc736}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Multiplayer\team_skin_info\SkinSelector">
+      <UniqueIdentifier>{a009cd77-507c-4fe7-a0fa-8eab7d7cdf35}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Multiplayer\Voting">
+      <UniqueIdentifier>{d5fe0914-040b-4d38-9351-3c09f67a5793}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Cursor">
+      <UniqueIdentifier>{2f7b5014-dd50-49c0-a75f-36b0e2e31efd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Tutorial">
+      <UniqueIdentifier>{a4d07a04-4e41-43ee-8008-83ba0764e679}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AI\AScript\ScriptClasses\UI">
+      <UniqueIdentifier>{45c9780f-22bc-45ea-80ab-91deba6d0875}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -4548,12 +4551,6 @@
     <ClInclude Include="script_sound_type.h">
       <Filter>AI\AScript\ScriptClasses\ScriptSoundType</Filter>
     </ClInclude>
-    <ClInclude Include="script_ui_registrator.h">
-      <Filter>AI\AScript\ScriptClasses\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="ScriptXMLInit.h">
-      <Filter>AI\AScript\ScriptClasses\UI</Filter>
-    </ClInclude>
     <ClInclude Include="key_binding_registrator.h">
       <Filter>AI\AScript\ScriptClasses\KeyBindings</Filter>
     </ClInclude>
@@ -4876,34 +4873,34 @@
       <Filter>Core\Client\Objects\base\CollideValidator</Filter>
     </ClInclude>
     <ClInclude Include="PHSkeleton.h">
-      <Filter>Core\Client\Objects\physics\PHSkeleton</Filter>
+      <Filter>Physics\PHSkeleton</Filter>
     </ClInclude>
     <ClInclude Include="PHDestroyable.h">
-      <Filter>Core\Client\Objects\physics\PHDestroyable</Filter>
+      <Filter>Physics\PHDestroyable</Filter>
     </ClInclude>
     <ClInclude Include="PHDestroyableNotificate.h">
-      <Filter>Core\Client\Objects\physics\PhysicsSkeletonObject</Filter>
+      <Filter>Physics\PhysicsSkeletonObject</Filter>
     </ClInclude>
     <ClInclude Include="PhysicsSkeletonObject.h">
-      <Filter>Core\Client\Objects\physics\PhysicsSkeletonObject</Filter>
+      <Filter>Physics\PhysicsSkeletonObject</Filter>
     </ClInclude>
     <ClInclude Include="PhysicsShellHolder.h">
-      <Filter>Core\Client\Objects\physics\PhysicsShellHolder</Filter>
+      <Filter>Physics\PhysicsShellHolder</Filter>
     </ClInclude>
     <ClInclude Include="ClimableObject.h">
-      <Filter>Core\Client\Objects\physics\Climable</Filter>
+      <Filter>Physics\Climable</Filter>
     </ClInclude>
     <ClInclude Include="BreakableObject.h">
-      <Filter>Core\Client\Objects\physics\Breakable</Filter>
+      <Filter>Physics\Breakable</Filter>
     </ClInclude>
     <ClInclude Include="PHCollisionDamageReceiver.h">
-      <Filter>Core\Client\Objects\physics\CollisionDamageReceiver</Filter>
+      <Filter>Physics\CollisionDamageReceiver</Filter>
     </ClInclude>
     <ClInclude Include="DestroyablePhysicsObject.h">
-      <Filter>Core\Client\Objects\physics\DestroyablePhysicsObject</Filter>
+      <Filter>Physics\DestroyablePhysicsObject</Filter>
     </ClInclude>
     <ClInclude Include="PhysicObject.h">
-      <Filter>Core\Client\Objects\physics\PhysicObject</Filter>
+      <Filter>Physics\PhysicObject</Filter>
     </ClInclude>
     <ClInclude Include="HangingLamp.h">
       <Filter>Core\Client\Objects\hanging_lamp</Filter>
@@ -5728,808 +5725,808 @@
       <Filter>Core\Server\xrGameSpyServer</Filter>
     </ClInclude>
     <ClInclude Include="CalculateTriangle.h">
-      <Filter>Core\Client\Objects\physics\Base</Filter>
+      <Filter>Physics\Base</Filter>
     </ClInclude>
     <ClInclude Include="ExtendedGeom.h">
-      <Filter>Core\Client\Objects\physics\Base</Filter>
+      <Filter>Physics\Base</Filter>
     </ClInclude>
     <ClInclude Include="ode_include.h">
-      <Filter>Core\Client\Objects\physics\Base</Filter>
+      <Filter>Physics\Base</Filter>
     </ClInclude>
     <ClInclude Include="ode_redefine.h">
-      <Filter>Core\Client\Objects\physics\Base</Filter>
+      <Filter>Physics\Base</Filter>
     </ClInclude>
     <ClInclude Include="PHDebug.h">
-      <Filter>Core\Client\Objects\physics\Base</Filter>
+      <Filter>Physics\Base</Filter>
     </ClInclude>
     <ClInclude Include="phvalide.h">
-      <Filter>Core\Client\Objects\physics\Base</Filter>
+      <Filter>Physics\Base</Filter>
     </ClInclude>
     <ClInclude Include="PHWorld.h">
-      <Filter>Core\Client\Objects\physics\Base</Filter>
+      <Filter>Physics\Base</Filter>
     </ClInclude>
     <ClInclude Include="Physics.h">
-      <Filter>Core\Client\Objects\physics\Base</Filter>
+      <Filter>Physics\Base</Filter>
     </ClInclude>
     <ClInclude Include="PhysicsCommon.h">
-      <Filter>Core\Client\Objects\physics\Base</Filter>
+      <Filter>Physics\Base</Filter>
     </ClInclude>
     <ClInclude Include="PhysicsGamePars.h">
-      <Filter>Core\Client\Objects\physics\Base</Filter>
+      <Filter>Physics\Base</Filter>
     </ClInclude>
     <ClInclude Include="ph_shell_interface.h">
-      <Filter>Core\Client\Objects\physics\Base\Objects</Filter>
+      <Filter>Physics\Base\Objects</Filter>
     </ClInclude>
     <ClInclude Include="PHDefs.h">
-      <Filter>Core\Client\Objects\physics\Base\Objects</Filter>
+      <Filter>Physics\Base\Objects</Filter>
     </ClInclude>
     <ClInclude Include="PHShellCreator.h">
-      <Filter>Core\Client\Objects\physics\Base\Objects</Filter>
+      <Filter>Physics\Base\Objects</Filter>
     </ClInclude>
     <ClInclude Include="PHStaticGeomShell.h">
-      <Filter>Core\Client\Objects\physics\Base\Objects</Filter>
+      <Filter>Physics\Base\Objects</Filter>
     </ClInclude>
     <ClInclude Include="BlockAllocator.h">
-      <Filter>Core\Client\Objects\physics\Base\Objects\Utils</Filter>
+      <Filter>Physics\Base\Objects\Utils</Filter>
     </ClInclude>
     <ClInclude Include="CycleConstStorage.h">
-      <Filter>Core\Client\Objects\physics\Base\Objects\Utils</Filter>
+      <Filter>Physics\Base\Objects\Utils</Filter>
     </ClInclude>
     <ClInclude Include="MathUtils.h">
-      <Filter>Core\Client\Objects\physics\Base\Objects\Utils</Filter>
+      <Filter>Physics\Base\Objects\Utils</Filter>
     </ClInclude>
     <ClInclude Include="PHDynamicData.h">
-      <Filter>Core\Client\Objects\physics\Base\Objects\Utils</Filter>
+      <Filter>Physics\Base\Objects\Utils</Filter>
     </ClInclude>
     <ClInclude Include="PHInterpolation.h">
-      <Filter>Core\Client\Objects\physics\Base\Objects\Utils</Filter>
+      <Filter>Physics\Base\Objects\Utils</Filter>
     </ClInclude>
     <ClInclude Include="PHItemList.h">
-      <Filter>Core\Client\Objects\physics\Base\Objects\Utils</Filter>
+      <Filter>Physics\Base\Objects\Utils</Filter>
     </ClInclude>
     <ClInclude Include="PHValideValues.h">
-      <Filter>Core\Client\Objects\physics\Base\Objects\Utils</Filter>
+      <Filter>Physics\Base\Objects\Utils</Filter>
     </ClInclude>
     <ClInclude Include="SpaceUtils.h">
-      <Filter>Core\Client\Objects\physics\Base\Objects\Utils</Filter>
+      <Filter>Physics\Base\Objects\Utils</Filter>
     </ClInclude>
     <ClInclude Include="PHBaseBodyEffector.h">
-      <Filter>Core\Client\Objects\physics\Base\Objects\BodyEffectors</Filter>
+      <Filter>Physics\Base\Objects\BodyEffectors</Filter>
     </ClInclude>
     <ClInclude Include="PHContactBodyEffector.h">
-      <Filter>Core\Client\Objects\physics\Base\Objects\BodyEffectors</Filter>
+      <Filter>Physics\Base\Objects\BodyEffectors</Filter>
     </ClInclude>
     <ClInclude Include="PHNetState.h">
-      <Filter>Core\Client\Objects\physics\Base\Objects\PHNet</Filter>
+      <Filter>Physics\Base\Objects\PHNet</Filter>
     </ClInclude>
     <ClInclude Include="PHSynchronize.h">
-      <Filter>Core\Client\Objects\physics\Base\Objects\PHNet</Filter>
+      <Filter>Physics\Base\Objects\PHNet</Filter>
     </ClInclude>
     <ClInclude Include="PHMoveStorage.h">
-      <Filter>Core\Client\Objects\physics\Base\Objects\MoveStorage</Filter>
+      <Filter>Physics\Base\Objects\MoveStorage</Filter>
     </ClInclude>
     <ClInclude Include="DisablingParams.h">
-      <Filter>Core\Client\Objects\physics\Base\Objects\Disabling</Filter>
+      <Filter>Physics\Base\Objects\Disabling</Filter>
     </ClInclude>
     <ClInclude Include="PHDisabling.h">
-      <Filter>Core\Client\Objects\physics\Base\Objects\Disabling</Filter>
+      <Filter>Physics\Base\Objects\Disabling</Filter>
     </ClInclude>
     <ClInclude Include="PHActorCharacter.h">
-      <Filter>Core\Client\Objects\physics\Base\Objects\PhyMove\ActorCaracter</Filter>
+      <Filter>Physics\Base\Objects\PhyMove\ActorCaracter</Filter>
     </ClInclude>
     <ClInclude Include="PHActorCharacterInline.h">
-      <Filter>Core\Client\Objects\physics\Base\Objects\PhyMove\ActorCaracter</Filter>
+      <Filter>Physics\Base\Objects\PhyMove\ActorCaracter</Filter>
     </ClInclude>
     <ClInclude Include="PHAICharacter.h">
-      <Filter>Core\Client\Objects\physics\Base\Objects\PhyMove\AICharacter</Filter>
+      <Filter>Physics\Base\Objects\PhyMove\AICharacter</Filter>
     </ClInclude>
     <ClInclude Include="PHCapture.h">
-      <Filter>Core\Client\Objects\physics\Base\Objects\PhyMove\Capture</Filter>
+      <Filter>Physics\Base\Objects\PhyMove\Capture</Filter>
     </ClInclude>
     <ClInclude Include="PHMovementControl.h">
-      <Filter>Core\Client\Objects\physics\Base\Objects\PhyMove\MovementControl</Filter>
+      <Filter>Physics\Base\Objects\PhyMove\MovementControl</Filter>
     </ClInclude>
     <ClInclude Include="ElevatorState.h">
-      <Filter>Core\Client\Objects\physics\Base\Objects\PhyMove\SipmpleCharacter</Filter>
+      <Filter>Physics\Base\Objects\PhyMove\SipmpleCharacter</Filter>
     </ClInclude>
     <ClInclude Include="PHSimpleCharacter.h">
-      <Filter>Core\Client\Objects\physics\Base\Objects\PhyMove\SipmpleCharacter</Filter>
+      <Filter>Physics\Base\Objects\PhyMove\SipmpleCharacter</Filter>
     </ClInclude>
     <ClInclude Include="PHSimpleCharacterInline.h">
-      <Filter>Core\Client\Objects\physics\Base\Objects\PhyMove\SipmpleCharacter</Filter>
+      <Filter>Physics\Base\Objects\PhyMove\SipmpleCharacter</Filter>
     </ClInclude>
     <ClInclude Include="IColisiondamageInfo.h">
-      <Filter>Core\Client\Objects\physics\Base\Objects\PhyMove\BaseCharacter</Filter>
+      <Filter>Physics\Base\Objects\PhyMove\BaseCharacter</Filter>
     </ClInclude>
     <ClInclude Include="PHCharacter.h">
-      <Filter>Core\Client\Objects\physics\Base\Objects\PhyMove\BaseCharacter</Filter>
+      <Filter>Physics\Base\Objects\PhyMove\BaseCharacter</Filter>
     </ClInclude>
     <ClInclude Include="PhysicsShell.h">
-      <Filter>Core\Client\Objects\physics\Base\Objects\BaseShell</Filter>
+      <Filter>Physics\Base\Objects\BaseShell</Filter>
     </ClInclude>
     <ClInclude Include="PhysicsShellAnimator.h">
-      <Filter>Core\Client\Objects\physics\Base\Objects\BaseShell\PhysicsShellAnimator</Filter>
+      <Filter>Physics\Base\Objects\BaseShell\PhysicsShellAnimator</Filter>
     </ClInclude>
     <ClInclude Include="PhysicsShellAnimatorBoneData.h">
-      <Filter>Core\Client\Objects\physics\Base\Objects\BaseShell\PhysicsShellAnimator</Filter>
+      <Filter>Physics\Base\Objects\BaseShell\PhysicsShellAnimator</Filter>
     </ClInclude>
     <ClInclude Include="animation_movement_controller.h">
-      <Filter>Core\Client\Objects\physics\Base\Objects\BaseShell\animation_movement_controller</Filter>
+      <Filter>Physics\Base\Objects\BaseShell\animation_movement_controller</Filter>
     </ClInclude>
     <ClInclude Include="PHElement.h">
-      <Filter>Core\Client\Objects\physics\Base\Objects\Elemenet</Filter>
+      <Filter>Physics\Base\Objects\Elemenet</Filter>
     </ClInclude>
     <ClInclude Include="PHElementInline.h">
-      <Filter>Core\Client\Objects\physics\Base\Objects\Elemenet</Filter>
+      <Filter>Physics\Base\Objects\Elemenet</Filter>
     </ClInclude>
     <ClInclude Include="PHJoint.h">
-      <Filter>Core\Client\Objects\physics\Base\Objects\Joint</Filter>
+      <Filter>Physics\Base\Objects\Joint</Filter>
     </ClInclude>
     <ClInclude Include="PHShell.h">
-      <Filter>Core\Client\Objects\physics\Base\Objects\Shell</Filter>
+      <Filter>Physics\Base\Objects\Shell</Filter>
     </ClInclude>
     <ClInclude Include="PHFracture.h">
-      <Filter>Core\Client\Objects\physics\Base\Objects\Breakable</Filter>
+      <Filter>Physics\Base\Objects\Breakable</Filter>
     </ClInclude>
     <ClInclude Include="PHJointDestroyInfo.h">
-      <Filter>Core\Client\Objects\physics\Base\Objects\Breakable</Filter>
+      <Filter>Physics\Base\Objects\Breakable</Filter>
     </ClInclude>
     <ClInclude Include="PHShellSplitter.h">
-      <Filter>Core\Client\Objects\physics\Base\Objects\Breakable</Filter>
+      <Filter>Physics\Base\Objects\Breakable</Filter>
     </ClInclude>
     <ClInclude Include="PHSplitedShell.h">
-      <Filter>Core\Client\Objects\physics\Base\Objects\SplitedShell</Filter>
+      <Filter>Physics\Base\Objects\SplitedShell</Filter>
     </ClInclude>
     <ClInclude Include="PHObject.h">
-      <Filter>Core\Client\Objects\physics\Base\Objects\PHObject</Filter>
+      <Filter>Physics\Base\Objects\PHObject</Filter>
     </ClInclude>
     <ClInclude Include="Geometry.h">
-      <Filter>Core\Client\Objects\physics\Base\Objects\PHObject\Geom</Filter>
+      <Filter>Physics\Base\Objects\PHObject\Geom</Filter>
     </ClInclude>
     <ClInclude Include="PHGeometryOwner.h">
-      <Filter>Core\Client\Objects\physics\Base\Objects\PHObject\Geom</Filter>
+      <Filter>Physics\Base\Objects\PHObject\Geom</Filter>
     </ClInclude>
     <ClInclude Include="PHIsland.h">
-      <Filter>Core\Client\Objects\physics\Base\Objects\PHIsland</Filter>
+      <Filter>Physics\Base\Objects\PHIsland</Filter>
     </ClInclude>
     <ClInclude Include="PHCommander.h">
-      <Filter>Core\Client\Objects\physics\Base\Objects\PHCommander</Filter>
+      <Filter>Physics\Base\Objects\PHCommander</Filter>
     </ClInclude>
     <ClInclude Include="PHReqComparer.h">
-      <Filter>Core\Client\Objects\physics\Base\Objects\PHCommander</Filter>
+      <Filter>Physics\Base\Objects\PHCommander</Filter>
     </ClInclude>
     <ClInclude Include="PHScriptCall.h">
-      <Filter>Core\Client\Objects\physics\Base\Objects\PHCommander</Filter>
+      <Filter>Physics\Base\Objects\PHCommander</Filter>
     </ClInclude>
     <ClInclude Include="PHSimpleCalls.h">
-      <Filter>Core\Client\Objects\physics\Base\Objects\PHCommander</Filter>
+      <Filter>Physics\Base\Objects\PHCommander</Filter>
     </ClInclude>
     <ClInclude Include="PHImpact.h">
-      <Filter>Core\Client\Objects\physics\Base\Impact</Filter>
+      <Filter>Physics\Base\Impact</Filter>
     </ClInclude>
     <ClInclude Include="character_hit_animations.h">
-      <Filter>Core\Client\Objects\physics\CharacterSupport</Filter>
+      <Filter>Physics\CharacterSupport</Filter>
     </ClInclude>
     <ClInclude Include="CharacterPhysicsSupport.h">
-      <Filter>Core\Client\Objects\physics\CharacterSupport</Filter>
+      <Filter>Physics\CharacterSupport</Filter>
     </ClInclude>
     <ClInclude Include="interactive_motion.h">
-      <Filter>Core\Client\Objects\physics\CharacterSupport</Filter>
+      <Filter>Physics\CharacterSupport</Filter>
     </ClInclude>
     <ClInclude Include="tri-colliderKNoOPC\__aabb_tri.h">
-      <Filter>Core\Client\Objects\physics\Colliders\Tri-Collider</Filter>
+      <Filter>Physics\Colliders\Tri-Collider</Filter>
     </ClInclude>
     <ClInclude Include="tri-colliderknoopc\dcTriangle.h">
-      <Filter>Core\Client\Objects\physics\Colliders\Tri-Collider</Filter>
+      <Filter>Physics\Colliders\Tri-Collider</Filter>
     </ClInclude>
     <ClInclude Include="tri-colliderKNoOPC\dcTriListCollider.h">
-      <Filter>Core\Client\Objects\physics\Colliders\Tri-Collider</Filter>
+      <Filter>Physics\Colliders\Tri-Collider</Filter>
     </ClInclude>
     <ClInclude Include="tri-colliderknoopc\dSortTriPrimitive.h">
-      <Filter>Core\Client\Objects\physics\Colliders\Tri-Collider</Filter>
+      <Filter>Physics\Colliders\Tri-Collider</Filter>
     </ClInclude>
     <ClInclude Include="tri-colliderknoopc\dTriBox.h">
-      <Filter>Core\Client\Objects\physics\Colliders\Tri-Collider</Filter>
+      <Filter>Physics\Colliders\Tri-Collider</Filter>
     </ClInclude>
     <ClInclude Include="tri-colliderKNoOPC\dTriCollideK.h">
-      <Filter>Core\Client\Objects\physics\Colliders\Tri-Collider</Filter>
+      <Filter>Physics\Colliders\Tri-Collider</Filter>
     </ClInclude>
     <ClInclude Include="tri-colliderknoopc\dTriColliderCommon.h">
-      <Filter>Core\Client\Objects\physics\Colliders\Tri-Collider</Filter>
+      <Filter>Physics\Colliders\Tri-Collider</Filter>
     </ClInclude>
     <ClInclude Include="tri-colliderknoopc\dTriColliderMath.h">
-      <Filter>Core\Client\Objects\physics\Colliders\Tri-Collider</Filter>
+      <Filter>Physics\Colliders\Tri-Collider</Filter>
     </ClInclude>
     <ClInclude Include="tri-colliderknoopc\dTriCylinder.h">
-      <Filter>Core\Client\Objects\physics\Colliders\Tri-Collider</Filter>
+      <Filter>Physics\Colliders\Tri-Collider</Filter>
     </ClInclude>
     <ClInclude Include="tri-colliderKNoOPC\dTriList.h">
-      <Filter>Core\Client\Objects\physics\Colliders\Tri-Collider</Filter>
+      <Filter>Physics\Colliders\Tri-Collider</Filter>
     </ClInclude>
     <ClInclude Include="tri-colliderknoopc\dTriSphere.h">
-      <Filter>Core\Client\Objects\physics\Colliders\Tri-Collider</Filter>
+      <Filter>Physics\Colliders\Tri-Collider</Filter>
     </ClInclude>
     <ClInclude Include="tri-colliderKNoOPC\dxTriList.h">
-      <Filter>Core\Client\Objects\physics\Colliders\Tri-Collider</Filter>
+      <Filter>Physics\Colliders\Tri-Collider</Filter>
     </ClInclude>
     <ClInclude Include="tri-colliderknoopc\TriPrimitiveCollideClassDef.h">
-      <Filter>Core\Client\Objects\physics\Colliders\Tri-Collider</Filter>
+      <Filter>Physics\Colliders\Tri-Collider</Filter>
     </ClInclude>
     <ClInclude Include="dCylinder\dCylinder.h">
-      <Filter>Core\Client\Objects\physics\Colliders\Cyl_Collider</Filter>
+      <Filter>Physics\Colliders\Cyl_Collider</Filter>
     </ClInclude>
     <ClInclude Include="DamagableItem.h">
-      <Filter>Core\Client\Objects\physics\DamagableItem</Filter>
+      <Filter>Physics\DamagableItem</Filter>
     </ClInclude>
     <ClInclude Include="PHSoundPlayer.h">
-      <Filter>Core\Client\Objects\physics\PhysicsSoundPlayer</Filter>
+      <Filter>Physics\PhysicsSoundPlayer</Filter>
     </ClInclude>
     <ClInclude Include="PHActivationShape.h">
-      <Filter>Core\Client\Objects\physics\ActivationBox</Filter>
+      <Filter>Physics\ActivationBox</Filter>
     </ClInclude>
     <ClInclude Include="Hit.h">
-      <Filter>Core\Client\Objects\physics\Hit</Filter>
+      <Filter>Physics\Hit</Filter>
     </ClInclude>
     <ClInclude Include="Ik\aint.h">
-      <Filter>Core\Client\Objects\physics\IK</Filter>
+      <Filter>Physics\IK</Filter>
     </ClInclude>
     <ClInclude Include="Ik\Dof7control.h">
-      <Filter>Core\Client\Objects\physics\IK</Filter>
+      <Filter>Physics\IK</Filter>
     </ClInclude>
     <ClInclude Include="Ik\eqn.h">
-      <Filter>Core\Client\Objects\physics\IK</Filter>
+      <Filter>Physics\IK</Filter>
     </ClInclude>
     <ClInclude Include="Ik\eulersolver.h">
-      <Filter>Core\Client\Objects\physics\IK</Filter>
+      <Filter>Physics\IK</Filter>
     </ClInclude>
     <ClInclude Include="ik_anim_state.h">
-      <Filter>Core\Client\Objects\physics\IK</Filter>
+      <Filter>Physics\IK</Filter>
     </ClInclude>
     <ClInclude Include="Ik\IKLimb.h">
-      <Filter>Core\Client\Objects\physics\IK</Filter>
+      <Filter>Physics\IK</Filter>
     </ClInclude>
     <ClInclude Include="IKLimbsController.h">
-      <Filter>Core\Client\Objects\physics\IK</Filter>
+      <Filter>Physics\IK</Filter>
     </ClInclude>
     <ClInclude Include="Ik\jtlimits.h">
-      <Filter>Core\Client\Objects\physics\IK</Filter>
+      <Filter>Physics\IK</Filter>
     </ClInclude>
     <ClInclude Include="Ik\limb.h">
-      <Filter>Core\Client\Objects\physics\IK</Filter>
+      <Filter>Physics\IK</Filter>
     </ClInclude>
     <ClInclude Include="Ik\math3d.h">
-      <Filter>Core\Client\Objects\physics\IK</Filter>
+      <Filter>Physics\IK</Filter>
     </ClInclude>
     <ClInclude Include="Ik\mathTrig.h">
-      <Filter>Core\Client\Objects\physics\IK</Filter>
+      <Filter>Physics\IK</Filter>
     </ClInclude>
     <ClInclude Include="ui\CExtraContentFilter.h">
-      <Filter>AI\AScript\ScriptClasses\UI</Filter>
+      <Filter>UI</Filter>
     </ClInclude>
     <ClInclude Include="MainMenu.h">
-      <Filter>AI\AScript\ScriptClasses\UI</Filter>
+      <Filter>UI</Filter>
     </ClInclude>
     <ClInclude Include="UI.h">
-      <Filter>AI\AScript\ScriptClasses\UI</Filter>
+      <Filter>UI</Filter>
     </ClInclude>
     <ClInclude Include="ui_base.h">
-      <Filter>AI\AScript\ScriptClasses\UI</Filter>
+      <Filter>UI</Filter>
     </ClInclude>
     <ClInclude Include="UIDialogHolder.h">
-      <Filter>AI\AScript\ScriptClasses\UI</Filter>
+      <Filter>UI</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIInventoryWnd.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\InventoryWnd</Filter>
+      <Filter>UI\Common\InventoryWnd</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIOutfitSlot.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\InventoryWnd</Filter>
+      <Filter>UI\Common\InventoryWnd</Filter>
     </ClInclude>
     <ClInclude Include="ui\UITradeWnd.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\TradeWnd</Filter>
+      <Filter>UI\Common\TradeWnd</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIPdaAux.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\PdaWnd</Filter>
+      <Filter>UI\Common\PdaWnd</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIPdaContactsWnd.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\PdaWnd</Filter>
+      <Filter>UI\Common\PdaWnd</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIPdaListItem.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\PdaWnd</Filter>
+      <Filter>UI\Common\PdaWnd</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIPdaWnd.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\PdaWnd</Filter>
+      <Filter>UI\Common\PdaWnd</Filter>
     </ClInclude>
     <ClInclude Include="ui\map_hint.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MapWnd</Filter>
+      <Filter>UI\Common\MapWnd</Filter>
     </ClInclude>
     <ClInclude Include="map_spot.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MapWnd</Filter>
+      <Filter>UI\Common\MapWnd</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIMap.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MapWnd</Filter>
+      <Filter>UI\Common\MapWnd</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIMapWnd.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MapWnd</Filter>
+      <Filter>UI\Common\MapWnd</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIMapWndActions.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MapWnd</Filter>
+      <Filter>UI\Common\MapWnd</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIMapWndActionsSpace.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MapWnd</Filter>
+      <Filter>UI\Common\MapWnd</Filter>
     </ClInclude>
     <ClInclude Include="ui\UITalkDialogWnd.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\TalkWnd</Filter>
+      <Filter>UI\Common\TalkWnd</Filter>
     </ClInclude>
     <ClInclude Include="ui\UITalkWnd.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\TalkWnd</Filter>
+      <Filter>UI\Common\TalkWnd</Filter>
     </ClInclude>
     <ClInclude Include="ui\UICarBodyWnd.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\CarBodyWnd</Filter>
+      <Filter>UI\Common\CarBodyWnd</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIDiaryWnd.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\Diary</Filter>
+      <Filter>UI\Common\Diary</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIEncyclopediaArticleWnd.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\Diary</Filter>
+      <Filter>UI\Common\Diary</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIEncyclopediaWnd.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\Diary</Filter>
+      <Filter>UI\Common\Diary</Filter>
     </ClInclude>
     <ClInclude Include="ui\UINewsItemWnd.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\Diary</Filter>
+      <Filter>UI\Common\Diary</Filter>
     </ClInclude>
     <ClInclude Include="ui\UINewsWnd.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\Diary</Filter>
+      <Filter>UI\Common\Diary</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIArtefactPanel.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MainIngame</Filter>
+      <Filter>UI\Common\MainIngame</Filter>
     </ClInclude>
     <ClInclude Include="ui\UICarPanel.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MainIngame</Filter>
+      <Filter>UI\Common\MainIngame</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIMainIngameWnd.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MainIngame</Filter>
+      <Filter>UI\Common\MainIngame</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIMessagesWindow.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MainIngame</Filter>
+      <Filter>UI\Common\MainIngame</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIMoneyIndicator.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MainIngame</Filter>
+      <Filter>UI\Common\MainIngame</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIMotionIcon.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MainIngame</Filter>
+      <Filter>UI\Common\MainIngame</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIPdaMsgListItem.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MainIngame</Filter>
+      <Filter>UI\Common\MainIngame</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIPointerGage.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MainIngame</Filter>
+      <Filter>UI\Common\MainIngame</Filter>
     </ClInclude>
     <ClInclude Include="UIZoneMap.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MainIngame</Filter>
+      <Filter>UI\Common\MainIngame</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIColorAnimatorWrapper.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\Animations</Filter>
+      <Filter>UI\Common\Animations</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIActorInfo.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\Statistics</Filter>
+      <Filter>UI\Common\Statistics</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIStalkersRankingWnd.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\Statistics</Filter>
+      <Filter>UI\Common\Statistics</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIDebugFonts.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\_Debug Fonts</Filter>
+      <Filter>UI\Common\_Debug Fonts</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIOptionsItem.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\OptionsItem</Filter>
+      <Filter>UI\Common\OptionsItem</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIOptionsManager.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\OptionsItem</Filter>
+      <Filter>UI\Common\OptionsItem</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIOptionsManagerScript.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\OptionsItem</Filter>
+      <Filter>UI\Common\OptionsItem</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIOptConCom.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\OptionsConsoleCommands</Filter>
+      <Filter>UI\Common\OptionsConsoleCommands</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIEventsWnd.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\EventsWnd</Filter>
+      <Filter>UI\Common\EventsWnd</Filter>
     </ClInclude>
     <ClInclude Include="ui\UITaskDescrWnd.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\EventsWnd</Filter>
+      <Filter>UI\Common\EventsWnd</Filter>
     </ClInclude>
     <ClInclude Include="ui\UITaskItem.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\EventsWnd</Filter>
+      <Filter>UI\Common\EventsWnd</Filter>
     </ClInclude>
     <ClInclude Include="ui\MMSound.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MM</Filter>
+      <Filter>UI\Common\MM</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIMMShniaga.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MM</Filter>
+      <Filter>UI\Common\MM</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIEditKeyBind.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MM\KeyBinding</Filter>
+      <Filter>UI\Common\MM\KeyBinding</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIKeyBinding.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MM\KeyBinding</Filter>
+      <Filter>UI\Common\MM\KeyBinding</Filter>
     </ClInclude>
     <ClInclude Include="ui\UICharacterInfo.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\CharacterInfo</Filter>
+      <Filter>UI\Common\CharacterInfo</Filter>
     </ClInclude>
     <ClInclude Include="ui\ui_af_params.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\ItemInfo</Filter>
+      <Filter>UI\Common\ItemInfo</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIItemInfo.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\ItemInfo</Filter>
+      <Filter>UI\Common\ItemInfo</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIWpnParams.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\ItemInfo</Filter>
+      <Filter>UI\Common\ItemInfo</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIOutfitInfo.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\OutfitInfo</Filter>
+      <Filter>UI\Common\OutfitInfo</Filter>
     </ClInclude>
     <ClInclude Include="ui\UITimeWnd.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\TimeWnd</Filter>
+      <Filter>UI\Common\TimeWnd</Filter>
     </ClInclude>
     <ClInclude Include="ui\UISleepWnd.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\SleepWnd</Filter>
+      <Filter>UI\Common\SleepWnd</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIInventoryUtilities.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\InventoryUtilities</Filter>
+      <Filter>UI\Common\InventoryUtilities</Filter>
     </ClInclude>
     <ClInclude Include="callback_info.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows</Filter>
+      <Filter>UI\UIWindows</Filter>
     </ClInclude>
     <ClInclude Include="ui\uiabstract.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows</Filter>
+      <Filter>UI\UIWindows</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIBtnHint.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows</Filter>
+      <Filter>UI\UIWindows</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIMessages.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows</Filter>
+      <Filter>UI\UIWindows</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIWndCallback.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows</Filter>
+      <Filter>UI\UIWindows</Filter>
     </ClInclude>
     <ClInclude Include="ui\UITextureMaster.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\XML</Filter>
+      <Filter>UI\UIWindows\XML</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIXmlInit.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\XML</Filter>
+      <Filter>UI\UIWindows\XML</Filter>
     </ClInclude>
     <ClInclude Include="ui\xrUIXmlParser.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\XML</Filter>
+      <Filter>UI\UIWindows\XML</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIMessageBox.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\MessageBox</Filter>
+      <Filter>UI\UIWindows\MessageBox</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIMessageBoxEx.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\MessageBox</Filter>
+      <Filter>UI\UIWindows\MessageBox</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIPropertiesBox.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\PropertiesBox</Filter>
+      <Filter>UI\UIWindows\PropertiesBox</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIAnimatedStatic.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Static</Filter>
+      <Filter>UI\UIWindows\Static</Filter>
     </ClInclude>
     <ClInclude Include="UICustomItem.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Static</Filter>
+      <Filter>UI\UIWindows\Static</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIMultiTextStatic.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Static</Filter>
+      <Filter>UI\UIWindows\Static</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIStatic.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Static</Filter>
+      <Filter>UI\UIWindows\Static</Filter>
     </ClInclude>
     <ClInclude Include="UIStaticItem.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Static</Filter>
+      <Filter>UI\UIWindows\Static</Filter>
     </ClInclude>
     <ClInclude Include="ui\UITextBanner.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Static</Filter>
+      <Filter>UI\UIWindows\Static</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIEditBox.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\EditBox</Filter>
+      <Filter>UI\UIWindows\EditBox</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIEditBoxEx.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\EditBox</Filter>
+      <Filter>UI\UIWindows\EditBox</Filter>
     </ClInclude>
     <ClInclude Include="ui\UICustomEdit.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\EditBox\customEB</Filter>
+      <Filter>UI\UIWindows\EditBox\customEB</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIDialogWnd.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Windows</Filter>
+      <Filter>UI\UIWindows\Windows</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIFrameLineWnd.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Windows</Filter>
+      <Filter>UI\UIWindows\Windows</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIFrameWindow.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Windows</Filter>
+      <Filter>UI\UIWindows\Windows</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIWindow.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Windows</Filter>
+      <Filter>UI\UIWindows\Windows</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIProgressBar.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ProgressBar</Filter>
+      <Filter>UI\UIWindows\ProgressBar</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIProgressShape.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ProgressBar</Filter>
+      <Filter>UI\UIWindows\ProgressBar</Filter>
     </ClInclude>
     <ClInclude Include="ui\UITabButton.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\TabControl</Filter>
+      <Filter>UI\UIWindows\TabControl</Filter>
     </ClInclude>
     <ClInclude Include="ui\UITabControl.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\TabControl</Filter>
+      <Filter>UI\UIWindows\TabControl</Filter>
     </ClInclude>
     <ClInclude Include="ui\UITreeViewItem.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\TreeView</Filter>
+      <Filter>UI\UIWindows\TreeView</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIScriptWnd.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ScriptWnd</Filter>
+      <Filter>UI\UIWindows\ScriptWnd</Filter>
     </ClInclude>
     <ClInclude Include="ui\uiscriptwnd_script.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ScriptWnd</Filter>
+      <Filter>UI\UIWindows\ScriptWnd</Filter>
     </ClInclude>
     <ClInclude Include="ui\UI3tButton.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Buttons</Filter>
+      <Filter>UI\UIWindows\Buttons</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIButton.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Buttons</Filter>
+      <Filter>UI\UIWindows\Buttons</Filter>
     </ClInclude>
     <ClInclude Include="ui\UICheckButton.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Buttons</Filter>
+      <Filter>UI\UIWindows\Buttons</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIRadioButton.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Buttons</Filter>
+      <Filter>UI\UIWindows\Buttons</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIComboBox.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ComboBox</Filter>
+      <Filter>UI\UIWindows\ComboBox</Filter>
     </ClInclude>
     <ClInclude Include="ui\UI_IB_Static.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\InteractiveBackground</Filter>
+      <Filter>UI\UIWindows\InteractiveBackground</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIInteractiveBackground.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\InteractiveBackground</Filter>
+      <Filter>UI\UIWindows\InteractiveBackground</Filter>
     </ClInclude>
     <ClInclude Include="ui\UITrackBar.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\TrackBar</Filter>
+      <Filter>UI\UIWindows\TrackBar</Filter>
     </ClInclude>
     <ClInclude Include="ui\UITrackButton.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\TrackBar</Filter>
+      <Filter>UI\UIWindows\TrackBar</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIFrameLine.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Frames</Filter>
+      <Filter>UI\UIWindows\Frames</Filter>
     </ClInclude>
     <ClInclude Include="UIFrameRect.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Frames</Filter>
+      <Filter>UI\UIWindows\Frames</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIScrollView.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ScrollView</Filter>
+      <Filter>UI\UIWindows\ScrollView</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIListBox.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ScrollView\ListBox</Filter>
+      <Filter>UI\UIWindows\ScrollView\ListBox</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIListBoxItem.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ScrollView\ListBox</Filter>
+      <Filter>UI\UIWindows\ScrollView\ListBox</Filter>
     </ClInclude>
     <ClInclude Include="ui\UILine.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Lines</Filter>
+      <Filter>UI\UIWindows\Lines</Filter>
     </ClInclude>
     <ClInclude Include="ui\UILines.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Lines</Filter>
+      <Filter>UI\UIWindows\Lines</Filter>
     </ClInclude>
     <ClInclude Include="ui\uilinestd.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Lines</Filter>
+      <Filter>UI\UIWindows\Lines</Filter>
     </ClInclude>
     <ClInclude Include="ui\UISubLine.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Lines</Filter>
+      <Filter>UI\UIWindows\Lines</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIVideoPlayerWnd.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\VideoPlayer</Filter>
+      <Filter>UI\UIWindows\VideoPlayer</Filter>
     </ClInclude>
     <ClInclude Include="ui\UICellCustomItems.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\DragDrop2</Filter>
+      <Filter>UI\UIWindows\DragDrop2</Filter>
     </ClInclude>
     <ClInclude Include="ui\UICellItem.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\DragDrop2</Filter>
+      <Filter>UI\UIWindows\DragDrop2</Filter>
     </ClInclude>
     <ClInclude Include="ui\UICellItemFactory.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\DragDrop2</Filter>
+      <Filter>UI\UIWindows\DragDrop2</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIDragDropListEx.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\DragDrop2</Filter>
+      <Filter>UI\UIWindows\DragDrop2</Filter>
     </ClInclude>
     <ClInclude Include="ui\UILabel.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Label</Filter>
+      <Filter>UI\UIWindows\Label</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIScrollBar.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ScrollBar</Filter>
+      <Filter>UI\UIWindows\ScrollBar</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIScrollBox.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ScrollBar</Filter>
+      <Filter>UI\UIWindows\ScrollBar</Filter>
     </ClInclude>
     <ClInclude Include="ui\UICustomSpin.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\SpinBox</Filter>
+      <Filter>UI\UIWindows\SpinBox</Filter>
     </ClInclude>
     <ClInclude Include="ui\UISpinNum.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\SpinBox</Filter>
+      <Filter>UI\UIWindows\SpinBox</Filter>
     </ClInclude>
     <ClInclude Include="ui\UISpinText.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\SpinBox</Filter>
+      <Filter>UI\UIWindows\SpinBox</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIListItem.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ListBox</Filter>
+      <Filter>UI\UIWindows\ListBox</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIListWnd.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ListBox</Filter>
+      <Filter>UI\UIWindows\ListBox</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIListWnd_inline.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ListBox</Filter>
+      <Filter>UI\UIWindows\ListBox</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIListItemEx.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ListBox\Ex</Filter>
+      <Filter>UI\UIWindows\ListBox\Ex</Filter>
     </ClInclude>
     <ClInclude Include="ContextMenu.h">
-      <Filter>AI\AScript\ScriptClasses\UI\HUD</Filter>
+      <Filter>UI\HUD</Filter>
     </ClInclude>
     <ClInclude Include="HitMarker.h">
-      <Filter>AI\AScript\ScriptClasses\UI\HUD</Filter>
+      <Filter>UI\HUD</Filter>
     </ClInclude>
     <ClInclude Include="HUDManager.h">
-      <Filter>AI\AScript\ScriptClasses\UI\HUD</Filter>
+      <Filter>UI\HUD</Filter>
     </ClInclude>
     <ClInclude Include="UIGameCustom.h">
-      <Filter>AI\AScript\ScriptClasses\UI\GameTypes\GameCustom</Filter>
+      <Filter>UI\GameTypes\GameCustom</Filter>
     </ClInclude>
     <ClInclude Include="UIDMStatisticWnd.h">
-      <Filter>AI\AScript\ScriptClasses\UI\GameTypes\Deathmatch</Filter>
+      <Filter>UI\GameTypes\Deathmatch</Filter>
     </ClInclude>
     <ClInclude Include="UIGameDM.h">
-      <Filter>AI\AScript\ScriptClasses\UI\GameTypes\Deathmatch</Filter>
+      <Filter>UI\GameTypes\Deathmatch</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIRankIndicator.h">
-      <Filter>AI\AScript\ScriptClasses\UI\GameTypes\Deathmatch</Filter>
+      <Filter>UI\GameTypes\Deathmatch</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIVoteStatusWnd.h">
-      <Filter>AI\AScript\ScriptClasses\UI\GameTypes\Deathmatch</Filter>
+      <Filter>UI\GameTypes\Deathmatch</Filter>
     </ClInclude>
     <ClInclude Include="UIGameSP.h">
-      <Filter>AI\AScript\ScriptClasses\UI\GameTypes\Single</Filter>
+      <Filter>UI\GameTypes\Single</Filter>
     </ClInclude>
     <ClInclude Include="UIGameTDM.h">
-      <Filter>AI\AScript\ScriptClasses\UI\GameTypes\TeamDeathmatch</Filter>
+      <Filter>UI\GameTypes\TeamDeathmatch</Filter>
     </ClInclude>
     <ClInclude Include="UIGameAHunt.h">
-      <Filter>AI\AScript\ScriptClasses\UI\GameTypes\ArtefactHunt</Filter>
+      <Filter>UI\GameTypes\ArtefactHunt</Filter>
     </ClInclude>
     <ClInclude Include="UIGame_custom_script.h">
-      <Filter>AI\AScript\ScriptClasses\UI\GameTypes\Game_custom_script</Filter>
+      <Filter>UI\GameTypes\Game_custom_script</Filter>
     </ClInclude>
     <ClInclude Include="ui\UICDkey.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\MM_MP\CDkey</Filter>
+      <Filter>UI\Multiplayer\MM_MP\CDkey</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIMapList.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\MM_MP\MapList</Filter>
+      <Filter>UI\Multiplayer\MM_MP\MapList</Filter>
     </ClInclude>
     <ClInclude Include="ui\ServerList.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\MM_MP\ServerList</Filter>
+      <Filter>UI\Multiplayer\MM_MP\ServerList</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIListItemAdv.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\MM_MP\ServerList</Filter>
+      <Filter>UI\Multiplayer\MM_MP\ServerList</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIListItemServer.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\MM_MP\ServerList</Filter>
+      <Filter>UI\Multiplayer\MM_MP\ServerList</Filter>
     </ClInclude>
     <ClInclude Include="ui\TeamInfo.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\MM_MP\TeamInfo</Filter>
+      <Filter>UI\Multiplayer\MM_MP\TeamInfo</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIStats.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\HUD\Stats</Filter>
+      <Filter>UI\Multiplayer\HUD\Stats</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIStatsPlayerInfo.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\HUD\Stats</Filter>
+      <Filter>UI\Multiplayer\HUD\Stats</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIStatsPlayerList.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\HUD\Stats</Filter>
+      <Filter>UI\Multiplayer\HUD\Stats</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIStatsIcon.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\HUD\Stats\icons</Filter>
+      <Filter>UI\Multiplayer\HUD\Stats\icons</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIFrags.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\HUD\Stats\frag_wnd</Filter>
+      <Filter>UI\Multiplayer\HUD\Stats\frag_wnd</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIFrags2.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\HUD\Stats\frag_wnd</Filter>
+      <Filter>UI\Multiplayer\HUD\Stats\frag_wnd</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIStatsWnd.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\HUD\Stats\old</Filter>
+      <Filter>UI\Multiplayer\HUD\Stats\old</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIChatWnd.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\HUD\Chat</Filter>
+      <Filter>UI\Multiplayer\HUD\Chat</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIGameLog.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\HUD\GameLog</Filter>
+      <Filter>UI\Multiplayer\HUD\GameLog</Filter>
     </ClInclude>
     <ClInclude Include="ui\UISpeechMenu.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\HUD\SpeechMenu</Filter>
+      <Filter>UI\Multiplayer\HUD\SpeechMenu</Filter>
     </ClInclude>
     <ClInclude Include="ui\KillMessageStruct.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\HUD\common</Filter>
+      <Filter>UI\Multiplayer\HUD\common</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIPdaKillMessage.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\HUD\common</Filter>
+      <Filter>UI\Multiplayer\HUD\common</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIBuyWndBase.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\BuyWeaponWnd</Filter>
+      <Filter>UI\Multiplayer\BuyWeaponWnd</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIBuyWndShared.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\BuyWeaponWnd</Filter>
+      <Filter>UI\Multiplayer\BuyWeaponWnd</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIMpItemsStoreWnd.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\BuyWeaponWnd</Filter>
+      <Filter>UI\Multiplayer\BuyWeaponWnd</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIMpTradeWnd.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\BuyWeaponWnd</Filter>
+      <Filter>UI\Multiplayer\BuyWeaponWnd</Filter>
     </ClInclude>
     <ClInclude Include="ui\Restrictions.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\BuyWeaponWnd\rank_restrictions</Filter>
+      <Filter>UI\Multiplayer\BuyWeaponWnd\rank_restrictions</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIBuyWeaponTab.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\BuyWeaponWnd\TAB</Filter>
+      <Filter>UI\Multiplayer\BuyWeaponWnd\TAB</Filter>
     </ClInclude>
     <ClInclude Include="ui\UITabButtonMP.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\BuyWeaponWnd\TAB</Filter>
+      <Filter>UI\Multiplayer\BuyWeaponWnd\TAB</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIBagWnd.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\BuyWeaponWnd\buy_wnd</Filter>
+      <Filter>UI\Multiplayer\BuyWeaponWnd\buy_wnd</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIBuyWnd.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\BuyWeaponWnd\buy_wnd</Filter>
+      <Filter>UI\Multiplayer\BuyWeaponWnd\buy_wnd</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIMapDesc.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\team_skin_info\MapDesc</Filter>
+      <Filter>UI\Multiplayer\team_skin_info\MapDesc</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIMapInfo.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\team_skin_info\MapDesc\MapInfo</Filter>
+      <Filter>UI\Multiplayer\team_skin_info\MapDesc\MapInfo</Filter>
     </ClInclude>
     <ClInclude Include="ui\UISpawnWnd.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\team_skin_info\Spawn</Filter>
+      <Filter>UI\Multiplayer\team_skin_info\Spawn</Filter>
     </ClInclude>
     <ClInclude Include="ui\UISkinSelector.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\team_skin_info\SkinSelector</Filter>
+      <Filter>UI\Multiplayer\team_skin_info\SkinSelector</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIStatix.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\team_skin_info\SkinSelector</Filter>
+      <Filter>UI\Multiplayer\team_skin_info\SkinSelector</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIChangeMap.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\Voting</Filter>
+      <Filter>UI\Multiplayer\Voting</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIChangeWeather.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\Voting</Filter>
+      <Filter>UI\Multiplayer\Voting</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIKickPlayer.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\Voting</Filter>
+      <Filter>UI\Multiplayer\Voting</Filter>
     </ClInclude>
     <ClInclude Include="ui\UITextVote.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\Voting</Filter>
+      <Filter>UI\Multiplayer\Voting</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIVote.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\Voting</Filter>
+      <Filter>UI\Multiplayer\Voting</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIVotingCategory.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\Voting</Filter>
+      <Filter>UI\Multiplayer\Voting</Filter>
     </ClInclude>
     <ClInclude Include="HUDCrosshair.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Cursor</Filter>
+      <Filter>UI\Cursor</Filter>
     </ClInclude>
     <ClInclude Include="HUDTarget.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Cursor</Filter>
+      <Filter>UI\Cursor</Filter>
     </ClInclude>
     <ClInclude Include="UICursor.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Cursor</Filter>
+      <Filter>UI\Cursor</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIGameTutorial.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Tutorial</Filter>
+      <Filter>UI\Tutorial</Filter>
     </ClInclude>
     <ClInclude Include="..\xr_3da\doug_lea_memory_allocator.h" />
     <ClInclude Include="TSMP_HitProcessor.h">
@@ -6537,6 +6534,12 @@
     </ClInclude>
     <ClInclude Include="TSMP_Timers.h">
       <Filter>TSMP</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptXMLInit.h">
+      <Filter>AI\AScript\ScriptClasses\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="script_ui_registrator.h">
+      <Filter>AI\AScript\ScriptClasses\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -7686,12 +7689,6 @@
     <ClCompile Include="script_sound_type_script.cpp">
       <Filter>AI\AScript\ScriptClasses\ScriptSoundType</Filter>
     </ClCompile>
-    <ClCompile Include="ScriptXMLInit.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="ui_export_script.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI</Filter>
-    </ClCompile>
     <ClCompile Include="key_binding_registrator_script.cpp">
       <Filter>AI\AScript\ScriptClasses\KeyBindings</Filter>
     </ClCompile>
@@ -8017,37 +8014,37 @@
       <Filter>Core\Client\Objects\base\CollideValidator</Filter>
     </ClCompile>
     <ClCompile Include="PHSkeleton.cpp">
-      <Filter>Core\Client\Objects\physics\PHSkeleton</Filter>
+      <Filter>Physics\PHSkeleton</Filter>
     </ClCompile>
     <ClCompile Include="PHDestroyable.cpp">
-      <Filter>Core\Client\Objects\physics\PHDestroyable</Filter>
+      <Filter>Physics\PHDestroyable</Filter>
     </ClCompile>
     <ClCompile Include="PHDestroyableNotificate.cpp">
-      <Filter>Core\Client\Objects\physics\PhysicsSkeletonObject</Filter>
+      <Filter>Physics\PhysicsSkeletonObject</Filter>
     </ClCompile>
     <ClCompile Include="PhysicsSkeletonObject.cpp">
-      <Filter>Core\Client\Objects\physics\PhysicsSkeletonObject</Filter>
+      <Filter>Physics\PhysicsSkeletonObject</Filter>
     </ClCompile>
     <ClCompile Include="PhysicsShellHolder.cpp">
-      <Filter>Core\Client\Objects\physics\PhysicsShellHolder</Filter>
+      <Filter>Physics\PhysicsShellHolder</Filter>
     </ClCompile>
     <ClCompile Include="ClimableObject.cpp">
-      <Filter>Core\Client\Objects\physics\Climable</Filter>
+      <Filter>Physics\Climable</Filter>
     </ClCompile>
     <ClCompile Include="BreakableObject.cpp">
-      <Filter>Core\Client\Objects\physics\Breakable</Filter>
+      <Filter>Physics\Breakable</Filter>
     </ClCompile>
     <ClCompile Include="PHCollisionDamageReceiver.cpp">
-      <Filter>Core\Client\Objects\physics\CollisionDamageReceiver</Filter>
+      <Filter>Physics\CollisionDamageReceiver</Filter>
     </ClCompile>
     <ClCompile Include="DestroyablePhysicsObject.cpp">
-      <Filter>Core\Client\Objects\physics\DestroyablePhysicsObject</Filter>
+      <Filter>Physics\DestroyablePhysicsObject</Filter>
     </ClCompile>
     <ClCompile Include="PhysicObject.cpp">
-      <Filter>Core\Client\Objects\physics\PhysicObject</Filter>
+      <Filter>Physics\PhysicObject</Filter>
     </ClCompile>
     <ClCompile Include="PhysicObject_script.cpp">
-      <Filter>Core\Client\Objects\physics\PhysicObject</Filter>
+      <Filter>Physics\PhysicObject</Filter>
     </ClCompile>
     <ClCompile Include="HangingLamp.cpp">
       <Filter>Core\Client\Objects\hanging_lamp</Filter>
@@ -8857,799 +8854,799 @@
       <Filter>Core\Server\xrGameSpyServer</Filter>
     </ClCompile>
     <ClCompile Include="PHDebug.cpp">
-      <Filter>Core\Client\Objects\physics\Base</Filter>
+      <Filter>Physics\Base</Filter>
     </ClCompile>
     <ClCompile Include="PHWorld.cpp">
-      <Filter>Core\Client\Objects\physics\Base</Filter>
+      <Filter>Physics\Base</Filter>
     </ClCompile>
     <ClCompile Include="PHWorldScript.cpp">
-      <Filter>Core\Client\Objects\physics\Base</Filter>
+      <Filter>Physics\Base</Filter>
     </ClCompile>
     <ClCompile Include="Physics.cpp">
-      <Filter>Core\Client\Objects\physics\Base</Filter>
+      <Filter>Physics\Base</Filter>
     </ClCompile>
     <ClCompile Include="physics_game.cpp">
-      <Filter>Core\Client\Objects\physics\Base</Filter>
+      <Filter>Physics\Base</Filter>
     </ClCompile>
     <ClCompile Include="PhysicsGamePars.cpp">
-      <Filter>Core\Client\Objects\physics\Base</Filter>
+      <Filter>Physics\Base</Filter>
     </ClCompile>
     <ClCompile Include="PHShellCreator.cpp">
-      <Filter>Core\Client\Objects\physics\Base\Objects</Filter>
+      <Filter>Physics\Base\Objects</Filter>
     </ClCompile>
     <ClCompile Include="PHStaticGeomShell.cpp">
-      <Filter>Core\Client\Objects\physics\Base\Objects</Filter>
+      <Filter>Physics\Base\Objects</Filter>
     </ClCompile>
     <ClCompile Include="MathUtils.cpp">
-      <Filter>Core\Client\Objects\physics\Base\Objects\Utils</Filter>
+      <Filter>Physics\Base\Objects\Utils</Filter>
     </ClCompile>
     <ClCompile Include="PHDynamicData.cpp">
-      <Filter>Core\Client\Objects\physics\Base\Objects\Utils</Filter>
+      <Filter>Physics\Base\Objects\Utils</Filter>
     </ClCompile>
     <ClCompile Include="PHInterpolation.cpp">
-      <Filter>Core\Client\Objects\physics\Base\Objects\Utils</Filter>
+      <Filter>Physics\Base\Objects\Utils</Filter>
     </ClCompile>
     <ClCompile Include="PHContactBodyEffector.cpp">
-      <Filter>Core\Client\Objects\physics\Base\Objects\BodyEffectors</Filter>
+      <Filter>Physics\Base\Objects\BodyEffectors</Filter>
     </ClCompile>
     <ClCompile Include="PHNetState.cpp">
-      <Filter>Core\Client\Objects\physics\Base\Objects\PHNet</Filter>
+      <Filter>Physics\Base\Objects\PHNet</Filter>
     </ClCompile>
     <ClCompile Include="PHMoveStorage.cpp">
-      <Filter>Core\Client\Objects\physics\Base\Objects\MoveStorage</Filter>
+      <Filter>Physics\Base\Objects\MoveStorage</Filter>
     </ClCompile>
     <ClCompile Include="DisablingParams.cpp">
-      <Filter>Core\Client\Objects\physics\Base\Objects\Disabling</Filter>
+      <Filter>Physics\Base\Objects\Disabling</Filter>
     </ClCompile>
     <ClCompile Include="PHDisabling.cpp">
-      <Filter>Core\Client\Objects\physics\Base\Objects\Disabling</Filter>
+      <Filter>Physics\Base\Objects\Disabling</Filter>
     </ClCompile>
     <ClCompile Include="PHActorCharacter.cpp">
-      <Filter>Core\Client\Objects\physics\Base\Objects\PhyMove\ActorCaracter</Filter>
+      <Filter>Physics\Base\Objects\PhyMove\ActorCaracter</Filter>
     </ClCompile>
     <ClCompile Include="PHMovementDynamicActivate.cpp">
-      <Filter>Core\Client\Objects\physics\Base\Objects\PhyMove\ActorCaracter</Filter>
+      <Filter>Physics\Base\Objects\PhyMove\ActorCaracter</Filter>
     </ClCompile>
     <ClCompile Include="PHAICharacter.cpp">
-      <Filter>Core\Client\Objects\physics\Base\Objects\PhyMove\AICharacter</Filter>
+      <Filter>Physics\Base\Objects\PhyMove\AICharacter</Filter>
     </ClCompile>
     <ClCompile Include="PHCapture.cpp">
-      <Filter>Core\Client\Objects\physics\Base\Objects\PhyMove\Capture</Filter>
+      <Filter>Physics\Base\Objects\PhyMove\Capture</Filter>
     </ClCompile>
     <ClCompile Include="PHCaptureInit.cpp">
-      <Filter>Core\Client\Objects\physics\Base\Objects\PhyMove\Capture</Filter>
+      <Filter>Physics\Base\Objects\PhyMove\Capture</Filter>
     </ClCompile>
     <ClCompile Include="PHMovementControl.cpp">
-      <Filter>Core\Client\Objects\physics\Base\Objects\PhyMove\MovementControl</Filter>
+      <Filter>Physics\Base\Objects\PhyMove\MovementControl</Filter>
     </ClCompile>
     <ClCompile Include="ElevatorState.cpp">
-      <Filter>Core\Client\Objects\physics\Base\Objects\PhyMove\SipmpleCharacter</Filter>
+      <Filter>Physics\Base\Objects\PhyMove\SipmpleCharacter</Filter>
     </ClCompile>
     <ClCompile Include="PHSimpleCharacter.cpp">
-      <Filter>Core\Client\Objects\physics\Base\Objects\PhyMove\SipmpleCharacter</Filter>
+      <Filter>Physics\Base\Objects\PhyMove\SipmpleCharacter</Filter>
     </ClCompile>
     <ClCompile Include="PHCharacter.cpp">
-      <Filter>Core\Client\Objects\physics\Base\Objects\PhyMove\BaseCharacter</Filter>
+      <Filter>Physics\Base\Objects\PhyMove\BaseCharacter</Filter>
     </ClCompile>
     <ClCompile Include="PhysicsShell.cpp">
-      <Filter>Core\Client\Objects\physics\Base\Objects\BaseShell</Filter>
+      <Filter>Physics\Base\Objects\BaseShell</Filter>
     </ClCompile>
     <ClCompile Include="PhysicsShellScript.cpp">
-      <Filter>Core\Client\Objects\physics\Base\Objects\BaseShell</Filter>
+      <Filter>Physics\Base\Objects\BaseShell</Filter>
     </ClCompile>
     <ClCompile Include="PhysicsShellAnimator.cpp">
-      <Filter>Core\Client\Objects\physics\Base\Objects\BaseShell\PhysicsShellAnimator</Filter>
+      <Filter>Physics\Base\Objects\BaseShell\PhysicsShellAnimator</Filter>
     </ClCompile>
     <ClCompile Include="animation_movement_controller.cpp">
-      <Filter>Core\Client\Objects\physics\Base\Objects\BaseShell\animation_movement_controller</Filter>
+      <Filter>Physics\Base\Objects\BaseShell\animation_movement_controller</Filter>
     </ClCompile>
     <ClCompile Include="PHElement.cpp">
-      <Filter>Core\Client\Objects\physics\Base\Objects\Elemenet</Filter>
+      <Filter>Physics\Base\Objects\Elemenet</Filter>
     </ClCompile>
     <ClCompile Include="PHElementNetState.cpp">
-      <Filter>Core\Client\Objects\physics\Base\Objects\Elemenet</Filter>
+      <Filter>Physics\Base\Objects\Elemenet</Filter>
     </ClCompile>
     <ClCompile Include="PHJoint.cpp">
-      <Filter>Core\Client\Objects\physics\Base\Objects\Joint</Filter>
+      <Filter>Physics\Base\Objects\Joint</Filter>
     </ClCompile>
     <ClCompile Include="PHShell.cpp">
-      <Filter>Core\Client\Objects\physics\Base\Objects\Shell</Filter>
+      <Filter>Physics\Base\Objects\Shell</Filter>
     </ClCompile>
     <ClCompile Include="PHShellActivate.cpp">
-      <Filter>Core\Client\Objects\physics\Base\Objects\Shell</Filter>
+      <Filter>Physics\Base\Objects\Shell</Filter>
     </ClCompile>
     <ClCompile Include="PHShellNetState.cpp">
-      <Filter>Core\Client\Objects\physics\Base\Objects\Shell</Filter>
+      <Filter>Physics\Base\Objects\Shell</Filter>
     </ClCompile>
     <ClCompile Include="ShellHit.cpp">
-      <Filter>Core\Client\Objects\physics\Base\Objects\Shell</Filter>
+      <Filter>Physics\Base\Objects\Shell</Filter>
     </ClCompile>
     <ClCompile Include="PHFracture.cpp">
-      <Filter>Core\Client\Objects\physics\Base\Objects\Breakable</Filter>
+      <Filter>Physics\Base\Objects\Breakable</Filter>
     </ClCompile>
     <ClCompile Include="PHJointDestroyInfo.cpp">
-      <Filter>Core\Client\Objects\physics\Base\Objects\Breakable</Filter>
+      <Filter>Physics\Base\Objects\Breakable</Filter>
     </ClCompile>
     <ClCompile Include="PHShellSplitter.cpp">
-      <Filter>Core\Client\Objects\physics\Base\Objects\Breakable</Filter>
+      <Filter>Physics\Base\Objects\Breakable</Filter>
     </ClCompile>
     <ClCompile Include="PHSplitedShell.cpp">
-      <Filter>Core\Client\Objects\physics\Base\Objects\SplitedShell</Filter>
+      <Filter>Physics\Base\Objects\SplitedShell</Filter>
     </ClCompile>
     <ClCompile Include="PHObject.cpp">
-      <Filter>Core\Client\Objects\physics\Base\Objects\PHObject</Filter>
+      <Filter>Physics\Base\Objects\PHObject</Filter>
     </ClCompile>
     <ClCompile Include="Geometry.cpp">
-      <Filter>Core\Client\Objects\physics\Base\Objects\PHObject\Geom</Filter>
+      <Filter>Physics\Base\Objects\PHObject\Geom</Filter>
     </ClCompile>
     <ClCompile Include="PHGeometryOwner.cpp">
-      <Filter>Core\Client\Objects\physics\Base\Objects\PHObject\Geom</Filter>
+      <Filter>Physics\Base\Objects\PHObject\Geom</Filter>
     </ClCompile>
     <ClCompile Include="PHIsland.cpp">
-      <Filter>Core\Client\Objects\physics\Base\Objects\PHIsland</Filter>
+      <Filter>Physics\Base\Objects\PHIsland</Filter>
     </ClCompile>
     <ClCompile Include="PHCommander.cpp">
-      <Filter>Core\Client\Objects\physics\Base\Objects\PHCommander</Filter>
+      <Filter>Physics\Base\Objects\PHCommander</Filter>
     </ClCompile>
     <ClCompile Include="PHScriptCall.cpp">
-      <Filter>Core\Client\Objects\physics\Base\Objects\PHCommander</Filter>
+      <Filter>Physics\Base\Objects\PHCommander</Filter>
     </ClCompile>
     <ClCompile Include="PHSimpleCalls.cpp">
-      <Filter>Core\Client\Objects\physics\Base\Objects\PHCommander</Filter>
+      <Filter>Physics\Base\Objects\PHCommander</Filter>
     </ClCompile>
     <ClCompile Include="PHSimpleCallsScript.cpp">
-      <Filter>Core\Client\Objects\physics\Base\Objects\PHCommander</Filter>
+      <Filter>Physics\Base\Objects\PHCommander</Filter>
     </ClCompile>
     <ClCompile Include="character_hit_animations.cpp">
-      <Filter>Core\Client\Objects\physics\CharacterSupport</Filter>
+      <Filter>Physics\CharacterSupport</Filter>
     </ClCompile>
     <ClCompile Include="CharacterPhysicsSupport.cpp">
-      <Filter>Core\Client\Objects\physics\CharacterSupport</Filter>
+      <Filter>Physics\CharacterSupport</Filter>
     </ClCompile>
     <ClCompile Include="interactive_motion.cpp">
-      <Filter>Core\Client\Objects\physics\CharacterSupport</Filter>
+      <Filter>Physics\CharacterSupport</Filter>
     </ClCompile>
     <ClCompile Include="tri-colliderknoopc\dcTriListCollider.cpp">
-      <Filter>Core\Client\Objects\physics\Colliders\Tri-Collider</Filter>
+      <Filter>Physics\Colliders\Tri-Collider</Filter>
     </ClCompile>
     <ClCompile Include="tri-colliderknoopc\dSortTriPrimitive.cpp">
-      <Filter>Core\Client\Objects\physics\Colliders\Tri-Collider</Filter>
+      <Filter>Physics\Colliders\Tri-Collider</Filter>
     </ClCompile>
     <ClCompile Include="tri-colliderknoopc\dTriBox.cpp">
-      <Filter>Core\Client\Objects\physics\Colliders\Tri-Collider</Filter>
+      <Filter>Physics\Colliders\Tri-Collider</Filter>
     </ClCompile>
     <ClCompile Include="tri-colliderKNoOPC\dTriCallideK.cpp">
-      <Filter>Core\Client\Objects\physics\Colliders\Tri-Collider</Filter>
+      <Filter>Physics\Colliders\Tri-Collider</Filter>
     </ClCompile>
     <ClCompile Include="tri-colliderknoopc\dTriCylinder.cpp">
-      <Filter>Core\Client\Objects\physics\Colliders\Tri-Collider</Filter>
+      <Filter>Physics\Colliders\Tri-Collider</Filter>
     </ClCompile>
     <ClCompile Include="tri-colliderKNoOPC\dTriList.cpp">
-      <Filter>Core\Client\Objects\physics\Colliders\Tri-Collider</Filter>
+      <Filter>Physics\Colliders\Tri-Collider</Filter>
     </ClCompile>
     <ClCompile Include="tri-colliderknoopc\dTriSphere.cpp">
-      <Filter>Core\Client\Objects\physics\Colliders\Tri-Collider</Filter>
+      <Filter>Physics\Colliders\Tri-Collider</Filter>
     </ClCompile>
     <ClCompile Include="dCylinder\dCylinder.cpp">
-      <Filter>Core\Client\Objects\physics\Colliders\Cyl_Collider</Filter>
+      <Filter>Physics\Colliders\Cyl_Collider</Filter>
     </ClCompile>
     <ClCompile Include="dRayMotions.cpp">
-      <Filter>Core\Client\Objects\physics\Colliders\RayMotions-Collider</Filter>
+      <Filter>Physics\Colliders\RayMotions-Collider</Filter>
     </ClCompile>
     <ClCompile Include="DamagableItem.cpp">
-      <Filter>Core\Client\Objects\physics\DamagableItem</Filter>
+      <Filter>Physics\DamagableItem</Filter>
     </ClCompile>
     <ClCompile Include="PHSoundPlayer.cpp">
-      <Filter>Core\Client\Objects\physics\PhysicsSoundPlayer</Filter>
+      <Filter>Physics\PhysicsSoundPlayer</Filter>
     </ClCompile>
     <ClCompile Include="PHActivationShape.cpp">
-      <Filter>Core\Client\Objects\physics\ActivationBox</Filter>
+      <Filter>Physics\ActivationBox</Filter>
     </ClCompile>
     <ClCompile Include="Hit.cpp">
-      <Filter>Core\Client\Objects\physics\Hit</Filter>
+      <Filter>Physics\Hit</Filter>
     </ClCompile>
     <ClCompile Include="Ik\aint.cxx">
-      <Filter>Core\Client\Objects\physics\IK</Filter>
+      <Filter>Physics\IK</Filter>
     </ClCompile>
     <ClCompile Include="Ik\Dof7control.cpp">
-      <Filter>Core\Client\Objects\physics\IK</Filter>
+      <Filter>Physics\IK</Filter>
     </ClCompile>
     <ClCompile Include="Ik\eqn.cxx">
-      <Filter>Core\Client\Objects\physics\IK</Filter>
+      <Filter>Physics\IK</Filter>
     </ClCompile>
     <ClCompile Include="Ik\eulersolver.cxx">
-      <Filter>Core\Client\Objects\physics\IK</Filter>
+      <Filter>Physics\IK</Filter>
     </ClCompile>
     <ClCompile Include="ik_anim_state.cpp">
-      <Filter>Core\Client\Objects\physics\IK</Filter>
+      <Filter>Physics\IK</Filter>
     </ClCompile>
     <ClCompile Include="Ik\IKLimb.cpp">
-      <Filter>Core\Client\Objects\physics\IK</Filter>
+      <Filter>Physics\IK</Filter>
     </ClCompile>
     <ClCompile Include="IKLimbsController.cpp">
-      <Filter>Core\Client\Objects\physics\IK</Filter>
+      <Filter>Physics\IK</Filter>
     </ClCompile>
     <ClCompile Include="Ik\jtlimits.cxx">
-      <Filter>Core\Client\Objects\physics\IK</Filter>
+      <Filter>Physics\IK</Filter>
     </ClCompile>
     <ClCompile Include="Ik\limb.cxx">
-      <Filter>Core\Client\Objects\physics\IK</Filter>
+      <Filter>Physics\IK</Filter>
     </ClCompile>
     <ClCompile Include="Ik\math3d.cpp">
-      <Filter>Core\Client\Objects\physics\IK</Filter>
+      <Filter>Physics\IK</Filter>
     </ClCompile>
     <ClCompile Include="Ik\mathTrig.cpp">
-      <Filter>Core\Client\Objects\physics\IK</Filter>
+      <Filter>Physics\IK</Filter>
     </ClCompile>
     <ClCompile Include="ui\CExtraContentFilter.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI</Filter>
+      <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="MainMenu.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI</Filter>
+      <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="UI.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI</Filter>
+      <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="ui_base.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI</Filter>
+      <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="UIDialogHolder.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI</Filter>
+      <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIInventoryWnd.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\InventoryWnd</Filter>
+      <Filter>UI\Common\InventoryWnd</Filter>
     </ClCompile>
     <ClCompile Include="ui\uiinventorywnd2.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\InventoryWnd</Filter>
+      <Filter>UI\Common\InventoryWnd</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIInventoryWnd3.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\InventoryWnd</Filter>
+      <Filter>UI\Common\InventoryWnd</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIOutfitSlot.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\InventoryWnd</Filter>
+      <Filter>UI\Common\InventoryWnd</Filter>
     </ClCompile>
     <ClCompile Include="ui\UITradeWnd.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\TradeWnd</Filter>
+      <Filter>UI\Common\TradeWnd</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIPdaAux.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\PdaWnd</Filter>
+      <Filter>UI\Common\PdaWnd</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIPdaContactsWnd.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\PdaWnd</Filter>
+      <Filter>UI\Common\PdaWnd</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIPdaListItem.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\PdaWnd</Filter>
+      <Filter>UI\Common\PdaWnd</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIPdaWnd.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\PdaWnd</Filter>
+      <Filter>UI\Common\PdaWnd</Filter>
     </ClCompile>
     <ClCompile Include="ui\map_hint.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MapWnd</Filter>
+      <Filter>UI\Common\MapWnd</Filter>
     </ClCompile>
     <ClCompile Include="map_spot.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MapWnd</Filter>
+      <Filter>UI\Common\MapWnd</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIMap.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MapWnd</Filter>
+      <Filter>UI\Common\MapWnd</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIMapWnd.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MapWnd</Filter>
+      <Filter>UI\Common\MapWnd</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIMapWndActions.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MapWnd</Filter>
+      <Filter>UI\Common\MapWnd</Filter>
     </ClCompile>
     <ClCompile Include="ui\UITalkDialogWnd.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\TalkWnd</Filter>
+      <Filter>UI\Common\TalkWnd</Filter>
     </ClCompile>
     <ClCompile Include="ui\UITalkWnd.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\TalkWnd</Filter>
+      <Filter>UI\Common\TalkWnd</Filter>
     </ClCompile>
     <ClCompile Include="ui\UICarBodyWnd.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\CarBodyWnd</Filter>
+      <Filter>UI\Common\CarBodyWnd</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIDiaryWnd2.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\Diary</Filter>
+      <Filter>UI\Common\Diary</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIEncyclopediaArticleWnd.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\Diary</Filter>
+      <Filter>UI\Common\Diary</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIEncyclopediaWnd.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\Diary</Filter>
+      <Filter>UI\Common\Diary</Filter>
     </ClCompile>
     <ClCompile Include="ui\UINewsItemWnd.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\Diary</Filter>
+      <Filter>UI\Common\Diary</Filter>
     </ClCompile>
     <ClCompile Include="ui\UINewsWnd.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\Diary</Filter>
+      <Filter>UI\Common\Diary</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIArtefactPanel.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MainIngame</Filter>
+      <Filter>UI\Common\MainIngame</Filter>
     </ClCompile>
     <ClCompile Include="ui\UICarPanel.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MainIngame</Filter>
+      <Filter>UI\Common\MainIngame</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIMainIngameWnd.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MainIngame</Filter>
+      <Filter>UI\Common\MainIngame</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIMessagesWindow.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MainIngame</Filter>
+      <Filter>UI\Common\MainIngame</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIMoneyIndicator.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MainIngame</Filter>
+      <Filter>UI\Common\MainIngame</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIMotionIcon.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MainIngame</Filter>
+      <Filter>UI\Common\MainIngame</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIPdaMsgListItem.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MainIngame</Filter>
+      <Filter>UI\Common\MainIngame</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIPointerGage.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MainIngame</Filter>
+      <Filter>UI\Common\MainIngame</Filter>
     </ClCompile>
     <ClCompile Include="UIZoneMap.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MainIngame</Filter>
+      <Filter>UI\Common\MainIngame</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIColorAnimatorWrapper.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\Animations</Filter>
+      <Filter>UI\Common\Animations</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIActorInfo.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\Statistics</Filter>
+      <Filter>UI\Common\Statistics</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIStalkersRankingWnd.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\Statistics</Filter>
+      <Filter>UI\Common\Statistics</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIDebugFonts.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\_Debug Fonts</Filter>
+      <Filter>UI\Common\_Debug Fonts</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIOptionsItem.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\OptionsItem</Filter>
+      <Filter>UI\Common\OptionsItem</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIOptionsManager.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\OptionsItem</Filter>
+      <Filter>UI\Common\OptionsItem</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIOptionsManagerScript.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\OptionsItem</Filter>
+      <Filter>UI\Common\OptionsItem</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIOptConCom.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\OptionsConsoleCommands</Filter>
+      <Filter>UI\Common\OptionsConsoleCommands</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIEventsWnd.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\EventsWnd</Filter>
+      <Filter>UI\Common\EventsWnd</Filter>
     </ClCompile>
     <ClCompile Include="ui\UITaskDescrWnd.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\EventsWnd</Filter>
+      <Filter>UI\Common\EventsWnd</Filter>
     </ClCompile>
     <ClCompile Include="ui\UITaskItem.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\EventsWnd</Filter>
+      <Filter>UI\Common\EventsWnd</Filter>
     </ClCompile>
     <ClCompile Include="ui\MMSound.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MM</Filter>
+      <Filter>UI\Common\MM</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIMMShniaga.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MM</Filter>
+      <Filter>UI\Common\MM</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIEditKeyBind.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MM\KeyBinding</Filter>
+      <Filter>UI\Common\MM\KeyBinding</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIKeyBinding.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MM\KeyBinding</Filter>
+      <Filter>UI\Common\MM\KeyBinding</Filter>
     </ClCompile>
     <ClCompile Include="ui\UICharacterInfo.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\CharacterInfo</Filter>
+      <Filter>UI\Common\CharacterInfo</Filter>
     </ClCompile>
     <ClCompile Include="ui\IUWpnParams.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\ItemInfo</Filter>
+      <Filter>UI\Common\ItemInfo</Filter>
     </ClCompile>
     <ClCompile Include="ui\ui_af_params.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\ItemInfo</Filter>
+      <Filter>UI\Common\ItemInfo</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIItemInfo.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\ItemInfo</Filter>
+      <Filter>UI\Common\ItemInfo</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIOutfitInfo.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\OutfitInfo</Filter>
+      <Filter>UI\Common\OutfitInfo</Filter>
     </ClCompile>
     <ClCompile Include="ui\UITimeWnd.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\TimeWnd</Filter>
+      <Filter>UI\Common\TimeWnd</Filter>
     </ClCompile>
     <ClCompile Include="ui\UISleepWnd.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\SleepWnd</Filter>
+      <Filter>UI\Common\SleepWnd</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIInventoryUtilities.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\InventoryUtilities</Filter>
+      <Filter>UI\Common\InventoryUtilities</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIBtnHint.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows</Filter>
+      <Filter>UI\UIWindows</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIWndCallback.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows</Filter>
+      <Filter>UI\UIWindows</Filter>
     </ClCompile>
     <ClCompile Include="ui\UITextureMaster.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\XML</Filter>
+      <Filter>UI\UIWindows\XML</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIXmlInit.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\XML</Filter>
+      <Filter>UI\UIWindows\XML</Filter>
     </ClCompile>
     <ClCompile Include="ui\xrUIXmlParser.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\XML</Filter>
+      <Filter>UI\UIWindows\XML</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIMessageBox.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\MessageBox</Filter>
+      <Filter>UI\UIWindows\MessageBox</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIMessageBox_script.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\MessageBox</Filter>
+      <Filter>UI\UIWindows\MessageBox</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIMessageBoxEx.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\MessageBox</Filter>
+      <Filter>UI\UIWindows\MessageBox</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIPropertiesBox.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\PropertiesBox</Filter>
+      <Filter>UI\UIWindows\PropertiesBox</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIPropertiesBox_script.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\PropertiesBox</Filter>
+      <Filter>UI\UIWindows\PropertiesBox</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIAnimatedStatic.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Static</Filter>
+      <Filter>UI\UIWindows\Static</Filter>
     </ClCompile>
     <ClCompile Include="UICustomItem.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Static</Filter>
+      <Filter>UI\UIWindows\Static</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIMultiTextStatic.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Static</Filter>
+      <Filter>UI\UIWindows\Static</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIStatic.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Static</Filter>
+      <Filter>UI\UIWindows\Static</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIStatic_script.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Static</Filter>
+      <Filter>UI\UIWindows\Static</Filter>
     </ClCompile>
     <ClCompile Include="UIStaticItem.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Static</Filter>
+      <Filter>UI\UIWindows\Static</Filter>
     </ClCompile>
     <ClCompile Include="ui\UITextBanner.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Static</Filter>
+      <Filter>UI\UIWindows\Static</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIEditBox.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\EditBox</Filter>
+      <Filter>UI\UIWindows\EditBox</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIEditBoxEx.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\EditBox</Filter>
+      <Filter>UI\UIWindows\EditBox</Filter>
     </ClCompile>
     <ClCompile Include="ui\UICustomEdit.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\EditBox\customEB</Filter>
+      <Filter>UI\UIWindows\EditBox\customEB</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIEditBox_script.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\EditBox\customEB</Filter>
+      <Filter>UI\UIWindows\EditBox\customEB</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIDialogWnd.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Windows</Filter>
+      <Filter>UI\UIWindows\Windows</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIFrameLineWnd.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Windows</Filter>
+      <Filter>UI\UIWindows\Windows</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIFrameWindow.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Windows</Filter>
+      <Filter>UI\UIWindows\Windows</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIWindow.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Windows</Filter>
+      <Filter>UI\UIWindows\Windows</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIWindow_script.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Windows</Filter>
+      <Filter>UI\UIWindows\Windows</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIProgressBar.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ProgressBar</Filter>
+      <Filter>UI\UIWindows\ProgressBar</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIProgressBar_script.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ProgressBar</Filter>
+      <Filter>UI\UIWindows\ProgressBar</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIProgressShape.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ProgressBar</Filter>
+      <Filter>UI\UIWindows\ProgressBar</Filter>
     </ClCompile>
     <ClCompile Include="ui\UITabButton.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\TabControl</Filter>
+      <Filter>UI\UIWindows\TabControl</Filter>
     </ClCompile>
     <ClCompile Include="ui\UITabControl.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\TabControl</Filter>
+      <Filter>UI\UIWindows\TabControl</Filter>
     </ClCompile>
     <ClCompile Include="ui\UITabControl_script.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\TabControl</Filter>
+      <Filter>UI\UIWindows\TabControl</Filter>
     </ClCompile>
     <ClCompile Include="ui\UITreeViewItem.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\TreeView</Filter>
+      <Filter>UI\UIWindows\TreeView</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIScriptWnd.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ScriptWnd</Filter>
+      <Filter>UI\UIWindows\ScriptWnd</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIScriptWnd_script.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ScriptWnd</Filter>
+      <Filter>UI\UIWindows\ScriptWnd</Filter>
     </ClCompile>
     <ClCompile Include="ui\uiscriptwnd_script2.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ScriptWnd</Filter>
+      <Filter>UI\UIWindows\ScriptWnd</Filter>
     </ClCompile>
     <ClCompile Include="ui\UI3tButton.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Buttons</Filter>
+      <Filter>UI\UIWindows\Buttons</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIButton.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Buttons</Filter>
+      <Filter>UI\UIWindows\Buttons</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIButton_script.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Buttons</Filter>
+      <Filter>UI\UIWindows\Buttons</Filter>
     </ClCompile>
     <ClCompile Include="ui\UICheckButton.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Buttons</Filter>
+      <Filter>UI\UIWindows\Buttons</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIRadioButton.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Buttons</Filter>
+      <Filter>UI\UIWindows\Buttons</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIComboBox.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ComboBox</Filter>
+      <Filter>UI\UIWindows\ComboBox</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIComboBox_script.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ComboBox</Filter>
+      <Filter>UI\UIWindows\ComboBox</Filter>
     </ClCompile>
     <ClCompile Include="ui\UI_IB_Static.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\InteractiveBackground</Filter>
+      <Filter>UI\UIWindows\InteractiveBackground</Filter>
     </ClCompile>
     <ClCompile Include="ui\UITrackBar.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\TrackBar</Filter>
+      <Filter>UI\UIWindows\TrackBar</Filter>
     </ClCompile>
     <ClCompile Include="ui\UITrackButton.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\TrackBar</Filter>
+      <Filter>UI\UIWindows\TrackBar</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIFrameLine.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Frames</Filter>
+      <Filter>UI\UIWindows\Frames</Filter>
     </ClCompile>
     <ClCompile Include="UIFrameRect.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Frames</Filter>
+      <Filter>UI\UIWindows\Frames</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIScrollView.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ScrollView</Filter>
+      <Filter>UI\UIWindows\ScrollView</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIListBox.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ScrollView\ListBox</Filter>
+      <Filter>UI\UIWindows\ScrollView\ListBox</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIListBoxItem.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ScrollView\ListBox</Filter>
+      <Filter>UI\UIWindows\ScrollView\ListBox</Filter>
     </ClCompile>
     <ClCompile Include="ui\UILine.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Lines</Filter>
+      <Filter>UI\UIWindows\Lines</Filter>
     </ClCompile>
     <ClCompile Include="ui\UILines.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Lines</Filter>
+      <Filter>UI\UIWindows\Lines</Filter>
     </ClCompile>
     <ClCompile Include="ui\UISubLine.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Lines</Filter>
+      <Filter>UI\UIWindows\Lines</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIVideoPlayerWnd.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\VideoPlayer</Filter>
+      <Filter>UI\UIWindows\VideoPlayer</Filter>
     </ClCompile>
     <ClCompile Include="ui\UICellCustomItems.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\DragDrop2</Filter>
+      <Filter>UI\UIWindows\DragDrop2</Filter>
     </ClCompile>
     <ClCompile Include="ui\UICellItem.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\DragDrop2</Filter>
+      <Filter>UI\UIWindows\DragDrop2</Filter>
     </ClCompile>
     <ClCompile Include="ui\UICellItemFactory.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\DragDrop2</Filter>
+      <Filter>UI\UIWindows\DragDrop2</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIDragDropListEx.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\DragDrop2</Filter>
+      <Filter>UI\UIWindows\DragDrop2</Filter>
     </ClCompile>
     <ClCompile Include="ui\UILabel.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Label</Filter>
+      <Filter>UI\UIWindows\Label</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIScrollBar.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ScrollBar</Filter>
+      <Filter>UI\UIWindows\ScrollBar</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIScrollBox.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ScrollBar</Filter>
+      <Filter>UI\UIWindows\ScrollBar</Filter>
     </ClCompile>
     <ClCompile Include="ui\UICustomSpin.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\SpinBox</Filter>
+      <Filter>UI\UIWindows\SpinBox</Filter>
     </ClCompile>
     <ClCompile Include="ui\UISpinNum.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\SpinBox</Filter>
+      <Filter>UI\UIWindows\SpinBox</Filter>
     </ClCompile>
     <ClCompile Include="ui\UISpinText.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\SpinBox</Filter>
+      <Filter>UI\UIWindows\SpinBox</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIListItem.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ListBox</Filter>
+      <Filter>UI\UIWindows\ListBox</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIListWnd.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ListBox</Filter>
+      <Filter>UI\UIWindows\ListBox</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIListWnd_script.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ListBox</Filter>
+      <Filter>UI\UIWindows\ListBox</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIListItemEx.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ListBox\Ex</Filter>
+      <Filter>UI\UIWindows\ListBox\Ex</Filter>
     </ClCompile>
     <ClCompile Include="ContextMenu.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\HUD</Filter>
+      <Filter>UI\HUD</Filter>
     </ClCompile>
     <ClCompile Include="HitMarker.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\HUD</Filter>
+      <Filter>UI\HUD</Filter>
     </ClCompile>
     <ClCompile Include="HUDManager.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\HUD</Filter>
+      <Filter>UI\HUD</Filter>
     </ClCompile>
     <ClCompile Include="UIGameCustom.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\GameTypes\GameCustom</Filter>
+      <Filter>UI\GameTypes\GameCustom</Filter>
     </ClCompile>
     <ClCompile Include="UIGameCustom_script.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\GameTypes\GameCustom</Filter>
+      <Filter>UI\GameTypes\GameCustom</Filter>
     </ClCompile>
     <ClCompile Include="UIDMStatisticWnd.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\GameTypes\Deathmatch</Filter>
+      <Filter>UI\GameTypes\Deathmatch</Filter>
     </ClCompile>
     <ClCompile Include="UIGameDM.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\GameTypes\Deathmatch</Filter>
+      <Filter>UI\GameTypes\Deathmatch</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIRankIndicator.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\GameTypes\Deathmatch</Filter>
+      <Filter>UI\GameTypes\Deathmatch</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIVoteStatusWnd.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\GameTypes\Deathmatch</Filter>
+      <Filter>UI\GameTypes\Deathmatch</Filter>
     </ClCompile>
     <ClCompile Include="UIGameSP.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\GameTypes\Single</Filter>
+      <Filter>UI\GameTypes\Single</Filter>
     </ClCompile>
     <ClCompile Include="UIGameTDM.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\GameTypes\TeamDeathmatch</Filter>
+      <Filter>UI\GameTypes\TeamDeathmatch</Filter>
     </ClCompile>
     <ClCompile Include="UIGameAHunt.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\GameTypes\ArtefactHunt</Filter>
+      <Filter>UI\GameTypes\ArtefactHunt</Filter>
     </ClCompile>
     <ClCompile Include="UIGame_custom_script.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\GameTypes\Game_custom_script</Filter>
+      <Filter>UI\GameTypes\Game_custom_script</Filter>
     </ClCompile>
     <ClCompile Include="ui\UICDkey.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\MM_MP\CDkey</Filter>
+      <Filter>UI\Multiplayer\MM_MP\CDkey</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIMapList.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\MM_MP\MapList</Filter>
+      <Filter>UI\Multiplayer\MM_MP\MapList</Filter>
     </ClCompile>
     <ClCompile Include="ui\ServerList.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\MM_MP\ServerList</Filter>
+      <Filter>UI\Multiplayer\MM_MP\ServerList</Filter>
     </ClCompile>
     <ClCompile Include="ui\ServerList_GameSpy_func.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\MM_MP\ServerList</Filter>
+      <Filter>UI\Multiplayer\MM_MP\ServerList</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIListItemAdv.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\MM_MP\ServerList</Filter>
+      <Filter>UI\Multiplayer\MM_MP\ServerList</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIListItemServer.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\MM_MP\ServerList</Filter>
+      <Filter>UI\Multiplayer\MM_MP\ServerList</Filter>
     </ClCompile>
     <ClCompile Include="ui\TeamInfo.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\MM_MP\TeamInfo</Filter>
+      <Filter>UI\Multiplayer\MM_MP\TeamInfo</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIStats.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\HUD\Stats</Filter>
+      <Filter>UI\Multiplayer\HUD\Stats</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIStatsPlayerInfo.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\HUD\Stats</Filter>
+      <Filter>UI\Multiplayer\HUD\Stats</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIStatsPlayerList.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\HUD\Stats</Filter>
+      <Filter>UI\Multiplayer\HUD\Stats</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIStatsIcon.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\HUD\Stats\icons</Filter>
+      <Filter>UI\Multiplayer\HUD\Stats\icons</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIFrags.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\HUD\Stats\frag_wnd</Filter>
+      <Filter>UI\Multiplayer\HUD\Stats\frag_wnd</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIFrags2.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\HUD\Stats\frag_wnd</Filter>
+      <Filter>UI\Multiplayer\HUD\Stats\frag_wnd</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIStatsWnd.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\HUD\Stats\old</Filter>
+      <Filter>UI\Multiplayer\HUD\Stats\old</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIChatWnd.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\HUD\Chat</Filter>
+      <Filter>UI\Multiplayer\HUD\Chat</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIGameLog.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\HUD\GameLog</Filter>
+      <Filter>UI\Multiplayer\HUD\GameLog</Filter>
     </ClCompile>
     <ClCompile Include="ui\UISpeechMenu.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\HUD\SpeechMenu</Filter>
+      <Filter>UI\Multiplayer\HUD\SpeechMenu</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIPdaKillMessage.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\HUD\common</Filter>
+      <Filter>UI\Multiplayer\HUD\common</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIBuyWndShared.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\BuyWeaponWnd</Filter>
+      <Filter>UI\Multiplayer\BuyWeaponWnd</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIMpItemsStoreWnd.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\BuyWeaponWnd</Filter>
+      <Filter>UI\Multiplayer\BuyWeaponWnd</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIMpTradeWnd.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\BuyWeaponWnd</Filter>
+      <Filter>UI\Multiplayer\BuyWeaponWnd</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIMpTradeWnd_init.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\BuyWeaponWnd</Filter>
+      <Filter>UI\Multiplayer\BuyWeaponWnd</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIMpTradeWnd_items.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\BuyWeaponWnd</Filter>
+      <Filter>UI\Multiplayer\BuyWeaponWnd</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIMpTradeWnd_misc.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\BuyWeaponWnd</Filter>
+      <Filter>UI\Multiplayer\BuyWeaponWnd</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIMpTradeWnd_trade.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\BuyWeaponWnd</Filter>
+      <Filter>UI\Multiplayer\BuyWeaponWnd</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIMpTradeWnd_wpn.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\BuyWeaponWnd</Filter>
+      <Filter>UI\Multiplayer\BuyWeaponWnd</Filter>
     </ClCompile>
     <ClCompile Include="ui\Restrictions.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\BuyWeaponWnd\rank_restrictions</Filter>
+      <Filter>UI\Multiplayer\BuyWeaponWnd\rank_restrictions</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIBuyWeaponTab.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\BuyWeaponWnd\TAB</Filter>
+      <Filter>UI\Multiplayer\BuyWeaponWnd\TAB</Filter>
     </ClCompile>
     <ClCompile Include="ui\UITabButtonMP.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\BuyWeaponWnd\TAB</Filter>
+      <Filter>UI\Multiplayer\BuyWeaponWnd\TAB</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIBagWnd.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\BuyWeaponWnd\buy_wnd</Filter>
+      <Filter>UI\Multiplayer\BuyWeaponWnd\buy_wnd</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIBuyWnd.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\BuyWeaponWnd\buy_wnd</Filter>
+      <Filter>UI\Multiplayer\BuyWeaponWnd\buy_wnd</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIMapDesc.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\team_skin_info\MapDesc</Filter>
+      <Filter>UI\Multiplayer\team_skin_info\MapDesc</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIMapInfo.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\team_skin_info\MapDesc\MapInfo</Filter>
+      <Filter>UI\Multiplayer\team_skin_info\MapDesc\MapInfo</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIMapInfo_script.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\team_skin_info\MapDesc\MapInfo</Filter>
+      <Filter>UI\Multiplayer\team_skin_info\MapDesc\MapInfo</Filter>
     </ClCompile>
     <ClCompile Include="ui\UISpawnWnd.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\team_skin_info\Spawn</Filter>
+      <Filter>UI\Multiplayer\team_skin_info\Spawn</Filter>
     </ClCompile>
     <ClCompile Include="ui\UISkinSelector.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\team_skin_info\SkinSelector</Filter>
+      <Filter>UI\Multiplayer\team_skin_info\SkinSelector</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIStatix.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\team_skin_info\SkinSelector</Filter>
+      <Filter>UI\Multiplayer\team_skin_info\SkinSelector</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIChangeMap.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\Voting</Filter>
+      <Filter>UI\Multiplayer\Voting</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIChangeWeather.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\Voting</Filter>
+      <Filter>UI\Multiplayer\Voting</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIKickPlayer.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\Voting</Filter>
+      <Filter>UI\Multiplayer\Voting</Filter>
     </ClCompile>
     <ClCompile Include="ui\UITextVote.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\Voting</Filter>
+      <Filter>UI\Multiplayer\Voting</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIVote.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\Voting</Filter>
+      <Filter>UI\Multiplayer\Voting</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIVotingCategory.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Multiplayer\Voting</Filter>
+      <Filter>UI\Multiplayer\Voting</Filter>
     </ClCompile>
     <ClCompile Include="HUDCrosshair.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Cursor</Filter>
+      <Filter>UI\Cursor</Filter>
     </ClCompile>
     <ClCompile Include="HUDTarget.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Cursor</Filter>
+      <Filter>UI\Cursor</Filter>
     </ClCompile>
     <ClCompile Include="UICursor.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Cursor</Filter>
+      <Filter>UI\Cursor</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIGameTutorial.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Tutorial</Filter>
+      <Filter>UI\Tutorial</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIGameTutorialSimpleItem.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Tutorial</Filter>
+      <Filter>UI\Tutorial</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIGameTutorialVideoItem.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Tutorial</Filter>
+      <Filter>UI\Tutorial</Filter>
     </ClCompile>
     <ClCompile Include="..\xr_3da\doug_lea_memory_allocator.c" />
     <ClCompile Include="TSMP_HitProcessor.cpp">
@@ -9657,6 +9654,12 @@
     </ClCompile>
     <ClCompile Include="TSMP_Timers.cpp">
       <Filter>TSMP</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptXMLInit.cpp">
+      <Filter>AI\AScript\ScriptClasses\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="ui_export_script.cpp">
+      <Filter>AI\AScript\ScriptClasses\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -9670,7 +9673,7 @@
       <Filter>Core\Client\Objects\items &amp; weapons\Explosives</Filter>
     </CustomBuildStep>
     <CustomBuildStep Include="dRayMotions.h">
-      <Filter>Core\Client\Objects\physics\Colliders\RayMotions-Collider</Filter>
+      <Filter>Physics\Colliders\RayMotions-Collider</Filter>
     </CustomBuildStep>
   </ItemGroup>
 </Project>
