@@ -629,6 +629,8 @@ public:
 			Msg("invalid id");
 			return;
 		}
+
+		Msg("Received id %u", id);
 		
 		u32	cnt = Level().Server->game->get_players_count();
 
@@ -643,7 +645,12 @@ public:
 			{
 				if (Level().Server->GetServerClient() != l_pC)
 				{
-					Msg("Disconnecting and Banning: %s id: %u", l_pC->ps->getName(), l_pC->ID.value());
+					ip_address ip;
+					DWORD dwPort = 0;
+
+					Level().Server->GetClientAddress(l_pC->ID, ip, &dwPort);
+
+					Msg("- Banning by id - %s, id - %u, ip - %s", l_pC->ps->getName(), l_pC->ID.value(), ip.to_string().c_str());
 					Level().Server->BanClient(l_pC, ban_time);
 					Level().Server->DisconnectClient(l_pC);
 					return;

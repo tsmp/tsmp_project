@@ -135,14 +135,7 @@ void	CResourceManager::LS_Load			()
 	}
 
 	// initialize lua standard library functions 
-	luaopen_base	(LSVM); 
-	luaopen_table	(LSVM);
-	luaopen_string	(LSVM);
-	luaopen_math	(LSVM);
-
-#ifdef USE_JIT
-	luaopen_jit		(LSVM);
-#endif
+	luaL_openlibs(LSVM);
 
 	luabind::open						(LSVM);
 #if !XRAY_EXCEPTIONS
@@ -232,10 +225,6 @@ void	CResourceManager::LS_Load			()
 		}
 	}
 	FS.file_list_close			(folder);
-
-#ifdef USE_JIT
-	luaJIT_setmode			(LSVM,LUAJIT_MODE_ENGINE,LUAJIT_MODE_ON);
-#endif
 }
 
 void	CResourceManager::LS_Unload			()

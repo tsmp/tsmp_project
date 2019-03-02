@@ -6,7 +6,7 @@ volatile int g_sv_mp_CheckHitsEnabled = 0;
 volatile int g_sv_mp_AutoBanHitCheaters = 0;
 volatile int g_sv_mp_ShowHits = 1;
 
-#define MinHitsToProcess 100
+#define MinHitsToProcess 50
 
 HitProcessor::~HitProcessor() 
 {
@@ -112,7 +112,7 @@ void HitProcessingThread(void *P)
 		else 
 			ProcessHits(HP, HP->Buffer2);		
 		
-		Sleep(60000);
+		Sleep(30000);
 	}
 }
 
@@ -171,9 +171,19 @@ static std::vector<Weapon> WPN = {
 
 void BanCheater(u32 id, string128 Message)
 {
-	string1024 Mes;
-	Console->Execute(Mes);
+	static std::vector<u32> Cheaters;
+	bool already_detected = false;
+
+	for (u32 uu : Cheaters)
+		if (uu == id)
+			already_detected = true;
+
+	if (already_detected)
+		return;
+
+	string1024 Mes;	
 	sprintf(Mes, "chat_tsmp %s", Message);
+	Console->Execute(Mes);
 
 	if (g_sv_mp_AutoBanHitCheaters)
 	{
@@ -181,6 +191,8 @@ void BanCheater(u32 id, string128 Message)
 		sprintf(Arg, "sv_banplayer_id %u 99999999", id);
 		Console->Execute(Arg);		
 	}
+
+	Cheaters.push_back(id);
 }
 
 void HitProcessor::CheckForCheats(HitInfo &Hit, int Bullets)
@@ -195,10 +207,7 @@ void HitProcessor::CheckForCheats(HitInfo &Hit, int Bullets)
 	}
 
 	if (WpnIdx == -1)
-	{
-		Msg("! Cant find weapon in list: %s", Hit.StrWeaponName);
-		return;
-	}
+		return;	
 
 	if (!WPN[WpnIdx].Drob && (Bullets > 4))
 	{
