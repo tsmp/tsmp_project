@@ -47,7 +47,8 @@ static int jit_jmp_target(jit_State *J)
 #endif
 #include "ljit_x86.h"
 #else
-#error "No support for this architecture (yet)"
+#include "ljit_x86.h"
+//#error "No support for this architecture (yet)"
 #endif
 
 /* ------------------------------------------------------------------------ */

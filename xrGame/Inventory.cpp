@@ -179,23 +179,15 @@ bool CInventory::DropItem(CGameObject *pObj)
 	if (!pIItem)
 		return false;
 
-	if (pIItem->m_pCurrentInventory != this)
-	{
-		Msg("ahtung !!! [%d]", Device.dwFrame);
-		Msg("CInventory::DropItem pIItem->m_pCurrentInventory!=this");
-		Msg("this = [%d]", GetOwner()->object_id());
-		Msg("pIItem->m_pCurrentInventory = [%d]", pIItem->m_pCurrentInventory->GetOwner()->object_id());
-	}
-
 	if (!(pIItem->m_pCurrentInventory))
 	{
-		Msg("! pIItem->m_pCurrentInventory, failed");
+		Msg("! Cant get inventory to drop item");
 		return false;
 	}
 
 	if (!(pIItem->m_pCurrentInventory == this))
 	{
-		Msg("! pIItem->m_pCurrentInventory != this");
+		Msg("! Player tries to drop items he doesnt own");
 		return false;
 	}
 

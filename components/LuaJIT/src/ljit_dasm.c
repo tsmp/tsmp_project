@@ -32,7 +32,8 @@
 #if defined(__i386) || defined(__i386__) || defined(_M_IX86)
 #include "../dynasm/dasm_x86.h"
 #else
-#error "No support for this architecture (yet)"
+//#error "No support for this architecture (yet)"
+#include "../dynasm/dasm_x86.h"
 #endif
 
 
