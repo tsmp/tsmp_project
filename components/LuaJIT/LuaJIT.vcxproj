@@ -130,7 +130,7 @@
       <ProgramDatabaseFile>$(OutDir)lua5.1.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
       <LargeAddressAware>true</LargeAddressAware>
-      <ImportLibrary>x:\libraries\lua5.1.lib</ImportLibrary>
+      <ImportLibrary>$(SolutionDir)\output\libraries_$(Configuration)\lua5.1.lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

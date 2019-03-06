@@ -139,7 +139,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>X:\libraries;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>xrCore.lib;lua5.1.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ImportLibrary>x:\libraries\luabind.lib</ImportLibrary>
+      <ImportLibrary>$(SolutionDir)\output\libraries_$(Configuration)\luabind.lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

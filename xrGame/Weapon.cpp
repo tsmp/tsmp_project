@@ -60,13 +60,9 @@ CWeapon::CWeapon(LPCSTR name)
 	m_fZoomFactor			= g_fov;
 	m_fZoomRotationFactor	= 0.f;
 
-
-	m_pAmmo					= NULL;
-
-
-	m_pFlameParticles2		= NULL;
-	m_sFlameParticles2		= NULL;
-
+	m_pAmmo					= nullptr;
+	m_pFlameParticles2		= nullptr;
+	m_sFlameParticles2		= nullptr;
 
 	m_fCurrentCartirdgeDisp = 1.f;
 
@@ -86,38 +82,33 @@ CWeapon::~CWeapon		()
 	xr_delete	(m_UIScope);
 }
 
-//void CWeapon::Hit(float P, Fvector &dir,	
-//		    CObject* who, s16 element,
-//		    Fvector position_in_object_space, 
-//		    float impulse, 
-//		    ALife::EHitType hit_type)
-void CWeapon::Hit					(SHit* pHDS)
+void CWeapon::Hit(SHit* pHDS)
 {
-//	inherited::Hit(P, dir, who, element, position_in_object_space,impulse,hit_type);
 	inherited::Hit(pHDS);
 }
 
-
-
-void CWeapon::UpdateXForm	()
+void CWeapon::UpdateXForm()
 {
 	if (Device.dwFrame!=dwXF_Frame)
 	{
 		dwXF_Frame = Device.dwFrame;
 
-		if (0==H_Parent())	return;
+		if (0==H_Parent())	
+			return;
 
 		// Get access to entity and its visual
-		CEntityAlive*	E		= smart_cast<CEntityAlive*>(H_Parent());
+		CEntityAlive *E = smart_cast<CEntityAlive*>(H_Parent());
 		
 		if(!E) 
 		{
 			if (!IsGameTypeSingle())
 				UpdatePosition(H_Parent()->XFORM());
+
 			return;
 		}
 
-		const CInventoryOwner	*parent = smart_cast<const CInventoryOwner*>(E);
+		const CInventoryOwner *parent = smart_cast<const CInventoryOwner*>(E);
+
 		if (parent && parent->use_simplified_visual())
 			return;
 
@@ -125,12 +116,13 @@ void CWeapon::UpdateXForm	()
 			return;
 
 		R_ASSERT		(E);
-		CKinematics*	V		= smart_cast<CKinematics*>	(E->Visual());
+		CKinematics *V = smart_cast<CKinematics*>	(E->Visual());
 		VERIFY			(V);
 
 		// Get matrices
-		int				boneL,boneR,boneR2;
+		int	boneL,boneR,boneR2;
 		E->g_WeaponBones(boneL,boneR,boneR2);
+
 		if ((HandDependence() == hd1Hand) || (GetState() == eReload) || (!E->g_Alive()))
 			boneL = boneR2;
 //#pragma todo("TO ALL: serious performance problem")

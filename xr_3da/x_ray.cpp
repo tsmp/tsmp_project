@@ -438,11 +438,7 @@ int APIENTRY WinMain_impl(HINSTANCE hInstance,
 
 	SetWindowPos(
 		logoWindow,
-#ifndef DEBUG
-		HWND_TOPMOST,
-#else
 		HWND_NOTOPMOST,
-#endif // NDEBUG
 		0,
 		0,
 		0,

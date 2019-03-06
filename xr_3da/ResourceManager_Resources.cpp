@@ -377,21 +377,38 @@ SPS *CResourceManager::_CreatePS(LPCSTR name)
 		// Select target
 		LPCSTR c_target = "ps_2_0";
 		LPCSTR c_entry = "main";
+	//	LPCSTR c_entry = "PS_Main";
+	//	LPCSTR c_entry = "main_ps_2_0";
 
 		if (strstr(data, "main_ps_1_1"))
-		{ c_target = "ps_1_1"; c_entry = "main_ps_1_1"; }
+		{ 
+			c_target = "ps_1_1";
+			c_entry = "main_ps_1_1"; 
+		}
 
 		if (strstr(data, "main_ps_1_2")) 
-		{ c_target = "ps_1_2"; c_entry = "main_ps_1_2"; }
+		{ 
+			c_target = "ps_1_2"; 
+			c_entry = "main_ps_1_2"; 
+		}
 
 		if (strstr(data, "main_ps_1_3")) 
-		{ c_target = "ps_1_3"; c_entry = "main_ps_1_3"; }
+		{ 
+			c_target = "ps_1_3"; 
+			c_entry = "main_ps_1_3"; 
+		}
 
 		if (strstr(data, "main_ps_1_4")) 
-		{ c_target = "ps_1_4"; c_entry = "main_ps_1_4"; }
+		{ 
+			c_target = "ps_1_4"; 
+			c_entry = "main_ps_1_4"; 
+		}
 
 		if (strstr(data, "main_ps_2_0")) 
-		{ c_target = "ps_2_0"; c_entry = "main_ps_2_0"; }
+		{ 
+			c_target = "ps_2_0"; 
+			c_entry = "main_ps_2_0"; 
+		}
 
 
 		// Compile
@@ -400,6 +417,8 @@ SPS *CResourceManager::_CreatePS(LPCSTR name)
 		LPD3DXSHADER_CONSTANTTABLE	pConstants	= nullptr;
 
 		HRESULT	_hr = S_OK;
+
+		Msg("centry %s; ctarget %s ", c_entry, c_target);
 
 		_hr = ::Render->shader_compile(name
 			, data
@@ -435,11 +454,18 @@ SPS *CResourceManager::_CreatePS(LPCSTR name)
 						_hr = E_FAIL;
 				}
 			}
-			else _hr = E_FAIL;
+			else 
+				_hr = E_FAIL;
 		}
 		else
-			Msg("error is %s" , 
-			(LPCSTR)pErrorBuf->GetBufferPointer());
+		{
+			Msg("! Cant compile shader %s", name);
+
+			LPCSTR str = (LPCSTR)pErrorBuf->GetBufferPointer();
+
+			Msg("error is %s"
+				,str);
+		}
 		
 		_RELEASE(pShaderBuf);
 		_RELEASE(pErrorBuf);
