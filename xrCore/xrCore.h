@@ -76,10 +76,6 @@
     #endif
 #endif
 
-#ifdef XRCORE_STATIC
-#	define NO_FS_SCAN
-#endif
-
 #ifdef _EDITOR
 #	define NO_FS_SCAN
 #endif
@@ -177,14 +173,11 @@
 #pragma warning (disable : 4100 )		// unreferenced formal parameter
 
 // Our headers
-#ifdef XRCORE_STATIC
-#	define XRCORE_API
+
+#ifdef XRCORE_EXPORTS
+#define XRCORE_API __declspec(dllexport)
 #else
-#	ifdef XRCORE_EXPORTS
-#		define XRCORE_API __declspec(dllexport)
-#	else
-#		define XRCORE_API __declspec(dllimport)
-#	endif
+#define XRCORE_API __declspec(dllimport)
 #endif
 
 #include "xrDebug.h"

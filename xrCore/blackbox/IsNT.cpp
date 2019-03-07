@@ -11,41 +11,38 @@ Copyright (c) 1997-2000 John Robbins -- All rights reserved.
                            File Scope Globals
 //////////////////////////////////////////////////////////////////////*/
 // Indicates that the version information is valid.
-static BOOL g_bHasVersion = FALSE ;
+static bool g_bHasVersion = false;
 // Indicates NT or 95/98.
-static BOOL g_bIsNT = TRUE ;
+static bool g_bIsNT = true;
 
-BOOL __stdcall IsNT ( void )
+bool __stdcall IsNT ( void )
 {
-    if ( TRUE == g_bHasVersion )
-    {
-        return ( TRUE == g_bIsNT ) ;
-    }
+    if (g_bHasVersion )
+		return g_bIsNT;
+    
 
     OSVERSIONINFO stOSVI ;
 
     FillMemory ( &stOSVI , sizeof ( OSVERSIONINFO ), NULL ) ;
     stOSVI.dwOSVersionInfoSize = sizeof ( OSVERSIONINFO ) ;
 
-    BOOL bRet = GetVersionEx ( &stOSVI ) ;
-    ASSERT ( TRUE == bRet ) ;
-    if ( FALSE == bRet )
+    bool bRet = GetVersionEx ( &stOSVI );
+
+    ASSERT (bRet) ;
+
+    if (!bRet )
     {
         TRACE0 ( "GetVersionEx failed!\n" ) ;
-        return ( FALSE ) ;
+        return ( false ) ;
     }
 
     // Check the version and call the appropriate thing.
     if ( VER_PLATFORM_WIN32_NT == stOSVI.dwPlatformId )
-    {
-        g_bIsNT = TRUE ;
-    }
-    else
-    {
-        g_bIsNT = FALSE ;
-    }
-    g_bHasVersion = TRUE ;
-    return ( TRUE == g_bIsNT ) ;
+		g_bIsNT = true;
+	else
+		g_bIsNT = false;
+    
+    g_bHasVersion = true;
+
+    return g_bIsNT;
 }
-
-

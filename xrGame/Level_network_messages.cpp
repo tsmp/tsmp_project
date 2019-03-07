@@ -50,24 +50,20 @@ void CLevel::ClientReceive()
 			}break;
 		case M_SPAWN:			
 			{
-				if (!m_bGameConfigStarted || !bReady) 
-				{
-					Msg ("Unconventional M_SPAWN received : cgf[%s] | bReady[%s]",
-						(m_bGameConfigStarted) ? "true" : "false",
-						(bReady) ? "true" : "false");
+				if (!m_bGameConfigStarted || !bReady) // Unconventional M_SPAWN received
 					break;
-				}
-				/*/
-				cl_Process_Spawn(*P);
-				/*/
-				game_events->insert		(*P);
-				if (g_bDebugEvents)		ProcessGameEvents();
-				//*/
+				
+				game_events->insert(*P);
+
+				if (g_bDebugEvents)		
+					ProcessGameEvents();				
 			}
 			break;
 		case M_EVENT:
-			game_events->insert		(*P);
-			if (g_bDebugEvents)		ProcessGameEvents();
+			game_events->insert(*P);
+
+			if (g_bDebugEvents)		
+				ProcessGameEvents();
 			break;
 		case M_EVENT_PACK:
 			NET_Packet	tmpP;

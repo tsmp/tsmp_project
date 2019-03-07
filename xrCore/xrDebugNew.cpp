@@ -14,29 +14,16 @@
 
 extern bool shared_str_initialized;
 // KD: we don't need BugTrap since it provides _only_ nice ui window and e-mail sending
-#ifdef __BORLANDC__
-/*    #	include "d3d9.h"
-    #	include "d3dx9.h"
-    #	include "D3DX_Wrapper.h"
-    #	pragma comment(lib,"EToolsB.lib")   */
-    #	define DEBUG_INVOKE	DebugBreak()
-        static BOOL			bException	= TRUE;
-//    #   define USE_BUG_TRAP
-#else
+
 //    #   define USE_BUG_TRAP
 #ifdef _WIN64
     #	define DEBUG_INVOKE	DebugBreak()
 #else
     #	define DEBUG_INVOKE	__asm int 3
 #endif
-        static BOOL			bException	= FALSE;
-#endif
-/*
-#ifndef _M_AMD64
-#	ifndef __BORLANDC__
-#		pragma comment(lib,"dxerr.lib")
-#	endif
-#endif*/
+
+static bool bException = false;
+
 
 
 #pragma warning(push)
@@ -279,9 +266,7 @@ void xrDebug::backend	(const char *expression, const char *description, const ch
 	if (get_on_dialog())
 		get_on_dialog()	(true);
 
-#ifdef XRCORE_STATIC
-	MessageBox			(NULL,assertion_info,"X-Ray error",MB_OK|MB_ICONERROR|MB_SYSTEMMODAL);
-#else
+
 #	ifdef USE_OWN_ERROR_MESSAGE_WINDOW
 	//	ShowWindow(GetTopWindow(NULL), SW_MINIMIZE);
 	//	ShowCursor(TRUE);
@@ -315,7 +300,6 @@ void xrDebug::backend	(const char *expression, const char *description, const ch
 #		endif // USE_BUG_TRAP
 		//DEBUG_INVOKE;
 #	endif // USE_OWN_ERROR_MESSAGE_WINDOW
-#endif
 
 	if (get_on_dialog())
 		get_on_dialog()	(false);

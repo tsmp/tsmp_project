@@ -305,7 +305,7 @@ PARAMETERS      :
 RETURNS         :
 
 ----------------------------------------------------------------------*/
-BOOL  __stdcall IsNT ( void ) ;
+bool  __stdcall IsNT ( void ) ;
 
 /*----------------------------------------------------------------------
 FUNCTION        :   BSUSymInitialize

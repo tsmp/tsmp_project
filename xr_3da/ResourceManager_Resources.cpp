@@ -377,8 +377,6 @@ SPS *CResourceManager::_CreatePS(LPCSTR name)
 		// Select target
 		LPCSTR c_target = "ps_2_0";
 		LPCSTR c_entry = "main";
-	//	LPCSTR c_entry = "PS_Main";
-	//	LPCSTR c_entry = "main_ps_2_0";
 
 		if (strstr(data, "main_ps_1_1"))
 		{ 
@@ -410,15 +408,12 @@ SPS *CResourceManager::_CreatePS(LPCSTR name)
 			c_entry = "main_ps_2_0"; 
 		}
 
-
 		// Compile
 		LPD3DXBUFFER				pShaderBuf	= nullptr;
 		LPD3DXBUFFER				pErrorBuf	= nullptr;
 		LPD3DXSHADER_CONSTANTTABLE	pConstants	= nullptr;
 
 		HRESULT	_hr = S_OK;
-
-		Msg("centry %s; ctarget %s ", c_entry, c_target);
 
 		_hr = ::Render->shader_compile(name
 			, data
@@ -520,8 +515,8 @@ R_constant_table *CResourceManager::_CreateConstantTable(R_constant_table &C)
 
 void CResourceManager::_DeleteConstantTable(const R_constant_table *C)
 {
-	if (0 == (C->dwFlags&xr_resource_flagged::RF_REGISTERED) || 
-		reclaim(v_constant_tables, C))				
+	if (0 == (C->dwFlags&xr_resource_flagged::RF_REGISTERED) 
+		|| reclaim(v_constant_tables, C))				
 			return;
 
 	Msg("! ERROR: Failed to find compiled constant-table");
@@ -546,8 +541,8 @@ CRT *CResourceManager::_CreateRT(LPCSTR Name, u32 w, u32 h, D3DFORMAT f)
 
 		if (Device.b_is_Ready)	
 			RT->create(Name, w, h, f);
-		return					
-			RT;
+
+		return RT;
 	}
 }
 
@@ -586,8 +581,8 @@ CRTC *CResourceManager::_CreateRTC(LPCSTR Name, u32 size, D3DFORMAT f)
 
 		if (Device.b_is_Ready)	
 			RT->create(Name, size, f);
-		return 			
-			RT;
+
+		return RT;
 	}
 }
 
@@ -636,7 +631,7 @@ SGeometry*	CResourceManager::CreateGeom(D3DVERTEXELEMENT9* decl, IDirect3DVertex
 	Geom->ib = ib;
 	v_geoms.push_back(Geom);
 
-	return	Geom;
+	return Geom;
 }
 
 SGeometry *CResourceManager::CreateGeom(u32 FVF, IDirect3DVertexBuffer9 *vb, IDirect3DIndexBuffer9 *ib)

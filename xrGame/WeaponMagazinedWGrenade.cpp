@@ -15,6 +15,9 @@
 #include "game_base_space.h"
 #include "MathUtils.h"
 #include "clsid_game.h"
+
+#include "..\TSMP_BuildConfig.h"
+
 #ifdef DEBUG
 #include "phdebug.h"
 #endif
@@ -33,7 +36,7 @@ CWeaponMagazinedWGrenade::~CWeaponMagazinedWGrenade(void)
 	HUD_SOUND::DestroySound(sndSwitch);
 }
 
-void CWeaponMagazinedWGrenade::StopHUDSounds		()
+void CWeaponMagazinedWGrenade::StopHUDSounds()
 {
 	HUD_SOUND::StopSound(sndShotG);
 	HUD_SOUND::StopSound(sndReloadG);
@@ -42,11 +45,10 @@ void CWeaponMagazinedWGrenade::StopHUDSounds		()
 	inherited::StopHUDSounds();
 }
 
-void CWeaponMagazinedWGrenade::Load	(LPCSTR section)
+void CWeaponMagazinedWGrenade::Load(LPCSTR section)
 {
-	inherited::Load			(section);
-	CRocketLauncher::Load	(section);
-	
+	inherited::Load(section);
+	CRocketLauncher::Load(section);	
 	
 	//// Sounds
 	HUD_SOUND::LoadSound(section,"snd_shoot_grenade"	, sndShotG		, m_eSoundShot);
@@ -91,10 +93,12 @@ void CWeaponMagazinedWGrenade::Load	(LPCSTR section)
 	// load ammo classes SECOND (grenade_class)
 	m_ammoTypes2.clear	(); 
 	LPCSTR				S = pSettings->r_string(section,"grenade_class");
+	
 	if (S && S[0]) 
 	{
 		string128		_ammoItem;
 		int				count		= _GetItemCount	(S);
+
 		for (int it=0; it<count; ++it)	
 		{
 			_GetItem				(S,it,_ammoItem);
@@ -113,7 +117,6 @@ void CWeaponMagazinedWGrenade::net_Destroy()
 	inherited::net_Destroy();
 }
 
-
 BOOL CWeaponMagazinedWGrenade::net_Spawn(CSE_Abstract* DC) 
 {
 	BOOL l_res = inherited::net_Spawn(DC);
@@ -121,6 +124,7 @@ BOOL CWeaponMagazinedWGrenade::net_Spawn(CSE_Abstract* DC)
 #ifdef TSMP_CLIENT
 	return l_res;
 #else
+
 	UpdateGrenadeVisibility(!!iAmmoElapsed);
 	m_bPending = false;
 
@@ -141,10 +145,12 @@ BOOL CWeaponMagazinedWGrenade::net_Spawn(CSE_Abstract* DC)
 	
 	xr_vector<CCartridge>* pM = NULL;
 	bool b_if_grenade_mode	= (m_bGrenadeMode && iAmmoElapsed && !getRocketCount());
+	
 	if(b_if_grenade_mode)
 		pM = &m_magazine;
 		
 	bool b_if_simple_mode	= (!m_bGrenadeMode && m_magazine2.size() && !getRocketCount());
+	
 	if(b_if_simple_mode)
 		pM = &m_magazine2;
 

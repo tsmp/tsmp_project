@@ -12,7 +12,7 @@ enum { UNIT_SIZE=12, N1=4, N2=4, N3=4, N4=(128+3-1*N1-2*N2-3*N3)/4,
 struct BLK_NODE {
     DWORD Stamp;
     BLK_NODE* next;
-    BOOL   avail()      const { return (next != NULL); }
+    bool   avail()      const { return (next != NULL); }
     void    link(BLK_NODE* p) { p->next=next; next=p; }
     void  unlink()            { next=next->next; }
     void* remove()            {
@@ -57,18 +57,30 @@ DWORD _STDCALL GetUsedMemory()
             RetVal -= UNIT_SIZE*Indx2Units[i]*BList[i].Stamp;
     return RetVal;
 }
-void _STDCALL StopSubAllocator() {
-    if ( SubAllocatorSize ) {
-        SubAllocatorSize=0;                 delete[] HeapStart;
+
+void _STDCALL StopSubAllocator() 
+{
+    if ( SubAllocatorSize ) 
+	{
+        SubAllocatorSize=0;       
+		delete[] HeapStart;
     }
 }
+
 BOOL _STDCALL StartSubAllocator(UINT SASize)
 {
     DWORD t=SASize << 20U;
-    if (SubAllocatorSize == t)              return TRUE;
+
+    if (SubAllocatorSize == t)        
+		return true;
+
     StopSubAllocator();
-    if ((HeapStart=new BYTE[t]) == NULL)    return FALSE;
-    SubAllocatorSize=t;                     return TRUE;
+
+    if ((HeapStart=new BYTE[t]) == NULL)  
+		return false;
+
+    SubAllocatorSize=t;                   
+	return true;
 }
 static inline void InitSubAllocator()
 {
