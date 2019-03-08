@@ -30,7 +30,7 @@ static HWND hwStage		= 0;
 static HWND hwTime		= 0;
 static HWND hwPText		= 0;
 static HWND hwPhaseTime	= 0;
-static HWND logWindow	= 0;
+HWND logWindow	= 0;
 
 // Log-thread data
 static INT_PTR CALLBACK logDlgProc( HWND hw, UINT msg, WPARAM wp, LPARAM lp )

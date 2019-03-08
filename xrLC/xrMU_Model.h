@@ -1,7 +1,6 @@
 #pragma once
 
 #include "xrPool.h"
-#include "cl_collector.h"
 
 class xrMU_Model
 {

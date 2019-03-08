@@ -11,6 +11,7 @@
 #include "ispatial.h"
 #include "Text_Console.h"
 #include <process.h>
+#include "..\TSMP_BuildConfig.h"
 
 ENGINE_API CInifile* pGameIni		= NULL;
 BOOL	g_bIntroFinished			= FALSE;
@@ -933,7 +934,7 @@ void doBenchmark(LPCSTR name)
 		Engine.External.Initialize	( );
 
 #ifdef TSMP_CLIENT
-		strcpy_s						(Console->ConfigFile,"user.ltx");
+		strcpy_s(Console->ConfigFile,"user.ltx");
 #else
 		strcpy_s(Console->ConfigFile, "tsmp_user.ltx");
 #endif

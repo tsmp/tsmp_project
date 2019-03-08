@@ -108,7 +108,7 @@
     <OutDir>$(SolutionDir)\output\binaries_x64_release\</OutDir>
     <IntDir>$(SolutionDir)\output\intermediate_x64\$(ProjectName)\$(Configuration)\</IntDir>
     <LibraryPath>$(SolutionDir)\components\dx9sdk\lib64;$(SolutionDir)\output\libraries_x64_release\;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)\components\FreeImage\;$(SolutionDir)\components\MagicFm\Include;$(SolutionDir)\components\dx9sdk\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\xrLC\COMMON_COMPILERS;$(SolutionDir)\xrQSlim\src;$(SolutionDir)\etools;$(SolutionDir)\xrcdb;$(SolutionDir)\xr_3da;$(SolutionDir)\xrcore;$(SolutionDir)\components\FreeImage;$(SolutionDir)\components\MagicFm\Include;$(SolutionDir)\components\dx9sdk\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)\output\binaries_x64_release\</OutDir>
@@ -352,7 +352,7 @@
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\editors\ECore\Engine;..\editors\LevelEditor\Edit;..\COMMON_COMPILERS;..\xr_3da;..\xrCDB;..\ETools;X:\3rd_party\Src\FreeImage;X:\3rd_party\Src\d3dx\include;..\xrCore\;X:\3rd_party\Src\MagicSoftware\FreeMagic\Include;..\xrQSlim\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_USE_MATH_DEFINES;_AMD64_;_WIN64;_WINDOWS;_SECURE_SCL=0;CDebug;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>
@@ -558,9 +558,9 @@
     <ClInclude Include="xrGameMaterials.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\editors\ECore\Engine\NVMeshMender.cpp" />
-    <ClCompile Include="..\editors\ECore\Engine\nv_algebra.cpp" />
     <ClCompile Include="..\xr_3da\fmesh.cpp" />
+    <ClCompile Include="NVMeshMender.cpp" />
+    <ClCompile Include="nv_algebra.cpp" />
     <ClCompile Include="StdAfx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

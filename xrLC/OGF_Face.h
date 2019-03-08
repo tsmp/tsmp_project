@@ -4,7 +4,6 @@
 #include "xruvpoint.h"
 #include "progmesh.h"
 #include "xrSpherical.h"
-
 #include "PropSlimTools.h"
 
 struct OGF_Texture

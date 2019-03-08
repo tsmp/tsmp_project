@@ -291,16 +291,16 @@
     <ClCompile Include="..\xr_3da\fmesh.cpp">
       <Filter>COMPILER\XRAY</Filter>
     </ClCompile>
-    <ClCompile Include="..\editors\ECore\Engine\nv_algebra.cpp">
-      <Filter>External\NV_Basis</Filter>
-    </ClCompile>
-    <ClCompile Include="..\editors\ECore\Engine\NVMeshMender.cpp">
-      <Filter>External\NV_Basis</Filter>
-    </ClCompile>
     <ClCompile Include="COMMON_COMPILERS\cl_log.cpp" />
     <ClCompile Include="COMMON_COMPILERS\tga.cpp" />
     <ClCompile Include="COMMON_COMPILERS\xrThread.cpp" />
     <ClCompile Include="xr_mu_light.cpp" />
+    <ClCompile Include="nv_algebra.cpp">
+      <Filter>External\NV_Basis</Filter>
+    </ClCompile>
+    <ClCompile Include="NVMeshMender.cpp">
+      <Filter>External\NV_Basis</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="COMMON_COMPILERS\resource.rc" />
