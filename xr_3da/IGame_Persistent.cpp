@@ -13,6 +13,8 @@
 #	include "CustomHUD.h"
 #endif
 
+#include "..\TSMP_BuildConfig.h"
+
 ENGINE_API	IGame_Persistent*		g_pGamePersistent	= NULL;
 
 IGame_Persistent::IGame_Persistent	()

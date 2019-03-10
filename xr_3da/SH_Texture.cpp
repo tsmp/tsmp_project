@@ -3,6 +3,8 @@
 
 #include "ResourceManager.h"
 
+#include "..\TSMP_BuildConfig.h"
+
 #ifndef _EDITOR
     #include "render.h"
 #endif

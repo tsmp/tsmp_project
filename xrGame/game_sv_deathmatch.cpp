@@ -622,67 +622,79 @@ BOOL	game_sv_Deathmatch::AllPlayers_Ready ()
 
 	if (ready == cnt && ready != 0) return TRUE;
 	return FALSE;
-};
-	
+};	
 
 void game_sv_Deathmatch::OnPlayerReady(ClientID id)
 {
 	switch (m_phase)
 	{
 	case GAME_PHASE_PENDING:
+	{
+		game_PlayerState *ps = get_id(id);
+
+		if (ps)
 		{
-			game_PlayerState*	ps	=	get_id	(id);
-			if (ps)
-			{
-				if (ps->testFlag(GAME_PLAYER_FLAG_READY) )	
-				{
-					ps->resetFlag(GAME_PLAYER_FLAG_READY);
-				} 
-				else 
-				{
-					ps->setFlag(GAME_PLAYER_FLAG_READY);
-				};
-			};
-			signal_Syncronize();
-		}break;
+			if (ps->testFlag(GAME_PLAYER_FLAG_READY))
+				ps->resetFlag(GAME_PLAYER_FLAG_READY);
+			else
+				ps->setFlag(GAME_PLAYER_FLAG_READY);
+		}
+
+		signal_Syncronize();
+		break;
+	}
+
 	case GAME_PHASE_INPROGRESS:
+	{
+		xrClientData *xrCData = (xrClientData*)m_server->ID_to_client(id);
+		game_PlayerState *ps = get_id(id);
+
+		if (ps->IsSkip())
+			break;
+
+		if (!(ps->testFlag(GAME_PLAYER_FLAG_VERY_VERY_DEAD)))
+			break;
+
+		if (ps->testFlag(GAME_PLAYER_FLAG_SPECTATOR))
+			break;
+
+		xrClientData *xrSCData = (xrClientData*)m_server->GetServerClient();
+
+		if (xrSCData && xrSCData->ID == id && m_bSpectatorMode)
 		{
-			xrClientData*	xrCData			= (xrClientData*)m_server->ID_to_client	(id);
-			game_PlayerState*	ps			=	get_id	(id);
-			if (ps->IsSkip())					break;
+			SM_SwitchOnNextActivePlayer();
+			return;
+		}
 
-			if (!(ps->testFlag(GAME_PLAYER_FLAG_VERY_VERY_DEAD)))	break;
-			if (ps->testFlag(GAME_PLAYER_FLAG_SPECTATOR))			break;
+		CSE_Abstract *pOwner = xrCData->owner;
+		CSE_Spectator *pS = smart_cast<CSE_Spectator*>(pOwner);
 
-			xrClientData* xrSCData			= (xrClientData*)m_server->GetServerClient();
+		u32 CurrentServerTime = Device.dwTimeGlobal;
+		u32 LastReadyTimeCL = xrSCData->ps->TSMP_LastReadyTime;  
 
-			if (xrSCData && xrSCData->ID == id && m_bSpectatorMode) 
+		if (pS)  // TSMP: исправляеи пролет мимо магазина когда быстро кликаем лкм и умираем
+		{
+			if ((CurrentServerTime - LastReadyTimeCL) < 500)
 			{
-				SM_SwitchOnNextActivePlayer	();
+				Msg("-TSMP: Пролет мимо магазина предотвращен :)");
 				return;
 			}
-			//------------------------------------------------------------
-			CSE_Abstract* pOwner			= xrCData->owner;
-			CSE_Spectator	*pS				= smart_cast<CSE_Spectator*>(pOwner);
-			if (pS)
-			{
-				if (xrSCData->ps->DeathTime + 1000 > Device.dwTimeGlobal)
-				{
-//					return;
-				}
-			}
-			//------------------------------------------------------------			
-			RespawnPlayer(id, false);
-			pOwner = xrCData->owner;
-			CSE_ALifeCreatureActor	*pA	=	smart_cast<CSE_ALifeCreatureActor*>(pOwner);
-			if(pA)
-			{
-				SpawnWeaponsForActor(pOwner, ps);
-				//---------------------------------------
-				Check_ForClearRun(ps);
-			}
-			//-------------------------------
-		}break;
+		}
+
+		xrSCData->ps->TSMP_LastReadyTime = CurrentServerTime;
+
+		RespawnPlayer(id, false);
+		pOwner = xrCData->owner;
+
+		CSE_ALifeCreatureActor *pA = smart_cast<CSE_ALifeCreatureActor*>(pOwner);
+
+		if (pA)
+		{
+			SpawnWeaponsForActor(pOwner, ps);
+			Check_ForClearRun(ps);
+		}
+		break;
+	}
 	};
 }
 

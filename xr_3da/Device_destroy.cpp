@@ -4,6 +4,8 @@
 #include "render.h"
 #include "IGame_Persistent.h"
 
+#include "..\TSMP_BuildConfig.h"
+
 void CRenderDevice::_Destroy(BOOL bKeepTextures)
 {
 	DU.OnDeviceDestroy	();

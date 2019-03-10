@@ -21,6 +21,9 @@
 
 #include <io.h>
 
+
+#include "..\TSMP_BuildConfig.h"
+
 xr_token							snd_freq_token							[ ]={
 	{ "22khz",						sf_22K										},
 	{ "44khz",						sf_44K										},

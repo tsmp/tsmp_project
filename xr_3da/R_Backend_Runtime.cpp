@@ -8,6 +8,8 @@
 
 #include "frustum.h"
 
+#include "..\TSMP_BuildConfig.h"
+
 void CBackend::OnFrameEnd()
 {
 #ifndef DEDICATED_SERVER

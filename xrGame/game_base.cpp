@@ -24,6 +24,8 @@ game_PlayerState::game_PlayerState()
 	RespawnTime			= 0;
 	m_bPayForSpawn		= false;
 
+	TSMP_LastReadyTime = 0;
+
 	clear				();
 }
 

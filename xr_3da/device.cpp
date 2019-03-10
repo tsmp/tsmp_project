@@ -16,6 +16,8 @@
 #include "x_ray.h"
 #include "render.h"
 
+#include "..\TSMP_BuildConfig.h"
+
 ENGINE_API BOOL bShowPauseString = TRUE;
 #include "IGame_Persistent.h"
 

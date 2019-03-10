@@ -13,6 +13,9 @@
 #include "GameFont.h"
 #include "xr_trims.h"
 #include "CustomHUD.h"
+
+#include "..\TSMP_BuildConfig.h"
+
 #pragma warning(push)
 #pragma warning(disable:4995)
 //#include <locale>

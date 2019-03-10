@@ -12,6 +12,8 @@
 #include "blenders\blender.h"
 #include "blenders\blender_recorder.h"
 
+#include "..\TSMP_BuildConfig.h"
+
 
 void fix_texture_name(LPSTR fn)
 {
