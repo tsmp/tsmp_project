@@ -21,7 +21,7 @@ static u32 LastTimeCreate = 0;
 #define BASE_PORT			0
 #define END_PORT			65535
 
-void	dump_URL	(LPCSTR p, IDirectPlay8Address* A)
+void	dump_URL	(LPCSTR p, IDirectPlay8Address *A)
 {
 	string256	aaaa;
 	DWORD		aaaa_s			= sizeof(aaaa);
@@ -42,24 +42,26 @@ INetQueue::INetQueue()
 
 INetQueue::~INetQueue()
 {
-	cs.Enter		();
-	u32				it;
-	for				(it=0; it<unused.size(); it++)	xr_delete(unused[it]);
-	for				(it=0; it<ready.size(); it++)	xr_delete(ready[it]);
-	cs.Leave		();
+	cs.Enter();
+	u32	it;
+
+	for	(it=0; it<unused.size(); it++) xr_delete(unused[it]);
+	for	(it=0; it<ready.size(); it++) xr_delete(ready[it]);
+
+	cs.Leave();
 }
 
-void INetQueue::CreateCommit(NET_Packet* P)
+void INetQueue::CreateCommit(NET_Packet *P)
 {
-	cs.Enter		();
-	ready.push_back	(P);
-	cs.Leave		();
+	cs.Enter();
+	ready.push_back(P);
+	cs.Leave();
 }
 
-NET_Packet*		INetQueue::CreateGet()
+NET_Packet *INetQueue::CreateGet()
 {
-	NET_Packet*	P			= 0;
-	cs.Enter		();
+	NET_Packet *P = 0;
+	cs.Enter();
 
 	if (unused.empty())	
 	{
@@ -77,10 +79,10 @@ NET_Packet*		INetQueue::CreateGet()
 	return P;
 }
 
-NET_Packet*		INetQueue::Retreive	()
+NET_Packet *INetQueue::Retreive	()
 {
-	NET_Packet*	P			= 0;
-	cs.Enter		();
+	NET_Packet *P = 0;
+	cs.Enter();
 
 	if (!ready.empty())		
 		P = ready.front();
@@ -96,8 +98,8 @@ NET_Packet*		INetQueue::Retreive	()
 		}		
 	}
 
-	cs.Leave		();
-	return	P;
+	cs.Leave();
+	return P;
 }
 
 void INetQueue::Release()
@@ -129,7 +131,7 @@ class XRNETSERVER_API syncQueue
 public:
 	syncQueue() { clear(); }
 
-	IC void			push	(u32 value)
+	IC void push(u32 value)
 	{
 		table[write++]	= value;
 
@@ -140,10 +142,10 @@ public:
 			count++;
 	}
 
-	IC u32*		begin	()	{ return table;			}
-	IC u32*		end		()	{ return table+count;	}
-	IC u32		size	()	{ return count;			}
-	IC void     clear	()	{ write=0; count=0;		}
+	IC u32 *begin	()	{ return table;			}
+	IC u32 *end		()	{ return table+count;	}
+	IC u32	size	()	{ return count;			}
+	IC void clear	()	{ write=0; count=0;		}
 } net_DeltaArray;
 
 XRNETSERVER_API Flags32	psNET_Flags			= {0};
@@ -171,25 +173,27 @@ void IPureClient::_SendTo_LL( const void* data, u32 size, u32 flags, u32 timeout
     IPureClient::SendTo_LL( const_cast<void*>(data), size, flags, timeout );
 }
 
-void  IPureClient::_Recieve( const void* data, u32 data_size, u32 /*param*/ )
+void  IPureClient::_Recieve( const void *data, u32 data_size, u32 param)
 {
-    MSYS_PING*    cfg = (MSYS_PING*)data;
+    MSYS_PING *cfg = (MSYS_PING*)data;
 
-	if(     (data_size>2*sizeof(u32)) 
-	    &&  (cfg->sign1==0x12071980) 
-	    &&  (cfg->sign2==0x26111975)
-	  )
+	bool InternalMessage =
+		(data_size > 2 * sizeof(u32))
+		&& (cfg->sign1 == 0x12071980)
+		&& (cfg->sign2 == 0x26111975);
+
+	if(InternalMessage)
 	{
-		// Internal system message
-		if( (data_size == sizeof(MSYS_PING)) )
+		if(data_size == sizeof(MSYS_PING))
 		{
 			// It is reverted(server) ping
-			u32		    time	= TimerAsync( device_timer );
-			u32		    ping	= time - (cfg->dwTime_ClientSend);
-			u32		    delta	= cfg->dwTime_Server + ping/2 - time;
+			u32 time = TimerAsync( device_timer );
+			u32 ping = time - (cfg->dwTime_ClientSend);
+			u32 delta = cfg->dwTime_Server + ping/2 - time;
 
-			net_DeltaArray.push		( delta );
-			Sync_Average			();
+			net_DeltaArray.push(delta);
+			Sync_Average();
+
 			return;
 		}
 		
@@ -202,25 +206,27 @@ void  IPureClient::_Recieve( const void* data, u32 data_size, u32 /*param*/ )
 		Msg( "! Unknown system message" );
 		return;
 	} 
-	else 
-		if( net_Connected == EnmConnectionCompleted )
+	else
 	{
-		// one of the messages - decompress it
-
-		if( psNET_Flags.test( NETFLAG_LOG_CL_PACKETS ) ) 
+		if (net_Connected == EnmConnectionCompleted)
 		{
-			if( !pClNetLog ) 
-				pClNetLog = xr_new<INetLog>("logs\\net_cl_log.log", timeServer());
-			    
-			if( pClNetLog ) 
-				pClNetLog->LogData( timeServer(), const_cast<void*>(data), data_size, TRUE );
-		}
+			// one of the messages - decompress it
 
-		OnMessage( const_cast<void*>(data), data_size );
+			if (psNET_Flags.test(NETFLAG_LOG_CL_PACKETS))
+			{
+				if (!pClNetLog)
+					pClNetLog = xr_new<INetLog>("logs\\net_cl_log.log", timeServer());
+
+				if (pClNetLog)
+					pClNetLog->LogData(timeServer(), const_cast<void*>(data), data_size, TRUE);
+			}
+
+			OnMessage(const_cast<void*>(data), data_size);
+		}
 	}
 }
 
-IPureClient::IPureClient	(CTimer* timer): net_Statistic(timer)
+IPureClient::IPureClient(CTimer* timer): net_Statistic(timer)
 #ifdef PROFILE_CRITICAL_SECTIONS
 ,net_csEnumeration(MUTEX_PROFILE_ID(IPureClient::net_csEnumeration))
 #endif // PROFILE_CRITICAL_SECTIONS

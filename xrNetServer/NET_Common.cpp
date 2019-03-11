@@ -119,18 +119,7 @@ MultipacketSender::_FlushSendBuffer( u32 timeout, Buffer* buf )
 
 
         // dump/log if needed
-
-
-     //   #if NET_LOG_PACKETS
-		if (0 != strstr(Core.Params, "-packets"))
-		{
-			Msg("#send %smulti-packet %u    flags= %08X",
-				(buf->last_flags & DPNSEND_IMMEDIATELLY) ? "IMMEDIATE " : "",
-				buf->buffer.B.count, buf->last_flags
-			);
-		}
-   //     #endif // NET_LOG_PACKETS
-
+		
 	    if( strstr( Core.Params,"-dump_traffic") ) 
         {
             static bool first_time  = true;
@@ -157,14 +146,10 @@ MultipacketSender::_FlushSendBuffer( u32 timeout, Buffer* buf )
     } // if buffer not empty
 }
 
-
-//------------------------------------------------------------------------------
-
-void            
-MultipacketReciever::RecievePacket( const void* packet_data, u32 packet_sz, u32 param )
+void MultipacketReciever::RecievePacket(const void *packet_data, u32 packet_sz, u32 param )
 {
-    MultipacketHeader*  header = (MultipacketHeader*)packet_data;
-    u8                  data[MaxMultipacketSize];
+    MultipacketHeader *header = (MultipacketHeader*)packet_data;
+    u8 data[MaxMultipacketSize];
 
     if ( header->tag != NET_TAG_MERGED  &&  header->tag != NET_TAG_NONMERGED )
        return;
@@ -172,10 +157,6 @@ MultipacketReciever::RecievePacket( const void* packet_data, u32 packet_sz, u32 
     gCompressor.Decompress( data, sizeof(data), 
                            (u8*)packet_data+sizeof(MultipacketHeader), packet_sz-sizeof(MultipacketHeader) 
                          );
-
-  //  #if NET_LOG_PACKETS
-	if (0 != strstr(Core.Params, "-packets")) Msg( "#receive multi-packet %u", packet_sz );
-  //  #endif
 
     if( strstr( Core.Params,"-dump_traffic") ) 
     {
@@ -208,11 +189,7 @@ MultipacketReciever::RecievePacket( const void* packet_data, u32 packet_sz, u32 
 
         if( is_multi_packet )
             dat += sizeof(u16);
-
-    //    #if NET_LOG_PACKETS
-		if (0 != strstr(Core.Params, "-packets"))  Msg( "  packet %u", size );
-    //    #endif
-        
+		        
         _Recieve( dat, size, param );
 
         dat          += size;

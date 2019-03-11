@@ -9,21 +9,21 @@
 #include <malloc.h>
 #pragma warning(pop)
 
-static	INetLog* pSvNetLog = nullptr;
+static	INetLog *pSvNetLog = nullptr;
 
-#define BASE_PORT_LAN_SV		5445
-#define BASE_PORT				0
-#define END_PORT				65535
+#define BASE_PORT_LAN_SV	5445
+#define BASE_PORT			0
+#define END_PORT			65535
 
-#define NET_BANNED_STR                "Player banned by server!"
-#define NET_PROTECTED_SERVER_STR      "Access denied by protected server for this player!"
+#define NET_BANNED_STR				"Player banned by server!"
+#define NET_PROTECTED_SERVER_STR	"Access denied by protected server for this player!"
 
-void	dump_URL(LPCSTR p, IDirectPlay8Address* A);
+void dump_URL(LPCSTR p, IDirectPlay8Address *A);
 
 LPCSTR nameTraffic = "traffic.net";
 
-XRNETSERVER_API int		psNET_ServerUpdate = 30;		// FPS
-XRNETSERVER_API int		psNET_ServerPending = 2;
+XRNETSERVER_API int psNET_ServerUpdate = 30;		// FPS
+XRNETSERVER_API int	psNET_ServerPending = 2;
 
 XRNETSERVER_API ClientID BroadcastCID(0xffffffff);
 
@@ -45,20 +45,28 @@ void ip_address::set(LPCSTR src_string)
 
 xr_string ip_address::to_string() const
 {
-	string128	res;
-	sprintf_s(res, sizeof(res), "%d.%d.%d.%d", m_data.a1, m_data.a2, m_data.a3, m_data.a4);
-	return		res;
+	string128 res;
+
+	sprintf_s(res
+		, sizeof(res)
+		, "%d.%d.%d.%d"
+		, m_data.a1
+		, m_data.a2
+		, m_data.a3
+		, m_data.a4);
+
+	return res;
 }
 
-void IBannedClient::Load(CInifile& ini, const shared_str& sect)
+void IBannedClient::Load(CInifile &ini, const shared_str &sect)
 {
 	HAddr.set(sect.c_str());
 
 	tm _tm_banned;
-	const shared_str& time_to = ini.r_string(sect, "time_to");
+	const shared_str &time_to = ini.r_string(sect, "time_to");
 
-	int res_t = sscanf
-	(time_to.c_str()
+	int res_t = sscanf(
+		  time_to.c_str()
 		, "%02d.%02d.%d_%02d:%02d:%02d"
 		, &_tm_banned.tm_mday
 		, &_tm_banned.tm_mon
@@ -139,7 +147,7 @@ void gen_auth_code()
 	FS.auth_generate(ignore, test);
 }
 
-IClient::IClient(CTimer* timer) : stats(timer), server(nullptr)
+IClient::IClient(CTimer *timer) : stats(timer), server(nullptr)
 {
 	dwTime_LastUpdate = 0;
 
@@ -183,7 +191,7 @@ static const GUID CLSID_NETWORKSIMULATOR_DP8SP_TCPIP =
 
 static HRESULT WINAPI Handler(PVOID pvUserContext, DWORD dwMessageType, PVOID pMessage)
 {
-	IPureServer* C = (IPureServer*)pvUserContext;
+	IPureServer *C = (IPureServer*)pvUserContext;
 	return C->net_Handler(dwMessageType, pMessage);
 }
 
@@ -193,7 +201,7 @@ void IClient::_SendTo_LL(const void* data, u32 size, u32 flags_, u32 timeout)
 	server->IPureServer::SendTo_LL(ID, const_cast<void*>(data), size, flags_, timeout);
 }
 
-IClient* IPureServer::ID_to_client(ClientID ID, bool ScanAll)
+IClient *IPureServer::ID_to_client(ClientID ID, bool ScanAll)
 {
 	if (!ID.value())			
 		return nullptr;
@@ -205,6 +213,7 @@ IClient* IPureServer::ID_to_client(ClientID ID, bool ScanAll)
 		if (net_Players[client]->ID == ID)
 		{
 			csPlayers.Leave();
+
 			return net_Players[client];
 		}
 	}
@@ -228,7 +237,7 @@ IClient* IPureServer::ID_to_client(ClientID ID, bool ScanAll)
 	return nullptr;
 }
 
-void IPureServer::_Recieve(const void* data, u32 data_size, u32 param)
+void IPureServer::_Recieve(const void *data, u32 data_size, u32 param)
 {
 	if (data_size > NET_PacketSizeLimit) 
 	{
@@ -236,8 +245,8 @@ void IPureServer::_Recieve(const void* data, u32 data_size, u32 param)
 		return;
 	}
 
-	NET_Packet  packet;
-	ClientID    id;
+	NET_Packet packet;
+	ClientID id;
 
 	id.set(param);
 	packet.construct(data, data_size);
@@ -261,8 +270,7 @@ void IPureServer::_Recieve(const void* data, u32 data_size, u32 param)
 		SendBroadcast(id, packet, result);
 }
 
-
-IPureServer::IPureServer(CTimer* timer, BOOL Dedicated) : m_bDedicated(Dedicated)
+IPureServer::IPureServer(CTimer *timer, BOOL Dedicated) : m_bDedicated(Dedicated)
 #ifdef PROFILE_CRITICAL_SECTIONS
 	, csPlayers(MUTEX_PROFILE_ID(IPureServer::csPlayers))
 	, csMessage(MUTEX_PROFILE_ID(IPureServer::csMessage))
@@ -271,10 +279,11 @@ IPureServer::IPureServer(CTimer* timer, BOOL Dedicated) : m_bDedicated(Dedicated
 	device_timer = timer;
 	stats.clear();
 	stats.dwSendTime = TimeGlobal(device_timer);
-	SV_Client = NULL;
-	NET = NULL;
-	net_Address_device = NULL;
-	pSvNetLog = NULL;
+
+	SV_Client			= nullptr;
+	NET					= nullptr;
+	net_Address_device	= nullptr;
+	pSvNetLog			= nullptr;
 }
 
 IPureServer::~IPureServer()
@@ -318,7 +327,7 @@ IPureServer::EConnect IPureServer::Connect(LPCSTR options)
 
 	if (strstr(options, "psw="))
 	{
-		const char* PSW = strstr(options, "psw=") + 4;
+		const char *PSW = strstr(options, "psw=") + 4;
 
 		if (strchr(PSW, '/'))
 			strncpy(password_str, PSW, strchr(PSW, '/') - PSW);
@@ -515,15 +524,16 @@ HRESULT	IPureServer::net_Handler(u32 dwMessageType, PVOID pMessage)
 
 	case DPN_MSGID_CREATE_PLAYER:
 	{
-		PDPNMSG_CREATE_PLAYER	msg = PDPNMSG_CREATE_PLAYER(pMessage);
-		const	u32				max_size = 1024;
-		char	bufferData[max_size];
-		DWORD	bufferSize = max_size;
-		ZeroMemory(bufferData, bufferSize);
-		string512				res;
+		PDPNMSG_CREATE_PLAYER msg = PDPNMSG_CREATE_PLAYER(pMessage);
+		const u32 max_size = 1024;
+		char bufferData[max_size];
+		DWORD bufferSize = max_size;
+		string512 res;
+
+		ZeroMemory(bufferData, bufferSize);		
 
 		// retreive info
-		DPN_PLAYER_INFO*		Pinfo = (DPN_PLAYER_INFO*)bufferData;
+		DPN_PLAYER_INFO *Pinfo = (DPN_PLAYER_INFO*)bufferData;
 		Pinfo->dwSize = sizeof(DPN_PLAYER_INFO);
 		HRESULT _hr = NET->GetClientInfo(msg->dpnidPlayer, Pinfo, &bufferSize, 0);
 
@@ -535,11 +545,37 @@ HRESULT	IPureServer::net_Handler(u32 dwMessageType, PVOID pMessage)
 
 		CHK_DX(_hr);
 
+		u32 NameSize = wcsnlen(Pinfo->pwszName,sizeof(string64));
+
+		if (NameSize >= sizeof(string64))
+		{
+			ip_address IP;
+			GetClientAddress(msg->dpnidPlayer, IP);
+			BanAddress(IP, 99999999);
+
+			Msg("! attack blocked! ip - %s", IP.to_string().c_str());
+			Msg("! player name without null terminator");
+
+			return S_FALSE;
+		}
+
 		string64			cname;
 		CHK_DX(WideCharToMultiByte(CP_ACP, 0, Pinfo->pwszName, -1, cname, sizeof(cname), 0, 0));
 
 		SClientConnectData	cl_data;
 		strcpy_s(cl_data.name, cname);
+
+		if (!Pinfo->pvData)
+		{
+			ip_address IP;
+			GetClientAddress(msg->dpnidPlayer, IP);
+			BanAddress(IP, 99999999);
+
+			Msg("! attack blocked! ip - %s", IP.to_string().c_str());
+			Msg("! fake players");
+
+			return S_FALSE;
+		}
 
 		if (Pinfo->pvData && Pinfo->dwDataSize == sizeof(cl_data))
 		{
@@ -594,7 +630,8 @@ HRESULT	IPureServer::net_Handler(u32 dwMessageType, PVOID pMessage)
 			{
 				// ping - save server time and reply
 				m_ping->dwTime_Server = TimerAsync(device_timer);
-				ClientID ID; ID.set(m_sender);
+				ClientID ID; 
+				ID.set(m_sender);
 				IPureServer::SendTo_Buf(ID, m_data, m_size, net_flags(FALSE, FALSE, TRUE, TRUE));
 			}
 		}
@@ -608,15 +645,15 @@ HRESULT	IPureServer::net_Handler(u32 dwMessageType, PVOID pMessage)
 	{
 		PDPNMSG_INDICATE_CONNECT msg = (PDPNMSG_INDICATE_CONNECT)pMessage;
 
-		ip_address			HAddr;
+		ip_address HAddr;
 		GetClientAddress(msg->pAddressPlayer, HAddr);
 
 		if (GetBannedClient(HAddr))
 		{
 			msg->dwReplyDataSize = xr_strlen(NET_BANNED_STR);
 			msg->pvReplyData = NET_BANNED_STR;
-			return					S_FALSE;
-		};
+			return S_FALSE;
+		}
 
 		break;
 	}
@@ -627,12 +664,6 @@ HRESULT	IPureServer::net_Handler(u32 dwMessageType, PVOID pMessage)
 
 void	IPureServer::Flush_Clients_Buffers()
 {
-#pragma todo("tsmp: fix define")
-
-	//  #if NET_LOG_PACKETS
-	if (0 != strstr(Core.Params, "-packets"))  Msg("#flush server send-buf");
-	//   #endif
-
 	csPlayers.Enter();
 
 	for (xr_vector<IClient*>::iterator it = net_Players.begin(); it != net_Players.end(); ++it)

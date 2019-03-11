@@ -1,13 +1,9 @@
 #include "stdafx.h"
-
 #include "level.h"
 #include "xrServer.h"
-
-
 #include "xrMessages.h"
 #include "xrGameSpyServer.h"
 #include "../igame_persistent.h"
-
 #include "GameSpy/GameSpy_Base_Defs.h"
 #include "GameSpy/GameSpy_Available.h"
 
@@ -228,7 +224,7 @@ void			xrGameSpyServer::OnCL_Disconnected	(IClient* _CL)
 	csPlayers.Leave			();
 }
 
-u32				xrGameSpyServer::OnMessage(NET_Packet& P, ClientID sender)			// Non-Zero means broadcasting with "flags" as returned
+u32 xrGameSpyServer::OnMessage(NET_Packet& P, ClientID sender)			// Non-Zero means broadcasting with "flags" as returned
 {
 	u16			type;
 	P.r_begin	(type);
@@ -239,32 +235,21 @@ u32				xrGameSpyServer::OnMessage(NET_Packet& P, ClientID sender)			// Non-Zero 
 	{
 	case M_GAMESPY_CDKEY_VALIDATION_CHALLENGE_RESPOND:
 		{
-			string4096 ResponseStr;
-			P.r_stringZ(ResponseStr);
+			string128 ResponseStr = "";
+			u32 bytesRemain = P.r_elapsed();
 
-			if (strlen(ResponseStr) > 100)
-			{		
-				xrClientData *ClData = (xrClientData*)ID_to_client(sender);
-				ip_address			ipSender;
-				DWORD dwPort = 0;
-				u32 uBanFor = 99999999999999999;
+			if (bytesRemain == 0 || bytesRemain > sizeof(ResponseStr))
+			{
+				Msg("! WARNING: Validation challenge respond from client is %s. DoS attack?"
+					, bytesRemain == 0 ? "empty" : "too long");
 
-				Level().Server->GetClientAddress(ClData->ID, ipSender, &dwPort);
-				Level().Server->clients_Lock();
-				Level().Server->BanAddress(ipSender, uBanFor);
-				Level().Server->DisconnectAddress(ipSender);
-				Level().Server->clients_Unlock();
-
-				Msg("! stalkazz attack detected, %i characters string was in packet, blocked ip %s"
-					, strlen(ResponseStr)
-					, ipSender.to_string().c_str());
-				
 				return 0;
 			}
 
+			P.r_stringZ(ResponseStr);
+			
 			if (!CL->m_bCDKeyAuth)
 			{
-
 				Msg("xrGS::CDKey::Server : Respond accepted, Authenticate client.");
 				m_GCDServer.AuthUser(int(CL->ID.value()), CL->m_cAddress.m_data.data, CL->m_pChallengeString, ResponseStr, this);
 				strcpy_s(CL->m_guid,128,this->GCD_Server()->GetKeyHash(CL->ID.value()));
