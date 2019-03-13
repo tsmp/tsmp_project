@@ -72,9 +72,6 @@
 #    pragma warning 203 9
 #  endif
 #endif
-#if defined(__BORLANDC__) && defined(__MSDOS__) && !defined(__FLAT__)
-#  pragma option -h
-#endif
 #if 0
 #define LZO_0xffffL             0xfffful
 #define LZO_0xffffffffL         0xfffffffful
@@ -268,12 +265,6 @@
 #elif defined(__QNX__)
 #  define LZO_OS_QNX            1
 #  define LZO_INFO_OS           "qnx"
-#elif defined(__BORLANDC__) && defined(__DPMI32__) && (__BORLANDC__ >= 0x0460)
-#  define LZO_OS_DOS32          1
-#  define LZO_INFO_OS           "dos32"
-#elif defined(__BORLANDC__) && defined(__DPMI16__)
-#  define LZO_OS_DOS16          1
-#  define LZO_INFO_OS           "dos16"
 #elif defined(__ZTC__) && defined(DOS386)
 #  define LZO_OS_DOS32          1
 #  define LZO_INFO_OS           "dos32"
@@ -458,10 +449,6 @@
 #  define LZO_CC_AZTECC         1
 #  define LZO_INFO_CC           "Aztec C"
 #  define LZO_INFO_CCVER        LZO_CPP_MACRO_EXPAND(__AZTEC_C__)
-#elif defined(__BORLANDC__)
-#  define LZO_CC_BORLANDC       1
-#  define LZO_INFO_CC           "Borland C"
-#  define LZO_INFO_CCVER        LZO_CPP_MACRO_EXPAND(__BORLANDC__)
 #elif defined(__DMC__) && defined(__SC__)
 #  define LZO_CC_DMC            1
 #  define LZO_INFO_CC           "Digital Mars C"
@@ -764,10 +751,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#if (LZO_CC_BORLANDC && (__BORLANDC__ >= 0x0200))
-   extern void __near __cdecl _AHSHIFT(void);
-#  define LZO_MM_AHSHIFT      ((unsigned) _AHSHIFT)
-#elif (LZO_CC_DMC || LZO_CC_SYMANTECC || LZO_CC_ZORTECHC)
+#if (LZO_CC_DMC || LZO_CC_SYMANTECC || LZO_CC_ZORTECHC)
    extern void __near __cdecl _AHSHIFT(void);
 #  define LZO_MM_AHSHIFT      ((unsigned) _AHSHIFT)
 #elif (LZO_CC_MSC || LZO_CC_TOPSPEEDC)
@@ -975,8 +959,6 @@ extern "C" {
 #elif (LZO_ARCH_I386 && (LZO_CC_INTELC || LZO_CC_MSC))
 #  define LZO_SIZEOF___INT64        8
 #elif (LZO_OS_WIN32 && (LZO_CC_MSC))
-#  define LZO_SIZEOF___INT64        8
-#elif (LZO_ARCH_I386 && (LZO_CC_BORLANDC && (__BORLANDC__ >= 0x0520)))
 #  define LZO_SIZEOF___INT64        8
 #elif (LZO_ARCH_I386 && (LZO_CC_WATCOMC && (__WATCOMC__ >= 1100)))
 #  define LZO_SIZEOF___INT64        8
@@ -1190,8 +1172,6 @@ extern "C" {
 #if (LZO_CC_TURBOC && (__TURBOC__ <= 0x0295))
 #elif defined(__cplusplus)
 #  define __lzo_inline          inline
-#elif (LZO_CC_BORLANDC && (__BORLANDC__ >= 0x0550))
-#  define __lzo_inline          __inline
 #elif (LZO_CC_CILLY || LZO_CC_GNUC || LZO_CC_LLVM || LZO_CC_PATHSCALE || LZO_CC_PGI)
 #  define __lzo_inline          __inline__
 #elif (LZO_CC_DMC)
@@ -1277,9 +1257,7 @@ extern "C" {
 #  define __lzo_unlikely(e)     (e)
 #endif
 #if !defined(LZO_UNUSED)
-#  if (LZO_CC_BORLANDC && (__BORLANDC__ >= 0x0600))
-#    define LZO_UNUSED(var)         ((void) &var)
-#  elif (LZO_CC_BORLANDC || LZO_CC_HIGHC || LZO_CC_NDPC || LZO_CC_PELLESC || LZO_CC_TURBOC)
+#  if (LZO_CC_BORLANDC || LZO_CC_HIGHC || LZO_CC_NDPC || LZO_CC_PELLESC || LZO_CC_TURBOC)
 #    define LZO_UNUSED(var)         if (&var) ; else
 #  elif (LZO_CC_GNUC || LZO_CC_LLVM || LZO_CC_PATHSCALE)
 #    define LZO_UNUSED(var)         ((void) var)

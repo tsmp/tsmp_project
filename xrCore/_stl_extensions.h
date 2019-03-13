@@ -1,20 +1,15 @@
-#ifndef _STL_EXT_internal
-#define _STL_EXT_internal
+#pragma once
 
 using std::swap;
 
 #include "_type_traits.h"
 
-#ifdef	__BORLANDC__
-#define M_NOSTDCONTAINERS_EXT
-#endif
 #ifdef	_M_AMD64
 #define M_DONTDEFERCLEAR_EXT
 #endif
 
 #define	M_DONTDEFERCLEAR_EXT		//. for mem-debug only
 
-//--------	
 #ifdef	M_NOSTDCONTAINERS_EXT
 
 #define xr_list std::list
@@ -292,10 +287,3 @@ DEFINE_VECTOR(float,FloatVec,FloatIt);
 DEFINE_VECTOR(float*,LPFloatVec,LPFloatIt);
 DEFINE_VECTOR(int,IntVec,IntIt);
 DEFINE_VECTOR(int*,LPIntVec,LPIntIt);
-
-#ifdef __BORLANDC__
-DEFINE_VECTOR(AnsiString,AStringVec,AStringIt);
-DEFINE_VECTOR(AnsiString*,LPAStringVec,LPAStringIt);
-#endif
-
-#endif

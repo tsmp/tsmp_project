@@ -39,13 +39,9 @@ static bool bException = false;
 #	pragma comment(lib,"BugTrap-x64.lib")		// Link to x64 dll
 #else
 #	include "bugtrap.h"						// for BugTrap functionality
-    #ifndef __BORLANDC__
-
+  
         #	pragma comment(lib,"BugTrap.lib")		// Link to ANSI DLL
 
-    #else
-        #	pragma comment(lib,"BugTrapB.lib")		// Link to ANSI DLL
-    #endif
 #endif
 #endif // USE_BUG_TRAP
 

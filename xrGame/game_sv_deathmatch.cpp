@@ -1825,14 +1825,9 @@ void	game_sv_Deathmatch::check_ForceRespawn		()
 		if (ps->testFlag(GAME_PLAYER_FLAG_SPECTATOR)) continue;
 		u32 CurTime = Device.dwTimeGlobal;
 
-		if (0 != strstr(Core.Params, "-survival"))
-		{
-			FRtime = 100; // surv
-		}
-		else
-		{
-			FRtime = 1000; // original 
-		}
+		
+			FRtime = 1000; 
+		
 
 		if (ps->DeathTime + GetForceRespawn()*FRtime < CurTime)   // *1000 ms   
 		{

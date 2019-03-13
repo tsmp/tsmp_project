@@ -19,6 +19,9 @@
 #ifdef	_MSC_VER
 #define	M_VISUAL
 #endif
+
+#pragma todo("tsmp: в топку")
+
 #ifdef	__BORLANDC__
 #define M_BORLAND
 #endif

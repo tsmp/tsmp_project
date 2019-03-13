@@ -111,8 +111,6 @@ const lzo_byte __lzo_copyright[] =
 	"$Id: LZO " LZO_VERSION_STRING " built " __DATE__ " " __TIME__
 #if defined(__GNUC__) && defined(__VERSION__)
 	" by gcc " __VERSION__
-#elif defined(__BORLANDC__)
-	" by Borland C " _LZO_MEXPAND(__BORLANDC__)
 #elif defined(_MSC_VER)
 	" by Microsoft C " _LZO_MEXPAND(_MSC_VER)
 #elif defined(__PUREC__)

@@ -43,29 +43,20 @@
 */
 
 // *** try to minimize code bloat of STLport
-#ifdef __BORLANDC__
-#else
+
 	#ifdef XRCORE_EXPORTS				// no exceptions, export allocator and common stuff
 	#define _STLP_DESIGNATED_DLL	1
 	#define _STLP_USE_DECLSPEC		1
 	#else
 	#define _STLP_USE_DECLSPEC		1	// no exceptions, import allocator and common stuff
 	#endif
-#endif
-
-// #include <exception>
-// using std::exception;
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
 #include <math.h>
 #include <string.h>
-
 #include <typeinfo>
-//#include <typeinfo.h>
-
-//#include <process.h>
 
 #ifndef DEBUG
 	#ifdef _DEBUG
@@ -74,10 +65,6 @@
 	#ifdef MIXED
     	#define DEBUG
     #endif
-#endif
-
-#ifdef _EDITOR
-#	define NO_FS_SCAN
 #endif
 
 // inline control - redefine to use compiler's heuristics ONLY
@@ -98,47 +85,18 @@
 
 #ifndef DEBUG
 	#pragma inline_depth	( 254 )
-	#pragma inline_recursion( on )
-	#ifndef __BORLANDC__
+	#pragma inline_recursion( on )	
 		#pragma intrinsic	(abs, fabs, fmod, sin, cos, tan, asin, acos, atan, sqrt, exp, log, log10, strcpy, strcat)
-	#endif
+
 #endif
 
 #include <time.h>
-// work-around dumb borland compiler
-#ifdef __BORLANDC__
-	#define ALIGN(a)
 
-	#include <assert.h>
-	#include <utime.h>
-	#define _utimbuf utimbuf
-	#define MODULE_NAME 		"xrCoreB.dll"
 
-	// function redefinition
-    #define fabsf(a) fabs(a)
-    #define sinf(a) sin(a)
-    #define asinf(a) asin(a)
-    #define cosf(a) cos(a)
-    #define acosf(a) acos(a)
-    #define tanf(a) tan(a)
-    #define atanf(a) atan(a)
-    #define sqrtf(a) sqrt(a)
-    #define expf(a) ::exp(a)
-    #define floorf floor
-    #define atan2f atan2
-    #define logf log
-	// float redefine
-	#define _PC_24 PC_24
-	#define _PC_53 PC_53
-	#define _PC_64 PC_64
-	#define _RC_CHOP RC_CHOP
-	#define _RC_NEAR RC_NEAR
-    #define _MCW_EM MCW_EM
-#else
 	#define ALIGN(a)		__declspec(align(a))
 	#include <sys\utime.h>
 	#define MODULE_NAME 	"xrCore.dll"
-#endif
+
 
 
 // Warnings
@@ -233,17 +191,12 @@ DEFINE_VECTOR	(xr_rtoken,RTokenVec,RTokenVecIt);
 #include "log.h"
 #include "xr_trims.h"
 #include "xr_ini.h"
-#ifdef NO_FS_SCAN
-#	include "ELocatorAPI.h"
-#else
-#	include "LocatorAPI.h"
-#endif
+#include "LocatorAPI.h"
 #include "FileSystem.h"
 #include "FTimer.h"
 #include "fastdelegate.h"
 #include "intrusive_ptr.h"
 
-// destructor
 template <class T>
 class destructor
 {
@@ -255,7 +208,6 @@ public:
 	{	return *ptr; }
 };
 
-// ********************************************** The Core definition
 class XRCORE_API xrCore 
 {
 public:
@@ -265,13 +217,12 @@ public:
 	string64	UserName;
 	string64	CompName;
 	string512	Params;
-	int			ProcCores;
-	int			ThreadsCount;
 
 public:
 	void		_initialize	(LPCSTR ApplicationName, LogCallback cb=0, BOOL init_fs=TRUE, LPCSTR fs_fname=0);
 	void		_destroy	();
 };
+
 extern XRCORE_API xrCore Core;
 
 #endif

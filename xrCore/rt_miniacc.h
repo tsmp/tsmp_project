@@ -72,9 +72,6 @@
 #    pragma warning 203 9
 #  endif
 #endif
-#if defined(__BORLANDC__) && defined(__MSDOS__) && !defined(__FLAT__)
-#  pragma option -h
-#endif
 #if defined(ACC_CFG_NO_CONFIG_HEADER)
 #elif defined(ACC_CFG_CONFIG_HEADER)
 #  include ACC_CFG_CONFIG_HEADER
@@ -339,12 +336,6 @@
 #elif defined(__QNX__)
 #  define ACC_OS_QNX            1
 #  define ACC_INFO_OS           "qnx"
-#elif defined(__BORLANDC__) && defined(__DPMI32__) && (__BORLANDC__ >= 0x0460)
-#  define ACC_OS_DOS32          1
-#  define ACC_INFO_OS           "dos32"
-#elif defined(__BORLANDC__) && defined(__DPMI16__)
-#  define ACC_OS_DOS16          1
-#  define ACC_INFO_OS           "dos16"
 #elif defined(__ZTC__) && defined(DOS386)
 #  define ACC_OS_DOS32          1
 #  define ACC_INFO_OS           "dos32"
@@ -529,10 +520,6 @@
 #  define ACC_CC_AZTECC         1
 #  define ACC_INFO_CC           "Aztec C"
 #  define ACC_INFO_CCVER        ACC_CPP_MACRO_EXPAND(__AZTEC_C__)
-#elif defined(__BORLANDC__)
-#  define ACC_CC_BORLANDC       1
-#  define ACC_INFO_CC           "Borland C"
-#  define ACC_INFO_CCVER        ACC_CPP_MACRO_EXPAND(__BORLANDC__)
 #elif defined(__DMC__) && defined(__SC__)
 #  define ACC_CC_DMC            1
 #  define ACC_INFO_CC           "Digital Mars C"
@@ -835,10 +822,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#if (ACC_CC_BORLANDC && (__BORLANDC__ >= 0x0200))
-   extern void __near __cdecl _AHSHIFT(void);
-#  define ACC_MM_AHSHIFT      ((unsigned) _AHSHIFT)
-#elif (ACC_CC_DMC || ACC_CC_SYMANTECC || ACC_CC_ZORTECHC)
+#if (ACC_CC_DMC || ACC_CC_SYMANTECC || ACC_CC_ZORTECHC)
    extern void __near __cdecl _AHSHIFT(void);
 #  define ACC_MM_AHSHIFT      ((unsigned) _AHSHIFT)
 #elif (ACC_CC_MSC || ACC_CC_TOPSPEEDC)
@@ -1046,8 +1030,6 @@ extern "C" {
 #elif (ACC_ARCH_I386 && (ACC_CC_INTELC || ACC_CC_MSC))
 #  define ACC_SIZEOF___INT64        8
 #elif (ACC_OS_WIN32 && (ACC_CC_MSC))
-#  define ACC_SIZEOF___INT64        8
-#elif (ACC_ARCH_I386 && (ACC_CC_BORLANDC && (__BORLANDC__ >= 0x0520)))
 #  define ACC_SIZEOF___INT64        8
 #elif (ACC_ARCH_I386 && (ACC_CC_WATCOMC && (__WATCOMC__ >= 1100)))
 #  define ACC_SIZEOF___INT64        8
@@ -1261,8 +1243,6 @@ extern "C" {
 #if (ACC_CC_TURBOC && (__TURBOC__ <= 0x0295))
 #elif defined(__cplusplus)
 #  define __acc_inline          inline
-#elif (ACC_CC_BORLANDC && (__BORLANDC__ >= 0x0550))
-#  define __acc_inline          __inline
 #elif (ACC_CC_CILLY || ACC_CC_GNUC || ACC_CC_LLVM || ACC_CC_PATHSCALE || ACC_CC_PGI)
 #  define __acc_inline          __inline__
 #elif (ACC_CC_DMC)
@@ -1348,9 +1328,7 @@ extern "C" {
 #  define __acc_unlikely(e)     (e)
 #endif
 #if !defined(ACC_UNUSED)
-#  if (ACC_CC_BORLANDC && (__BORLANDC__ >= 0x0600))
-#    define ACC_UNUSED(var)         ((void) &var)
-#  elif (ACC_CC_BORLANDC || ACC_CC_HIGHC || ACC_CC_NDPC || ACC_CC_PELLESC || ACC_CC_TURBOC)
+#  if (ACC_CC_BORLANDC || ACC_CC_HIGHC || ACC_CC_NDPC || ACC_CC_PELLESC || ACC_CC_TURBOC)
 #    define ACC_UNUSED(var)         if (&var) ; else
 #  elif (ACC_CC_GNUC || ACC_CC_LLVM || ACC_CC_PATHSCALE)
 #    define ACC_UNUSED(var)         ((void) var)
@@ -1367,9 +1345,7 @@ extern "C" {
 #  endif
 #endif
 #if !defined(ACC_UNUSED_FUNC)
-#  if (ACC_CC_BORLANDC && (__BORLANDC__ >= 0x0600))
-#    define ACC_UNUSED_FUNC(func)   ((void) func)
-#  elif (ACC_CC_BORLANDC || ACC_CC_NDPC || ACC_CC_TURBOC)
+#  if (ACC_CC_BORLANDC || ACC_CC_NDPC || ACC_CC_TURBOC)
 #    define ACC_UNUSED_FUNC(func)   if (func) ; else
 #  elif (ACC_CC_LLVM)
 #    define ACC_UNUSED_FUNC(func)   ((void) &func)
@@ -1861,8 +1837,6 @@ extern "C" {
 #  undef HAVE_STDINT_H
 #elif (ACC_LIBC_UCLIBC)
 #  define HAVE_STDINT_H 1
-#elif (ACC_CC_BORLANDC) && (__BORLANDC__ >= 0x560)
-#  undef HAVE_STDINT_H
 #elif (ACC_CC_DMC) && (__DMC__ >= 0x825)
 #  define HAVE_STDINT_H 1
 #endif
@@ -1980,18 +1954,6 @@ extern "C" {
 #  undef HAVE_SNPRINTF
 #  undef HAVE_UTIME
 #  undef HAVE_VSNPRINTF
-#elif (ACC_CC_BORLANDC)
-#  if (__BORLANDC__ < 0x0400)
-#    undef HAVE_ALLOCA
-#    undef HAVE_UTIME
-#  endif
-#  if ((__BORLANDC__ < 0x0410) && ACC_OS_WIN16)
-#    undef HAVE_ALLOCA
-#  endif
-#  if (__BORLANDC__ < 0x0550)
-#    undef HAVE_SNPRINTF
-#    undef HAVE_VSNPRINTF
-#  endif
 #elif (ACC_CC_DMC)
 #  if (ACC_OS_WIN16)
 #    undef HAVE_ALLOCA

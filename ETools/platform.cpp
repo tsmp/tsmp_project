@@ -42,7 +42,7 @@ void setbinmode(FILE *f)
 }
 #endif
 
-#if defined(__WATCOMC__) || defined(__BORLANDC__) || defined(__MINGW32__)
+#if defined(__WATCOMC__) || defined(__MINGW32__)
 void setbinmode(FILE *f)
 {
 	setmode(fileno(f), O_BINARY);
@@ -117,10 +117,8 @@ void timer_clear(void *timer)
 #define PATH_SEPS "/\\"
 #define mkdir(x,y) _mkdir((x))
 
-/* MSVC does this, borland doesn't? */
-#ifndef __BORLANDC__
 #define stat _stat
-#endif
+
 
 #else
 
@@ -163,8 +161,6 @@ int create_directories(char *fn)
         }
 #if defined(_WIN32) && !defined(__BORLANDC__)
         else if(!(_S_IFDIR & statbuf.st_mode)) {
-#elif defined(__BORLANDC__)
-        else if(!(S_IFDIR & statbuf.st_mode)) {
 #else
         else if(!S_ISDIR(statbuf.st_mode)) {
 #endif
