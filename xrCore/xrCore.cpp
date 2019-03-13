@@ -6,8 +6,6 @@
 #include <mmsystem.h>
 #include <objbase.h>
 #include "xrCore.h"
-
-#include <omp.h>
  
 #pragma comment(lib,"winmm.lib")
 
@@ -15,20 +13,61 @@
 #	include	<malloc.h>
 #endif // DEBUG
 
-XRCORE_API		xrCore	Core;
-XRCORE_API		u32		build_id;
-XRCORE_API		LPCSTR	build_date;
+XRCORE_API xrCore	Core;
+XRCORE_API u32		build_id;
+XRCORE_API LPCSTR	build_date;
 
 namespace CPU
 {
-	extern	void			Detect	();
+	extern void Detect();
 };
 
 static u32	init_counter	= 0;
 
-extern char g_application_path[256];
+XRCORE_API void ComputeBuildID(LPCSTR Date)
+{
+	static LPSTR month_id[12] =
+	{
+		"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"
+	};
 
-//. extern xr_vector<shared_str>*	LogFile;
+	static int days_in_month[12] =
+	{
+		31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
+	};
+
+	static int start_day = 31;	// 31
+	static int start_month = 1;	// January
+	static int start_year = 1999;	// 1999
+
+	build_date = Date;
+
+	int days, years, months = 0;
+
+	string16 month;
+	string256 buffer;
+	strcpy_s(buffer, Date);
+	sscanf(buffer, "%s %d %d", month, &days, &years);
+
+	for (int i = 0; i < 12; i++)
+	{
+		if (_stricmp(month_id[i], month))
+			continue;
+
+		months = i;
+		break;
+	}
+
+	build_id = (years - start_year) * 365 + days - start_day;
+
+	for (int i = 0; i < months; ++i)
+		build_id += days_in_month[i];
+
+	for (int i = 0; i < start_month - 1; ++i)
+		build_id -= days_in_month[i];
+}
+
+extern char g_application_path[256];
 
 void xrCore::_initialize	(LPCSTR _ApplicationName, LogCallback cb, BOOL init_fs, LPCSTR fs_fname)
 {
@@ -63,9 +102,6 @@ void xrCore::_initialize	(LPCSTR _ApplicationName, LogCallback cb, BOOL init_fs,
         }
 		GetCurrentDirectory(sizeof(WorkingPath),WorkingPath);
 
-
-
-
 		// User/Comp Name
 		DWORD	sz_user		= sizeof(UserName);
 		GetUserName			(UserName,&sz_user);
@@ -83,19 +119,15 @@ void xrCore::_initialize	(LPCSTR _ApplicationName, LogCallback cb, BOOL init_fs,
 		InitLog				();
 		_initialize_cpu		();
 
-	
-
-
-
-//		Debug._initialize	();
-
 		rtc_initialize		();
 
 		xr_FS				= xr_new<CLocatorAPI>	();
 
 		xr_EFS				= xr_new<EFS_Utils>		();
 	}
-	if (init_fs){
+
+	if (init_fs)
+	{
 		u32 flags			= 0;
 		if (0!=strstr(Params,"-build"))	 flags |= CLocatorAPI::flBuildCopy;
 		if (0!=strstr(Params,"-ebuild")) flags |= CLocatorAPI::flBuildCopy|CLocatorAPI::flEBuildCopy;
@@ -170,10 +202,9 @@ void xrCore::_destroy		()
 			_control87		( _RC_NEAR, MCW_RC );
 			_control87		( _MCW_EM,  MCW_EM );
 		}
-//.		LogFile.reserve		(256);
 		break;
 	case DLL_THREAD_ATTACH:
-		CoInitializeEx	(NULL, COINIT_MULTITHREADED); //-V718
+		CoInitializeEx	(NULL, COINIT_MULTITHREADED);
 		timeBeginPeriod	(1);
 		break;
 	case DLL_THREAD_DETACH:
