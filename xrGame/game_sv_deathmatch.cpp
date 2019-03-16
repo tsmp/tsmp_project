@@ -676,7 +676,7 @@ void game_sv_Deathmatch::OnPlayerReady(ClientID id)
 		{
 			if ((CurrentServerTime - LastReadyTimeCL) < 500)
 			{
-				Msg("-TSMP: Пролет мимо магазина предотвращен :)");
+				Msg("- TSMP: Пролет мимо магазина предотвращен :)");
 				return;
 			}
 		}
