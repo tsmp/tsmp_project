@@ -5,6 +5,8 @@ output
 ipch/
 .vs/
 x64/
+obj/
+bin/
 
 output/
 *.aps
