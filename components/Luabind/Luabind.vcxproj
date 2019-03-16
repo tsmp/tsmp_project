@@ -70,8 +70,8 @@
     <TargetName>luabind</TargetName>
     <OutDir>$(SolutionDir)\output\binaries_$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)\output\intermediate\$(ProjectName)\$(Configuration)\</IntDir>
-    <IncludePath>C:\tsmp_project\components;C:\tsmp_project\components\LuaJIT\src;C:\tsmp_project\components\Luabind;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\tsmp_project\output\libraries_Release;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\components;$(SolutionDir)\components\LuaJIT\src;$(SolutionDir)\components\Luabind;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\output\libraries_Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>C:\tsmp_project\components;C:\tsmp_project\components\LuaJIT\src;C:\tsmp_project\components\Luabind;$(IncludePath)</IncludePath>
