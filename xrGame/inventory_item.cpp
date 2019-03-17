@@ -29,7 +29,11 @@
 
 extern bool bIsDedicatedServer;
 
-#define ITEM_REMOVE_TIME		30000
+//#define ITEM_REMOVE_TIME 30000
+
+extern int g_sv_mp_RemoveDropHabarTimeSec;
+
+
 struct net_update_IItem {	u32					dwTimeStamp;
 SPHNetState			State;};
 struct net_updateData{
@@ -150,7 +154,7 @@ void CInventoryItem::Load(LPCSTR section)
 
 
 	//время убирания объекта с уровня
-	m_dwItemRemoveTime			= READ_IF_EXISTS(pSettings, r_u32, section,"item_remove_time",			ITEM_REMOVE_TIME);
+	m_dwItemRemoveTime			= READ_IF_EXISTS(pSettings, r_u32, section,"item_remove_time", g_sv_mp_RemoveDropHabarTimeSec * 1000);
 
 	m_flags.set					(FAllowSprint,READ_IF_EXISTS	(pSettings, r_bool, section,"sprint_allowed",			TRUE));
 	m_fControlInertionFactor	= READ_IF_EXISTS(pSettings, r_float,section,"control_inertion_factor",	1.0f);

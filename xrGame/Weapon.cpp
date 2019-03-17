@@ -27,8 +27,13 @@
 #include "object_broker.h"
 #include "../igame_persistent.h"
 
-#define WEAPON_REMOVE_TIME		60000
+//#define WEAPON_REMOVE_TIME 60000
+
+extern int g_sv_mp_RemoveHabarTimeSec;
+
 #define ROTATION_TIME			0.25f
+
+
 
 extern bool bIsDedicatedServer;
 
@@ -389,10 +394,14 @@ void CWeapon::Load		(LPCSTR section)
 
 	//////////////////////////////////////
 	//время убирания оружия с уровня
-	if(pSettings->line_exist(section,"weapon_remove_time"))
+	/*
+	if(pSettings->line_exist(section, "weapon_remove_time"))
 		m_dwWeaponRemoveTime = pSettings->r_u32(section,"weapon_remove_time");
 	else
-		m_dwWeaponRemoveTime = WEAPON_REMOVE_TIME;
+		m_dwWeaponRemoveTime = g_sv_mp_RemoveHabarTimeSec * 1000;*/
+
+	m_dwWeaponRemoveTime = g_sv_mp_RemoveHabarTimeSec * 1000;
+
 	//////////////////////////////////////
 	if(pSettings->line_exist(section,"auto_spawn_ammo"))
 		m_bAutoSpawnAmmo = pSettings->r_bool(section,"auto_spawn_ammo");

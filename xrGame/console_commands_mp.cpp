@@ -64,6 +64,10 @@ extern volatile	int		g_sv_mp_AutoBanHitCheaters;
 extern volatile	int		g_sv_mp_ShowHits;
 extern	int		g_sv_mp_nickname_change_mode;
 
+        int     g_sv_mp_RemoveHabarTimeSec = 10;
+        int     g_sv_mp_RemoveDropHabarTimeSec = 15;
+
+
 extern	u32		g_sv_dm_dwForceRespawn			;
 extern	s32		g_sv_dm_dwFragLimit				;
 extern	s32		g_sv_dm_dwTimeLimit				;
@@ -1827,7 +1831,7 @@ void register_mp_console_commands()
 	CMD4(CCC_SV_Integer,	"tsmp_weapon_disabler_enabled", (int*)&g_sv_mp_DisablerEnabled, 0, 1);
 	CMD4(CCC_SV_Integer,	"tsmp_weapon_hits_log"		,	(int*)&g_sv_mp_LogHitsEnabled, 0, 1);
 	CMD4(CCC_SV_Integer,	"tsmp_weapon_hits_autoban"	,	(int*)&g_sv_mp_AutoBanHitCheaters, 0, 1);
-	CMD4(CCC_SV_Integer,	"tsmp_weapon_hits_show"	,	(int*)&g_sv_mp_ShowHits, 0, 1);	
+	CMD4(CCC_SV_Integer,	"tsmp_weapon_hits_show"	,	    (int*)&g_sv_mp_ShowHits, 0, 1);	
 	CMD4(CCC_SV_Integer,	"tsmp_weapon_hits_check"	,	(int*)&g_sv_mp_CheckHitsEnabled, 0, 1);
 
 	CMD4(CCC_SV_Integer,	"tsmp_nickname_change_mode"	,	(int*)&g_sv_mp_nickname_change_mode, 1, 3);
@@ -1835,6 +1839,11 @@ void register_mp_console_commands()
 	CMD1(CCC_WeaponDisable, "tsmp_weapon_disable");
 	CMD4(CCC_SV_Integer,	"tsmp_loader_enabled"		,	(int*)&g_sv_mp_ModLoaderEnabled, 0, 1);
 	CMD1(CCC_TSMP_SetIp,	"tsmp_loader_reconnect_ip");
+
+	CMD4(CCC_SV_Integer,    "tsmp_removehabartime",         (int*)&g_sv_mp_RemoveHabarTimeSec, 1, 3600);
+	CMD4(CCC_SV_Integer,    "tsmp_removehabardroptime",     (int*)&g_sv_mp_RemoveDropHabarTimeSec, 1, 3600);
+
+
 
 	CMD4(CCC_SV_Integer,	"sv_artefact_stay_time"		,	(int*)&g_sv_ah_dwArtefactStayTime		, 0,180);	//min
 	CMD4(CCC_SV_Integer,	"sv_reinforcement_time"		,	(int*)&g_sv_ah_iReinforcementTime		, -1,3600); //sec

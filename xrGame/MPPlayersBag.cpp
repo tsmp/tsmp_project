@@ -5,7 +5,9 @@
 //#include "xrMessages.h"
 #include "game_base_space.h"
 
-#define BAG_REMOVE_TIME		60000
+//#define BAG_REMOVE_TIME		60000
+
+extern int g_sv_mp_RemoveHabarTimeSec;
 
 CMPPlayersBag::CMPPlayersBag()
 {
@@ -45,5 +47,5 @@ bool CMPPlayersBag::NeedToDestroyObject()	const
 	if (H_Parent()) return false;
 	if (g_iWeaponRemove == -1) return false;
 	if (g_iWeaponRemove == 0) return true;
-	return (TimePassedAfterIndependant() > BAG_REMOVE_TIME);
+	return (TimePassedAfterIndependant() > g_sv_mp_RemoveHabarTimeSec * 1000);
 }

@@ -12,8 +12,12 @@
 #include "game_cl_base.h"
 #include "xrserver_objects_alife.h"
 
-#define GRENADE_REMOVE_TIME		30000
+// #define GRENADE_REMOVE_TIME		30000;
+
+extern int g_sv_mp_RemoveHabarTimeSec;
+
 const float default_grenade_detonation_threshold_hit=100;
+
 CGrenade::CGrenade(void) 
 {
 
@@ -34,10 +38,14 @@ void CGrenade::Load(LPCSTR section)
 
 	//////////////////////////////////////
 	//время убирания оружия с уровня
+	/*
 	if(pSettings->line_exist(section,"grenade_remove_time"))
 		m_dwGrenadeRemoveTime = pSettings->r_u32(section,"grenade_remove_time");
 	else
-		m_dwGrenadeRemoveTime = GRENADE_REMOVE_TIME;
+		m_dwGrenadeRemoveTime = g_sv_mp_RemoveHabarTimeSec * 1000;*/
+
+	m_dwGrenadeRemoveTime = g_sv_mp_RemoveHabarTimeSec * 1000;
+
 	m_grenade_detonation_threshold_hit=READ_IF_EXISTS(pSettings,r_float,section,"detonation_threshold_hit",default_grenade_detonation_threshold_hit);
 }
 
@@ -131,7 +139,8 @@ void CGrenade::Throw()
 	CGrenade					*pGrenade = smart_cast<CGrenade*>(m_fake_missile);
 	VERIFY						(pGrenade);
 	
-	if (pGrenade) {
+	if (pGrenade) 
+	{
 		pGrenade->set_destroy_time(m_dwDestroyTimeMax);
 		//установить ID того кто кинул гранату
 		pGrenade->SetInitiator( H_Parent()->ID() );
