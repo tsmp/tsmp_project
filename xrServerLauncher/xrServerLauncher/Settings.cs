@@ -44,7 +44,6 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
         }
 
         public bool EventsAutoColor { get; set; }
-        public bool EventsAutoDelete { get; set; }
         public bool EventsChangeWindow { get; set; }
         public bool FirewallActivated { get; set; }
         public bool EventsControllerCheckPlayers { get; set; }

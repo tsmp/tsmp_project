@@ -120,7 +120,35 @@
   <metadata name="BaseMenu2.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>311, 55</value>
   </metadata>
+  <metadata name="BaseMenu1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>411, 92</value>
+  </metadata>
+  <metadata name="menuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>526, 92</value>
+  </metadata>
+  <metadata name="menuStrip2.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>639, 82</value>
+  </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="img_rules.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAN
+        0AAADdABEGw9BwAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAI3SURBVGhD7ZhJ
+        S8NAGIbjwVQ89Cxe6lr3BRe8ideKIoItgogIIoq7Yl2KaEEQBEF6EEFRBEEE7V8wrid/gbhAD/oDepZx
+        EoexTb420yXNCPPCA5J5E76vh4dBSURERERExIqgW0c35k1DcXjI4/8R9FBYjAePYhAhqj4jx/wHKfJp
+        zPC/3Mkn5JjvICW/HQ/8bVhAfYbPSI3PICTloVv5CRieID+qHVLnL3hAHzx4DIrsJXW+gp6lQjxgxDCw
+        kYjaJa/xE/zrB4BhYRR5nbzGRwBtmsGXVkFtmsGLVhNpc7a3BQ13dWjM97XEnRHs12oybS71N9MF/APN
+        hvNfbNZqMm2u+ZroAoHBRrCjYZdWzbS5OdRAFwgON4Adgj1aNdPm9kg9XWBntA7sUHKtVRZt7o7V0gX2
+        xmvATgy51SqLNvcnq+kCoakqsBNHrrSa5LYZx8GMmy5wOOcGOzqs16r5bfOPo4VKusDJUgXYMWKxVpNp
+        U8+Zv5wucL5aBnZArNJqCrdNjYtAKV3gcqME7CTAGq2aaVPP1ZaLLhAOusBOQrKt1TRum5mSXa2yaDPr
+        ZEurrNrU83ntRMeLlRpfYSfYMSFzraaiTT3+gb/L3Iq3CeyYk6FWU9GmnglPK11g0tMGdphIV6upalPP
+        fagITfe0ajzgv6EOI+lpFW/uBz5mD3eOZTIWe/CLH4YP2cc7GYs9eOtX4EN28ULGYg+6KejCL6r/Hoc+
+        mEvwDAWdZCwREREREZGYSNIPhHpAXSu+uDEAAAAASUVORK5CYII=
+</value>
+  </data>
+  <metadata name="BaseMenu2.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>311, 55</value>
+  </metadata>
   <data name="ListPage2CheckUpdate.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAABn5JREFUSEud
@@ -523,20 +551,6 @@
         0Ro6r7eFJaMjktt3I7iHne7SJjrdb1dNbFPq1k44AAAAAElFTkSuQmCC
 </value>
   </data>
-  <data name="BaseMenu2StatsEvent.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAABl0RVh0U29m
-        dHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAHRSURBVFhHxdVBS1RhGAXg+QWm1agFEZLkP8hEi4gh
-        CNHAhS4GoqJgIBlwMQsXERS0aVEQpATBEAkuBoJLbvwBbnTV0oU0qWVDoxCIINHx+MYbDPdyz6UudxbP
-        98HHec99N8PkALRV5GOWIh+zFPn438oDASFG4NnwcAp+T1+E4tnQcBp+lfqheDY0nIbDBxegeDY0nIaD
-        O31QPBsaTsN+8TwUz4aG0/Bz6hwUz4aGY73LBYQY9vPamzgLxTvtSKzKS2Fu99YZKN5pR2JveSnMNcd6
-        oXinHYm94aUw92O0B4p32pHYHC+FucbNbijeaUdir3gpzH2/kYfinXYk9oKXwtxOIQ/FO+24v9QMCDH+
-        /Hs9Z1xh7tv101Cs7+8CH/kRwQaeMa4w9/XaKSjW5wvcDRpQbOAJ4wpz21dPQrE+X+D2hx0oNvCIcYW5
-        rStdUKzPFyjWtqHYwCzjCnObw51QrM8XmFysQ7GBCuMKc1+GOqFYny8w8X4Dig3MMK4wV798Aor1+QLj
-        1XUoNlBmXDleYJAfEazPFyjMf4JiAw8ZV5j7fKkDivX5AiMvV6HYQIlx5V8WeFxbe5q1lgUqCyvIWssC
-        914vI2stC7RT5GN2kDsCIJfwbwlT2BEAAAAASUVORK5CYII=
-</value>
-  </data>
   <data name="BaseMenu2OpenEvents.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAYAAACOEfKtAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
@@ -557,6 +571,20 @@
         4Ayc7c3nsyj3Q4tAe9E+NDFnJh5/Z8VB4GdwJpPnuSj3Q4tAwGXRthflkWbS8l6U+0ECJYb7D9XNFm17
         Ud4/3n5byKLcD7thaeEEAvaifSxdjiefpALTwL+zu8nHwhblsgLLMCzFIAyW5GCLcpmBpRiW40xcoEW5
         7MByDEtysEX5fwCWZL9FuVL5Ay+NyJyPsW9XAAAAAElFTkSuQmCC
+</value>
+  </data>
+  <data name="BaseMenu2StatsEvent.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAABl0RVh0U29m
+        dHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAHRSURBVFhHxdVBS1RhGAXg+QWm1agFEZLkP8hEi4gh
+        CNHAhS4GoqJgIBlwMQsXERS0aVEQpATBEAkuBoJLbvwBbnTV0oU0qWVDoxCIINHx+MYbDPdyz6UudxbP
+        98HHec99N8PkALRV5GOWIh+zFPn438oDASFG4NnwcAp+T1+E4tnQcBp+lfqheDY0nIbDBxegeDY0nIaD
+        O31QPBsaTsN+8TwUz4aG0/Bz6hwUz4aGY73LBYQY9vPamzgLxTvtSKzKS2Fu99YZKN5pR2JveSnMNcd6
+        oXinHYm94aUw92O0B4p32pHYHC+FucbNbijeaUdir3gpzH2/kYfinXYk9oKXwtxOIQ/FO+24v9QMCDH+
+        /Hs9Z1xh7tv101Cs7+8CH/kRwQaeMa4w9/XaKSjW5wvcDRpQbOAJ4wpz21dPQrE+X+D2hx0oNvCIcYW5
+        rStdUKzPFyjWtqHYwCzjCnObw51QrM8XmFysQ7GBCuMKc1+GOqFYny8w8X4Dig3MMK4wV798Aor1+QLj
+        1XUoNlBmXDleYJAfEazPFyjMf4JiAw8ZV5j7fKkDivX5AiMvV6HYQIlx5V8WeFxbe5q1lgUqCyvIWssC
+        914vI2stC7RT5GN2kDsCIJfwbwlT2BEAAAAASUVORK5CYII=
 </value>
   </data>
   <metadata name="toolTipHelMenu.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -707,7 +735,7 @@
 </value>
   </data>
   <metadata name="btnServerEventsTable.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>134, 21</value>
+    <value>143, 19</value>
   </metadata>
   <data name="btnUpdate.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -1047,15 +1075,6 @@ Includes automatic test players for the presence of inflated data.
 Saves overstated data and detailed information to the buffer while the program is running.
 Works only if the server is running on the Stalker Controller (4 or 5)</value>
   </data>
-  <data name="EventsAutoDelete.ToolTip" xml:space="preserve">
-    <value>Автоматическая очистка событий сервера, если их количество превышает 1000
-Функция будет полезна только в том случаи, если лог сервера
-очищается в автоматическом режиме.
-
-Automatic cleanup of server events, if their number exceeds 1000
-The function will be useful only if the server log
-it is cleared in automatic mode.</value>
-  </data>
   <data name="EventsControllerMaxLimit.ToolTip" xml:space="preserve">
     <value>Максимальный лимит завышенных данных.
 При превышений которого игрок будет заблокирован.
@@ -1287,27 +1306,14 @@ ENTER - Поиск по базе</value>
 To hide the server - strictly specify the Port GS.
 The hidden server will not be visible to everyone - including the server administrator.</value>
   </data>
-  <data name="img_rules.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAN
-        0AAADdABEGw9BwAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAI3SURBVGhD7ZhJ
-        S8NAGIbjwVQ89Cxe6lr3BRe8ideKIoItgogIIoq7Yl2KaEEQBEF6EEFRBEEE7V8wrid/gbhAD/oDepZx
-        EoexTb420yXNCPPCA5J5E76vh4dBSURERERExIqgW0c35k1DcXjI4/8R9FBYjAePYhAhqj4jx/wHKfJp
-        zPC/3Mkn5JjvICW/HQ/8bVhAfYbPSI3PICTloVv5CRieID+qHVLnL3hAHzx4DIrsJXW+gp6lQjxgxDCw
-        kYjaJa/xE/zrB4BhYRR5nbzGRwBtmsGXVkFtmsGLVhNpc7a3BQ13dWjM97XEnRHs12oybS71N9MF/APN
-        hvNfbNZqMm2u+ZroAoHBRrCjYZdWzbS5OdRAFwgON4Adgj1aNdPm9kg9XWBntA7sUHKtVRZt7o7V0gX2
-        xmvATgy51SqLNvcnq+kCoakqsBNHrrSa5LYZx8GMmy5wOOcGOzqs16r5bfOPo4VKusDJUgXYMWKxVpNp
-        U8+Zv5wucL5aBnZArNJqCrdNjYtAKV3gcqME7CTAGq2aaVPP1ZaLLhAOusBOQrKt1TRum5mSXa2yaDPr
-        ZEurrNrU83ntRMeLlRpfYSfYMSFzraaiTT3+gb/L3Iq3CeyYk6FWU9GmnglPK11g0tMGdphIV6upalPP
-        fagITfe0ajzgv6EOI+lpFW/uBz5mD3eOZTIWe/CLH4YP2cc7GYs9eOtX4EN28ULGYg+6KejCL6r/Hoc+
-        mEvwDAWdZCwREREREZGYSNIPhHpAXSu+uDEAAAAASUVORK5CYII=
-</value>
-  </data>
   <metadata name="ThreadListplayers.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>291, 17</value>
   </metadata>
   <metadata name="ScanDataFiles.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>745, 17</value>
+  </metadata>
+  <metadata name="toolTipHelMenu.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>865, 16</value>
   </metadata>
   <metadata name="ThreadDumpPlayers.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>595, 17</value>

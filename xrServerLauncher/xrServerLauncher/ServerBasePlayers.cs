@@ -29,6 +29,16 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
             ListProxyLoad(); // test
         }
 
+        protected override void WndProc(ref Message m)
+        {
+            if (m.Msg == 0x0084)
+            {
+                m.Result = (IntPtr)2;
+                return;
+            }
+            base.WndProc(ref m);
+        }
+
         public HashSet<string> PlayersBaseBuffer = new HashSet<string>();
         private void BaseLoadInBuffer()
         {
@@ -63,15 +73,11 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
             }
         }
 
-
-        protected override void WndProc(ref Message m)
+        public void LogProc(string AppendLine)
         {
-            if (m.Msg == 0x0084)
-            {
-                m.Result = (IntPtr)2;
-                return;
-            }
-            base.WndProc(ref m);
+            StreamWriter writer = new StreamWriter(@"Log.txt", true, Encoding.GetEncoding("UTF-8"));
+            writer.Write(AppendLine + Environment.NewLine);
+            writer.Close();
         }
 
         private void btnExit_Click(object sender, EventArgs e)
@@ -99,6 +105,11 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
             memory.Dispose();
             GC.Collect(4, GCCollectionMode.Forced);
             GC.GetTotalMemory(true);
+        }
+
+        private void notifyIcon_DoubleClick(object sender, EventArgs e)
+        {
+            StartAutoCheckThread.Checked = false;
         }
 
         private void get_auto_scan_Click(object sender, EventArgs e)
@@ -241,10 +252,8 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                 else
                 {
                     DialogResult result = MessageBox.Show("Поиск не дал результатов.\nНажмите \"Да\" - чтобы продолжить поиск\nНажмите \"Отмена\" - чтобы закрыть окно поиска", "S.E.R.V.E.R - Shadow Of Chernobyl", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
-                    if (result == DialogResult.OK)
-                        return;
-                    else
-                        SearchPanel.Visible = false;
+                    if (result == DialogResult.Cancel)
+                        SearchPanel.Visible = false;                 
                 }
             }
             catch (Exception)
@@ -435,6 +444,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
         {
             if (StartAutoCheckThread.CheckState == CheckState.Checked)
             {
+                FinishReadIndex = 0;             
                 START_LEVEL_THREAD = 0;
                 Width = 151;
                 Height = 133;
@@ -464,17 +474,6 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
             }
         }
 
-        // ==================================================
-        // Сохраняем данные в файл и закрываем запись
-        // ==================================================
-        private void ResultStatusScanCollect(string CollectChange)
-        {
-            StreamWriter LocalBaseChange = new StreamWriter(@"PlayersDataBase\base_temp.txt", true, Encoding.GetEncoding("UTF-8")); //  windows-1251
-            LocalBaseChange.Write(CollectChange + Environment.NewLine);
-            LocalBaseChange.Close();
-        }
-
-
 
         int name_skip_space = 0;
         int server_version = 0;
@@ -494,15 +493,15 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
 
         int EventsControllerMaxHPLimit = 20;                                   // Максимальное число пуль для параметра Hit Power
 
-        int StrIndexStart = 0;
-        int StrIndexFinish = 0;
+        int StartReadIndex = 0;
+        int FinishReadIndex = 0;
 
         HashSet<string> SrvEventsBuffer = new HashSet<string>();               // Events history
         HashSet<string> SrvPlayersBuffer = new HashSet<string>();              // HIM Players Автоматический режим           
         HashSet<string> CHEATERPLAYERSLIST = new HashSet<string>();            // Лист нарушителей которые были обнаружены с завышенными данными
         HashSet<string> ListplayersEvents = new HashSet<string>();             // для просмотра списка игроков.
 
-        public static HashSet<string> BaseEvents = new HashSet<string>();             // События которые относятся к временным событиям
+        public static HashSet<string> BaseEvents = new HashSet<string>();      // События которые относятся к временным событиям
 
         HashSet<string> CHECK_PLAYER_INPROXYLIST = new HashSet<string>();      // Список всех адресов с сервера
         HashSet<string> CHECK_ADDR = new HashSet<string>();
@@ -540,12 +539,10 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                     if (Size < finish_log_size)
                     {
                         CHEATERPLAYERSLIST.Clear();
-                        SrvPlayersBuffer.Clear();
                         ListCheaterEvents.Items.Clear();
                         PlayersCheaterList.Items.Clear();
                         SIGNAL_BANNED = 0;
-                        StrIndexStart = 0;
-                        StrIndexFinish = 0;
+                        FinishReadIndex = 0;
                     }
                     finish_log_size = Size;
                 }
@@ -568,370 +565,360 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                     }
                 }
 
-
+                if (!(START_LEVEL_THREAD == 0 || START_LEVEL_THREAD == 4))
+                {
+                    FinishReadIndex = 0;
+                }             
+                else if ((StartReadIndex > 0) && (START_LEVEL_THREAD == 0))
+                {
+                    SrvPlayersBuffer.Clear();
+                    CHEATERPLAYERSLIST.Clear();
+                }           
+                StartReadIndex = 0;
                 foreach (string s in File.ReadLines(@"server_settings\logs\xray_" + SystemInformation.UserName + ".log", Encoding.GetEncoding(1251)))
                 {
-                    if (server_version == 1)
+                   StartReadIndex++;
+                   if (FinishReadIndex <= StartReadIndex)
                     {
-                        if (s.Contains("session_id: "))
+                        if (server_version == 1)
                         {
-                            string WriteToBase = s.Remove(0, s.IndexOf("name:"));
-                            WriteToBase = WriteToBase.Substring(0, WriteToBase.LastIndexOf("ping: "));
-                            WriteToBase = WriteToBase.Replace(",", "").Replace("(", "").Replace(")", "");
-
-                            name_skip_space = WriteToBase.Count(simbolcount => simbolcount == ' '); // Число пробелов в строке должно быть всегда 8
-                            var get_name = WriteToBase.Split()[1];          // Проверяем на наличие ника, если он есть, то добавляем данные, если же строка пустая, то не добавляем ничего.
-                            if (get_name.Length > 0 && name_skip_space == 8)
-                            {
-                                int a = WriteToBase.IndexOf("session_id:"); // index start
-                                int b = WriteToBase.IndexOf("hash:");       // index end
-                                WriteToBase = WriteToBase.Remove(a, b - a); // remove index   Удаляем все, что находится между session_id и hash + включая эти слова
-                                var pName = WriteToBase.Split()[1];
-                                var pHash = WriteToBase.Split()[3];
-                                var pAddr = WriteToBase.Split()[5];
-                                if (START_LEVEL_THREAD == 0 || START_LEVEL_THREAD == 4)
-                                    PlayersBaseBuffer.Add("[A]%" + pName + "%%" + pHash + "%" + pAddr + "%" + Environment.NewLine);
-                                else
-                                    ListplayersEvents.Add("[A]%" + pName + "%%" + pHash + "%" + pAddr + "%" + Environment.NewLine);
-                                if (EventCheckProxy.CheckState == CheckState.Checked)
-                                    CHECK_PLAYER_INPROXYLIST.Add(pAddr + "%" + pName);
-                            }
-                            else if (name_skip_space > 8)
-                            {
-                                int str_name = WriteToBase.IndexOf("name:"); // Извлекаем имя игрока
-                                int str_name_finished = WriteToBase.IndexOf("session_id:");
-                                var check_name_out = WriteToBase.Substring(str_name, str_name_finished - str_name).Replace("name: ", "").TrimEnd(' ').Replace(" ", "_");
-
-                                int a = WriteToBase.IndexOf("session_id:"); // index start
-                                int b = WriteToBase.IndexOf("hash:");       // index end
-                                WriteToBase = WriteToBase.Remove(a, b - a); // remove index   Удаляем все, что находится между session_id и hash + включая эти слова
-
-                                if (!(START_LEVEL_THREAD == 0 || START_LEVEL_THREAD == 4))
-                                    ListplayersEvents.Add("[A]%" + check_name_out + "%%[ERROR STRING FORMAT]%" + name_skip_space + "%" + Environment.NewLine);
-                            }
-
-                            // test  
-                            /*      
-                            else if ((get_name.Length == 0) && (START_LEVEL_THREAD == 0))
-                            {
-                                fakeAddr = WriteToBase.Split()[7];
-                                if (fakeAddr == fakeAddrCmp)  // null str
-                                {
-                                    protect++;
-                                    if (protect > 5) // attack
-                                    {
-                                        foreach (string SKIP_BLOCKED in AddressBuffer)
-                                        {
-                                            if (SKIP_BLOCKED.Contains(fakeAddr))
-                                            {
-                                                protect = 0;
-                                                break;
-                                            }
-                                        }
-                                        if (protect > 0)
-                                        {
-                                            WriteToCheaterList("FAKE>" + protect, fakeAddr, "[null]", "[null]", 16);
-                                            FirewallWriteNewRule(8, "FAKE", " [FAKEPLAYER] IP: ", fakeAddr, "@");
-                                            protect = 0;
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    fakeAddrCmp = fakeAddr;
-                                    protect = 0;
-                                }
-                            }*/
-                        }
-                    }
-                    else
-                    {
-                        if (s.Contains("] ping["))
-                        {
-                            string WriteToBaseST = s.Remove(0, s.IndexOf(": ") + 1);
-                            WriteToBaseST = WriteToBaseST.Substring(0, WriteToBaseST.LastIndexOf(" port["));
-                            name_skip_space = WriteToBaseST.Count(simbolcount => simbolcount == ' '); // Число пробелов в строке должно быть всегда 3
-                            var get_name = WriteToBaseST.Split()[1]; // Проверяем на наличие ника, если он есть, то добавляем данные, если же строка пустая, то не добавляем ничего.
-
-                            if (name_skip_space == 3 && get_name.Length > 0)
-                            {
-                                var p2name = WriteToBaseST.Split()[1];
-                                var p2addr = WriteToBaseST.Split()[3];
-                                if (START_LEVEL_THREAD == 0 || START_LEVEL_THREAD == 4)
-                                    PlayersBaseBuffer.Add("[A]%" + p2name + "%%%" + p2addr + "%%" + Environment.NewLine);
-                                else
-                                    ListplayersEvents.Add("[A]%" + p2name + "%%%" + p2addr + "%%" + Environment.NewLine);
-                            }
-                        }
-                    }
-
-                    if (s.Contains("logged as"))
-                    {
-                        SrvEventsBuffer.Add(s);
-                    }
-                    else if (s.Contains("Access denied"))
-                    {
-                        SrvEventsBuffer.Add(s);
-                    }
-                    else if (s.Contains("! blocked"))
-                    {
-                        var a = s.Replace("! blocked", "stalkazz_attack%%%").Replace(" ", string.Empty);
-                        PlayersBaseBuffer.Add("[IP]%" + a + "%" + Environment.NewLine);
-                        SrvEventsBuffer.Add("[IP]%" + a + "%");
-                    }
-                    else if (s.Contains("! ip attack"))
-                    {
-                        var b = s.Replace("! ip attack", "stalkazz_attack%%%").Replace(" ", string.Empty);
-                        PlayersBaseBuffer.Add("[IP]%" + b + "%" + Environment.NewLine);
-                        SrvEventsBuffer.Add("[IP]%" + b + "%");
-                    }
-                    else if (s.Contains("! too large packet size"))
-                    {
-                        SrvEventsBuffer.Add(s);
-                    }
-                    else if (s.Contains("Disconnecting and Banning: "))
-                    {
-                        SrvEventsBuffer.Add(s);
-                    }
-                    else if (s.Contains("от Заряд ВОГ-25") || s.Contains("M209"))
-                    {
-                        var cmp_line = s.Split()[0];
-                        if ((server_version == 1) && (cmp_line == "*"))
-                            SrvEventsBuffer.Add(s);
-
-                        else if ((server_version == 1) && (cmp_line != "*"))
-                            SrvEventsBuffer.Add("* " + s);
-
-                        else if (server_version == 0)
-                            SrvEventsBuffer.Add("* " + s);
-                    }
-
-                    else if (s.Contains("~ Чат:")) // blue msg                          
-                        SrvEventsBuffer.Add(s);
-
-                    else if (s.Contains("- Чат:")) // green msg                         
-                        SrvEventsBuffer.Add(s);
-
-                    else if (s.Contains("Чат:"))   // dm, spectactor, admin msg                    
-                        SrvEventsBuffer.Add(s);
-                    // ================================ IPBlockedServices ================================
-                    if (START_LEVEL_THREAD == 0 || START_LEVEL_THREAD == 2)
-                    {
-                        if (EventsWeaponsBlockedPlayers.CheckState == CheckState.Checked)
-                        {
-                            if (s.Contains("от Заряд ВОГ-25") || s.Contains("M209"))
-                            {
-                                var cmp_line = s.Split()[0];
-                                if ((server_version == 1) && (cmp_line == "*"))
-                                    SrvPlayersBuffer.Add("@ Weapons Flags -> " + s);
-
-                                else if ((server_version == 1) && (cmp_line != "*"))
-                                    SrvPlayersBuffer.Add("@ Weapons Flags -> * " + s);
-
-                                else if (server_version == 0)
-                                    SrvPlayersBuffer.Add("@ Weapons Flags -> * " + s);
-                            }
-
-                            if (server_version == 0)
-                            {
-                                if (s.Contains("] ping["))
-                                {
-                                    string WriteToBaseST = s.Remove(0, s.IndexOf(": ") + 1);
-                                    WriteToBaseST = WriteToBaseST.Substring(0, WriteToBaseST.LastIndexOf(" port["));
-                                    name_skip_space = WriteToBaseST.Count(simbolcount => simbolcount == ' ');
-                                    var get_name = WriteToBaseST.Split()[1];
-                                    if (name_skip_space == 3 && get_name.Length > 0)
-                                    {
-                                        var p2name = WriteToBaseST.Split()[1];
-                                        var p2addr = WriteToBaseST.Split()[3];
-                                        SrvPlayersBuffer.Add("name: " + p2name + " hash: unknown ip: " + p2addr);
-                                    }
-                                }
-                            }
-                        }
-
-                        if (s.Contains("! ") || (s.Contains("- Banning by id -")))
-                        {
-                            var str = s.Split()[0];
-                            if (str == "!")
-                            {
-                                SrvPlayersBuffer.Add(s + " <-> Server Events");
-                            }
-                            else if (str == "-")
-                            {
-                                SrvPlayersBuffer.Add(s);
-                                int count_max_space_line = s.Count(line => line == ' ');
-                                if (count_max_space_line == 11)
-                                {
-                                    var NAME = s.Split('-')[2];
-                                    var IPs = s.Split()[11];
-                                    FirewallWriteNewRule(2, NAME.Replace(", id ", "").Replace(" ", ""), " [PATCH] IP: ", IPs, "@");
-                                }
-                            }
-                        }
-                    }
-
-
-                    if ((EventsControllerAutoCheckPlayers.CheckState == CheckState.Checked) && (server_version == 1))
-                    {
-                        try
-                        {
-                            if (s.Contains("- | BT"))
-                            {
-                                string print = s.Replace("# srv: ", "");
-                                var STR_NO_CHAT_MSG = print.Split()[1];
-                                if (STR_NO_CHAT_MSG != "Чат:")
-                                {
-                                    var str_find = print.Split()[13];               // HIM
-                                    var str_find_hp = print.Split()[6];             // HP
-                                    var str_find_weapons = print.Split()[2];        // WEAPONS
-
-                                    long converter_hp = long.Parse(str_find_hp.Substring(0, str_find_hp.LastIndexOf("+"))); // HP, можно было проверять и дробные числа :)
-                                    long converter = long.Parse(str_find.Substring(0, str_find.LastIndexOf(".")));
-
-                                    if ((mp_wpn_knife.CheckState == CheckState.Unchecked) && (converter > 120 || str_find_hp.Length >= 8 || converter_hp > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_knife]") && (str_find_weapons != "[mp_actor]"))
-                                    {
-                                        SrvPlayersBuffer.Add(print);
-                                    }
-                                    else if ((mp_wpn_pm.CheckState == CheckState.Unchecked) && (converter > 91 || str_find_hp.Length >= 8 || converter_hp > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_pm]") && (str_find_weapons != "[mp_actor]"))
-                                    {
-                                        SrvPlayersBuffer.Add(print);
-                                    }
-                                    else if ((mp_wpn_fort.CheckState == CheckState.Unchecked) && (converter > 100 || str_find_hp.Length >= 8 || converter_hp > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_fort]") && (str_find_weapons != "[mp_actor]"))
-                                    {
-                                        SrvPlayersBuffer.Add(print);
-                                    }
-                                    else if ((mp_wpn_walther.CheckState == CheckState.Unchecked) && (converter > 131 || str_find_hp.Length >= 8 || converter_hp > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_walther]") && (str_find_weapons != "[mp_actor]"))
-                                    {
-                                        SrvPlayersBuffer.Add(print);
-                                    }
-                                    else if ((mp_wpn_sig220.CheckState == CheckState.Unchecked) && (converter > 126 || str_find_hp.Length >= 8 || converter_hp > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_sig220]") && (str_find_weapons != "[mp_actor]"))
-                                    {
-                                        SrvPlayersBuffer.Add(print);
-                                    }
-                                    else if ((mp_wpn_usp.CheckState == CheckState.Unchecked) && (converter > 126 || str_find_hp.Length >= 8 || converter_hp > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_usp]") && (str_find_weapons != "[mp_actor]"))
-                                    {
-                                        SrvPlayersBuffer.Add(print);
-                                    }
-                                    else if ((mp_wpn_desert_eagle.CheckState == CheckState.Unchecked) && (converter > 144 || str_find_hp.Length >= 8 || converter_hp > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_desert_eagle]") && (str_find_weapons != "[mp_actor]"))
-                                    {
-                                        SrvPlayersBuffer.Add(print);
-                                    }
-                                    else if ((mp_wpn_pb.CheckState == CheckState.Unchecked) && (converter > 72 || str_find_hp.Length >= 8 || converter_hp > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_pb]") && (str_find_weapons != "[mp_actor]"))
-                                    {
-                                        SrvPlayersBuffer.Add(print);
-                                    }
-                                    else if ((mp_wpn_colt1911.CheckState == CheckState.Unchecked) && (converter > 126 || str_find_hp.Length >= 8 || converter_hp > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_colt1911]") && (str_find_weapons != "[mp_actor]"))
-                                    {
-                                        SrvPlayersBuffer.Add(print);
-                                    }
-                                    else if ((mp_wpn_bm16.CheckState == CheckState.Unchecked) && (converter > 315 || str_find_hp.Length >= 8) && (str_find_weapons == "[mp_wpn_bm16]") && (str_find_weapons != "[mp_actor]"))
-                                    {
-                                        SrvPlayersBuffer.Add(print);
-                                    }
-                                    else if ((mp_wpn_wincheaster1300.CheckState == CheckState.Unchecked) && (converter > 315 || str_find_hp.Length >= 8) && (str_find_weapons == "[mp_wpn_wincheaster1300]") && (str_find_weapons != "[mp_actor]"))
-                                    {
-                                        SrvPlayersBuffer.Add(print);
-                                    }
-                                    else if ((mp_wpn_spas12.CheckState == CheckState.Unchecked) && (converter > 315 || str_find_hp.Length >= 8) && (str_find_weapons == "[mp_wpn_spas12]") && (str_find_weapons != "[mp_actor]"))
-                                    {
-                                        SrvPlayersBuffer.Add(print);
-                                    }
-                                    else if ((mp_wpn_ak74u.CheckState == CheckState.Unchecked) && (converter > 140 || str_find_hp.Length >= 8 || converter_hp > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_ak74u]") && (str_find_weapons != "[mp_actor]"))
-                                    {
-                                        SrvPlayersBuffer.Add(print);
-                                    }
-                                    else if ((mp_wpn_ak74.CheckState == CheckState.Unchecked) && (converter > 140 || str_find_hp.Length >= 8 || converter_hp > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_ak74]") && (str_find_weapons != "[mp_actor]"))
-                                    {
-                                        SrvPlayersBuffer.Add(print);
-                                    }
-                                    else if ((mp_wpn_abakan.CheckState == CheckState.Unchecked) && (converter > 140 || str_find_hp.Length >= 8 || converter_hp > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_abakan]") && (str_find_weapons != "[mp_actor]"))
-                                    {
-                                        SrvPlayersBuffer.Add(print);
-                                    }
-                                    else if ((mp_wpn_groza.CheckState == CheckState.Unchecked) && (converter > 184 || str_find_hp.Length >= 8 || converter_hp > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_groza]") && (str_find_weapons != "[mp_actor]"))
-                                    {
-                                        SrvPlayersBuffer.Add(print);
-                                    }
-                                    else if ((mp_wpn_val.CheckState == CheckState.Unchecked) && (converter > 114 || str_find_hp.Length >= 8 || converter_hp > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_val]") && (str_find_weapons != "[mp_actor]"))
-                                    {
-                                        SrvPlayersBuffer.Add(print);
-                                    }
-                                    else if ((mp_wpn_fn2000.CheckState == CheckState.Unchecked) && (converter > 105 || str_find_hp.Length >= 8 || converter_hp > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_fn2000]") && (str_find_weapons != "[mp_actor]"))
-                                    {
-                                        SrvPlayersBuffer.Add(print);
-                                    }
-                                    else if ((mp_wpn_mp5.CheckState == CheckState.Unchecked) && (converter > 210 || str_find_hp.Length >= 8 || converter_hp > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_mp5]") && (str_find_weapons != "[mp_actor]"))
-                                    {
-                                        SrvPlayersBuffer.Add(print);
-                                    }
-                                    else if ((mp_wpn_l85.CheckState == CheckState.Unchecked) && (converter > 140 || str_find_hp.Length >= 8 || converter_hp > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_l85]") && (str_find_weapons != "[mp_actor]"))
-                                    {
-                                        SrvPlayersBuffer.Add(print);
-                                    }
-                                    else if ((mp_wpn_lr300.CheckState == CheckState.Unchecked) && (converter > 140 || str_find_hp.Length >= 8 || converter_hp > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_lr300]") && (str_find_weapons != "[mp_actor]"))
-                                    {
-                                        SrvPlayersBuffer.Add(print);
-                                    }
-                                    else if ((mp_wpn_sig550.CheckState == CheckState.Unchecked) && (converter > 140 || str_find_hp.Length >= 8 || converter_hp > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_sig550]") && (str_find_weapons != "[mp_actor]"))
-                                    {
-                                        SrvPlayersBuffer.Add(print);
-                                    }
-                                    else if ((mp_wpn_g36.CheckState == CheckState.Unchecked) && (converter > 105 || str_find_hp.Length >= 8 || converter_hp > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_g36]") && (str_find_weapons != "[mp_actor]"))
-                                    {
-                                        SrvPlayersBuffer.Add(print);
-                                    }
-                                    else if ((mp_wpn_vintorez.CheckState == CheckState.Unchecked) && (converter > 104 || str_find_hp.Length >= 8 || converter_hp > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_vintorez]") && (str_find_weapons != "[mp_actor]"))
-                                    {
-                                        SrvPlayersBuffer.Add(print);
-                                    }
-                                    else if ((mp_wpn_svu.CheckState == CheckState.Unchecked) && (converter > 224 || str_find_hp.Length >= 8 || converter_hp > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_svu]") && (str_find_weapons != "[mp_actor]"))
-                                    {
-                                        SrvPlayersBuffer.Add(print);
-                                    }
-                                    else if ((mp_wpn_svd.CheckState == CheckState.Unchecked) && (converter > 245 || str_find_hp.Length >= 8 || converter_hp > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_svd]") && (str_find_weapons != "[mp_actor]"))
-                                    {
-                                        SrvPlayersBuffer.Add(print);
-                                    }
-                                    else if ((mp_wpn_gauss.CheckState == CheckState.Unchecked) && (converter > 3001 || str_find_hp.Length >= 8 || converter_hp > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_gauss]") && (str_find_weapons != "[mp_actor]"))
-                                    {
-                                        SrvPlayersBuffer.Add(print);
-                                    }
-                                    if (converter_hp > 40)
-                                    {
-                                        SrvPlayersBuffer.Add(print + " <-> Too many bullets for the value Hit Power".Replace("#", "+"));
-                                    }
-                                }
-                            }
-
                             if (s.Contains("session_id: "))
                             {
-                                string StrListplayers = s.Remove(0, s.IndexOf("name:"));
-                                StrListplayers = StrListplayers.Substring(0, StrListplayers.LastIndexOf("ping: "));
-                                StrListplayers = StrListplayers.Replace(",", "").Replace("(", "").Replace(")", "");                  // 
-                                var get_name = StrListplayers.Split()[1];  // Проверяем на наличие ника, если он есть, то добавляем данные.
-                                if (get_name.Length > 0)
+                                string WriteToBase = s.Remove(0, s.IndexOf("name:"));
+                                WriteToBase = WriteToBase.Substring(0, WriteToBase.LastIndexOf("ping: "));
+                                WriteToBase = WriteToBase.Replace(",", "").Replace("(", "").Replace(")", "");
+
+                                name_skip_space = WriteToBase.Count(simbolcount => simbolcount == ' '); // Число пробелов в строке должно быть всегда 8
+                                var get_name = WriteToBase.Split()[1];          // Проверяем на наличие ника, если он есть, то добавляем данные, если же строка пустая, то не добавляем ничего.
+                                if (get_name.Length > 0 && name_skip_space == 8)
                                 {
-                                    int a = StrListplayers.IndexOf("session_id:");
-                                    int b = StrListplayers.IndexOf("hash:");
-                                    StrListplayers = StrListplayers.Remove(a, b - a);
-                                    SrvPlayersBuffer.Add(StrListplayers);
+                                    int a = WriteToBase.IndexOf("session_id:"); // index start
+                                    int b = WriteToBase.IndexOf("hash:");       // index end
+                                    WriteToBase = WriteToBase.Remove(a, b - a); // remove index   Удаляем все, что находится между session_id и hash + включая эти слова
+                                    var pName = WriteToBase.Split()[1];
+                                    var pHash = WriteToBase.Split()[3];
+                                    var pAddr = WriteToBase.Split()[5];
+                                    if (START_LEVEL_THREAD == 0 || START_LEVEL_THREAD == 4)
+                                        PlayersBaseBuffer.Add("[A]%" + pName + "%%" + pHash + "%" + pAddr + "%" + Environment.NewLine);
+                                    else
+                                        ListplayersEvents.Add("[A]%" + pName + "%%" + pHash + "%" + pAddr + "%" + Environment.NewLine);
+                                    if (EventCheckProxy.CheckState == CheckState.Checked)
+                                        CHECK_PLAYER_INPROXYLIST.Add(pAddr + "%" + pName);
+                                }
+                                else if (name_skip_space > 8)
+                                {
+                                    int str_name = WriteToBase.IndexOf("name:"); // Извлекаем имя игрока
+                                    int str_name_finished = WriteToBase.IndexOf("session_id:");
+                                    var check_name_out = WriteToBase.Substring(str_name, str_name_finished - str_name).Replace("name: ", "").TrimEnd(' ').Replace(" ", "_");
+
+                                    int a = WriteToBase.IndexOf("session_id:"); // index start
+                                    int b = WriteToBase.IndexOf("hash:");       // index end
+                                    WriteToBase = WriteToBase.Remove(a, b - a); // remove index   Удаляем все, что находится между session_id и hash + включая эти слова
+
+                                    if (!(START_LEVEL_THREAD == 0 || START_LEVEL_THREAD == 4))
+                                        ListplayersEvents.Add("[A]%" + check_name_out + "%%[ERROR STRING FORMAT]%" + name_skip_space + "%" + Environment.NewLine);
+                                }
+
+                                // test  
+                                /*      
+                                else if ((get_name.Length == 0) && (START_LEVEL_THREAD == 0))
+                                {
+                                    fakeAddr = WriteToBase.Split()[7];
+                                    if (fakeAddr == fakeAddrCmp)  // null str
+                                    {
+                                        protect++;
+                                        if (protect > 5) // attack
+                                        {
+                                            foreach (string SKIP_BLOCKED in AddressBuffer)
+                                            {
+                                                if (SKIP_BLOCKED.Contains(fakeAddr))
+                                                {
+                                                    protect = 0;
+                                                    break;
+                                                }
+                                            }
+                                            if (protect > 0)
+                                            {
+                                                WriteToCheaterList("FAKE>" + protect, fakeAddr, "[null]", "[null]", 16);
+                                                FirewallWriteNewRule(8, "FAKE", " [FAKEPLAYER] IP: ", fakeAddr, "@");
+                                                protect = 0;
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        fakeAddrCmp = fakeAddr;
+                                        protect = 0;
+                                    }
+                                }*/
+                            }
+                        }
+                        else
+                        {
+                            if (s.Contains("] ping["))
+                            {
+                                string WriteToBaseST = s.Remove(0, s.IndexOf(": ") + 1);
+                                WriteToBaseST = WriteToBaseST.Substring(0, WriteToBaseST.LastIndexOf(" port["));
+                                name_skip_space = WriteToBaseST.Count(simbolcount => simbolcount == ' ');
+                                var get_name = WriteToBaseST.Split()[1];
+
+                                if (name_skip_space == 3 && get_name.Length > 0)
+                                {
+                                    var p2name = WriteToBaseST.Split()[1];
+                                    var p2addr = WriteToBaseST.Split()[3];
+                                    if (START_LEVEL_THREAD == 0 || START_LEVEL_THREAD == 4)
+                                        PlayersBaseBuffer.Add("[A]%" + p2name + "%%%" + p2addr + "%%" + Environment.NewLine);
+                                    else
+                                        ListplayersEvents.Add("[A]%" + p2name + "%%%" + p2addr + "%%" + Environment.NewLine);
                                 }
                             }
                         }
-                        catch (Exception ex)
+
+                        if (s.Contains("logged as") || s.Contains("Access denied") || s.Contains("! too large packet size") || s.Contains("Disconnecting and Banning: ") || s.Contains("~ Чат:") || s.Contains("- Чат:") || s.Contains("Чат:"))
                         {
-                            ERROR_COUNTER++;
-                            ListCheaterEvents.Items.Add((DateTime.Now.ToString("[dd.MM.yyyy]: ")) + "[AntiCheatThread]: Ошибка выполнения команды => " + ex.Message).BackColor = Color.Lime;
+                            SrvEventsBuffer.Add(s);
+                        }
+
+                        else if (s.Contains("от Заряд ВОГ-25") || s.Contains("M209"))
+                        {
+                            var cmp_line = s.Split()[0];
+                            if ((server_version == 1) && (cmp_line == "*"))
+                                SrvEventsBuffer.Add(s);
+
+                            else if ((server_version == 1) && (cmp_line != "*"))
+                                SrvEventsBuffer.Add("* " + s);
+
+                            else if (server_version == 0)
+                                SrvEventsBuffer.Add("* " + s);
+                        }
+
+                        else if (s.Contains("! blocked") || s.Contains("! ip attack"))
+                        {
+                            var a = s.Replace("! blocked", "stalkazz_attack%%%").Replace("! ip attack", "stalkazz_attack%%%").Replace(" ", string.Empty);
+                            PlayersBaseBuffer.Add("[IP]%" + a + "%" + Environment.NewLine);
+                            SrvEventsBuffer.Add("[IP]%" + a + "%");
+                        }
+
+                        if (START_LEVEL_THREAD == 0 || START_LEVEL_THREAD == 2)
+                        {
+                            if (EventsWeaponsBlockedPlayers.CheckState == CheckState.Checked)
+                            {
+                                if (s.Contains("от Заряд ВОГ-25") || s.Contains("M209"))
+                                {
+                                    var cmp_line = s.Split()[0];
+                                    if ((server_version == 1) && (cmp_line == "*"))
+                                        SrvPlayersBuffer.Add("@ Weapons Flags -> " + s);
+
+                                    else if ((server_version == 1) && (cmp_line != "*"))
+                                        SrvPlayersBuffer.Add("@ Weapons Flags -> * " + s);
+
+                                    else if (server_version == 0)
+                                        SrvPlayersBuffer.Add("@ Weapons Flags -> * " + s);
+                                }
+
+                                if (server_version == 0)
+                                {
+                                    if (s.Contains("] ping["))
+                                    {
+                                        string WriteToBaseST = s.Remove(0, s.IndexOf(": ") + 1);
+                                        WriteToBaseST = WriteToBaseST.Substring(0, WriteToBaseST.LastIndexOf(" port["));
+                                        name_skip_space = WriteToBaseST.Count(simbolcount => simbolcount == ' ');
+                                        var get_name = WriteToBaseST.Split()[1];
+                                        if (name_skip_space == 3 && get_name.Length > 0)
+                                        {
+                                            var p2name = WriteToBaseST.Split()[1];
+                                            var p2addr = WriteToBaseST.Split()[3];
+                                            SrvPlayersBuffer.Add("name: " + p2name + " hash: unknown ip: " + p2addr);
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (s.Contains("! ") || (s.Contains("- Banning by id -")))
+                            {
+                                var str = s.Split()[0];
+                                if (str == "!")
+                                {
+                                    SrvPlayersBuffer.Add(s);
+                                }
+                                else if (str == "-")
+                                {
+                                    SrvPlayersBuffer.Add(s);
+                                    int count_max_space_line = s.Count(line => line == ' ');
+                                    if ((count_max_space_line == 11) && (EventsControllerBlockedPlayers.CheckState == CheckState.Checked))
+                                    {
+                                        var NAME = s.Split('-')[2];
+                                        var IPs = s.Split()[11];
+                                        BlockedClient(2, NAME.Replace(", id ", "").Replace(" ", ""), " [PATCH] IP: ", IPs, "@");
+                                    }
+                                }
+                            }
+                        }
+
+                        if ((EventsControllerAutoCheckPlayers.CheckState == CheckState.Checked) && (server_version == 1))
+                        {
+                            try
+                            {
+                                if (s.Contains("- | BT"))
+                                {
+                                    string print = s.Replace("# srv: ", "");
+                                    var STR_NO_CHAT_MSG = print.Split()[1];
+                                    if (STR_NO_CHAT_MSG != "Чат:")
+                                    {
+                                        var str_find_impulse = print.Split()[13];
+                                        var str_find_hp = print.Split()[6];
+                                        var str_find_weapons = print.Split()[2];
+
+                                        long HITPOWER = long.Parse(str_find_hp.Substring(0, str_find_hp.LastIndexOf("+")));
+                                        long IMPULSE = long.Parse(str_find_impulse.Substring(0, str_find_impulse.LastIndexOf(".")));
+
+                                        if ((mp_wpn_knife.CheckState == CheckState.Unchecked) && (IMPULSE > 120 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_knife]") && (str_find_weapons != "[mp_actor]"))
+                                        {
+                                            SrvPlayersBuffer.Add(print);
+                                        }
+                                        else if ((mp_wpn_pm.CheckState == CheckState.Unchecked) && (IMPULSE > 91 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_pm]") && (str_find_weapons != "[mp_actor]"))
+                                        {
+                                            SrvPlayersBuffer.Add(print);
+                                        }
+                                        else if ((mp_wpn_fort.CheckState == CheckState.Unchecked) && (IMPULSE > 100 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_fort]") && (str_find_weapons != "[mp_actor]"))
+                                        {
+                                            SrvPlayersBuffer.Add(print);
+                                        }
+                                        else if ((mp_wpn_walther.CheckState == CheckState.Unchecked) && (IMPULSE > 131 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_walther]") && (str_find_weapons != "[mp_actor]"))
+                                        {
+                                            SrvPlayersBuffer.Add(print);
+                                        }
+                                        else if ((mp_wpn_sig220.CheckState == CheckState.Unchecked) && (IMPULSE > 126 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_sig220]") && (str_find_weapons != "[mp_actor]"))
+                                        {
+                                            SrvPlayersBuffer.Add(print);
+                                        }
+                                        else if ((mp_wpn_usp.CheckState == CheckState.Unchecked) && (IMPULSE > 126 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_usp]") && (str_find_weapons != "[mp_actor]"))
+                                        {
+                                            SrvPlayersBuffer.Add(print);
+                                        }
+                                        else if ((mp_wpn_desert_eagle.CheckState == CheckState.Unchecked) && (IMPULSE > 144 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_desert_eagle]") && (str_find_weapons != "[mp_actor]"))
+                                        {
+                                            SrvPlayersBuffer.Add(print);
+                                        }
+                                        else if ((mp_wpn_pb.CheckState == CheckState.Unchecked) && (IMPULSE > 72 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_pb]") && (str_find_weapons != "[mp_actor]"))
+                                        {
+                                            SrvPlayersBuffer.Add(print);
+                                        }
+                                        else if ((mp_wpn_colt1911.CheckState == CheckState.Unchecked) && (IMPULSE > 126 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_colt1911]") && (str_find_weapons != "[mp_actor]"))
+                                        {
+                                            SrvPlayersBuffer.Add(print);
+                                        }
+                                        else if ((mp_wpn_bm16.CheckState == CheckState.Unchecked) && (IMPULSE > 315 || str_find_hp.Length >= 8) && (str_find_weapons == "[mp_wpn_bm16]") && (str_find_weapons != "[mp_actor]"))
+                                        {
+                                            SrvPlayersBuffer.Add(print);
+                                        }
+                                        else if ((mp_wpn_wincheaster1300.CheckState == CheckState.Unchecked) && (IMPULSE > 315 || str_find_hp.Length >= 8) && (str_find_weapons == "[mp_wpn_wincheaster1300]") && (str_find_weapons != "[mp_actor]"))
+                                        {
+                                            SrvPlayersBuffer.Add(print);
+                                        }
+                                        else if ((mp_wpn_spas12.CheckState == CheckState.Unchecked) && (IMPULSE > 315 || str_find_hp.Length >= 8) && (str_find_weapons == "[mp_wpn_spas12]") && (str_find_weapons != "[mp_actor]"))
+                                        {
+                                            SrvPlayersBuffer.Add(print);
+                                        }
+                                        else if ((mp_wpn_ak74u.CheckState == CheckState.Unchecked) && (IMPULSE > 140 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_ak74u]") && (str_find_weapons != "[mp_actor]"))
+                                        {
+                                            SrvPlayersBuffer.Add(print);
+                                        }
+                                        else if ((mp_wpn_ak74.CheckState == CheckState.Unchecked) && (IMPULSE > 140 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_ak74]") && (str_find_weapons != "[mp_actor]"))
+                                        {
+                                            SrvPlayersBuffer.Add(print);
+                                        }
+                                        else if ((mp_wpn_abakan.CheckState == CheckState.Unchecked) && (IMPULSE > 140 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_abakan]") && (str_find_weapons != "[mp_actor]"))
+                                        {
+                                            SrvPlayersBuffer.Add(print);
+                                        }
+                                        else if ((mp_wpn_groza.CheckState == CheckState.Unchecked) && (IMPULSE > 184 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_groza]") && (str_find_weapons != "[mp_actor]"))
+                                        {
+                                            SrvPlayersBuffer.Add(print);
+                                        }
+                                        else if ((mp_wpn_val.CheckState == CheckState.Unchecked) && (IMPULSE > 114 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_val]") && (str_find_weapons != "[mp_actor]"))
+                                        {
+                                            SrvPlayersBuffer.Add(print);
+                                        }
+                                        else if ((mp_wpn_fn2000.CheckState == CheckState.Unchecked) && (IMPULSE > 105 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_fn2000]") && (str_find_weapons != "[mp_actor]"))
+                                        {
+                                            SrvPlayersBuffer.Add(print);
+                                        }
+                                        else if ((mp_wpn_mp5.CheckState == CheckState.Unchecked) && (IMPULSE > 210 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_mp5]") && (str_find_weapons != "[mp_actor]"))
+                                        {
+                                            SrvPlayersBuffer.Add(print);
+                                        }
+                                        else if ((mp_wpn_l85.CheckState == CheckState.Unchecked) && (IMPULSE > 140 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_l85]") && (str_find_weapons != "[mp_actor]"))
+                                        {
+                                            SrvPlayersBuffer.Add(print);
+                                        }
+                                        else if ((mp_wpn_lr300.CheckState == CheckState.Unchecked) && (IMPULSE > 140 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_lr300]") && (str_find_weapons != "[mp_actor]"))
+                                        {
+                                            SrvPlayersBuffer.Add(print);
+                                        }
+                                        else if ((mp_wpn_sig550.CheckState == CheckState.Unchecked) && (IMPULSE > 140 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_sig550]") && (str_find_weapons != "[mp_actor]"))
+                                        {
+                                            SrvPlayersBuffer.Add(print);
+                                        }
+                                        else if ((mp_wpn_g36.CheckState == CheckState.Unchecked) && (IMPULSE > 105 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_g36]") && (str_find_weapons != "[mp_actor]"))
+                                        {
+                                            SrvPlayersBuffer.Add(print);
+                                        }
+                                        else if ((mp_wpn_vintorez.CheckState == CheckState.Unchecked) && (IMPULSE > 104 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_vintorez]") && (str_find_weapons != "[mp_actor]"))
+                                        {
+                                            SrvPlayersBuffer.Add(print);
+                                        }
+                                        else if ((mp_wpn_svu.CheckState == CheckState.Unchecked) && (IMPULSE > 224 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_svu]") && (str_find_weapons != "[mp_actor]"))
+                                        {
+                                            SrvPlayersBuffer.Add(print);
+                                        }
+                                        else if ((mp_wpn_svd.CheckState == CheckState.Unchecked) && (IMPULSE > 245 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_svd]") && (str_find_weapons != "[mp_actor]"))
+                                        {
+                                            SrvPlayersBuffer.Add(print);
+                                        }
+                                        else if ((mp_wpn_gauss.CheckState == CheckState.Unchecked) && (IMPULSE > 3001 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_gauss]") && (str_find_weapons != "[mp_actor]"))
+                                        {
+                                            SrvPlayersBuffer.Add(print);
+                                        }
+                                        if (HITPOWER > 40)
+                                        {
+                                            SrvPlayersBuffer.Add(print + " <-> Too many bullets for the value Hit Power");
+                                        }
+                                    }
+                                }
+
+                                if (s.Contains("session_id: "))
+                                {
+                                    string StrListplayers = s.Remove(0, s.IndexOf("name:"));
+                                    StrListplayers = StrListplayers.Substring(0, StrListplayers.LastIndexOf("ping: "));
+                                    StrListplayers = StrListplayers.Replace(",", "").Replace("(", "").Replace(")", "");
+                                    var get_name = StrListplayers.Split()[1];
+                                    if (get_name.Length > 0)
+                                    {
+                                        int a = StrListplayers.IndexOf("session_id:");
+                                        int b = StrListplayers.IndexOf("hash:");
+                                        StrListplayers = StrListplayers.Remove(a, b - a);
+                                        SrvPlayersBuffer.Add(StrListplayers);
+                                    }
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                LogProc(ex.Message + Environment.NewLine);
+                                ERROR_COUNTER++;
+                                ListCheaterEvents.Items.Add((DateTime.Now.ToString("[dd.MM.yyyy]: ")) + "[AntiCheatThread]: Ошибка выполнения команды => " + ex.Message).BackColor = Color.Lime;
+                            }
                         }
                     }
                 }
+                FinishReadIndex = StartReadIndex;
             }
             catch (Exception ex)
             {
+                LogProc(ex.Message + Environment.NewLine);
                 ERROR_COUNTER++;
                 listEventsSrv.Items.Add((DateTime.Now.ToString("[dd.MM.yyyy]: ")) + "[AutoScanBaseThread]: Ошибка выполнения команды => " + ex.Message).BackColor = Color.Lime;
-            }
+            } 
 
             foreach (string Messages in SrvEventsBuffer)
             {
@@ -945,34 +932,34 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
 
                     if (color_msg + " " + check_msg == "- Чат:")
                     {
-                        if (Messages.Length > 250)
+                        if (Messages.Length > 200)
                             server_chat_warning++;
                     }
                     else if (color_msg + " " + check_msg == "~ Чат:")
                     {
-                        if (Messages.Length > 250)
+                        if (Messages.Length > 200)
                             server_chat_warning++;
                     }
                     else if ((color_msg + " " + check_msg.Length == "Чат: " + check_msg.Length) && (check_msg != "ServerAdmin"))
                     {
-                        if (Messages.Length > 250)
+                        if (Messages.Length > 200)
                             server_chat_warning++;
                     }
                 }
             }
 
-            // Заносим данные в CHEATERLISTPLAYERS за Статистику
+
             if ((EventsControllerAutoCheckPlayers.CheckState == CheckState.Checked) && (server_version == 1))
             {
-                foreach (string getplayers in SrvPlayersBuffer)
+                foreach (string ICHEATER in SrvPlayersBuffer)
                 {
-                    if (getplayers.Contains("- | BT"))
+                    if (ICHEATER.Contains("- | BT"))
                     {
-                        string print = getplayers.Remove(0, getplayers.IndexOf("#"));
-                        var str_find_name = getplayers.Split()[1];                                    // NAME
-                        var str_find_weapons = getplayers.Split()[2];                                 // NAME WEAPONS
+                        string print = ICHEATER.Remove(0, ICHEATER.IndexOf("#"));
+                        var str_find_name = ICHEATER.Split()[1];                                      // NAME
+                        var str_find_weapons = ICHEATER.Split()[2];                                   // NAME WEAPONS
                         var str_find_hp = print.Split()[6];                                           // HP
-                        var str_find = getplayers.Split()[13];                                        // выдергиваем только показатели HIM (целое число)
+                        var str_find = ICHEATER.Split()[13];                                          // выдергиваем только показатели HIM (целое число)
                         str_find = str_find.Substring(0, str_find.LastIndexOf("."));                  // удаляем все после точки, оставляем целое число
                         {                                                                             // Input # Name [weapon] HT 0 HP 1+900.00 - BT 18 HIM 900 K_AP 0.00
                             if (print.Contains("| HIM " + str_find))                                  // Проверяем, точно ли у нашего игрока завышенный HIM
@@ -997,20 +984,19 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                 }
             }
 
-            // Заносим данные в CHEATERLISTPLAYERS за Тяжелое Снаряжение
             if (EventsWeaponsBlockedPlayers.CheckState == CheckState.Checked)
             {
-                int CheckLine = 0; // проверка корректности пробелов в строке 
-                foreach (string str in SrvEventsBuffer)
+                int CheckMaxSpaceInLine = 0;
+                foreach (string AddCheaterlistReasonWeaponUsage in SrvEventsBuffer)
                 {
-                    if (str.Contains("от Заряд ВОГ-25") || str.Contains("M209"))
+                    if (AddCheaterlistReasonWeaponUsage.Contains("от Заряд ВОГ-25") || AddCheaterlistReasonWeaponUsage.Contains("M209"))
                     {
-                        var StartLine = str.Split()[0];
-                        var PNAME = str.Split()[1];
-                        CheckLine = str.Count(simbolcount => simbolcount == ' ');
-                        if (str.Contains(StartLine + " " + PNAME) && (CheckLine == 5 || CheckLine == 6) && (StartLine == "*"))
+                        var StartLine = AddCheaterlistReasonWeaponUsage.Split()[0];
+                        var PNAME = AddCheaterlistReasonWeaponUsage.Split()[1];
+                        CheckMaxSpaceInLine = AddCheaterlistReasonWeaponUsage.Count(simbolcount => simbolcount == ' ');
+                        if (AddCheaterlistReasonWeaponUsage.Contains(StartLine + " " + PNAME) && (CheckMaxSpaceInLine == 5 || CheckMaxSpaceInLine == 6) && (StartLine == "*"))
                         {
-                            var CMP_PNAME = str.Split()[1];
+                            var CMP_PNAME = AddCheaterlistReasonWeaponUsage.Split()[1];
                             if (CMP_PNAME == PNAME)
                             {
                                 foreach (string s in SrvPlayersBuffer)
@@ -1034,31 +1020,10 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
 
             try
             {
-                PlayersCheaterList.Items.Clear();
-                foreach (string add_ip in CHEATERPLAYERSLIST)
-                {
-                    string[] values = add_ip.Split('%');
-                    if (add_ip.Contains("% [CHEATER] "))
-                    {
-                        PlayersCheaterList.Items.Add(new ListViewItem(values)).BackColor = Color.Violet;
-                    }
-                    else if (add_ip.Contains("% [HWEAPONS] "))
-                    {
-                        PlayersCheaterList.Items.Add(new ListViewItem(values)).BackColor = Color.PaleVioletRed;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                ERROR_COUNTER++;
-                ListCheaterEvents.Items.Add("[ThreadListplayers]: Error in function drawing table => " + ex.Message);
-            }
+                LoadInCheaterList();
 
-            try
-            {
                 EventsCount = 0;
                 ADDRESS_COUNTER_AUTO = 0;
-
                 foreach (string add_ip in CHEATERPLAYERSLIST)  // Пробегаемся по всему списку построчно
                 {
                     EventsCount = 0;
@@ -1098,14 +1063,11 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                             {
                                 if (SV_LISTPLAYERS_COUNT_IN_LIST.Contains(CMP_GETNAME))
                                     if (SV_LISTPLAYERS_COUNT_IN_LIST.Contains("% [CHEATER] "))
-                                            ADDRESS_COUNTER_AUTO++;
+                                        ADDRESS_COUNTER_AUTO++;
                             }
                             if ((ADDRESS_COUNTER_AUTO == 1) && (server_version == 1))
                             {
-                                FirewallWriteNewRule(2, CMP_GETNAME, " Flags:[" + EventsCount + "/" + EventsControllerMaxLimit.Value + "] IP: ", GETIP, GETHASH);
-                                Thread.Sleep(1000);
-                                if (AutoServerHide.CheckState == CheckState.Checked)
-                                    HideServer();
+                                BlockedClient(2, CMP_GETNAME, " Flags:[" + EventsCount + "/" + EventsControllerMaxLimit.Value + "] IP: ", GETIP, GETHASH);
                             }
                         }
 
@@ -1118,11 +1080,9 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                                     if (SV_LISTPLAYERS_COUNT_IN_LIST.Contains("% [HWEAPONS] "))
                                         ADDRESS_COUNTER_AUTO++;
                             }
-
                             if (ADDRESS_COUNTER_AUTO == 1)
                             {
-                                FirewallWriteNewRule(4, CMP_GETNAME, " Flags:[" + EventsWeaponsCount + "/" + EventsWeaponsMaxLimit.Value + "] IP: ", GETIP, GETHASH);
-                                Thread.Sleep(1000);
+                                BlockedClient(4, CMP_GETNAME, " Flags:[" + EventsWeaponsCount + "/" + EventsWeaponsMaxLimit.Value + "] IP: ", GETIP, GETHASH);
                             }
                         }
 
@@ -1188,8 +1148,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                                         if ((proxy_skip_block == 0) && (block_ready == 1))
                                         {
                                             WriteToCheaterList(pName, pAddress, "null", "[null]", 8);
-                                            FirewallWriteNewRule(8, pName, " [PROXY] IP: ", pAddress, GETHASH);
-                                            Thread.Sleep(1000);
+                                            BlockedClient(8, pName, " [PROXY] IP: ", pAddress, GETHASH);
                                         }
                                     }
                                 }
@@ -1207,26 +1166,15 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                     WinFirewallActivate.Checked = false;
                     ListCheaterBlockedEvents.Items.Add("[PROCESS FIREWALL FINISHED WITH ERROR]: Process Deactivate: " + AddressBuffer.Count + " < " + SIGNAL_BANNED).BackColor = Color.Red;
                 }
-            }
-            catch (Exception)
-            {
-                ERROR_COUNTER++;
-            }
 
-            // Обновить данные мы можем только если пользователь перевел программу в автоматический режим, или же принудительно решил перенести все данные в базу данных.
-            if (START_LEVEL_THREAD == 0 || START_LEVEL_THREAD == 4)
-            {
-                try
+                if (START_LEVEL_THREAD == 0 || START_LEVEL_THREAD == 4)
                 {
                     if (handler_writer_base != PlayersBaseBuffer.Count)
                     {
                         Save(string.Concat(PlayersBaseBuffer));
-                        // Подсчитаем количество новых игроков
                         int get_state = (PlayersBaseBuffer.Count - handler_writer_base);
                         for (int i = 0; i < get_state; i++)
                             statistics_new_players++;
-
-                        GUI_INFO_3.Text = "Новых игроков: " + statistics_new_players;
                         handler_writer_base = PlayersBaseBuffer.Count;
                     }
 
@@ -1235,12 +1183,18 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                         BaseEvents.Add(WriteEventsInBuffer);
                     }
 
+                    if (SrvEventsBuffer.Count > 5000)
+                    {
+                        SrvEventsBuffer.Clear();
+                    }
+
+                    GUI_INFO_3.Text = "Новых игроков: " + statistics_new_players;
                     GUI_INFO_BASE.Text = "Игроков в базе: " + PlayersBaseBuffer.Count;
                     GUI_INFO_2.Text = "Атак на сервер: " + (server_chat_warning + server_attack_blocked);
                     str_base_value.Text = "Данных в базе: " + PlayersBaseBuffer.Count;
                     GUI_INFO_EVENTS.Text = "Игровых событий: " + SrvEventsBuffer.Count;
-                    GUI_STATUS.BackColor = Color.White;
                     GUI_STATUS.Text = "Обработка не требуется";
+                    GUI_STATUS.BackColor = Color.White;
                     if ((EventsControllerAutoCheckPlayers.CheckState == CheckState.Checked) && (server_version == 1))
                     {
                         if (SIGNAL_BANNED > 0)
@@ -1252,40 +1206,37 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                             GUI_INFO_1.Text = "Нарушителей: " + CHEATERPLAYERSLIST.Count;
                         }
                     }
-                    if ((EventsAutoDelete.CheckState == CheckState.Checked) && (SrvEventsBuffer.Count >= 1000))
-                    {
-                        SrvEventsBuffer.Clear();
-                    }
                 }
-                catch (ArgumentNullException ex)
+                else
                 {
-                    ERROR_COUNTER++;
-                    ListCheaterBlockedEvents.Items.Add("[ERROR]: " + ex.Message).BackColor = Color.Red;
+                    events_load();
                 }
             }
-            else
+            catch (Exception ex)
             {
-                events_load();
-                ClickUpdate();
+                LogProc(ex.Message + Environment.NewLine);
+                ERROR_COUNTER++;
+                ListCheaterBlockedEvents.Items.Add("[ERROR]: " + ex.Message).BackColor = Color.Red;
             }
         }
 
-        private void FirewallWriteNewRule(int Description, string pName, string Flags, string pAddr, string pHash)
+        bool SubnetActivate = false;
+        private void BlockedClient(int Description, string pName, string Flags, string pAddr, string pHash)
         {
             try
             {
-                string desc = null;
 
-                foreach (string AdressInBlocked in AddressBuffer)
+                string desc = null;
+                foreach (string FoundAddressInBlocked in AddressBuffer)
                 {
-                    if (AdressInBlocked.Contains(pAddr))
+                    if (FoundAddressInBlocked.Contains(pAddr))
                     {
                         return;
                     }
                 }
 
                 int address_format = pAddr.Count(address_check_symbol => address_check_symbol == '.');
-                if ((Description > 0) && (pAddr.Length >= 7 && pAddr.Length <= 15 && pAddr != "0.0.0.0" && pAddr != "127.0.0.1" && pAddr != "255.255.255.255") && (address_format == 3))
+                if ((Description > 0) && (Description == 16 || (pAddr.Length >= 7 && pAddr.Length <= 15 && pAddr != "0.0.0.0" && pAddr != "127.0.0.1" && pAddr != "255.255.255.255") && (address_format == 3)))
                 {
                     if (Description == 2)
                     {
@@ -1293,6 +1244,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                         SrvPlayersBuffer.Add("~ " + pName + " =============== Banned Address: " + pAddr + " =============== " + Flags); // All Server Events
                         WriteToCheaterList(pName, pAddr, pHash, Flags.Replace("Flags:", "").Replace("IP:", ""), 2);                     // Write info in table
                         PlayersBaseBuffer.Add("[V+]%" + pName + "%[CHEATER]:" + Flags.Replace(" IP:", "").Replace(" Flags:", "Flags: ").Replace(" ", "") + "%" + pHash + "%" + pAddr + Environment.NewLine);
+                        Thread.Sleep(1000);
                         if (EventsControllerCheckPlayers.CheckState == CheckState.Checked)
                         {
                             EXPORT_DATA_TO_HTML(pName, pAddr, @"PlayersDataBase\html_cheater_base\" + pName.Replace((char)0x22, (char)0x5F).Replace((char)0x2F, (char)0x5F).Replace((char)0x5C, (char)0x5F).Replace((char)0x3C, (char)0x5F).Replace((char)0x3E, (char)0x5F).Replace((char)0x3A, (char)0x5F).Replace((char)0x7C, (char)0x5F).Replace((char)0x3F, (char)0x5F).Replace((char)0x2A, (char)0x5F) + DateTime.Now.ToString(" [dd.MM.yyyy--HH-mm-ss]") + "[CHEATER].html", @"<hr><br/><font style='color:Green'>Файл сформирован программой S.E.R.V.E.R - Shadow Of Chernobyl в Автоматическом режиме в: " + DateTime.Now + "</font>");
@@ -1308,6 +1260,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                         desc = " [HWEAPONS] ";
                         SrvPlayersBuffer.Add("~ " + pName + " =============== Banned Address: " + pAddr + " =============== " + Flags);
                         WriteToCheaterList(pName, pAddr, pHash, Flags.Replace("Flags:", "").Replace("IP:", ""), 4);
+                        Thread.Sleep(1000);
                         if (EventsControllerTrayMessage.CheckState == CheckState.Checked)
                         {
                             notifyIcon.ShowBalloonTip(1000, "Заблокирован нарушитель", "Name: " + pName + "\nReason: [HWEAPONS]:" + Flags.Replace(" IP:", "\nIP:") + pAddr, ToolTipIcon.Warning);
@@ -1320,22 +1273,35 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                     }
 
                     if (EventsBlockedSubnet.CheckState == CheckState.Checked)
-                    {
-                        FirewallMsgTransferAddress.FirewallAddress = pAddr + "/" + AddressByteMask.Text;
-                    }
+                        SubnetActivate = true;
                     else
-                    {
-                        FirewallMsgTransferAddress.FirewallAddress = pAddr;
-                    }
-                    FirewallMsgTransferAddress.FirewallTextBox = desc + pName.Replace((char)0x22, (char)0x5F).Replace((char)0x2F, (char)0x5F).Replace((char)0x5C, (char)0x5F).Replace((char)0x3C, (char)0x5F).Replace((char)0x3E, (char)0x5F).Replace((char)0x3A, (char)0x5F).Replace((char)0x7C, (char)0x5F).Replace((char)0x3F, (char)0x5F).Replace((char)0x2A, (char)0x5F) + Flags;
-                    IPBlockedServices.FirewallNewRuleCreate();
+                        SubnetActivate = false;
+
+                    IPBlockedServices.FirewallNewRuleCreate(desc + pName.Replace((char)0x22, (char)0x5F).Replace((char)0x2F, (char)0x5F).Replace((char)0x5C, (char)0x5F).Replace((char)0x3C, (char)0x5F).Replace((char)0x3E, (char)0x5F).Replace((char)0x3A, (char)0x5F).Replace((char)0x7C, (char)0x5F).Replace((char)0x3F, (char)0x5F).Replace((char)0x2A, (char)0x5F) + Flags, pAddr, SubnetActivate, AddressByteMask.Text);
                     FirewallAddressBaseLoad();
-                    SIGNAL_BANNED++;        // Для контрольной сверки кол-ва блокированных адресов в буфере программы и в листе FireWall. Если SIGNAL_BANNED > FirewallList то мы отключаем авто проверку
+                    SIGNAL_BANNED++;  // Exit == AddressBuffer.Count < SIGNAL_BANNED 
                 }
             }
             catch (Exception)
             {
                 ERROR_COUNTER++;
+            }
+        }
+
+        private void LoadInCheaterList()
+        {
+            PlayersCheaterList.Items.Clear();
+            foreach (string add_ip in CHEATERPLAYERSLIST)
+            {
+                string[] values = add_ip.Split('%');
+                if (add_ip.Contains("% [CHEATER] "))
+                {
+                    PlayersCheaterList.Items.Add(new ListViewItem(values)).BackColor = Color.Violet;
+                }
+                else if (add_ip.Contains("% [HWEAPONS] "))
+                {
+                    PlayersCheaterList.Items.Add(new ListViewItem(values)).BackColor = Color.PaleVioletRed;
+                }
             }
         }
 
@@ -1399,8 +1365,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                     StartAutoCheckThread.Enabled = true;
                     try
                     {
-                        // используется старый интерфейс
-                        if (EventsChangeWindow.CheckState == CheckState.Checked)
+                        if (EventsChangeWindow.CheckState == CheckState.Checked) // используется старый интерфейс
                         {
                             listBase.Items.Clear();
 
@@ -1410,16 +1375,15 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                                 listBase.Items.Add(new ListViewItem(values));
                             }
                         }
-                        else
+                        else  // используется новый интерфейс     
                         {
-                            // используется новый интерфейс     
                             ListTableChange1.Items.Clear();
                             foreach (string ipblocked in SrvEventsBuffer)
                             {
                                 if (ipblocked.Contains("stalkazz_attack"))
                                 {
                                     var IP = ipblocked.Split('%')[4];
-                                    var blocked = ipblocked.Replace("stalkazz_attack", "[ATTACK]: " + IP);
+                                    var blocked = ipblocked.Replace("stalkazz_attack", "[ATTACK]:" + IP);
                                     string[] values = blocked.Split('%');
                                     ListTableChange1.Items.Add(new ListViewItem(values)).BackColor = Color.DeepPink;
                                 }
@@ -1446,14 +1410,13 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                                             }
                                         }
 
-                                        // Check Size Chat
-                                        foreach (string chat in SrvEventsBuffer)
+                                        foreach (string CheckChatSize in SrvEventsBuffer)
                                         {
-                                            if (chat.Contains("~ Чат: " + PNAME))
+                                            if (CheckChatSize.Contains("~ Чат: " + PNAME))
                                             {
-                                                if (chat.Length >= 150)
+                                                if (CheckChatSize.Length >= 150)
                                                 {
-                                                    var correct_msg = chat.Split(':')[1].Replace(" ", "");
+                                                    var correct_msg = CheckChatSize.Split(':')[1].Replace(" ", "");
                                                     if (correct_msg == PNAME)
                                                     {
                                                         color_str = 8;
@@ -1463,7 +1426,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                                                 }
                                                 else
                                                 {
-                                                    var correct_msg = chat.Split(':')[1].Replace(" ", "");
+                                                    var correct_msg = CheckChatSize.Split(':')[1].Replace(" ", "");
                                                     if (correct_msg == PNAME)
                                                     {
                                                         color_str = 10;
@@ -1472,11 +1435,11 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                                                 }
                                             }
 
-                                            else if (chat.Contains("- Чат: " + PNAME))
+                                            else if (CheckChatSize.Contains("- Чат: " + PNAME))
                                             {
-                                                if (chat.Length >= 150)
+                                                if (CheckChatSize.Length >= 150)
                                                 {
-                                                    var correct_msg = chat.Split(':')[1].Replace(" ", "");
+                                                    var correct_msg = CheckChatSize.Split(':')[1].Replace(" ", "");
                                                     if (correct_msg == PNAME)
                                                     {
                                                         color_str = 8;
@@ -1486,7 +1449,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                                                 }
                                                 else
                                                 {
-                                                    var correct_msg = chat.Split(':')[1].Replace(" ", "");
+                                                    var correct_msg = CheckChatSize.Split(':')[1].Replace(" ", "");
                                                     if (correct_msg == PNAME)
                                                     {
                                                         color_str = 10;
@@ -1495,11 +1458,11 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                                                 }
                                             }
 
-                                            else if (chat.Contains("Чат: " + PNAME))
+                                            else if (CheckChatSize.Contains("Чат: " + PNAME))
                                             {
-                                                if (chat.Length >= 150)
+                                                if (CheckChatSize.Length >= 150)
                                                 {
-                                                    var correct_msg = chat.Split(':')[1].Replace(" ", "");
+                                                    var correct_msg = CheckChatSize.Split(':')[1].Replace(" ", "");
                                                     if (correct_msg == PNAME)
                                                     {
                                                         color_str = 8;
@@ -1509,7 +1472,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                                                 }
                                                 else
                                                 {
-                                                    var correct_msg = chat.Split(':')[1].Replace(" ", "");
+                                                    var correct_msg = CheckChatSize.Split(':')[1].Replace(" ", "");
                                                     if (correct_msg == PNAME)
                                                     {
                                                         color_str = 10;
@@ -1712,33 +1675,16 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
         {
             try
             {
-                int cmp = 0;
-                string checkName = PlayersCheaterList.FocusedItem.SubItems[0].Text.Replace(" ", string.Empty).Replace((char)0x22, (char)0x5F).Replace((char)0x2F, (char)0x5F).Replace((char)0x5C, (char)0x5F).Replace((char)0x3C, (char)0x5F).Replace((char)0x3E, (char)0x5F).Replace((char)0x3A, (char)0x5F).Replace((char)0x7C, (char)0x5F).Replace((char)0x3F, (char)0x5F).Replace((char)0x2A, (char)0x5F);
+                string checkName = PlayersCheaterList.FocusedItem.SubItems[0].Text.Replace(" ", string.Empty);
                 string checkAddr = PlayersCheaterList.FocusedItem.SubItems[1].Text.Replace(" ", string.Empty);
-                foreach (string counter in AddressBuffer)
-                {
-                    if (counter.Contains(checkAddr))                
-                        cmp++;               
-                }
-                if (cmp == 0)
-                {
-                    FirewallMsgTransferAddress.FirewallAddress = checkAddr;
-                    FirewallMsgTransferAddress.FirewallTextBox = " [ADMIN] " + checkName + " Flags:[null] IP: ";
-                    IPBlockedServices.FirewallNewRuleCreate();
-                    FirewallAddressBaseLoad();
-                }
-                else
-                {
-                    MessageBox.Show("Добавляемый Вами адрес уже существует в списке блокировок.", "S.E.R.V.E.R - Shadow Of Chernobyl", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
+                BlockedClient(8, checkName, " Flags:[null] IP: ", checkAddr, "@");
+                tabControl1.SelectedIndex = 6;
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Произошла ошибка. Reason:\n" + ex.Message, "S.E.R.V.E.R - Shadow Of Chernobyl", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
-
-        // Edit 2018
 
         HashSet<string> html_buffer = new HashSet<string>();
         private void btnExportToHTML_Click(object sender, EventArgs e)
@@ -1752,7 +1698,6 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                 {
                     var html_name = PlayersCheaterList.FocusedItem.SubItems[0].Text;
                     var html_addr = PlayersCheaterList.FocusedItem.SubItems[1].Text;    
-                    //var html_hash = PlayersCheaterList.FocusedItem.SubItems[2].Text;   
                     EXPORT_DATA_TO_HTML(html_name, html_addr, ExportBase.FileName, @"<hr><font style='color:blue'>Файл сформирован программой S.E.R.V.E.R - Shadow Of Chernobyl в: " + DateTime.Now + "</font>");
                 }                      
             }          
@@ -2100,8 +2045,6 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
 
 
         // Проверка игроков
-        string StrNameBuffer;
-        string StrAddressBuffer;
         int badshots = 0;
         int PlayersCount = 0;
         int find_address = 0;
@@ -2149,7 +2092,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
             try
             {
                 for (int i = 0; i < PlayersCheaterList.Items.Count; i++)
-                {         
+                {
                     PlayersCheaterList.Items[i].Focused = true;
                     PlayersCheaterList.Items[i].Checked = true;
                     if (i > 0)
@@ -2170,46 +2113,44 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
         {
             update_blocked = 0;
             ListCheaterEvents.Items.Clear();
-            scanplayers();
+            ListCheaterScanner(null, null);
         }
 
         private void PlayersCheaterList_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
             update_blocked = 1;
-            scanplayers();
+            ListCheaterScanner(null, null);
         }
 
-        private void scanplayers()
+        private void ListCheaterScanner(string StrNameBuffer, string StrAddressBuffer)
         {
             badshots = 0;
             PlayersCount = 0;
             find_address = 0;
             weapons_counter = 0;
+   
             StrNameBuffer = PlayersCheaterList.FocusedItem.SubItems[0].Text;    // NAME   
             StrAddressBuffer = PlayersCheaterList.FocusedItem.SubItems[1].Text; // IP ADDRESS
-            //StrHashBuffer = PlayersCheaterList.FocusedItem.SubItems[2].Text;    // HASH
-            SelectTable3.Text = "Сведения из буфера событий.";
-
-            // Выводим игрока, а после по логу его убойку
-                foreach (string anticheat in SrvPlayersBuffer)
-                {
-                    // подсчитываем количество клиентов c данным именем
-                    if (anticheat.Contains("name: " + StrNameBuffer))
-                    {
-                        PlayersCount++;
-                        if (update_blocked == 0)                      
-                            ListCheaterEvents.Items.Add(anticheat).BackColor = Color.Gold;                      
-                    }
-                    // подсчитываем количество убойки (статистика нужна для автоблокировки)
-                    if ((anticheat.Contains("# " + StrNameBuffer)) && (server_version == 1))
-                    {
-                        badshots++;
-                        if (update_blocked == 0)                       
-                            ListCheaterEvents.Items.Add(anticheat).BackColor = Color.Violet;                        
-                    }
-                }
           
-
+            SelectTable3.Text = "Сведения из буфера событий.";
+            foreach (string anticheat in SrvPlayersBuffer)
+            {
+                // подсчитываем количество клиентов c данным именем
+                if (anticheat.Contains("name: " + StrNameBuffer))
+                {
+                    PlayersCount++;
+                    if (update_blocked == 0)
+                        ListCheaterEvents.Items.Add(anticheat).BackColor = Color.Gold;
+                }
+                // подсчитываем количество убойки (статистика нужна для автоблокировки)
+                if ((anticheat.Contains("# " + StrNameBuffer)) && (server_version == 1))
+                {
+                    badshots++;
+                    if (update_blocked == 0)
+                        ListCheaterEvents.Items.Add(anticheat).BackColor = Color.Violet;
+                }
+            }
+         
             // Подсчитываем число использования подствольного снаряжения
             if ((EventsWeaponsBlockedPlayers.CheckState == CheckState.Checked) && (EventsWeaponsCount > 0))
             {
@@ -2260,7 +2201,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                             {
                                 PlayersCheaterList.FocusedItem.SubItems.Add(badshots + "/" + EventsControllerMaxLimit.Value + " | " + weapons_counter + "/" + EventsWeaponsMaxLimit.Value);
                             }
-                            break;
+                            return;
                         }
                     }
                     // Завышенные данные статистики
@@ -2270,16 +2211,22 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                         PlayersCheaterList.FocusedItem.SubItems.Add(badshots + "/" + EventsControllerMaxLimit.Value);
                     }
                     // Завышенные данные статистики и статистика снаряжения
-                    if ((find_address == 0) && (EventsControllerMaxLimit.Value < badshots) && (EventsWeaponsMaxLimit.Value < weapons_counter))
+                    else if ((find_address == 0) && (EventsControllerMaxLimit.Value < badshots) && (EventsWeaponsMaxLimit.Value < weapons_counter))
                     {
                         PlayersCheaterList.FocusedItem.SubItems.Add("Wait Banning [HIM+WS]");
                         PlayersCheaterList.FocusedItem.SubItems.Add(badshots + "/" + EventsControllerMaxLimit.Value + " | " + weapons_counter + "/" + EventsWeaponsMaxLimit.Value);
                     }
                     // Статистика снаряжения
-                    if ((find_address == 0) && (EventsWeaponsMaxLimit.Value > weapons_counter) && (badshots == 0))
+                    else if ((find_address == 0) && (EventsWeaponsMaxLimit.Value > weapons_counter) && (badshots == 0))
                     {
                         PlayersCheaterList.FocusedItem.SubItems.Add("Wait Banning [WS]");
                         PlayersCheaterList.FocusedItem.SubItems.Add(weapons_counter + "/" + EventsWeaponsMaxLimit.Value);
+                    }
+                    else
+                    {
+                        PlayersCheaterList.FocusedItem.BackColor = Color.Red;
+                        PlayersCheaterList.FocusedItem.SubItems.Add("IP NOT BLOCKED ?");
+                        PlayersCheaterList.FocusedItem.SubItems.Add("?/?");
                     }
                 }
                 catch (Exception ex)
@@ -2290,6 +2237,16 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
             }
             else if (PlayersCount > 1)
             {
+                foreach (string AdressInBlocked in AddressBuffer)
+                {
+                    if (AdressInBlocked.Contains(player_ip))
+                    {
+                        PlayersCheaterList.FocusedItem.BackColor = Color.Lime;
+                        PlayersCheaterList.FocusedItem.SubItems.Add("This Address is Banned");
+                        PlayersCheaterList.FocusedItem.SubItems.Add("Double Name");
+                        return;
+                    }
+                }
                 PlayersCheaterList.FocusedItem.BackColor = Color.Orange;
                 PlayersCheaterList.FocusedItem.SubItems.Add("Skip. Double Player Name");
                 PlayersCheaterList.FocusedItem.SubItems.Add(badshots + "/" + EventsControllerMaxLimit.Value);
@@ -2303,7 +2260,6 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
         private void save_settings()
         {
             _base_settings.EventsAutoColor = EventsPlayersAutoColor.Checked;
-            _base_settings.EventsAutoDelete = EventsAutoDelete.Checked;
             _base_settings.EventsDirectoryDF = DmpCurrentDirectory.Text;
             _base_settings.EventsChangeWindow = EventsChangeWindow.Checked;
             _base_settings.FirewallActivated = WinFirewallActivate.Checked;
@@ -2350,7 +2306,6 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
         private void Initialize_save_form()
         {
             EventsPlayersAutoColor.Checked = _base_settings.EventsAutoColor;
-            EventsAutoDelete.Checked = _base_settings.EventsAutoDelete;
             DmpCurrentDirectory.Text = _base_settings.EventsDirectoryDF;
             EventsChangeWindow.Checked = _base_settings.EventsChangeWindow;
             WinFirewallActivate.Checked = _base_settings.FirewallActivated;
@@ -2392,44 +2347,48 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
             mp_wpn_gauss.Checked = _base_settings.SkipScanWeapons27;
         }
 
-
-
         // 1 - блокируем отрисовку данных, при автоматической обработке таблицы цветов.
         int blocked_events_handler = 0;
         private void BaseMenu2GetListplayers_Click(object sender, EventArgs e)
         {
-            START_LEVEL_THREAD = 2;
-            if (EventsChangeWindow.CheckState == CheckState.Checked)
+            if (ThreadListplayers.IsBusy == false)
             {
-                BaseMenu1.Visible = true;
-                listBase.Visible = true;
-                ListTableChange1.Visible = false;
-                BaseMenu2.Visible = false;
-                EventsBaseSubnetsSearch.Visible = false;
+                START_LEVEL_THREAD = 2;
+                if (EventsChangeWindow.CheckState == CheckState.Checked)
+                {
+                    BaseMenu1.Visible = true;
+                    listBase.Visible = true;
+                    ListTableChange1.Visible = false;
+                    BaseMenu2.Visible = false;
+                    EventsBaseSubnetsSearch.Visible = false;
+                }
+                else // Переключение интерфейса на новый
+                {
+                    BaseMenu1.Visible = false;
+                    EventsBaseSubnetsSearch.Visible = true;
+                    listBase.Visible = false;
+                    ListTableChange1.Visible = true;
+                    BaseMenu2.Visible = true;
+                    SelectedTable1.Visible = true;
+                    SelectedTable2.Visible = true;
+                    ListTableChange2.Visible = true;
+                    ListTableChange3.Visible = true;
+                    blocked_events_handler = 1;       // Если открыт интерфейс, и пользователь нажимает кнопку, то всегда == true
+                }
+             
+                if (SearchPanel.Visible == true)
+                    SearchPanel.Visible = false;
+
+                ThreadListplayers.RunWorkerAsync();
+                ThreadListplayers.WorkerSupportsCancellation = true;
+                delFromBase.Enabled = false;
+                btnExit.Enabled = false;
+                StartAutoCheckThread.Enabled = false;
             }
-            else // Переключение интерфейса на новый
+            else
             {
-                BaseMenu1.Visible = false;
-                EventsBaseSubnetsSearch.Visible = true;
-                listBase.Visible = false;
-                ListTableChange1.Visible = true;
-                BaseMenu2.Visible = true;
-                SelectedTable1.Visible = true;
-                SelectedTable2.Visible = true;
-                ListTableChange2.Visible = true;
-                ListTableChange3.Visible = true;
-                blocked_events_handler = 1;       // Если открыт интерфейс, и пользователь нажимает кнопку, то всегда == true
+                MessageBox.Show("Обработка уже выполняется, пожалуйста подождите ее завершения.", "S.E.R.V.E.R - Shadow Of Chernobyl", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-
-            if (SearchPanel.Visible == true)
-                SearchPanel.Visible = false;
-
-            ThreadListplayers.RunWorkerAsync();
-            ThreadListplayers.WorkerSupportsCancellation = true;
-
-            delFromBase.Enabled = false;
-            btnExit.Enabled = false;
-            StartAutoCheckThread.Enabled = false;
         }
 
         // Подробный поиск со всеми разделителями
@@ -2551,15 +2510,15 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                             ListTableChange2.Items.Add(new ListViewItem(values)).BackColor = Color.Gold;
                         }
                     }
-                }
-                delFromBase.Enabled = false;
-                if (GetFuncCreateInFirewall.Enabled == true)             
-                    GetFuncCreateInFirewall.Enabled = false;            
+                }        
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "S.E.R.V.E.R - Shadow Of Chernobyl", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+            delFromBase.Enabled = false;
+            if (GetFuncCreateInFirewall.Enabled == true)
+                GetFuncCreateInFirewall.Enabled = false;
         }
 
         private void SearchAtHash_Click(object sender, EventArgs e)
@@ -2575,15 +2534,16 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                         string[] values = s.Split('%');
                         listBase.Items.Add(new ListViewItem(values));
                     }
-                }
-                if (GetFuncCreateInFirewall.Enabled == true)                
-                    GetFuncCreateInFirewall.Enabled = false;           
+                }      
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "S.E.R.V.E.R - Shadow Of Chernobyl", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             delFromBase.Enabled = false;
+            if (GetFuncCreateInFirewall.Enabled == true)
+                GetFuncCreateInFirewall.Enabled = false;
+
         }
   
         private void SearchPlayersInBase_Click(object sender, EventArgs e)
@@ -2653,7 +2613,6 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                             break;
                         }
                     }
-                    Thread.Sleep(1);
                     Save(string.Concat(PlayersBaseBuffer));
                     ListViewItem del_str = listBase.FocusedItem;
                     listBase.Items.Remove(del_str);
@@ -2699,7 +2658,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
         {
             try
             {
-                string pname = listViewBase.FocusedItem.SubItems[1].Text.Replace((char)0x22, (char)0x5F).Replace((char)0x2F, (char)0x5F).Replace((char)0x5C, (char)0x5F).Replace((char)0x3C, (char)0x5F).Replace((char)0x3E, (char)0x5F).Replace((char)0x3A, (char)0x5F).Replace((char)0x7C, (char)0x5F).Replace((char)0x3F, (char)0x5F).Replace((char)0x2A, (char)0x5F);
+                string pname = listViewBase.FocusedItem.SubItems[1].Text;
                 string address = listViewBase.FocusedItem.SubItems[4].Text.Replace(Environment.NewLine, string.Empty);
                 if ((address == "0.0.0.0") || (address == "255.255.255.255") || (address == "127.0.0.1"))
                 {
@@ -2707,7 +2666,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                 }
                 else
                 {
-                    FirewallWriteNewRule(8, pname, " Flags:[null] IP: ", address, "@");
+                    BlockedClient(8, pname, " Flags:[null] IP: ", address, "@");
                     tabControl1.SelectedIndex = 6;
                 }
             }
@@ -2754,76 +2713,8 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
         int BaseDumpPlayers = 0;
         int CheaterList = 0;
 
-        private void HideServer()
-        {
-            if (AutoServerHide.CheckState == CheckState.Checked)
-            {
-                int a = 0;
-                foreach (string SKIP_BLOCKED in AddressBuffer)
-                {
-                    if (SKIP_BLOCKED.Contains(AutoHide.Text))
-                    {
-                        a++;
-                    }
-                }
-                if (a == 0)
-                {
-                    IPBlockedServices.FirewallRuleServerHideCreate(AutoHide.Text);
-                    FirewallAddressBaseLoad();
-                }
-            }
-        }
-
-        int tick_time = 0;
-        int get_port_block = 0;
-        int proc_time = 0;
-        private void ServerUnlock()
-        {
-            foreach (string SKIP_BLOCKED in AddressBuffer)
-            {
-                if (SKIP_BLOCKED.Contains(AutoHide.Text))
-                {
-                    get_port_block = 1;
-                }
-            }
-            int block_time = Convert.ToInt32(AutoHideTime.Text); // наше время действия блокировки
-            if ((block_time <= tick_time) && (get_port_block == 1))
-            {
-                tick_time = 0;
-                get_port_block = 0;
-                foreach (string get_state in AddressBuffer)
-                {
-                    try
-                    {
-                        var PLAYER_INFO = get_state.Split()[0];
-                        var RULE_INFO = get_state.Split()[2];
-                        var ADDRESS_INFO = get_state.Split()[4];
-                        var FLAGS_INFO = get_state.Split()[7];
-                        var DATE_INFO = get_state.Split()[9];
-                        FirewallMsgTransferAddress.FirewallAddressInTables = RULE_INFO + " [HIDE] " + PLAYER_INFO + " " + FLAGS_INFO + " IP:  " + ADDRESS_INFO + " Time: " + DATE_INFO;
-                        IPBlockedServices.FirewallAllUserRuleDelete();      
-                    }
-                    catch (Exception)
-                    {
-    
-                    }
-                }
-            }
-        }
-
         private void ScanDataFiles_Tick(object sender, EventArgs e)
         {
-            proc_time++;
-            if (proc_time == 3)
-            {
-                tick_time++;
-                proc_time = 0;
-                if (AutoServerHide.CheckState == CheckState.Checked)
-                {
-                    ServerUnlock();
-                }
-            }
-
             try
             {
                 DateTime DataModification = File.GetLastWriteTime(@"server_settings\logs\xray_" + SystemInformation.UserName + ".log");
@@ -2865,7 +2756,6 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
         {
             StartAutoCheckThread.Checked = false;
             events_load();
-            ClickUpdate();
         }
 
         private void update_stats()
@@ -2906,9 +2796,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
             }
         }
 
-        // ==================================================
-        // Фильтры автоматических событий. 
-        // ==================================================
+
         private void BaseMenu3_Events_Click(object sender, EventArgs e)
         {
             listEventsSrv.Items.Clear();
@@ -2919,21 +2807,21 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                     var reg = MSG.Replace("logged as remote administrator", "- Зарегистрирован как Удаленный Администратор").Replace("# User", "").Replace("# Player", "").Replace("with login", "используя логин"); ;
                     listEventsSrv.Items.Add(reg).BackColor = Color.LightGreen;
                 }
-                if (MSG.Contains("tried to login as remote administrator. Access denied"))
+                else if (MSG.Contains("tried to login as remote administrator. Access denied"))
                 {
                     var reg = MSG.Replace("tried to login as remote administrator. Access denied", "- Доступ запрещен").Replace("# User", "").Replace("# Player", "").Replace("with login", "используя логин");
                     listEventsSrv.Items.Add(reg).BackColor = Color.LightPink;
                 }
-                if (MSG.Contains("stalkazz_attack"))
+                else if (MSG.Contains("stalkazz_attack"))
                 {
                     string str = MSG.Replace("[IP]", "").Replace("-", "").Replace("%", "").Replace("stalkazz_attack", "[ATTACK]: ");
                     listEventsSrv.Items.Add(str).BackColor = Color.LightCoral;
                 }
-                if (MSG.Contains("! too large packet size"))
+                else if (MSG.Contains("! too large packet size"))
                 {
                     listEventsSrv.Items.Add("[ATTACK]: " + MSG).BackColor = Color.Violet;
                 }
-                if (MSG.Contains("Disconnecting and Banning:"))
+                else if (MSG.Contains("Disconnecting and Banning:"))
                 {
                     var blocked = MSG.Replace("Disconnecting and Banning:", "Отключен и заблокирован:");
                     listEventsSrv.Items.Add(blocked).BackColor = Color.Gold;
@@ -2943,11 +2831,11 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                     var blocked = MSG.Replace("Disconnecting and Banning:", "Отключен и заблокирован:");
                     listEventsSrv.Items.Add(blocked + " [server ip address]").BackColor = Color.Red;
                 }
-                if (MSG.Contains("от Заряд ВОГ-25"))
+                else if (MSG.Contains("от Заряд ВОГ-25"))
                 {
                     listEventsSrv.Items.Add(MSG.Replace("*", "")).BackColor = Color.LightBlue;
                 }
-                if (MSG.Contains("M209"))
+                else if (MSG.Contains("M209"))
                 {
                     listEventsSrv.Items.Add(MSG.Replace("*", "")).BackColor = Color.LightCyan;
                 }
@@ -2963,7 +2851,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                 {
                     listEventsSrv.Items.Add(MSG.Replace("*","")).BackColor = Color.LightBlue;
                 }
-                if (MSG.Contains("M209"))
+                else if (MSG.Contains("M209"))
                 {
                     listEventsSrv.Items.Add(MSG.Replace("*", "")).BackColor = Color.LightCyan;
                 }
@@ -2998,8 +2886,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                     var reg = Messages.Replace("logged as remote administrator", "- Зарегистрирован как Удаленный Администратор").Replace("# User", "").Replace("# Player", "").Replace("with login", "используя логин"); ;
                     listEventsSrv.Items.Add(reg).BackColor = Color.LightGreen;
                 }
-
-                if (Messages.Contains("tried to login as remote administrator. Access denied"))
+                else if (Messages.Contains("tried to login as remote administrator. Access denied"))
                 {
                     var reg = Messages.Replace("tried to login as remote administrator. Access denied", "- Доступ запрещен").Replace("# User", "").Replace("# Player", "").Replace("with login", "используя логин");
                     listEventsSrv.Items.Add(reg).BackColor = Color.LightPink;
@@ -3017,16 +2904,13 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                     string str = MSG.Replace("[IP]", "").Replace("-", "").Replace("%", "").Replace("stalkazz_attack", "[ATTACK]: ");
                     listEventsSrv.Items.Add(str).BackColor = Color.LightCoral;
                 }
-                if (MSG.Contains("! too large packet size"))
+                else if (MSG.Contains("! too large packet size"))
                 {
                     listEventsSrv.Items.Add("[!ATTACK]:" + MSG).BackColor = Color.Violet;
                 }
             }
         }
-
-        // ==================================================
-        // Копия, восстановление и объединение баз     
-        // ==================================================           
+                  
         private void btnConnectionBase_Click(object sender, EventArgs e)
         {
             try
@@ -3123,50 +3007,53 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
 
         private void ServerBasePlayers_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.F1)         
-                searchAtName.PerformClick();
-            
-            if (e.KeyCode == Keys.F2)          
-                SearchAtAddress.PerformClick();
-            
-            if (e.KeyCode == Keys.F3)       
-                SearchAtHash.PerformClick();
-            
-            if (e.KeyCode == Keys.F4)            
-                stringCopy.PerformClick();
-            
-            if (e.KeyCode == Keys.F5)           
-                copyBuffer.PerformClick();
-            
-            if (e.KeyCode == Keys.F6)           
-                OpenProc.PerformClick();
-            
-            if (e.KeyCode == Keys.F7)       
-                AddInBase.PerformClick();
-            
-            if (e.KeyCode == Keys.F8)         
-                btnInvokeClearEvents.PerformClick();
-            
-            if (e.KeyCode == Keys.F9)       
-                btnSaveDialog.PerformClick();
-            
-            if (e.KeyCode == Keys.F10)           
-                SearchPlayersInBase.PerformClick();
-            
-            if (e.KeyCode == Keys.F11)     
-                NewWindowStrCopy.PerformClick();
-            
-            if (e.KeyCode == Keys.F12)          
-                NewWindowBanInfo.PerformClick();
-            
-            if (e.KeyCode == Keys.Delete)         
-                delFromBase.PerformClick();
-
-            if (SearchPanel.Visible == true)
+            if (StartAutoCheckThread.CheckState == CheckState.Unchecked)
             {
-                if (e.KeyCode == Keys.Enter)
-                    index_search.PerformClick();
-            }         
+                if (e.KeyCode == Keys.F1)
+                    searchAtName.PerformClick();
+
+                else if (e.KeyCode == Keys.F2)
+                    SearchAtAddress.PerformClick();
+
+                else if (e.KeyCode == Keys.F3)
+                    SearchAtHash.PerformClick();
+
+                else if (e.KeyCode == Keys.F4)
+                    stringCopy.PerformClick();
+
+                else if (e.KeyCode == Keys.F5)
+                    copyBuffer.PerformClick();
+
+                else if (e.KeyCode == Keys.F6)
+                    OpenProc.PerformClick();
+
+                else if (e.KeyCode == Keys.F7)
+                    AddInBase.PerformClick();
+
+                else if (e.KeyCode == Keys.F8)
+                    btnInvokeClearEvents.PerformClick();
+
+                else if (e.KeyCode == Keys.F9)
+                    btnSaveDialog.PerformClick();
+
+                else if (e.KeyCode == Keys.F10)
+                    SearchPlayersInBase.PerformClick();
+
+                else if (e.KeyCode == Keys.F11)
+                    NewWindowStrCopy.PerformClick();
+
+                else if (e.KeyCode == Keys.F12)
+                    NewWindowBanInfo.PerformClick();
+
+                else if (e.KeyCode == Keys.Delete)
+                    delFromBase.PerformClick();
+
+                if (SearchPanel.Visible == true)
+                { 
+                    if (e.KeyCode == Keys.Enter)
+                        index_search.PerformClick();
+                }
+            }
         }
 
         private void btnReadingBaseType1_Click(object sender, EventArgs e)
@@ -3208,7 +3095,6 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
             }
         }
 
-
         private void btnAddToBase_Click(object sender, EventArgs e)
         {
             try
@@ -3248,7 +3134,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Data not added to base. Reason:\n" + ex.Message, "S.E.R.V.E.R - Shadow Of Chernobyl", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Повторите попытку. В выделенной строке нет требуемых данных:\n" + ex.Message, "S.E.R.V.E.R - Shadow Of Chernobyl", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -3259,7 +3145,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                 string[] values = s.Split('%');
                 if (s.Contains("[V+]"))              
                     listViewBase.Items.Add(new ListViewItem(values)).BackColor = Color.Gold;
-                if (s.Contains("[N+]"))
+                else if (s.Contains("[N+]"))
                     listViewBase.Items.Add(new ListViewItem(values)).BackColor = Color.LightGreen;
             }
         }
@@ -4207,6 +4093,9 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
         // ============================================================================== WINDOWS FIREWALL ==============================================================================      
         HashSet<string> AddressBuffer = new HashSet<string>();  
         int check_new_data = 0;
+
+        int FlagAdmin = 0, FlagCheater = 0, FlagWeapons = 0;
+
         public void FirewallAddressBaseLoad()
         {
             AddressBuffer.Clear();
@@ -4237,6 +4126,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
             if (StartAutoCheckThread.CheckState == CheckState.Unchecked)
             {
                 check_new_data = AddressBuffer.Count;
+                FlagCheater = FlagWeapons = FlagAdmin = 0;
                 foreach (string drawing_table in AddressBuffer)
                 {
                     if (drawing_table.Contains("STALKER_SRV"))
@@ -4245,16 +4135,19 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                         {
                             string[] values = drawing_table.Split('%');
                             FirewallList.Items.Add(new ListViewItem(values)).BackColor = Color.Violet;
+                            FlagCheater++;
                         }
                         else if (drawing_table.Contains("[HWEAPONS]"))
                         {
                             string[] values = drawing_table.Split('%');
                             FirewallList.Items.Add(new ListViewItem(values)).BackColor = Color.Coral;
+                            FlagWeapons++;
                         }
                         else if (drawing_table.Contains("[ADMIN]"))
                         {
                             string[] values = drawing_table.Split('%');
                             FirewallList.Items.Add(new ListViewItem(values)).BackColor = Color.ForestGreen;
+                            FlagAdmin++;
                         }
                         else if (drawing_table.Contains("[LIST]"))
                         {
@@ -4268,6 +4161,9 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                         }
                     }
                 }
+                gui_filter1.Text = "[ADMIN]: " + FlagAdmin;
+                gui_filter2.Text = "[CHEATER]: " + FlagCheater;
+                gui_filter3.Text = "[WEAPONS]: " + FlagWeapons;
             }
             if ((check_new_data != AddressBuffer.Count) && (StartAutoCheckThread.CheckState == CheckState.Checked))
             {
@@ -4338,59 +4234,38 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                 try
                 {
                     var PLAYER_INFO = get_state.Split()[0];
-                    var RULE_INFO = get_state.Split()[2];
+                    //var RULE_INFO = get_state.Split()[2];
                     var ADDRESS_INFO = get_state.Split()[4];
                     var FLAGS_INFO = get_state.Split()[7];
                     var DATE_INFO = get_state.Split()[9];
-                    FirewallMsgTransferAddress.FirewallAddressInTables = RULE_INFO + " [HIDE] " + PLAYER_INFO + " " + FLAGS_INFO + " IP:  " + ADDRESS_INFO + " Time: " + DATE_INFO;
-                    IPBlockedServices.FirewallAllUserRuleDelete();
+                    IPBlockedServices.CleanAllRules("[HIDE] " + PLAYER_INFO + " " + FLAGS_INFO + " IP:  " + ADDRESS_INFO + " Time: " + DATE_INFO);
                     completed_proc++;
                 }
                 catch (Exception)
                 {
                     error_proc++;
                 }
-            }
-            
+            }           
             if ((completed_proc != 0) && (error_proc == 0))          
-                MessageBox.Show("Успешное завершение процедуры.\nУдалено правил блокировок: " + completed_proc, "S.E.R.V.E.R - Shadow Of Chernobyl", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            
+                MessageBox.Show("Успешное завершение процедуры.\nУдалено правил блокировок: " + completed_proc, "S.E.R.V.E.R - Shadow Of Chernobyl", MessageBoxButtons.OK, MessageBoxIcon.Information);          
             else if ((completed_proc != 0) && (error_proc > 0))          
-                MessageBox.Show("При удалении правил произошли ошибки\nУдалено правил блокировок: " + completed_proc + "\nОшибок: " + error_proc, "S.E.R.V.E.R - Shadow Of Chernobyl", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            
+                MessageBox.Show("При удалении правил произошли ошибки\nУдалено правил блокировок: " + completed_proc + "\nОшибок: " + error_proc, "S.E.R.V.E.R - Shadow Of Chernobyl", MessageBoxButtons.OK, MessageBoxIcon.Information);      
             FirewallAddressBaseLoad();
         }
 
-        int local_address_block_cancel = 0;
         private void FirewallBlock_Click(object sender, EventArgs e)
         {
-            try
+            FirewallIPBox.Text = FirewallIPBox.Text.Replace("=", ".").Replace(",", ".");
+            if ((FirewallIPBox.Text.Length > 0) && (FirewallTextBox.Text.Length > 0))
             {
-                FirewallIPBox.Text = FirewallIPBox.Text.Replace("=", ".").Replace(",", ".");
-                if (FirewallIPBox.Text == "0.0.0.0" || FirewallIPBox.Text == "255.255.255.255" || FirewallIPBox.Text == "127.0.0.1")
-                {
-                    local_address_block_cancel++;
-                    MessageBox.Show("Нельзя заблокировать локальный адрес!", "S.E.R.V.E.R - Shadow Of Chernobyl", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    CheckedAddress.Text = "Статус: Попытка Вами заблокировать\nлокальный сетевой адрес.\nДействие отменено защитой: " + local_address_block_cancel;
-                }
+                if (FirewallAddressMaskAdd.CheckState == CheckState.Checked)
+                    BlockedClient(8, FirewallTextBox.Text.Replace(" ", "_").Replace("%", "_"), " Flags:[null] IP: ", FirewallIPBox.Text + "/" + AddressByteMask.Text, "@");
                 else
-                {
-                    if ((FirewallIPBox.Text.Length > 0) && (FirewallTextBox.Text.Length > 0))
-                    {
-                        if (FirewallAddressMaskAdd.CheckState == CheckState.Checked)
-                            FirewallWriteNewRule(8, FirewallTextBox.Text.Replace(" ", "_").Replace("%", "_"), " Flags:[null] IP: ", FirewallIPBox.Text + "/" + AddressByteMask.Text, "@");
-                        else
-                            FirewallWriteNewRule(8, FirewallTextBox.Text.Replace(" ", "_").Replace("%", "_"), " Flags:[null] IP: ", FirewallIPBox.Text, "@");
-                    }
-                    else
-                    {
-                        MessageBox.Show("Нельзя добавлять данные без явного указанного адреса или имени игрока!", "S.E.R.V.E.R - Shadow Of Chernobyl", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    }
-                }
+                    BlockedClient(8, FirewallTextBox.Text.Replace(" ", "_").Replace("%", "_"), " Flags:[null] IP: ", FirewallIPBox.Text, "@");
             }
-            catch (Exception ex)
+            else
             {
-                MessageBox.Show(ex.Message, "S.E.R.V.E.R - Shadow Of Chernobyl", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Нельзя добавлять данные без явного указанного адреса или имени игрока!", "S.E.R.V.E.R - Shadow Of Chernobyl", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -4416,9 +4291,11 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                 else if (strscan.Contains("[HIDE]"))
                     remove_filters = "[HIDE]";
 
-                var index = getname + " " + remove_filters + " " + FirewallList.FocusedItem.SubItems[0].Text + filters + " IP:  " + address + " Time: " + timeban;
-                FirewallMsgTransferAddress.FirewallAddressInTables = index;
-                IPBlockedServices.FirewallRuleUserDelete();
+
+               IPBlockedServices.CleanAllRules(remove_filters + " " + FirewallList.FocusedItem.SubItems[0].Text + filters + " IP:  " + address + " Time: " + timeban);
+
+                var index = remove_filters + " " + FirewallList.FocusedItem.SubItems[0].Text + filters + " IP:  " + address + " Time: " + timeban;
+
                 ListViewItem del = FirewallList.FocusedItem;
                 FirewallList.Items.Remove(del);
                 FirewallAddressBaseLoad();
@@ -4475,42 +4352,6 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
             }
         }
 
-        private void FirewallAllUnblock_Click(object sender, EventArgs e)
-        {
-            DialogResult dialogResult = MessageBox.Show("Вы действительно хотите удалить все введенные данные из внутренних правил Брандмауэра Windows?\nПродолжить?", "Удаление всех правил блокировки", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
-            if (dialogResult == DialogResult.Yes)
-            {
-                SIGNAL_BANNED = 0;
-                int completed_proc = 0;
-                int error_proc = 0;
-                foreach (string get_state in AddressBuffer)
-                {
-                    try
-                    {
-                        var PLAYER_INFO = get_state.Split()[0];
-                        var RULE_INFO = get_state.Split()[2];
-                        var ADDRESS_INFO = get_state.Split()[4];
-                        var REASON_INFO = get_state.Split()[6];
-                        var FLAGS_INFO = get_state.Split()[7];
-                        var DATE_INFO = get_state.Split()[9];                                                                                  
-                        FirewallMsgTransferAddress.FirewallAddressInTables = RULE_INFO + " " + REASON_INFO + " " + PLAYER_INFO + " " + FLAGS_INFO + " IP:  " + ADDRESS_INFO + " Time: " + DATE_INFO;
-                        IPBlockedServices.FirewallAllUserRuleDelete();
-                        completed_proc++;
-                    }
-                    catch (Exception)
-                    {
-                        error_proc++;
-                    }
-                }
-                if ((completed_proc != 0) && (error_proc == 0))              
-                    MessageBox.Show("Успешное завершение процедуры.\nУдалено правил блокировок: " + completed_proc, "S.E.R.V.E.R - Shadow Of Chernobyl", MessageBoxButtons.OK, MessageBoxIcon.Information);              
-                else if ((completed_proc != 0) && (error_proc > 0))              
-                   MessageBox.Show("При удалении правил произошли ошибки\nУдалено правил блокировок: " + completed_proc + "\nОшибок: " + error_proc, "S.E.R.V.E.R - Shadow Of Chernobyl", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                
-                FirewallAddressBaseLoad();
-            }
-        }
-
         private void FirwallSearchInList_Click(object sender, EventArgs e)
         {
             int result_search = 0;
@@ -4560,6 +4401,93 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
             }
         }
 
+        private void FirewallAllUnblock_Click(object sender, EventArgs e)
+        {
+            DialogResult dialogResult = MessageBox.Show("Вы действительно хотите удалить все введенные данные из внутренних правил Брандмауэра Windows?\nПродолжить?", "Удаление всех правил блокировки", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+            if (dialogResult == DialogResult.Yes)
+            {
+                SIGNAL_BANNED = 0;
+                int completed_proc = 0;
+                int error_proc = 0;
+                foreach (string get_state in AddressBuffer)
+                {
+                    try
+                    {
+                        var PLAYER_INFO = get_state.Split()[0];
+                        var RULE_INFO = get_state.Split()[2];
+                        var ADDRESS_INFO = get_state.Split()[4];
+                        var REASON_INFO = get_state.Split()[6];
+                        var FLAGS_INFO = get_state.Split()[7];
+                        var DATE_INFO = get_state.Split()[9];
+                        IPBlockedServices.CleanAllRules(REASON_INFO + " " + PLAYER_INFO + " " + FLAGS_INFO + " IP:  " + ADDRESS_INFO + " Time: " + DATE_INFO);
+                        completed_proc++;
+                    }
+                    catch (Exception)
+                    {
+                        error_proc++;
+                    }
+                }
+                if ((completed_proc != 0) && (error_proc == 0))
+                    MessageBox.Show("Успешное завершение процедуры.\nУдалено правил блокировок: " + completed_proc, "S.E.R.V.E.R - Shadow Of Chernobyl", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                else if ((completed_proc != 0) && (error_proc > 0))
+                    MessageBox.Show("При удалении правил произошли ошибки\nУдалено правил блокировок: " + completed_proc + "\nОшибок: " + error_proc, "S.E.R.V.E.R - Shadow Of Chernobyl", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                FirewallAddressBaseLoad();
+            }
+        }
+
+        private void btn_gui_filter1_Click(object sender, EventArgs e)
+        {
+            GET_REMOVE_STR("[ADMIN]");
+        }
+
+        private void btn_gui_filter2_Click(object sender, EventArgs e)
+        {
+            GET_REMOVE_STR("[CHEATER]");
+        }
+
+        private void btn_gui_filter3_Click(object sender, EventArgs e)
+        {
+            GET_REMOVE_STR("[HWEAPONS]");
+        }
+
+        private void GET_REMOVE_STR(string FILTER_REMOVE_DESCRIPTION)
+        {
+            DialogResult dialogResult = MessageBox.Show("Вы действительно хотите удалить все блокировки из группы " + FILTER_REMOVE_DESCRIPTION +" из внутренних правил Брандмауэра Windows?\nПродолжить?", "Удаление правил блокировки группы: " + FILTER_REMOVE_DESCRIPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+            if (dialogResult == DialogResult.Yes)
+            {
+                int completed_proc = 0;
+                int error_proc = 0;
+                foreach (string get_state in AddressBuffer)
+                {
+                    if (get_state.Contains(FILTER_REMOVE_DESCRIPTION))
+                    {
+                        try
+                        {
+                            var PLAYER_INFO = get_state.Split()[0];
+                            var ADDRESS_INFO = get_state.Split()[4];
+                            var REASON_INFO = get_state.Split()[6];
+                            var FLAGS_INFO = get_state.Split()[7];
+                            var DATE_INFO = get_state.Split()[9];
+                            IPBlockedServices.CleanAllRules(REASON_INFO + " " + PLAYER_INFO + " " + FLAGS_INFO + " IP:  " + ADDRESS_INFO + " Time: " + DATE_INFO);
+                            completed_proc++;
+                        }
+                        catch (Exception)
+                        {
+                            error_proc++;
+                        }
+                    }
+                }
+                SIGNAL_BANNED = (SIGNAL_BANNED - completed_proc);
+
+                if ((completed_proc != 0) && (error_proc == 0))
+                    MessageBox.Show("Успешное завершение процедуры.\nУдалено правил блокировок: " + completed_proc, "S.E.R.V.E.R - Shadow Of Chernobyl", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                else if ((completed_proc != 0) && (error_proc > 0))
+                    MessageBox.Show("При удалении правил произошли ошибки\nУдалено правил блокировок: " + completed_proc + "\nОшибок: " + error_proc, "S.E.R.V.E.R - Shadow Of Chernobyl", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                FirewallAddressBaseLoad();
+            }
+        }
+
         private void FirwallLoadFilterAddress_Click(object sender, EventArgs e)
         {
             check_new_data = AddressBuffer.Count;
@@ -4574,7 +4502,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
             {
                 string pname = ListTableChange1.FocusedItem.SubItems[1].Text;
                 string address = ListTableChange1.FocusedItem.SubItems[4].Text;
-                FirewallWriteNewRule(8, pname, " Flags:[null] IP: ", address, "@");
+                BlockedClient(8, pname, " Flags:[null] IP: ", address, "@");
                 tabControl1.SelectedIndex = 6;
             }
             catch (Exception ex)
@@ -4606,9 +4534,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                         }
                     }
 
-                    FirewallMsgTransferAddress.FirewallAddress = string.Concat(FirewallAddressContainer);
-                    FirewallMsgTransferAddress.FirewallTextBox = " [LIST] " + "LIST_IP[" + addresscount + "] Flags:[null] IP: ";
-                    IPBlockedServices.FirewallNewRuleCreate();
+                    IPBlockedServices.FirewallNewRuleCreate(" [LIST] " + "ExportFromTheBase[" + addresscount + "] Flags:[null] IP: ", string.Concat(FirewallAddressContainer), false, null);
                     FirewallAddressBaseLoad();
                     GetFuncCreateInFirewall.Enabled = false;
                     tabControl1.SelectedIndex = 6;
@@ -4627,7 +4553,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
             {
                 int address_skip = 0;
                 string addressblock = listBase.FocusedItem.SubItems[4].Text.Replace(" ", string.Empty); // IP
-                if ((addressblock.Length >= 7 && addressblock.Length <= 15) && (addressblock != "0.0.0.0" && addressblock != "127.0.0.1" && addressblock != "255.255.255.255")) // FORMAT STR OK
+                if ((addressblock.Length >= 7 && addressblock.Length <= 16) && (addressblock != "0.0.0.0" && addressblock != "127.0.0.1" && addressblock != "255.255.255.255")) // FORMAT STR OK
                 {
                     address_skip = addressblock.Count(simbolcount => simbolcount == '.');
                     if (addressblock.Length > 0 && address_skip == 3)
@@ -4713,8 +4639,9 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                     var ADDRESS_INFO = get_state.Split()[4];
                     var FLAGS_INFO = get_state.Split()[7];
                     var DATE_INFO = get_state.Split()[9];
-                    FirewallMsgTransferAddress.FirewallAddressInTables = RULE_INFO + " [LIST] " + PLAYER_INFO + " " + FLAGS_INFO + " IP:  " + ADDRESS_INFO + " Time: " + DATE_INFO;
-                    IPBlockedServices.FirewallAllUserRuleDelete();
+                    //FirewallMsgTransferAddress.FirewallAddressInTables = RULE_INFO + " [LIST] " + PLAYER_INFO + " " + FLAGS_INFO + " IP:  " + ADDRESS_INFO + " Time: " + DATE_INFO;
+                    //IPBlockedServices.FirewallAllUserRuleDelete();
+                    IPBlockedServices.CleanAllRules("[HIDE] " + PLAYER_INFO + " " + FLAGS_INFO + " IP:  " + ADDRESS_INFO + " Time: " + DATE_INFO);
                     completed_proc++;
                 }
                 catch (Exception)

@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "S.E.R.V.E.R - Shadow Of Chernobyl 1.0006", "S.E.R.V.E.R - Shadow Of Chernobyl 1.0006\S.E.R.V.E.R - Shadow Of Chernobyl 1.0006.csproj", "{7CBA0829-9A30-432E-8442-38724FC6B799}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		RadminBase|Any CPU = RadminBase|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7CBA0829-9A30-432E-8442-38724FC6B799}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CBA0829-9A30-432E-8442-38724FC6B799}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CBA0829-9A30-432E-8442-38724FC6B799}.RadminBase|Any CPU.ActiveCfg = RadminBase|Any CPU
+		{7CBA0829-9A30-432E-8442-38724FC6B799}.RadminBase|Any CPU.Build.0 = RadminBase|Any CPU
+		{7CBA0829-9A30-432E-8442-38724FC6B799}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CBA0829-9A30-432E-8442-38724FC6B799}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

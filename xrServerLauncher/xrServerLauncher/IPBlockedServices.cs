@@ -12,11 +12,10 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
         // https://www.osp.ru/winitpro/2012/17/13017914/
         // https://firstvds.ru/blog/windows_rabota_s_fayrvolom_iz_komandnoy_stroki
 
-        public static string FirewallRuleServerHideCreate(string localport)
+        public static void FirewallRuleServerHideCreate(string localport)
         {
             try
             {
-                //string localport = FirewallMsgTransfer.FirewallAddIP; // Send Message ServerBasePlayers.cs => UsingFireWallWindows
                 string name = "STALKER_SRV [HIDE] " + localport + " Flags:[null] IP:  null Time: " + (DateTime.Now.ToString("dd.MM.yyyy---HH:mm:ss"));
                 Process RuleCreate = new Process();
                 RuleCreate.StartInfo.FileName = "netsh";
@@ -39,41 +38,43 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
             {
                 MessageBox.Show(ex.Message + ex, "Ошибка в момент вызова функции FireWall [1]", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            return localport;
         }
    
        
-        public static void FirewallNewRuleCreate()
+        public static void FirewallNewRuleCreate(string text, string remoteip, bool SubnetFlag, string SubnetMaskByte)
         {
             try
             {
-                string remoteip = FirewallMsgTransferAddress.FirewallAddress;
-                string text = FirewallMsgTransferAddress.FirewallTextBox;
                 INetFwPolicy2 firewallPolicy = (INetFwPolicy2)Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FwPolicy2"));
                 INetFwRule FW_RULE = (INetFwRule)Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FWRule"));
                 FW_RULE.Action = NET_FW_ACTION_.NET_FW_ACTION_BLOCK;
                 FW_RULE.Direction = NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_IN;  // Входящее соединение
                 FW_RULE.Enabled = true;                                         // устанавливает флаг - включен/отключен
                 FW_RULE.InterfaceTypes = "All";                                 // тип сетевого интерфейса
-
-                if (remoteip == " 0.0.0.0" || remoteip == " 127.0.0.1" || remoteip == " 255.255.255.255")
+                 
+                if ((remoteip == " 0.0.0.0" || remoteip == " 127.0.0.1" || remoteip == " 255.255.255.255"))
                     return;
+                else if (remoteip.Length == 0)
+                    return;
+
+                if (SubnetFlag == true)
+                    remoteip = remoteip + "/" + SubnetMaskByte;
 
                 if (text.Contains("[CHEATER] "))
                 {
-                    FW_RULE.RemoteAddresses = remoteip;                       
+                    FW_RULE.RemoteAddresses = remoteip;
                     FW_RULE.Description = text + (DateTime.Now) + " IP: " + remoteip;
                     FW_RULE.Name = "STALKER_SRV" + text + " " + remoteip + " Time: " + (DateTime.Now.ToString("dd.MM.yyyy---HH:mm:ss")); 
                 }
                 else if (text.Contains("[HWEAPONS] "))
                 {
-                    FW_RULE.RemoteAddresses = remoteip;                         // адрес для блокировки
+                    FW_RULE.RemoteAddresses = remoteip;
                     FW_RULE.Description = text + (DateTime.Now) + " IP: " + remoteip;
                     FW_RULE.Name = "STALKER_SRV" + text + " " + remoteip + " Time: " + (DateTime.Now.ToString("dd.MM.yyyy---HH:mm:ss"));
                 }
                 else if (text.Contains("[ADMIN] "))
                 {
-                    FW_RULE.RemoteAddresses = remoteip;                         // адрес для блокировки
+                    FW_RULE.RemoteAddresses = remoteip;
                     FW_RULE.Description = text + " " + (DateTime.Now) + " IP: " + remoteip;
                     FW_RULE.Name = "STALKER_SRV" + text + " " + remoteip + " Time: " + (DateTime.Now.ToString("dd.MM.yyyy---HH:mm:ss"));
                 }
@@ -98,8 +99,6 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
 
                     if (remoteip.Length > 0)
                         remoteip = remoteip.Substring(0, remoteip.Length - 1);
-                    else if (remoteip.Length == 0)
-                        return;
 
                     FW_RULE.RemoteAddresses = remoteip;                       
                     FW_RULE.Description = text + " " + (DateTime.Now) + " IP: " + remoteip;
@@ -122,53 +121,23 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                 //MessageBox.Show(ex.Message + ex, "Ошибка в момент вызова функции FireWall [3]", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-     
-        // Удаление данных из таблицы
-        public static void FirewallRuleUserDelete()
-        {
-            try
-            {
-                string indexinfo = FirewallMsgTransferAddress.FirewallAddressInTables;
-                Process RuleDelete = new Process();
-                RuleDelete.StartInfo.FileName = "netsh";                             
-                RuleDelete.StartInfo.Arguments = string.Format(@"advfirewall firewall delete rule name=""" + indexinfo + "");
-                RuleDelete.StartInfo.CreateNoWindow = true;
-                RuleDelete.StartInfo.UseShellExecute = false;
-                RuleDelete.StartInfo.RedirectStandardOutput = true;
-                RuleDelete.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                RuleDelete.StartInfo.StandardOutputEncoding = Encoding.GetEncoding(866);
-                RuleDelete.Start();
-                string result_info = RuleDelete.StandardOutput.ReadToEnd();
-                RuleDelete.WaitForExit();
-                RuleDelete.Close();
-                if (result_info.Length < 35)             
-                    MessageBox.Show(result_info, "S.E.R.V.E.R - Shadow Of Chernobyl", MessageBoxButtons.OK, MessageBoxIcon.Information);            
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message + ex, "Ошибка в момент вызова функции FireWall [4]", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
 
-        // Удалим все правила
-        public static void FirewallAllUserRuleDelete()
+        public static void CleanAllRules(string FirewallMsg)
         {
             try
             {
-                string indexinfo = FirewallMsgTransferAddress.FirewallAddressInTables;
-                Process RuleDelete = new Process();
-                RuleDelete.StartInfo.FileName = "netsh";
-                RuleDelete.StartInfo.Arguments = string.Format(@"advfirewall firewall delete rule name=""" + indexinfo + "");
-                RuleDelete.StartInfo.CreateNoWindow = true;
-                RuleDelete.StartInfo.UseShellExecute = false;
-                RuleDelete.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                RuleDelete.Start();
-                RuleDelete.WaitForExit();
-                RuleDelete.Close();
+                INetFwPolicy2 firewallPolicy = (INetFwPolicy2)Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FwPolicy2"));
+                foreach (INetFwRule rule in firewallPolicy.Rules)
+                {
+                    if (rule.Name.Contains("STALKER_SRV " + FirewallMsg))
+                    {
+                        firewallPolicy.Rules.Remove(rule.Name);
+                    }
+                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message + ex, "Ошибка в момент вызова функции FireWall [5]", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message + ex, "ERROR CleanAllRules", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

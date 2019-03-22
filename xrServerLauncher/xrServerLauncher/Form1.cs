@@ -538,64 +538,66 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                 //proc.StartInfo.WorkingDirectory = current_directory + @"\soProject\";
                 load.StartInfo.Arguments = ("-dedicated -perfhud_hack -i -nosound -silent_error_mode " + StartKeyArgument +" -start server("+SrvMaps4.Text+"/tdm"+ KeySV4+"/ver=1.0/hname=" +SrvName4.Text+"/portsv="+PortSV4.Text+"/portgs="+PortGS4.Text+"/maxplayers="+svPlayers.Text+ "/public=" + ServerOnline + "estime=9:00/etimef=1.0/ans=1/anslen=3/pdahunt=0/warmup=0/timelimit=0/dmgblock=0/dmbi=0/fraglimit=0/spectrmds=31/vote=26/frcrspwn=0/abalance=0/aswap=0/fi=0/fn=0/ffire=1.0) client(" + NAT_IP_ATTACH+"/portcl="+PortCL4.Text);
                 load.Start();*/
-
+                
                 ProcessStartInfo CONTROLLER = new ProcessStartInfo(current_directory + @"\bin\stalker_csoc.exe", @"bin\dedicated\xr_3da.exe -i -nosound -noprefetch " + StartKeyArgument + " -$sv_status -start server(" + SrvMaps4.Text + "/" + SrvGameType4.Text + KeySV4 + "/hname=" + SrvName4.Text + "/maxplayers=" + svPlayers.Text + "/public=" + ServerOnline + "/battleye=1/maxping=" + svPing.Text + "/spectr=20/spectrmds=31/vote=1/dmgblock=0/fraglimit=" + svFraglim.Text + "/timelimit=" + svTimeLim.Text + "/ffire=" + svFriendlyFire.Text + "/fn=" + svIco.Text + "/fi=" + svIco.Text + "/ans=0/warmup=" + svWurmUp.Text + "/etimef=0.0/estime=" + svWeatherTime.Text + "/portgs=" + PortGS4.Text + "/portsv=" + PortSV4.Text + "portcl=" + PortCL4.Text + "/anum=" + Artefacts.Text + "/astime=" + svTimeArtefact.Text + ") client(" + NAT_IP_ATTACH + "/name=server)");
                 CONTROLLER.WorkingDirectory = Path.GetDirectoryName(CONTROLLER.FileName);
                 Process load = Process.Start(CONTROLLER);
                 // ========================= GET CHILD PID ========================= 
-                Thread.Sleep(500);
+                new Thread(() =>
+                {
+                    Thread.Sleep(3500);
 
-                var search = new ManagementObjectSearcher("root\\CIMV2", "SELECT ProcessId FROM Win32_Process WHERE ParentProcessId = " + load.Id);
-                foreach (var PIDResult in search.Get())
-                {
-                    var a = (uint)PIDResult["ProcessID"];
-                    ServerEvents.Items.Add((DateTime.Now.ToString("[dd.MM.yyyy - HH:mm:ss]")) + "[SYSTEM]: SERVER[4] PID PROCESS => " + a).ForeColor = Color.Coral;
-                    GetPIDSV4 = Convert.ToInt32(a);
-                }
-                Thread.Sleep(500);
-                if (GetPIDSV4 != 0)                         // Процесс не должен быть равен нулю, иначе мы его останавливаем. 
-                {
-                    try                                     // Проверяем точно ли существует наш процесс, и если он существует, то продолжаем работу
+                    var search = new ManagementObjectSearcher("root\\CIMV2", "SELECT ProcessId FROM Win32_Process WHERE ParentProcessId = " + load.Id);
+                    foreach (var PIDResult in search.Get())
                     {
-                        Process.GetProcessById(GetPIDSV4);
-                        PID4 = GetPIDSV4;                   // если процесс действительно существует, то берем его под контроль. 
-                        FunctionServer4UsingCore();
-                        FuncPriorityClassChangeServer4();
+                        var a = (uint)PIDResult["ProcessID"];
+                        ServerEvents.Items.Add((DateTime.Now.ToString("[dd.MM.yyyy - HH:mm:ss]")) + "[SYSTEM]: SERVER[4] PID PROCESS => " + a).ForeColor = Color.Coral;
+                        GetPIDSV4 = Convert.ToInt32(a);
                     }
-                    catch (Exception ex)                    // Потеряли pid сервера... останавливаем контроль.
+                    if (GetPIDSV4 != 0)                         // Процесс не должен быть равен нулю, иначе мы его останавливаем. 
+                    {
+                        try                                     // Проверяем точно ли существует наш процесс, и если он существует, то продолжаем работу
+                        {
+                            Process.GetProcessById(GetPIDSV4);
+                            PID4 = GetPIDSV4;                   // если процесс действительно существует, то берем его под контроль. 
+                            FunctionServer4UsingCore();
+                            FuncPriorityClassChangeServer4();
+                        }
+                        catch (Exception ex)                    // Потеряли pid сервера... останавливаем контроль.
+                        {
+                            if (btnStartStop4.Text == "Стоп")
+                            {
+                                btnStartStop4.PerformClick();
+                                if (btnStartStop4.Text == "Старт")
+                                {
+                                    info_sv_time4.Text = "[stop] Lost pid process";
+                                    ServerEvents.Items.Add((DateTime.Now.ToString("[dd.MM.yyyy - HH:mm:ss]")) + "[STOP]: SERVER[4] LOST PID PROCESS => Reason: " + ex.Message).ForeColor = Color.Red;
+                                }
+                                else
+                                {
+                                    Srv4ProcessScan.Stop();
+                                    Srv4Time.Stop();
+                                    ServerEvents.Items.Add((DateTime.Now.ToString("[dd.MM.yyyy - HH:mm:ss]")) + "[STOP]: SERVER[4] LOST PID PROCESS => INCORRECT EXITS FUNCT !!!").ForeColor = Color.DarkViolet;
+                                }
+                            }
+                        }
+                    }
+                    else
                     {
                         if (btnStartStop4.Text == "Стоп")
                         {
                             btnStartStop4.PerformClick();
-                            if (btnStartStop4.Text == "Старт")
-                            {
-                                info_sv_time4.Text = "[stop] Lost pid process";
-                                ServerEvents.Items.Add((DateTime.Now.ToString("[dd.MM.yyyy - HH:mm:ss]")) + "[STOP]: SERVER[4] LOST PID PROCESS => Reason: " + ex.Message).ForeColor = Color.Red;
-                            }
-                            else
-                            {
-                                Srv4ProcessScan.Stop();
-                                Srv4Time.Stop();
-                                ServerEvents.Items.Add((DateTime.Now.ToString("[dd.MM.yyyy - HH:mm:ss]")) + "[STOP]: SERVER[4] LOST PID PROCESS => INCORRECT EXITS FUNCT !!!").ForeColor = Color.DarkViolet;
-                            }
+                            info_sv_time4.Text = "[stop] Pid process is null";
                         }
                     }
-                }
-                else
-                {
-                    if (btnStartStop4.Text == "Стоп")
-                    {
-                        btnStartStop4.PerformClick();
-                        info_sv_time4.Text = "[stop] Pid process is null";
-                    }
-                }
+                }).Start();
             }
             catch (Exception ex)
             {
+                btnStartStop4.Text = "Старт";
                 MessageBox.Show("Ошибка загрузки исполняемых файлов сервера.\nКод ошибки:\n" + ex.Message, "S.E.R.V.E.R - Shadow Of Chernobyl", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
-
         // ==================================START SERVER 5==================================
         string KeySV5;
         int PID5, GetPIDSV5;
@@ -623,62 +625,63 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                 info_sv_time5.Text = "Loading...";
 
                 // Call Of Pripyat
-
-                /* Process load = new Process();
+                /*
+                 Process load = new Process();
                  load.StartInfo.FileName = "soLauncher.exe";
                  load.StartInfo.Arguments = ("-dedicated -perfhud_hack -i -nosound -silent_error_mode "+StartKeyArgument + " -start server(" + SrvMaps5.Text + "/tdm"+ KeySV5+"/ver=1.0/hname=" + SrvName5.Text + "/portsv=" + PortSV5.Text + "/portgs=" + PortGS5.Text + "/maxplayers=" + svPlayers.Text + "/estime=9:00/etimef=1.0/ans=1/anslen=3/pdahunt=0/warmup=0/timelimit=0/dmgblock=0/dmbi=0/fraglimit=0/spectrmds=31/vote=26/frcrspwn=0/abalance=0/aswap=0/fi=0/fn=0/ffire=1.0) client("+NAT_IP_ATTACH+"/portcl=" + PortCL5.Text);
                  load.Start();*/
-
-                ProcessStartInfo CONTROLLER = new ProcessStartInfo(current_directory + @"\bin\stalker_csoc.exe", @"bin\dedicated\xr_3da.exe -i -nosound -noprefetch " + StartKeyArgument + " -$sv_status -start server(" + SrvMaps5.Text + "/" + SrvGameType5.Text + KeySV5 + "/hname=" + SrvName5.Text + "/maxplayers=" + svPlayers.Text + "/public=" + ServerOnline + "/battleye=1/maxping=" + svPing.Text + "/spectr=20/spectrmds=31/vote=1/dmgblock=0/fraglimit=" + svFraglim.Text + "/timelimit=" + svTimeLim.Text + "/ffire=" + svFriendlyFire.Text + "/fn=" + svIco.Text + "/fi=" + svIco.Text + "/ans=0/warmup=" + svWurmUp.Text + "/etimef=0.0/estime=" + svWeatherTime.Text + "/portgs=" + PortGS5.Text + "/portsv=" + PortSV5.Text + "portcl=" + PortCL5.Text + "/anum=" + Artefacts.Text + "/astime=" + svTimeArtefact.Text + ") client(" + NAT_IP_ATTACH + "/name=server)");
-                CONTROLLER.WorkingDirectory = Path.GetDirectoryName(CONTROLLER.FileName);
-                Process load = Process.Start(CONTROLLER);
-      
-                Thread.Sleep(500);
-                var search = new ManagementObjectSearcher("root\\CIMV2", "SELECT ProcessId FROM Win32_Process WHERE ParentProcessId = " + load.Id);
-                foreach (var PIDResult in search.Get())
+               
+               ProcessStartInfo CONTROLLER = new ProcessStartInfo(current_directory + @"\bin\stalker_csoc.exe", @"bin\dedicated\xr_3da.exe -i -nosound -noprefetch " + StartKeyArgument + " -$sv_status -start server(" + SrvMaps5.Text + "/" + SrvGameType5.Text + KeySV5 + "/hname=" + SrvName5.Text + "/maxplayers=" + svPlayers.Text + "/public=" + ServerOnline + "/battleye=1/maxping=" + svPing.Text + "/spectr=20/spectrmds=31/vote=1/dmgblock=0/fraglimit=" + svFraglim.Text + "/timelimit=" + svTimeLim.Text + "/ffire=" + svFriendlyFire.Text + "/fn=" + svIco.Text + "/fi=" + svIco.Text + "/ans=0/warmup=" + svWurmUp.Text + "/etimef=0.0/estime=" + svWeatherTime.Text + "/portgs=" + PortGS5.Text + "/portsv=" + PortSV5.Text + "portcl=" + PortCL5.Text + "/anum=" + Artefacts.Text + "/astime=" + svTimeArtefact.Text + ") client(" + NAT_IP_ATTACH + "/name=server)");
+               CONTROLLER.WorkingDirectory = Path.GetDirectoryName(CONTROLLER.FileName);
+               Process load = Process.Start(CONTROLLER);
+                new Thread(() =>
                 {
-                    var a = (uint)PIDResult["ProcessID"];
-                    ServerEvents.Items.Add((DateTime.Now.ToString("[dd.MM.yyyy - HH:mm:ss]")) + "[SYSTEM]: SERVER[5] PID PROCESS => " + a).ForeColor = Color.Coral;
-                    GetPIDSV5 = Convert.ToInt32(a);
-                }
-                Thread.Sleep(500);
-                if (GetPIDSV5 != 0)
-                {
-                    try
+                    Thread.Sleep(3500);
+                    var search = new ManagementObjectSearcher("root\\CIMV2", "SELECT ProcessId FROM Win32_Process WHERE ParentProcessId = " + load.Id);
+                    foreach (var PIDResult in search.Get())
                     {
-                        Process.GetProcessById(GetPIDSV5);
-                        PID5 = GetPIDSV5;
-                        FunctionServer4UsingCore();
-                        FuncPriorityClassChangeServer4();
-                        AsmLoading.Start();
+                        var a = (uint)PIDResult["ProcessID"];
+                        ServerEvents.Items.Add((DateTime.Now.ToString("[dd.MM.yyyy - HH:mm:ss]")) + "[SYSTEM]: SERVER[5] PID PROCESS => " + a).ForeColor = Color.Coral;
+                        GetPIDSV5 = Convert.ToInt32(a);
                     }
-                    catch (Exception ex)
+                    if (GetPIDSV5 != 0)
+                    {
+                        try
+                        {
+                            Process.GetProcessById(GetPIDSV5);
+                            PID5 = GetPIDSV5;
+                            FunctionServer4UsingCore();
+                            FuncPriorityClassChangeServer4();
+                            AsmLoading.Start();
+                        }
+                        catch (Exception ex)
+                        {
+                            if (btnStartStop5.Text == "Стоп")
+                            {
+                                btnStartStop5.PerformClick();
+                                if (btnStartStop5.Text == "Старт")
+                                {
+                                    info_sv_time5.Text = "[stop] Lost pid process";
+                                    ServerEvents.Items.Add((DateTime.Now.ToString("[dd.MM.yyyy - HH:mm:ss]")) + "[STOP]: SERVER[5] LOST PID PROCESS => Reason: " + ex.Message).ForeColor = Color.Red;
+                                }
+                                else
+                                {
+                                    Srv5ProcessScan.Stop();
+                                    Srv5Time.Stop();
+                                    ServerEvents.Items.Add((DateTime.Now.ToString("[dd.MM.yyyy - HH:mm:ss]")) + "[STOP]: SERVER[5] LOST PID PROCESS => INCORRECT EXITS FUNCT !!!").ForeColor = Color.DarkViolet;
+                                }
+                            }
+                        }
+                    }
+                    else
                     {
                         if (btnStartStop5.Text == "Стоп")
                         {
                             btnStartStop5.PerformClick();
-                            if (btnStartStop5.Text == "Старт")
-                            {
-                                info_sv_time5.Text = "[stop] Lost pid process";
-                                ServerEvents.Items.Add((DateTime.Now.ToString("[dd.MM.yyyy - HH:mm:ss]")) + "[STOP]: SERVER[5] LOST PID PROCESS => Reason: " + ex.Message).ForeColor = Color.Red;
-                            }
-                            else
-                            {
-                                Srv5ProcessScan.Stop();
-                                Srv5Time.Stop();
-                                ServerEvents.Items.Add((DateTime.Now.ToString("[dd.MM.yyyy - HH:mm:ss]")) + "[STOP]: SERVER[5] LOST PID PROCESS => INCORRECT EXITS FUNCT !!!").ForeColor = Color.DarkViolet;
-                            }
+                            info_sv_time5.Text = "[stop] Pid process is null";
                         }
                     }
-                }
-                else
-                {
-                    if (btnStartStop5.Text == "Стоп")
-                    {
-                        btnStartStop5.PerformClick();
-                        info_sv_time5.Text = "[stop] Pid process is null";
-                    }
-                }
+                }).Start();
             }
             catch (Exception ex)
             {
@@ -713,7 +716,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                 Proc.WaitForExit();
                 Proc.Close();
             }
-            catch (Exception) // ArgumentException т.к проверка может кинуть 2 вида исключения, выбираем 1 действие. 
+            catch (Exception)
             {
                 srv1_reconnection_counter++;
                 info_sv_reconnect1.Text = "Restarts: [" + srv1_reconnection_counter + "]";
@@ -2432,9 +2435,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                 GUI_PROTECT.Text = "Защита";
             }
         }
-        // =========================================================================
-        // Смена цвета
-        // =========================================================================
+
         private void WriteNewColor_Click(object sender, EventArgs e)
         {
             using (ColorDialog newCollor = new ColorDialog())
@@ -3881,7 +3882,6 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                 }
             }
         }
-
 
 #if (DEBUG)
         private void SendMail()

@@ -66,6 +66,11 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                             blocked_players++;
                             SrvColorEvents.Items.Add("[BLOCKED] " + s.Replace("~", "")).ForeColor = Color.Lime;
                         }
+                        else if (s.Contains("<-> Too many bullets for the value Hit Power"))
+                        {
+                            cheater_hack++;
+                            SrvColorEvents.Items.Add("[CHEATER + BAD HIT POWER && BULLETS] => " + s.Replace("+", "")).ForeColor = Color.Violet;
+                        }
                         else if (color == "#")
                         {
                             cheater_found++;
@@ -75,11 +80,6 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                         {
                             using_weapons++;
                             SrvColorEvents.Items.Add("[HWEAPONS] " + s.Replace("@", "")).ForeColor = Color.Blue;
-                        }
-                        else if (color == "+")
-                        {
-                            cheater_hack++;
-                            SrvColorEvents.Items.Add("[CHEATER + BAD HIT POWER && BULLETS] => " + s.Replace("+", "")).ForeColor = Color.Violet;
                         }
                         else if (color == "%")
                         {

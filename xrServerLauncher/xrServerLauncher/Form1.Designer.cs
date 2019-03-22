@@ -4274,8 +4274,6 @@
         private System.Windows.Forms.Label GUI_PSV;
         private System.Windows.Forms.Label GUI_PGS;
         private System.Windows.Forms.ComboBox PortCL1;
-        private System.Windows.Forms.ComboBox PortSV1;
-        private System.Windows.Forms.ComboBox PortGS1;
         private System.Windows.Forms.Label GUI_PROTECT;
         private System.Windows.Forms.TextBox PID1;
         private System.Windows.Forms.Label GUI_START_STOP;
@@ -4283,16 +4281,12 @@
         private System.Windows.Forms.CheckBox SRV_PROTECT1;
         private System.Windows.Forms.Button btnStartStop2;
         private System.Windows.Forms.TextBox PID2;
-        private System.Windows.Forms.ComboBox PortGS2;
-        private System.Windows.Forms.ComboBox PortSV2;
         private System.Windows.Forms.ComboBox PortCL2;
         private System.Windows.Forms.ComboBox SrvMaps2;
         private System.Windows.Forms.ComboBox SrvGameType2;
         private System.Windows.Forms.TextBox SrvName2;
         private System.Windows.Forms.Button btnStartStop3;
         private System.Windows.Forms.TextBox PID3;
-        private System.Windows.Forms.ComboBox PortGS3;
-        private System.Windows.Forms.ComboBox PortSV3;
         private System.Windows.Forms.ComboBox PortCL3;
         private System.Windows.Forms.ComboBox SrvMaps3;
         private System.Windows.Forms.ComboBox SrvGameType3;
@@ -4488,6 +4482,12 @@
         private System.Windows.Forms.CheckBox ProcessMemoryController;
         private System.Windows.Forms.PictureBox WriteNewColor;
         private System.Windows.Forms.CheckBox SendToMail;
+        private System.Windows.Forms.ComboBox PortSV1;
+        private System.Windows.Forms.ComboBox PortSV2;
+        private System.Windows.Forms.ComboBox PortSV3;
+        private System.Windows.Forms.ComboBox PortGS1;
+        private System.Windows.Forms.ComboBox PortGS2;
+        private System.Windows.Forms.ComboBox PortGS3;
     }
 }
 

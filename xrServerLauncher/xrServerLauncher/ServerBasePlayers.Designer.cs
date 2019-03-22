@@ -44,8 +44,8 @@
             this.BaseMenu2StartAutoCheck = new System.Windows.Forms.ToolStripMenuItem();
             this.BaseMenu2GetListplayers = new System.Windows.Forms.ToolStripMenuItem();
             this.BaseMenu2GetSearch = new System.Windows.Forms.ToolStripMenuItem();
-            this.BaseMenu2StatsEvent = new System.Windows.Forms.ToolStripMenuItem();
             this.BaseMenu2OpenEvents = new System.Windows.Forms.ToolStripMenuItem();
+            this.BaseMenu2StatsEvent = new System.Windows.Forms.ToolStripMenuItem();
             this.SearchPanel = new System.Windows.Forms.Panel();
             this.ui_search_exit = new System.Windows.Forms.Label();
             this.index_search = new System.Windows.Forms.Button();
@@ -199,15 +199,10 @@
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.tabPage6 = new System.Windows.Forms.TabPage();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.AutoHideTime = new System.Windows.Forms.NumericUpDown();
-            this.label14 = new System.Windows.Forms.Label();
-            this.AutoHide = new System.Windows.Forms.NumericUpDown();
-            this.AutoServerHide = new System.Windows.Forms.CheckBox();
-            this.EventCheckProxy = new System.Windows.Forms.CheckBox();
             this.StartAutoCheckThread = new System.Windows.Forms.CheckBox();
             this.BASE_MENU_5 = new System.Windows.Forms.LinkLabel();
             this.EventsBlockedSubnet = new System.Windows.Forms.CheckBox();
+            this.EventCheckProxy = new System.Windows.Forms.CheckBox();
             this.BASE_MENU_4 = new System.Windows.Forms.LinkLabel();
             this.BASE_MENU_3 = new System.Windows.Forms.LinkLabel();
             this.BASE_MENU_2 = new System.Windows.Forms.LinkLabel();
@@ -221,7 +216,6 @@
             this.GUI_2 = new System.Windows.Forms.Label();
             this.EventsControllerCheckPlayers = new System.Windows.Forms.CheckBox();
             this.EventsControllerAutoCheckPlayers = new System.Windows.Forms.CheckBox();
-            this.EventsAutoDelete = new System.Windows.Forms.CheckBox();
             this.EventsChangeWindow = new System.Windows.Forms.CheckBox();
             this.EventsControllerMaxLimit = new System.Windows.Forms.NumericUpDown();
             this.EventsPlayersAutoColor = new System.Windows.Forms.CheckBox();
@@ -305,8 +299,13 @@
             this.UI_HELP = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.PageNetwork = new System.Windows.Forms.TabPage();
-            this.groupBox7 = new System.Windows.Forms.GroupBox();
-            this.CheckedAddress = new System.Windows.Forms.Label();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.gui_filter3 = new System.Windows.Forms.Label();
+            this.btn_gui_filter3 = new System.Windows.Forms.PictureBox();
+            this.gui_filter2 = new System.Windows.Forms.Label();
+            this.btn_gui_filter2 = new System.Windows.Forms.PictureBox();
+            this.gui_filter1 = new System.Windows.Forms.Label();
+            this.btn_gui_filter1 = new System.Windows.Forms.PictureBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.FirwallLoadFilterAddress = new System.Windows.Forms.Button();
             this.FirewallInfo = new System.Windows.Forms.Label();
@@ -320,8 +319,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.FirewallIPBox = new System.Windows.Forms.TextBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.FirewallRulesSearch = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.FirewallRulesSearch = new System.Windows.Forms.TextBox();
             this.FirwallSearchInList = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.btnStatusFunct = new System.Windows.Forms.LinkLabel();
@@ -389,9 +388,6 @@
             this.tabControl2.SuspendLayout();
             this.tabPage6.SuspendLayout();
             this.panel1.SuspendLayout();
-            this.panel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.AutoHideTime)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.AutoHide)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.EventsControllerMaxLimit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.EventsWeaponsMaxLimit)).BeginInit();
             this.tabPageAntiCheatParams.SuspendLayout();
@@ -409,7 +405,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.tablecolor2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tablecolor5)).BeginInit();
             this.PageNetwork.SuspendLayout();
-            this.groupBox7.SuspendLayout();
+            this.groupBox6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.btn_gui_filter3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.btn_gui_filter2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.btn_gui_filter1)).BeginInit();
             this.groupBox3.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -543,8 +542,8 @@
             this.BaseMenu2StartAutoCheck,
             this.BaseMenu2GetListplayers,
             this.BaseMenu2GetSearch,
-            this.BaseMenu2StatsEvent,
-            this.BaseMenu2OpenEvents});
+            this.BaseMenu2OpenEvents,
+            this.BaseMenu2StatsEvent});
             this.BaseMenu1.Location = new System.Drawing.Point(0, 0);
             this.BaseMenu1.Name = "BaseMenu1";
             this.BaseMenu1.Size = new System.Drawing.Size(776, 27);
@@ -575,14 +574,6 @@
             this.BaseMenu2GetSearch.Text = "Поиск в базе";
             this.BaseMenu2GetSearch.Click += new System.EventHandler(this.BaseMenu2GetSearch_Click);
             // 
-            // BaseMenu2StatsEvent
-            // 
-            this.BaseMenu2StatsEvent.Image = ((System.Drawing.Image)(resources.GetObject("BaseMenu2StatsEvent.Image")));
-            this.BaseMenu2StatsEvent.Name = "BaseMenu2StatsEvent";
-            this.BaseMenu2StatsEvent.Size = new System.Drawing.Size(140, 23);
-            this.BaseMenu2StatsEvent.Text = "Статистика работы";
-            this.BaseMenu2StatsEvent.Click += new System.EventHandler(this.BaseMenu2StatsEvent_Click);
-            // 
             // BaseMenu2OpenEvents
             // 
             this.BaseMenu2OpenEvents.Image = ((System.Drawing.Image)(resources.GetObject("BaseMenu2OpenEvents.Image")));
@@ -590,6 +581,14 @@
             this.BaseMenu2OpenEvents.Size = new System.Drawing.Size(84, 23);
             this.BaseMenu2OpenEvents.Text = "События";
             this.BaseMenu2OpenEvents.Click += new System.EventHandler(this.BaseMenu2OpenEvents_Click);
+            // 
+            // BaseMenu2StatsEvent
+            // 
+            this.BaseMenu2StatsEvent.Image = ((System.Drawing.Image)(resources.GetObject("BaseMenu2StatsEvent.Image")));
+            this.BaseMenu2StatsEvent.Name = "BaseMenu2StatsEvent";
+            this.BaseMenu2StatsEvent.Size = new System.Drawing.Size(140, 23);
+            this.BaseMenu2StatsEvent.Text = "Статистика работы";
+            this.BaseMenu2StatsEvent.Click += new System.EventHandler(this.BaseMenu2StatsEvent_Click);
             // 
             // SearchPanel
             // 
@@ -717,7 +716,6 @@
             this.ListTableChange1.Name = "ListTableChange1";
             this.ListTableChange1.ShowItemToolTips = true;
             this.ListTableChange1.Size = new System.Drawing.Size(203, 410);
-            this.ListTableChange1.Sorting = System.Windows.Forms.SortOrder.Descending;
             this.ListTableChange1.TabIndex = 66;
             this.ListTableChange1.UseCompatibleStateImageBehavior = false;
             this.ListTableChange1.View = System.Windows.Forms.View.Details;
@@ -1915,7 +1913,7 @@
             // columnHeader21
             // 
             this.columnHeader21.Text = "Counter";
-            this.columnHeader21.Width = 75;
+            this.columnHeader21.Width = 78;
             // 
             // ContextMenuBanPlayersList
             // 
@@ -2063,10 +2061,10 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(255)))));
-            this.panel1.Controls.Add(this.panel2);
             this.panel1.Controls.Add(this.StartAutoCheckThread);
             this.panel1.Controls.Add(this.BASE_MENU_5);
             this.panel1.Controls.Add(this.EventsBlockedSubnet);
+            this.panel1.Controls.Add(this.EventCheckProxy);
             this.panel1.Controls.Add(this.BASE_MENU_4);
             this.panel1.Controls.Add(this.BASE_MENU_3);
             this.panel1.Controls.Add(this.BASE_MENU_2);
@@ -2080,7 +2078,6 @@
             this.panel1.Controls.Add(this.GUI_2);
             this.panel1.Controls.Add(this.EventsControllerCheckPlayers);
             this.panel1.Controls.Add(this.EventsControllerAutoCheckPlayers);
-            this.panel1.Controls.Add(this.EventsAutoDelete);
             this.panel1.Controls.Add(this.EventsChangeWindow);
             this.panel1.Controls.Add(this.EventsControllerMaxLimit);
             this.panel1.Controls.Add(this.EventsPlayersAutoColor);
@@ -2091,95 +2088,6 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(588, 351);
             this.panel1.TabIndex = 195;
-            // 
-            // panel2
-            // 
-            this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel2.Controls.Add(this.AutoHideTime);
-            this.panel2.Controls.Add(this.label14);
-            this.panel2.Controls.Add(this.AutoHide);
-            this.panel2.Controls.Add(this.AutoServerHide);
-            this.panel2.Controls.Add(this.EventCheckProxy);
-            this.panel2.Location = new System.Drawing.Point(292, 212);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(281, 44);
-            this.panel2.TabIndex = 202;
-            // 
-            // AutoHideTime
-            // 
-            this.AutoHideTime.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.AutoHideTime.Location = new System.Drawing.Point(177, 19);
-            this.AutoHideTime.Maximum = new decimal(new int[] {
-            60,
-            0,
-            0,
-            0});
-            this.AutoHideTime.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.AutoHideTime.Name = "AutoHideTime";
-            this.AutoHideTime.Size = new System.Drawing.Size(49, 20);
-            this.AutoHideTime.TabIndex = 203;
-            this.AutoHideTime.Value = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.ForeColor = System.Drawing.Color.Red;
-            this.label14.Location = new System.Drawing.Point(229, 22);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(37, 13);
-            this.label14.TabIndex = 194;
-            this.label14.Text = "минут";
-            // 
-            // AutoHide
-            // 
-            this.AutoHide.Location = new System.Drawing.Point(123, 19);
-            this.AutoHide.Maximum = new decimal(new int[] {
-            7000,
-            0,
-            0,
-            0});
-            this.AutoHide.Name = "AutoHide";
-            this.AutoHide.Size = new System.Drawing.Size(51, 20);
-            this.AutoHide.TabIndex = 193;
-            this.AutoHide.Value = new decimal(new int[] {
-            5445,
-            0,
-            0,
-            0});
-            // 
-            // AutoServerHide
-            // 
-            this.AutoServerHide.AutoSize = true;
-            this.AutoServerHide.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(255)))));
-            this.AutoServerHide.ForeColor = System.Drawing.Color.Red;
-            this.AutoServerHide.Location = new System.Drawing.Point(4, 21);
-            this.AutoServerHide.Name = "AutoServerHide";
-            this.AutoServerHide.Size = new System.Drawing.Size(116, 17);
-            this.AutoServerHide.TabIndex = 192;
-            this.AutoServerHide.Text = "Auto block port GS";
-            this.toolTipHelMenu.SetToolTip(this.AutoServerHide, "Автоматически прятать сервер с мастер-сервера\r\nв момент блокировки нарушителей\r\nп" +
-        "ри этом играющие игроки остануться на сервере.");
-            this.AutoServerHide.UseVisualStyleBackColor = false;
-            // 
-            // EventCheckProxy
-            // 
-            this.EventCheckProxy.AutoSize = true;
-            this.EventCheckProxy.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(255)))));
-            this.EventCheckProxy.ForeColor = System.Drawing.Color.Red;
-            this.EventCheckProxy.Location = new System.Drawing.Point(4, 3);
-            this.EventCheckProxy.Name = "EventCheckProxy";
-            this.EventCheckProxy.Size = new System.Drawing.Size(263, 17);
-            this.EventCheckProxy.TabIndex = 191;
-            this.EventCheckProxy.Text = "Проверка адреса на использование vpn, proxy";
-            this.EventCheckProxy.UseVisualStyleBackColor = false;
             // 
             // StartAutoCheckThread
             // 
@@ -2218,6 +2126,18 @@
             this.EventsBlockedSubnet.TabIndex = 190;
             this.EventsBlockedSubnet.Text = "Блокировать подсеть нарушителя";
             this.EventsBlockedSubnet.UseVisualStyleBackColor = false;
+            // 
+            // EventCheckProxy
+            // 
+            this.EventCheckProxy.AutoSize = true;
+            this.EventCheckProxy.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(255)))));
+            this.EventCheckProxy.ForeColor = System.Drawing.Color.Red;
+            this.EventCheckProxy.Location = new System.Drawing.Point(14, 229);
+            this.EventCheckProxy.Name = "EventCheckProxy";
+            this.EventCheckProxy.Size = new System.Drawing.Size(263, 17);
+            this.EventCheckProxy.TabIndex = 191;
+            this.EventCheckProxy.Text = "Проверка адреса на использование vpn, proxy";
+            this.EventCheckProxy.UseVisualStyleBackColor = false;
             // 
             // BASE_MENU_4
             // 
@@ -2301,7 +2221,7 @@
             this.EventsControllerTrayMessage.AutoSize = true;
             this.EventsControllerTrayMessage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(255)))));
             this.EventsControllerTrayMessage.Enabled = false;
-            this.EventsControllerTrayMessage.ForeColor = System.Drawing.Color.Red;
+            this.EventsControllerTrayMessage.ForeColor = System.Drawing.Color.Black;
             this.EventsControllerTrayMessage.Location = new System.Drawing.Point(14, 212);
             this.EventsControllerTrayMessage.Name = "EventsControllerTrayMessage";
             this.EventsControllerTrayMessage.Size = new System.Drawing.Size(269, 17);
@@ -2330,7 +2250,7 @@
             this.EventsControllerAutoSaveHistory.AutoSize = true;
             this.EventsControllerAutoSaveHistory.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(255)))));
             this.EventsControllerAutoSaveHistory.ForeColor = System.Drawing.Color.Black;
-            this.EventsControllerAutoSaveHistory.Location = new System.Drawing.Point(292, 179);
+            this.EventsControllerAutoSaveHistory.Location = new System.Drawing.Point(288, 179);
             this.EventsControllerAutoSaveHistory.Name = "EventsControllerAutoSaveHistory";
             this.EventsControllerAutoSaveHistory.Size = new System.Drawing.Size(274, 17);
             this.EventsControllerAutoSaveHistory.TabIndex = 183;
@@ -2354,7 +2274,7 @@
             this.EventsControllerCheckPlayers.AutoSize = true;
             this.EventsControllerCheckPlayers.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(255)))));
             this.EventsControllerCheckPlayers.ForeColor = System.Drawing.Color.Black;
-            this.EventsControllerCheckPlayers.Location = new System.Drawing.Point(292, 196);
+            this.EventsControllerCheckPlayers.Location = new System.Drawing.Point(288, 196);
             this.EventsControllerCheckPlayers.Name = "EventsControllerCheckPlayers";
             this.EventsControllerCheckPlayers.Size = new System.Drawing.Size(256, 17);
             this.EventsControllerCheckPlayers.TabIndex = 114;
@@ -2373,18 +2293,6 @@
             this.EventsControllerAutoCheckPlayers.Text = "Включить автоматическую проверку игроков";
             this.toolTipHelMenu.SetToolTip(this.EventsControllerAutoCheckPlayers, resources.GetString("EventsControllerAutoCheckPlayers.ToolTip"));
             this.EventsControllerAutoCheckPlayers.UseVisualStyleBackColor = false;
-            // 
-            // EventsAutoDelete
-            // 
-            this.EventsAutoDelete.AutoSize = true;
-            this.EventsAutoDelete.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(255)))));
-            this.EventsAutoDelete.Location = new System.Drawing.Point(14, 229);
-            this.EventsAutoDelete.Name = "EventsAutoDelete";
-            this.EventsAutoDelete.Size = new System.Drawing.Size(255, 17);
-            this.EventsAutoDelete.TabIndex = 77;
-            this.EventsAutoDelete.Text = "Автоудаление событий если их больше: 1000";
-            this.toolTipHelMenu.SetToolTip(this.EventsAutoDelete, resources.GetString("EventsAutoDelete.ToolTip"));
-            this.EventsAutoDelete.UseVisualStyleBackColor = false;
             // 
             // EventsChangeWindow
             // 
@@ -2429,7 +2337,7 @@
             // 
             this.EventsPlayersAutoColor.AutoSize = true;
             this.EventsPlayersAutoColor.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(255)))));
-            this.EventsPlayersAutoColor.ForeColor = System.Drawing.Color.Red;
+            this.EventsPlayersAutoColor.ForeColor = System.Drawing.Color.Black;
             this.EventsPlayersAutoColor.Location = new System.Drawing.Point(14, 195);
             this.EventsPlayersAutoColor.Name = "EventsPlayersAutoColor";
             this.EventsPlayersAutoColor.Size = new System.Drawing.Size(257, 17);
@@ -3380,7 +3288,7 @@
             // 
             // PageNetwork
             // 
-            this.PageNetwork.Controls.Add(this.groupBox7);
+            this.PageNetwork.Controls.Add(this.groupBox6);
             this.PageNetwork.Controls.Add(this.groupBox3);
             this.PageNetwork.Controls.Add(this.groupBox5);
             this.PageNetwork.Controls.Add(this.groupBox4);
@@ -3396,31 +3304,86 @@
             this.PageNetwork.Text = "Блокировка IP";
             this.PageNetwork.UseVisualStyleBackColor = true;
             // 
-            // groupBox7
+            // groupBox6
             // 
-            this.groupBox7.Controls.Add(this.CheckedAddress);
-            this.groupBox7.Location = new System.Drawing.Point(2, 365);
-            this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(207, 72);
-            this.groupBox7.TabIndex = 69;
-            this.groupBox7.TabStop = false;
-            this.groupBox7.Text = "Проверка корректности данных";
+            this.groupBox6.Controls.Add(this.gui_filter3);
+            this.groupBox6.Controls.Add(this.btn_gui_filter3);
+            this.groupBox6.Controls.Add(this.gui_filter2);
+            this.groupBox6.Controls.Add(this.btn_gui_filter2);
+            this.groupBox6.Controls.Add(this.gui_filter1);
+            this.groupBox6.Controls.Add(this.btn_gui_filter1);
+            this.groupBox6.Location = new System.Drawing.Point(3, 357);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(207, 80);
+            this.groupBox6.TabIndex = 69;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "Статистика блокировок по цвету";
             // 
-            // CheckedAddress
+            // gui_filter3
             // 
-            this.CheckedAddress.AutoSize = true;
-            this.CheckedAddress.ForeColor = System.Drawing.Color.Black;
-            this.CheckedAddress.Location = new System.Drawing.Point(6, 15);
-            this.CheckedAddress.Name = "CheckedAddress";
-            this.CheckedAddress.Size = new System.Drawing.Size(127, 13);
-            this.CheckedAddress.TabIndex = 0;
-            this.CheckedAddress.Text = "Статус: Нарушений нет.";
+            this.gui_filter3.AutoSize = true;
+            this.gui_filter3.BackColor = System.Drawing.Color.White;
+            this.gui_filter3.Location = new System.Drawing.Point(26, 53);
+            this.gui_filter3.Name = "gui_filter3";
+            this.gui_filter3.Size = new System.Drawing.Size(88, 13);
+            this.gui_filter3.TabIndex = 131;
+            this.gui_filter3.Text = "[HWEAPONS]: 0";
+            // 
+            // btn_gui_filter3
+            // 
+            this.btn_gui_filter3.BackColor = System.Drawing.Color.DarkOrange;
+            this.btn_gui_filter3.Location = new System.Drawing.Point(7, 53);
+            this.btn_gui_filter3.Name = "btn_gui_filter3";
+            this.btn_gui_filter3.Size = new System.Drawing.Size(15, 15);
+            this.btn_gui_filter3.TabIndex = 130;
+            this.btn_gui_filter3.TabStop = false;
+            this.btn_gui_filter3.Click += new System.EventHandler(this.btn_gui_filter3_Click);
+            // 
+            // gui_filter2
+            // 
+            this.gui_filter2.AutoSize = true;
+            this.gui_filter2.BackColor = System.Drawing.Color.White;
+            this.gui_filter2.Location = new System.Drawing.Point(26, 37);
+            this.gui_filter2.Name = "gui_filter2";
+            this.gui_filter2.Size = new System.Drawing.Size(76, 13);
+            this.gui_filter2.TabIndex = 129;
+            this.gui_filter2.Text = "[CHEATER]: 0";
+            // 
+            // btn_gui_filter2
+            // 
+            this.btn_gui_filter2.BackColor = System.Drawing.Color.Violet;
+            this.btn_gui_filter2.Location = new System.Drawing.Point(7, 36);
+            this.btn_gui_filter2.Name = "btn_gui_filter2";
+            this.btn_gui_filter2.Size = new System.Drawing.Size(15, 15);
+            this.btn_gui_filter2.TabIndex = 128;
+            this.btn_gui_filter2.TabStop = false;
+            this.btn_gui_filter2.Click += new System.EventHandler(this.btn_gui_filter2_Click);
+            // 
+            // gui_filter1
+            // 
+            this.gui_filter1.AutoSize = true;
+            this.gui_filter1.BackColor = System.Drawing.Color.White;
+            this.gui_filter1.Location = new System.Drawing.Point(26, 20);
+            this.gui_filter1.Name = "gui_filter1";
+            this.gui_filter1.Size = new System.Drawing.Size(60, 13);
+            this.gui_filter1.TabIndex = 127;
+            this.gui_filter1.Text = "[ADMIN]: 0";
+            // 
+            // btn_gui_filter1
+            // 
+            this.btn_gui_filter1.BackColor = System.Drawing.Color.ForestGreen;
+            this.btn_gui_filter1.Location = new System.Drawing.Point(7, 19);
+            this.btn_gui_filter1.Name = "btn_gui_filter1";
+            this.btn_gui_filter1.Size = new System.Drawing.Size(15, 15);
+            this.btn_gui_filter1.TabIndex = 126;
+            this.btn_gui_filter1.TabStop = false;
+            this.btn_gui_filter1.Click += new System.EventHandler(this.btn_gui_filter1_Click);
             // 
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.FirwallLoadFilterAddress);
             this.groupBox3.Controls.Add(this.FirewallInfo);
-            this.groupBox3.Location = new System.Drawing.Point(2, 294);
+            this.groupBox3.Location = new System.Drawing.Point(3, 288);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(207, 67);
             this.groupBox3.TabIndex = 68;
@@ -3459,7 +3422,7 @@
             this.groupBox5.Controls.Add(this.label4);
             this.groupBox5.Controls.Add(this.label2);
             this.groupBox5.Controls.Add(this.FirewallIPBox);
-            this.groupBox5.Location = new System.Drawing.Point(2, 177);
+            this.groupBox5.Location = new System.Drawing.Point(3, 173);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Size = new System.Drawing.Size(207, 113);
             this.groupBox5.TabIndex = 65;
@@ -3554,15 +3517,49 @@
             // 
             // groupBox4
             // 
-            this.groupBox4.Controls.Add(this.label1);
             this.groupBox4.Controls.Add(this.FirewallRulesSearch);
+            this.groupBox4.Controls.Add(this.label1);
             this.groupBox4.Controls.Add(this.FirwallSearchInList);
-            this.groupBox4.Location = new System.Drawing.Point(2, 27);
+            this.groupBox4.Location = new System.Drawing.Point(3, 27);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(207, 71);
             this.groupBox4.TabIndex = 66;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Поиск";
+            // 
+            // FirewallRulesSearch
+            // 
+            this.FirewallRulesSearch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.FirewallRulesSearch.AutoCompleteCustomSource.AddRange(new string[] {
+            "Обычный игрок",
+            "Использование чит программы (трейнеры)",
+            "Сетевая атака, или попытка вызвать нарушение в работе сервера",
+            "Использование различных багов",
+            "Макросы",
+            "Запрещенное оружие",
+            "Распрыг",
+            "Wallhack (wh)",
+            "Shophack",
+            "Убойка",
+            "Нет отдачи",
+            "Использование запрещенных имен",
+            "Выход на пределы карты",
+            "Оскорбление администрации, и оскорбительные высказывания"});
+            this.FirewallRulesSearch.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
+            this.FirewallRulesSearch.BackColor = System.Drawing.Color.White;
+            this.FirewallRulesSearch.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.FirewallRulesSearch.FormattingEnabled = true;
+            this.FirewallRulesSearch.Items.AddRange(new object[] {
+            "[ADMIN]",
+            "[CHEATER]",
+            "[WEAPONS]",
+            "[LIST]",
+            "[HIDE]"});
+            this.FirewallRulesSearch.Location = new System.Drawing.Point(49, 17);
+            this.FirewallRulesSearch.Name = "FirewallRulesSearch";
+            this.FirewallRulesSearch.Size = new System.Drawing.Size(151, 21);
+            this.FirewallRulesSearch.TabIndex = 116;
             // 
             // label1
             // 
@@ -3572,13 +3569,6 @@
             this.label1.Size = new System.Drawing.Size(41, 13);
             this.label1.TabIndex = 62;
             this.label1.Text = "Найти:";
-            // 
-            // FirewallRulesSearch
-            // 
-            this.FirewallRulesSearch.Location = new System.Drawing.Point(46, 18);
-            this.FirewallRulesSearch.Name = "FirewallRulesSearch";
-            this.FirewallRulesSearch.Size = new System.Drawing.Size(154, 20);
-            this.FirewallRulesSearch.TabIndex = 61;
             // 
             // FirwallSearchInList
             // 
@@ -3704,12 +3694,12 @@
             this.groupBox1.Controls.Add(this.FirewallBlockedPort);
             this.groupBox1.Controls.Add(this.FirewallServerHide);
             this.groupBox1.Controls.Add(this.ServerFirewallHideRuleDel);
-            this.groupBox1.Location = new System.Drawing.Point(2, 102);
+            this.groupBox1.Location = new System.Drawing.Point(3, 100);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(207, 71);
             this.groupBox1.TabIndex = 64;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Спрятать сервер";
+            this.groupBox1.Text = "Блокировка порта";
             // 
             // FirewallBlockedPort
             // 
@@ -3892,6 +3882,7 @@
             this.notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));
             this.notifyIcon.Text = "S.E.R.V.E.R - Shadow Of Chernobyl";
             this.notifyIcon.Visible = true;
+            this.notifyIcon.DoubleClick += new System.EventHandler(this.notifyIcon_DoubleClick);
             // 
             // notifyIconcontextMenuStrip
             // 
@@ -4015,10 +4006,6 @@
             this.tabPage6.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.AutoHideTime)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.AutoHide)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.EventsControllerMaxLimit)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.EventsWeaponsMaxLimit)).EndInit();
             this.tabPageAntiCheatParams.ResumeLayout(false);
@@ -4040,8 +4027,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.tablecolor2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tablecolor5)).EndInit();
             this.PageNetwork.ResumeLayout(false);
-            this.groupBox7.ResumeLayout(false);
-            this.groupBox7.PerformLayout();
+            this.groupBox6.ResumeLayout(false);
+            this.groupBox6.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.btn_gui_filter3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.btn_gui_filter2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.btn_gui_filter1)).EndInit();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.groupBox5.ResumeLayout(false);
@@ -4115,7 +4105,6 @@
         private System.Windows.Forms.Button btnConnectionBase;
         private System.Windows.Forms.Button btnBaseRecovery;
         private System.Windows.Forms.Button btnBaseCopy;
-        private System.Windows.Forms.CheckBox EventsAutoDelete;
         private System.Windows.Forms.ListView listChatHistory;
         private System.Windows.Forms.ColumnHeader columnHeader9;
         private System.Windows.Forms.ToolStripMenuItem SearchPlayersInBase;
@@ -4179,7 +4168,6 @@
         private System.Windows.Forms.Button FirwallLoadFilterAddress;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox FirewallRulesSearch;
         private System.Windows.Forms.Button FirwallSearchInList;
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.Label label2;
@@ -4193,14 +4181,11 @@
         private System.Windows.Forms.ToolStripMenuItem FirewallTableGetAddress;
         private System.Windows.Forms.ToolStripMenuItem FirewallSearchAddressInBase;
         private System.Windows.Forms.CheckBox FirewallAddressMaskAdd;
-        private System.Windows.Forms.ComboBox AddressByteMask;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Label FirewallInfo;
         private System.Windows.Forms.ToolStripMenuItem FirewallIPBlocked;
         private System.Windows.Forms.CheckBox EventsBaseSubnetsSearch;
         private System.Windows.Forms.CheckBox EventsPlayersAutoColor;
-        private System.Windows.Forms.GroupBox groupBox7;
-        private System.Windows.Forms.Label CheckedAddress;
         private System.Windows.Forms.ToolStripMenuItem GetCheaterBase;
         private System.Windows.Forms.ToolStripMenuItem GetFuncCreateInFirewall;
         private System.Windows.Forms.ToolStripMenuItem GetFuncDelFirewallRule;
@@ -4372,11 +4357,6 @@
         private System.Windows.Forms.ToolStripMenuItem BaseMenu1AddToBase;
         private System.Windows.Forms.MenuStrip menuStrip2;
         private System.Windows.Forms.ToolStripMenuItem BaseMenu1GetChatSearch;
-        private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.NumericUpDown AutoHideTime;
-        private System.Windows.Forms.Label label14;
-        public System.Windows.Forms.NumericUpDown AutoHide;
-        private System.Windows.Forms.CheckBox AutoServerHide;
         private System.Windows.Forms.ToolStripMenuItem btnLoadGreenChat;
         private System.Windows.Forms.ToolStripMenuItem btnLoadBlueChat;
         private System.Windows.Forms.ToolStripMenuItem btnLoadAdminChat;
@@ -4391,5 +4371,14 @@
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.ToolStripMenuItem BaseMenu2OpenEvents;
         private System.Windows.Forms.ToolStripMenuItem BaseMenu1OpenEvents;
+        private System.Windows.Forms.ComboBox AddressByteMask;
+        private System.Windows.Forms.GroupBox groupBox6;
+        private System.Windows.Forms.Label gui_filter3;
+        private System.Windows.Forms.PictureBox btn_gui_filter3;
+        private System.Windows.Forms.Label gui_filter2;
+        private System.Windows.Forms.PictureBox btn_gui_filter2;
+        private System.Windows.Forms.Label gui_filter1;
+        private System.Windows.Forms.PictureBox btn_gui_filter1;
+        private System.Windows.Forms.ComboBox FirewallRulesSearch;
     }
 }
