@@ -1,22 +1,15 @@
-// xrAI.cpp : Defines the entry point for the application.
-//
-
 #include "stdafx.h"
 #include "process.h"
 #include "global_options.h"
 
-//#pragma comment(linker,"/STACK:0x800000,0x400000")
-
 #pragma comment(lib,"comctl32.lib")
-//#pragma comment(lib,"d3dx9.lib")
-//#pragma comment(lib,"IMAGEHLP.LIB")
 #pragma comment(lib,"winmm.LIB")
 #pragma comment(lib,"xrCDB.lib")
 #pragma comment(lib,"xrCore.lib")
 #pragma comment(lib,"FreeImage.lib")
 
-extern void	xrCompiler			(LPCSTR name);
-extern void logThread			(void *dummy);
+extern void	xrCompiler(LPCSTR name);
+extern void logThread(void *dummy);
 extern volatile bool bClose;
 
 XRCORE_API void ComputeBuildID(LPCSTR Date);
@@ -32,18 +25,22 @@ static const char* h_str =
 	"NOTE: The last key is required for any functionality\n";
 
 void Help()
-{	MessageBox(0,h_str,"Command line options",MB_OK|MB_ICONINFORMATION); }
+{	
+	MessageBox(0,h_str,"Command line options",MB_OK|MB_ICONINFORMATION); 
+}
 
-void Startup(LPSTR     lpCmdLine)
+void Startup(LPSTR lpCmdLine)
 {
 	char cmd[512],name[256];
-	BOOL bModifyOptions		= FALSE;
+	BOOL bModifyOptions = FALSE;
 
 	strcpy(cmd,lpCmdLine);
 	strlwr(cmd);
+
 	if (strstr(cmd,"-?") || strstr(cmd,"-h"))			{ Help(); return; }
 	if (strstr(cmd,"-f")==0)							{ Help(); return; }
 	if (strstr(cmd,"-o"))								bModifyOptions = TRUE;
+
 // KD: new options
 	if (strstr(cmd,"-norgb"))							b_norgb			= TRUE;
 	if (strstr(cmd,"-nosun"))							b_nosun			= TRUE;
