@@ -10,7 +10,7 @@
 #include "..\r_light.h"
 #include "global_options.h"
 
-#define NUM_THREADS		3
+#define NUM_THREADS		16
 
 enum
 {
@@ -259,6 +259,8 @@ void xrLoad(LPCSTR name)
 #else
 			u32 tex_count	= F->length()/sizeof(b_texture);
 #endif
+			Msg("textures count: %u",tex_count);
+
 			for (u32 t=0; t<tex_count; t++)
 			{
 				Progress		(float(t)/float(tex_count));
@@ -281,18 +283,24 @@ void xrLoad(LPCSTR name)
 
 				// load thumbnail
 				LPSTR N			= BT.name;
-				if (strchr(N,'.')) *(strchr(N,'.')) = 0;
+
+				if (strchr(N,'.')) 
+					*(strchr(N,'.')) = 0;
+
 				strlwr			(N);
 
-				if (0==xr_strcmp(N,"level_lods"))	{
+				if (0==xr_strcmp(N,"level_lods"))	
+				{
 					// HACK for merged lod textures
 					BT.dwWidth	= 1024;
 					BT.dwHeight	= 1024;
 					BT.bHasAlpha= TRUE;
 					BT.pSurface	= 0;
-				} else {
+				} 
+				else 
+				{
 					strcat			(N,".thm");
-					IReader* THM	= FS.r_open("$game_textures$",N);
+					IReader* THM	= FS.r_open("$textures$",N);
 					R_ASSERT2		(THM,	N);
 
 					// version
@@ -311,13 +319,16 @@ void xrLoad(LPCSTR name)
 					BT.THM.width			= THM->r_u32();
 					BT.THM.height           = THM->r_u32();
 					BOOL			bLOD=FALSE;
-					if (N[0]=='l' && N[1]=='o' && N[2]=='d' && N[3]=='\\') bLOD = TRUE;
+
+					if (N[0]=='l' && N[1]=='o' && N[2]=='d' && N[3]=='\\') 
+						bLOD = TRUE;
 
 					// load surface if it has an alpha channel or has "implicit lighting" flag
 					BT.dwWidth				= BT.THM.width;
 					BT.dwHeight				= BT.THM.height;
 					BT.bHasAlpha			= BT.THM.HasAlphaChannel();
 					BT.pSurface				= 0;
+
 					if (!bLOD) 
 					{
 						if (BT.bHasAlpha || BT.THM.flags.test(STextureParams::flImplicitLighted))
@@ -326,6 +337,7 @@ void xrLoad(LPCSTR name)
 							u32			w=0, h=0;
 							BT.pSurface = Surface_Load(N,w,h); 
 							R_ASSERT2	(BT.pSurface,"Can't load surface");
+						
 							// KD: in case of thm doesn't correspond to texture let's reset thm params to actual texture ones
 							if ((w != BT.dwWidth) || (h != BT.dwHeight))
 							{
@@ -333,8 +345,11 @@ void xrLoad(LPCSTR name)
 								BT.dwWidth = w;
 								BT.dwHeight = h;
 							}
+
 							BT.Vflip	();
-						} else {
+						} 
+						else 
+						{
 							// Free surface memory
 						}
 					}
@@ -585,6 +600,7 @@ public:
 	{
 		Nstart	= _start;
 		Nend	= _end;
+		SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
 	}
 	IC float			fromSlotX		(int x)		
 	{

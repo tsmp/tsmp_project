@@ -80,6 +80,8 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 	// KD: let's init debug to enable exception handling
 	Debug._initialize	(false);
 
+	SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
+
 	// KD: custom log name
 	char app_name[10];
 #ifdef _WIN64
