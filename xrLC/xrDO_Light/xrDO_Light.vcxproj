@@ -86,6 +86,12 @@
     <OutDir>$(SolutionDir)\output\binaries_$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)\output\intermediate\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)\output\binaries_x64_release\</OutDir>
+    <IntDir>$(SolutionDir)\output\intermediate_x64\$(ProjectName)\$(Configuration)\</IntDir>
+    <IncludePath>$(SolutionDir)\components\dx9sdk\include;$(SolutionDir)\xrcore;$(SolutionDir)\components\FreeImage;$(SolutionDir)\xrLC\COMMON_COMPILERS;$(SolutionDir)\xrcdb;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\output\libraries_x64_release\;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Midl>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>

@@ -17,7 +17,7 @@
 
 extern void	xrCompiler			(LPCSTR name);
 extern void logThread			(void *dummy);
-extern volatile BOOL bClose;
+extern volatile bool bClose;
 
 XRCORE_API void ComputeBuildID(LPCSTR Date);
 

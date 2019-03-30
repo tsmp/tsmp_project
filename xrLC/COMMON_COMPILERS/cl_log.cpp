@@ -122,6 +122,7 @@ void Phase			(const char *phase_name)
 	csLog.Leave			();
 }
 
+BOOL					b_highest_priority = TRUE;
 
 void logThread(void *dummy)
 {

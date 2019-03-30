@@ -162,6 +162,8 @@ void xrLoad(LPCSTR name)
 	// Load CFORM
 	{
 		FS.update_path			(N,"$level$","build.cform");
+		Msg(N);
+
 		IReader*			fs = FS.r_open("$level$","build.cform");
 		
 		R_ASSERT			(fs->find_chunk(0));

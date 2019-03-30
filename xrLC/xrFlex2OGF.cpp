@@ -161,7 +161,7 @@ void CBuild::Flex2OGF()
 		
 		g_tree.push_back	(pOGF);
 //		xr_delete			(*it);
-//		Progress			(p_total+=p_cost);
+		Progress			(p_total+=p_cost);
 	}
 
 	clMsg("%f seconds", start_ogf.GetElapsed_sec());
