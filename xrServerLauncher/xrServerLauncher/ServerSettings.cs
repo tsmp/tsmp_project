@@ -3768,7 +3768,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
             {
                 s10 = "mp_wpn_beretta, ";
             }
-            if (wn23.SelectedIndex == 6)    // Весь набор
+            if (wn23.SelectedIndex == 7)    // Весь набор
             {
                 s10 = "wpn_colt_m1, wpn_eagle_m1, wpn_fort_m1,wpn_walther_m1,mp_wpn_hpsa, mp_wpn_beretta, ";
             }

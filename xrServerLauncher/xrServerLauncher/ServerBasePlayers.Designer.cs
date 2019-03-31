@@ -360,6 +360,7 @@
             this.GUI_INFO_BLOCKED = new System.Windows.Forms.Label();
             this.GUIEvents = new System.Windows.Forms.Label();
             this.GUI_MINI_MENU = new System.Windows.Forms.Label();
+            this.BtnScreen = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.BaseMenu2.SuspendLayout();
@@ -544,7 +545,8 @@
             this.BaseMenu2GetListplayers,
             this.BaseMenu2GetSearch,
             this.BaseMenu2OpenEvents,
-            this.BaseMenu2StatsEvent});
+            this.BaseMenu2StatsEvent,
+            this.BtnScreen});
             this.BaseMenu1.Location = new System.Drawing.Point(0, 0);
             this.BaseMenu1.Name = "BaseMenu1";
             this.BaseMenu1.Size = new System.Drawing.Size(776, 27);
@@ -3954,6 +3956,14 @@
             this.GUI_MINI_MENU.Visible = false;
             this.GUI_MINI_MENU.Click += new System.EventHandler(this.GUI_MINI_MENU_Click);
             // 
+            // BtnScreen
+            // 
+            this.BtnScreen.Image = ((System.Drawing.Image)(resources.GetObject("BtnScreen.Image")));
+            this.BtnScreen.Name = "BtnScreen";
+            this.BtnScreen.Size = new System.Drawing.Size(93, 23);
+            this.BtnScreen.Text = "Скриншот";
+            this.BtnScreen.Click += new System.EventHandler(this.BtnScreen_Click);
+            // 
             // ServerBasePlayers
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -4393,5 +4403,6 @@
         private System.Windows.Forms.PictureBox btn_gui_filter1;
         private System.Windows.Forms.ComboBox FirewallRulesSearch;
         private System.Windows.Forms.ToolStripMenuItem btnChatIPFilter;
+        private System.Windows.Forms.ToolStripMenuItem BtnScreen;
     }
 }

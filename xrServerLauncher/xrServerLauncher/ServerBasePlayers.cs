@@ -419,7 +419,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                             }
                         }
                     }
-                    else if ((color_msg + " " + check_msg.Length == "Чат: " + check_msg.Length) && (check_msg != "ServerAdmin") && (check_msg != "SERVER"))
+                    else if ((color_msg + " " + check_msg == "Чат: " + check_msg) && (check_msg != "ServerAdmin"))
                     {
                         var all_msg = Messages.Replace("Чат: ", "[Общий чат]: ");
                         if (CheckResult.SelectedIndex == 0)
@@ -494,7 +494,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                             var admin = Messages.Replace("Чат: ServerAdmin", "[Администратор]: ");
                             listChatHistory.Items.Add(admin).BackColor = Color.Gold;
                         }
-                        if ((color_msg + " " + check_msg.Length == "Чат: " + check_msg.Length) && (AllMsg == true) && (check_msg != "ServerAdmin") && (check_msg != "SERVER"))
+                        if ((color_msg + " " + check_msg == "Чат: " + check_msg) && (AllMsg == true) && (check_msg != "ServerAdmin"))
                         {
                             var all_msg = Messages.Replace("Чат: ", "[Общий чат]: " + get_address_by_name);
                             listChatHistory.Items.Add(all_msg).BackColor = Color.Honeydew;
@@ -810,111 +810,111 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                                         long HITPOWER = long.Parse(str_find_hp.Substring(0, str_find_hp.LastIndexOf("+")));
                                         long IMPULSE = long.Parse(str_find_impulse.Substring(0, str_find_impulse.LastIndexOf(".")));
 
-                                        if ((mp_wpn_knife.CheckState == CheckState.Unchecked) && (IMPULSE > 120 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_knife]") && (str_find_weapons != "[mp_actor]"))
+                                        if ((mp_wpn_knife.CheckState == CheckState.Unchecked) && (IMPULSE > 120 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_knife]"))
                                         {
                                             SrvPlayersBuffer.Add(print);
                                         }
-                                        else if ((mp_wpn_pm.CheckState == CheckState.Unchecked) && (IMPULSE > 91 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_pm]") && (str_find_weapons != "[mp_actor]"))
+                                        else if ((mp_wpn_pm.CheckState == CheckState.Unchecked) && (IMPULSE > 91 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_pm]"))
                                         {
                                             SrvPlayersBuffer.Add(print);
                                         }
-                                        else if ((mp_wpn_fort.CheckState == CheckState.Unchecked) && (IMPULSE > 100 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_fort]") && (str_find_weapons != "[mp_actor]"))
+                                        else if ((mp_wpn_fort.CheckState == CheckState.Unchecked) && (IMPULSE > 100 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_fort]"))
                                         {
                                             SrvPlayersBuffer.Add(print);
                                         }
-                                        else if ((mp_wpn_walther.CheckState == CheckState.Unchecked) && (IMPULSE > 131 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_walther]") && (str_find_weapons != "[mp_actor]"))
+                                        else if ((mp_wpn_walther.CheckState == CheckState.Unchecked) && (IMPULSE > 131 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_walther]"))
                                         {
                                             SrvPlayersBuffer.Add(print);
                                         }
-                                        else if ((mp_wpn_sig220.CheckState == CheckState.Unchecked) && (IMPULSE > 126 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_sig220]") && (str_find_weapons != "[mp_actor]"))
+                                        else if ((mp_wpn_sig220.CheckState == CheckState.Unchecked) && (IMPULSE > 126 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_sig220]"))
                                         {
                                             SrvPlayersBuffer.Add(print);
                                         }
-                                        else if ((mp_wpn_usp.CheckState == CheckState.Unchecked) && (IMPULSE > 126 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_usp]") && (str_find_weapons != "[mp_actor]"))
+                                        else if ((mp_wpn_usp.CheckState == CheckState.Unchecked) && (IMPULSE > 126 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_usp]"))
                                         {
                                             SrvPlayersBuffer.Add(print);
                                         }
-                                        else if ((mp_wpn_desert_eagle.CheckState == CheckState.Unchecked) && (IMPULSE > 144 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_desert_eagle]") && (str_find_weapons != "[mp_actor]"))
+                                        else if ((mp_wpn_desert_eagle.CheckState == CheckState.Unchecked) && (IMPULSE > 144 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_desert_eagle]"))
                                         {
                                             SrvPlayersBuffer.Add(print);
                                         }
-                                        else if ((mp_wpn_pb.CheckState == CheckState.Unchecked) && (IMPULSE > 72 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_pb]") && (str_find_weapons != "[mp_actor]"))
+                                        else if ((mp_wpn_pb.CheckState == CheckState.Unchecked) && (IMPULSE > 72 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_pb]"))
                                         {
                                             SrvPlayersBuffer.Add(print);
                                         }
-                                        else if ((mp_wpn_colt1911.CheckState == CheckState.Unchecked) && (IMPULSE > 126 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_colt1911]") && (str_find_weapons != "[mp_actor]"))
+                                        else if ((mp_wpn_colt1911.CheckState == CheckState.Unchecked) && (IMPULSE > 126 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_colt1911]"))
                                         {
                                             SrvPlayersBuffer.Add(print);
                                         }
-                                        else if ((mp_wpn_bm16.CheckState == CheckState.Unchecked) && (IMPULSE > 315 || str_find_hp.Length >= 8) && (str_find_weapons == "[mp_wpn_bm16]") && (str_find_weapons != "[mp_actor]"))
+                                        else if ((mp_wpn_bm16.CheckState == CheckState.Unchecked) && (IMPULSE > 315 || str_find_hp.Length >= 8) && (str_find_weapons == "[mp_wpn_bm16]"))
                                         {
                                             SrvPlayersBuffer.Add(print);
                                         }
-                                        else if ((mp_wpn_wincheaster1300.CheckState == CheckState.Unchecked) && (IMPULSE > 315 || str_find_hp.Length >= 8) && (str_find_weapons == "[mp_wpn_wincheaster1300]") && (str_find_weapons != "[mp_actor]"))
+                                        else if ((mp_wpn_wincheaster1300.CheckState == CheckState.Unchecked) && (IMPULSE > 315 || str_find_hp.Length >= 8) && (str_find_weapons == "[mp_wpn_wincheaster1300]"))
                                         {
                                             SrvPlayersBuffer.Add(print);
                                         }
-                                        else if ((mp_wpn_spas12.CheckState == CheckState.Unchecked) && (IMPULSE > 315 || str_find_hp.Length >= 8) && (str_find_weapons == "[mp_wpn_spas12]") && (str_find_weapons != "[mp_actor]"))
+                                        else if ((mp_wpn_spas12.CheckState == CheckState.Unchecked) && (IMPULSE > 315 || str_find_hp.Length >= 8) && (str_find_weapons == "[mp_wpn_spas12]"))
                                         {
                                             SrvPlayersBuffer.Add(print);
                                         }
-                                        else if ((mp_wpn_ak74u.CheckState == CheckState.Unchecked) && (IMPULSE > 140 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_ak74u]") && (str_find_weapons != "[mp_actor]"))
+                                        else if ((mp_wpn_ak74u.CheckState == CheckState.Unchecked) && (IMPULSE > 140 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_ak74u]"))
                                         {
                                             SrvPlayersBuffer.Add(print);
                                         }
-                                        else if ((mp_wpn_ak74.CheckState == CheckState.Unchecked) && (IMPULSE > 140 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_ak74]") && (str_find_weapons != "[mp_actor]"))
+                                        else if ((mp_wpn_ak74.CheckState == CheckState.Unchecked) && (IMPULSE > 140 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_ak74]"))
                                         {
                                             SrvPlayersBuffer.Add(print);
                                         }
-                                        else if ((mp_wpn_abakan.CheckState == CheckState.Unchecked) && (IMPULSE > 140 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_abakan]") && (str_find_weapons != "[mp_actor]"))
+                                        else if ((mp_wpn_abakan.CheckState == CheckState.Unchecked) && (IMPULSE > 140 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_abakan]"))
                                         {
                                             SrvPlayersBuffer.Add(print);
                                         }
-                                        else if ((mp_wpn_groza.CheckState == CheckState.Unchecked) && (IMPULSE > 184 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_groza]") && (str_find_weapons != "[mp_actor]"))
+                                        else if ((mp_wpn_groza.CheckState == CheckState.Unchecked) && (IMPULSE > 184 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_groza]"))
                                         {
                                             SrvPlayersBuffer.Add(print);
                                         }
-                                        else if ((mp_wpn_val.CheckState == CheckState.Unchecked) && (IMPULSE > 114 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_val]") && (str_find_weapons != "[mp_actor]"))
+                                        else if ((mp_wpn_val.CheckState == CheckState.Unchecked) && (IMPULSE > 114 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_val]"))
                                         {
                                             SrvPlayersBuffer.Add(print);
                                         }
-                                        else if ((mp_wpn_fn2000.CheckState == CheckState.Unchecked) && (IMPULSE > 105 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_fn2000]") && (str_find_weapons != "[mp_actor]"))
+                                        else if ((mp_wpn_fn2000.CheckState == CheckState.Unchecked) && (IMPULSE > 105 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_fn2000]"))
                                         {
                                             SrvPlayersBuffer.Add(print);
                                         }
-                                        else if ((mp_wpn_mp5.CheckState == CheckState.Unchecked) && (IMPULSE > 210 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_mp5]") && (str_find_weapons != "[mp_actor]"))
+                                        else if ((mp_wpn_mp5.CheckState == CheckState.Unchecked) && (IMPULSE > 210 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_mp5]"))
                                         {
                                             SrvPlayersBuffer.Add(print);
                                         }
-                                        else if ((mp_wpn_l85.CheckState == CheckState.Unchecked) && (IMPULSE > 140 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_l85]") && (str_find_weapons != "[mp_actor]"))
+                                        else if ((mp_wpn_l85.CheckState == CheckState.Unchecked) && (IMPULSE > 140 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_l85]"))
                                         {
                                             SrvPlayersBuffer.Add(print);
                                         }
-                                        else if ((mp_wpn_lr300.CheckState == CheckState.Unchecked) && (IMPULSE > 140 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_lr300]") && (str_find_weapons != "[mp_actor]"))
+                                        else if ((mp_wpn_lr300.CheckState == CheckState.Unchecked) && (IMPULSE > 140 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_lr300]"))
                                         {
                                             SrvPlayersBuffer.Add(print);
                                         }
-                                        else if ((mp_wpn_sig550.CheckState == CheckState.Unchecked) && (IMPULSE > 140 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_sig550]") && (str_find_weapons != "[mp_actor]"))
+                                        else if ((mp_wpn_sig550.CheckState == CheckState.Unchecked) && (IMPULSE > 140 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_sig550]"))
                                         {
                                             SrvPlayersBuffer.Add(print);
                                         }
-                                        else if ((mp_wpn_g36.CheckState == CheckState.Unchecked) && (IMPULSE > 105 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_g36]") && (str_find_weapons != "[mp_actor]"))
+                                        else if ((mp_wpn_g36.CheckState == CheckState.Unchecked) && (IMPULSE > 105 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_g36]"))
                                         {
                                             SrvPlayersBuffer.Add(print);
                                         }
-                                        else if ((mp_wpn_vintorez.CheckState == CheckState.Unchecked) && (IMPULSE > 104 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_vintorez]") && (str_find_weapons != "[mp_actor]"))
+                                        else if ((mp_wpn_vintorez.CheckState == CheckState.Unchecked) && (IMPULSE > 104 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_vintorez]"))
                                         {
                                             SrvPlayersBuffer.Add(print);
                                         }
-                                        else if ((mp_wpn_svu.CheckState == CheckState.Unchecked) && (IMPULSE > 224 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_svu]") && (str_find_weapons != "[mp_actor]"))
+                                        else if ((mp_wpn_svu.CheckState == CheckState.Unchecked) && (IMPULSE > 224 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_svu]"))
                                         {
                                             SrvPlayersBuffer.Add(print);
                                         }
-                                        else if ((mp_wpn_svd.CheckState == CheckState.Unchecked) && (IMPULSE > 245 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_svd]") && (str_find_weapons != "[mp_actor]"))
+                                        else if ((mp_wpn_svd.CheckState == CheckState.Unchecked) && (IMPULSE > 245 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_svd]"))
                                         {
                                             SrvPlayersBuffer.Add(print);
                                         }
-                                        else if ((mp_wpn_gauss.CheckState == CheckState.Unchecked) && (IMPULSE > 3001 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_gauss]") && (str_find_weapons != "[mp_actor]"))
+                                        else if ((mp_wpn_gauss.CheckState == CheckState.Unchecked) && (IMPULSE > 3001 || str_find_hp.Length >= 8 || HITPOWER > EventsControllerMaxHPLimit) && (str_find_weapons == "[mp_wpn_gauss]"))
                                         {
                                             SrvPlayersBuffer.Add(print);
                                         }
@@ -1103,7 +1103,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                                     if (SV_LISTPLAYERS_COUNT_IN_LIST.Contains("% [CHEATER] "))
                                         ADDRESS_COUNTER_AUTO++;
                             }
-                            if ((ADDRESS_COUNTER_AUTO == 1) && (server_version == 1))
+                            if (ADDRESS_COUNTER_AUTO == 1)
                             {
                                 BlockedClient(2, CMP_GETNAME, " Flags:[" + EventsCount + "/" + EventsControllerMaxLimit.Value + "] IP: ", GETIP, GETHASH);
                             }
@@ -1235,7 +1235,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                     GUI_STATUS.Text = "Обработка не требуется"; GUI_STATUS.BackColor = Color.White;
                     GUI_INFO_BLOCKED.Text = "Новых блокировок: " + statistics_new_blocked;
                     if (statistics_new_blocked > 0) GUI_INFO_BLOCKED.BackColor = Color.Orange;
-                    if ((EventsControllerAutoCheckPlayers.CheckState == CheckState.Checked) && (server_version == 1))
+                    if (EventsControllerAutoCheckPlayers.CheckState == CheckState.Checked)
                     {
                         if (SIGNAL_BANNED > 0)
                         {
@@ -1275,7 +1275,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                 }
 
                 int address_format = pAddr.Count(address_check_symbol => address_check_symbol == '.');
-                if ((Description > 0) && (Description == 16 || (pAddr.Length >= 7 && pAddr.Length <= 15 && pAddr != "0.0.0.0" && pAddr != "127.0.0.1" && pAddr != "255.255.255.255") && (address_format == 3)))
+                if ((Description > 0) && (pAddr.Length >= 7 && pAddr.Length <= 15 && pAddr != "0.0.0.0" && pAddr != "127.0.0.1" && pAddr != "255.255.255.255") && (address_format == 3))
                 {
                     if (Description == 2)
                     {
@@ -2508,7 +2508,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
             }
         }
              
-
+    
         private void BaseMenu2StartAutoCheck_Click(object sender, EventArgs e)
         {
             StartAutoCheckThread.Checked = true;
@@ -3276,12 +3276,12 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                             var blue = Messages.Replace("~ Чат:", "[Наемники]: ");                     
                                 listChatHistory.Items.Add(blue).BackColor = Color.LightBlue;                  
                         }
-                        else if ((color_msg + " " + check_msg.Length == "Чат: " + check_msg.Length) && (check_msg != "ServerAdmin") && (check_msg != "SERVER"))
+                        else if ((color_msg + " " + check_msg  == "Чат: " + check_msg) && (check_msg != "ServerAdmin"))
                         {
                             var all_msg = Messages.Replace("Чат: ", "[Общий чат]: ");                    
                                 listChatHistory.Items.Add(all_msg).BackColor = Color.Honeydew;                    
                         }
-                        else if ((color_msg + " " + check_msg.Length == "Чат: " + check_msg.Length) && (check_msg == "SERVER"))
+                        else if ((color_msg + " " + check_msg == "Чат: " + check_msg) && (check_msg == "SERVER"))
                         {
                             var all_msg = Messages.Replace("Чат: ", "[Событие]: ");
                                 listChatHistory.Items.Add(all_msg).BackColor = Color.WhiteSmoke;
@@ -4613,7 +4613,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                 if ((addressblock.Length >= 7 && addressblock.Length <= 16) && (addressblock != "0.0.0.0" && addressblock != "127.0.0.1" && addressblock != "255.255.255.255")) // FORMAT STR OK
                 {
                     address_skip = addressblock.Count(simbolcount => simbolcount == '.');
-                    if (addressblock.Length > 0 && address_skip == 3)
+                    if (address_skip == 3)
                     {
                         listBase.FocusedItem.BackColor = Color.LightGreen;
                         FirewallAddressContainer.Add(addressblock.Replace(Environment.NewLine, "") + ",");    // OK 
@@ -4766,6 +4766,23 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
         private void ListTableChange3_ColumnClick(object sender, ColumnClickEventArgs e)
         {
             LVComparer(e, ListTableChange3);
+        }
+
+        private void BtnScreen_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using (var bmp = new Bitmap(ActiveForm.Width, ActiveForm.Height))
+                {
+                    ActiveForm.DrawToBitmap(bmp, new Rectangle(0, 0, bmp.Width, bmp.Height));
+                    Clipboard.SetImage(bmp);
+                }
+                MessageBox.Show("Скриншот окна успешно создан", "S.E.R.V.E.R - Administrator", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "S.E.R.V.E.R - Administrator", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         int SortingHeader = -1;
