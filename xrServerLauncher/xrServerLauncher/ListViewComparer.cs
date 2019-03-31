@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Windows.Forms;
 
 namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
@@ -19,11 +20,18 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
         }
         public int Compare(object x, object y)
         {
-            int returnVal = -1;
-            returnVal = string.Compare(((ListViewItem)x).SubItems[idx].Text, ((ListViewItem)y).SubItems[idx].Text);
+            int rtn = -1;
+            try
+            {
+                rtn = string.Compare(((ListViewItem)x).SubItems[idx].Text, ((ListViewItem)y).SubItems[idx].Text);               
+            }
+            catch(Exception)
+            {
+                rtn = 0;
+            }
             if (order == SortOrder.Descending)
-                returnVal *= -1;
-            return returnVal;
+                rtn *= -1;
+            return rtn;
         }
     }
 }
