@@ -9,7 +9,7 @@ int g_stackTraceCount = 0;
 
 void BuildStackTrace	(struct _EXCEPTION_POINTERS *g_BlackBoxUIExPtrs)
 {
-	FillMemory			(g_stackTrace[0],MAX_STACK_TRACE*256, 0 );
+	FillMemory(&g_stackTrace,MAX_STACK_TRACE*256, 0);
 
 	const TCHAR* traceDump = 
 		GetFirstStackTraceString( GSTSO_MODULE | GSTSO_SYMBOL | GSTSO_SRCLINE,g_BlackBoxUIExPtrs );

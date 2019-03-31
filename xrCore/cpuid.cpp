@@ -153,13 +153,6 @@ res |= feature;
 }
 #endif
 
-#ifdef M_BORLAND
-// borland doesn't understand MMX/3DNow!/SSE/SSE2 asm opcodes
-void _os_support(int feature, int& res)
-{
-res |= feature;
-}
-#endif
 
 */
 /***

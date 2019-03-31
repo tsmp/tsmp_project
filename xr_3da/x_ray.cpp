@@ -361,7 +361,6 @@ int APIENTRY WinMain_impl(HINSTANCE hInstance, HINSTANCE hPrevInstance, char *lp
 #endif
 #endif
 
-	SetThreadAffinityMask(GetCurrentThread(), 1);
 
 	// Title window
 #ifdef _WIN54

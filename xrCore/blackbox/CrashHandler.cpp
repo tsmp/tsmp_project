@@ -409,7 +409,7 @@ LPCTSTR __stdcall GetFaultReason ( EXCEPTION_POINTERS * pExPtrs )
         if ( NULL != dwTemp )
         {
             iCurr += wsprintf ( g_szBuff + iCurr ,
-                                _T ( "%s" )      ,
+                                _T ( "%u" )      ,
                                 dwTemp            ) ;
         }
         else
@@ -460,7 +460,7 @@ LPCTSTR __stdcall GetFaultReason ( EXCEPTION_POINTERS * pExPtrs )
                             pExPtrs->ExceptionRecord->ExceptionAddress);
     #else
         iCurr += wsprintf ( g_szBuff + iCurr                ,
-                            _T ( " at %04X:%08X" )          ,
+                            _T ( " at %04X:%08p" )          ,
                             pExPtrs->ContextRecord->SegCs   ,
                             pExPtrs->ExceptionRecord->ExceptionAddress);
     #endif
@@ -469,7 +469,7 @@ LPCTSTR __stdcall GetFaultReason ( EXCEPTION_POINTERS * pExPtrs )
 
         // Start looking up the exception address.
         PIMAGEHLP_SYMBOL pSym = (PIMAGEHLP_SYMBOL)&g_stSymbol ;
-        FillMemory ( pSym , NULL , SYM_BUFF_SIZE ) ;
+        FillMemory ( pSym , SYM_BUFF_SIZE, NULL) ;
         pSym->SizeOfStruct = sizeof ( IMAGEHLP_SYMBOL ) ;
         pSym->MaxNameLength = SYM_BUFF_SIZE - sizeof ( IMAGEHLP_SYMBOL);
 
@@ -846,7 +846,7 @@ LPCTSTR __stdcall
                     if ( dwDisp > 0 )
                     {
                         iCurr += wsprintf ( g_szBuff + iCurr         ,
-                                            _T( "%s()") ,
+                                            _T( "%s(%u)") ,
                                             pSym->Name               ,
                                             dwDisp                   );
                     }
@@ -899,22 +899,11 @@ LPCTSTR __stdcall
                     return ( szRet ) ;
                 }
                 else
-                {
-                    if ( dwDisp > 0 )
-                    {
-                        iCurr += wsprintf(g_szBuff + iCurr             ,
-                                       _T("%s, %d"),
-                                          g_stLine.FileName            ,
-                                          g_stLine.LineNumber          ,
-                                          dwDisp                     );
-                    }
-                    else
-                    {
-                        iCurr += wsprintf ( g_szBuff + iCurr       ,
-                                            _T ( "%s, %d" ) ,
-                                            g_stLine.FileName      ,
-                                            g_stLine.LineNumber     ) ;
-                    }
+                {                  
+                        iCurr += wsprintf(g_szBuff + iCurr
+							, _T ("%s, %d") 
+							, g_stLine.FileName
+							, g_stLine.LineNumber);                    
                 }
             }
         }

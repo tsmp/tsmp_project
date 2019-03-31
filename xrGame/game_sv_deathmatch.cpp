@@ -1681,6 +1681,7 @@ void game_sv_Deathmatch::OnDetach(u16 eid_who, u16 eid_what)
 		NET_Packet							PacketReject;
 		NET_Packet							PacketTake;
 		EventPack.w_begin					(M_EVENT_PACK);
+
 		
 		for( ;tr_it!=tr_it_e; ++tr_it)
 		{

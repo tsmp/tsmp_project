@@ -302,14 +302,6 @@ public:
 
 	virtual void					object_relcase			( CObject* obj )																		= 0;
 	virtual const Fvector&			listener_position		()																						= 0;
-#ifdef __BORLANDC__
-	virtual SoundEnvironment_LIB*	get_env_library			()																						= 0;
-	virtual void					refresh_env_library		()																						= 0;
-	virtual void					set_user_env			(CSound_environment* E)																	= 0;
-	virtual void					refresh_sources			()																						= 0;
-    virtual void					set_environment			(u32 id, CSound_environment** dst_env)													= 0;
-    virtual void					set_environment_size	(CSound_environment* src_env, CSound_environment** dst_env)								= 0;
-#endif
 };
 extern XRSOUND_API CSound_manager_interface*		Sound;
 

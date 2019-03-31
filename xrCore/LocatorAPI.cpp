@@ -484,6 +484,9 @@ bool ignore_path(const char* _path)
 
 bool CLocatorAPI::Recurse		(const char* path)
 {
+	if (!path)
+		return false;
+
     _finddata_t		sFile;
     intptr_t		hFile;
 
@@ -542,7 +545,7 @@ bool CLocatorAPI::Recurse		(const char* path)
 		ProcessOne	(path,I);
 
 	// insert self
-    if (path&&path[0])\
+    if (path[0])
 		Register	(path,0xffffffff,0,0,0,0,0);
 
     return true;
@@ -969,7 +972,7 @@ void CLocatorAPI::check_cached_files	(LPSTR fname, const file &desc, LPCSTR &sou
 	// Use
 	source_name		= &fname_copy[0];
 	strcpy_s		(fname_copy,sizeof(fname_copy),fname);
-	strcpy_s		(fname,sizeof(fname),fname_in_cache);
+	strcpy_s		(fname,sizeof(fname_in_cache),fname_in_cache);
 }														  
 
 void CLocatorAPI::file_from_cache_impl	(IReader *&R, LPSTR fname, const file &desc)

@@ -204,7 +204,6 @@ void xrCore::_destroy		()
 		}
 		break;
 	case DLL_THREAD_ATTACH:
-		CoInitializeEx	(NULL, COINIT_MULTITHREADED);
 		timeBeginPeriod	(1);
 		break;
 	case DLL_THREAD_DETACH:
