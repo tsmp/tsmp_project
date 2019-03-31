@@ -16,11 +16,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-#if DEBUG
             Application.Run(new FormMenu1());
-#else
-            Application.Run(new ServerBasePlayers());
-#endif
         }
     }
 }

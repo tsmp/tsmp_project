@@ -165,6 +165,7 @@
             this.btnLoadGreenChat = new System.Windows.Forms.ToolStripMenuItem();
             this.btnLoadBlueChat = new System.Windows.Forms.ToolStripMenuItem();
             this.btnLoadAdminChat = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnChatIPFilter = new System.Windows.Forms.ToolStripMenuItem();
             this.listChatHistory = new System.Windows.Forms.ListView();
             this.columnHeader9 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.BadPlayers = new System.Windows.Forms.TabPage();
@@ -847,16 +848,15 @@
             this.columnHeader29,
             this.columnHeader30});
             this.ListTableChange3.FullRowSelect = true;
-            this.ListTableChange3.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.ListTableChange3.Location = new System.Drawing.Point(204, 258);
             this.ListTableChange3.Name = "ListTableChange3";
             this.ListTableChange3.ShowItemToolTips = true;
             this.ListTableChange3.Size = new System.Drawing.Size(572, 180);
-            this.ListTableChange3.Sorting = System.Windows.Forms.SortOrder.Descending;
             this.ListTableChange3.TabIndex = 69;
             this.ListTableChange3.UseCompatibleStateImageBehavior = false;
             this.ListTableChange3.View = System.Windows.Forms.View.Details;
             this.ListTableChange3.Visible = false;
+            this.ListTableChange3.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.ListTableChange3_ColumnClick);
             // 
             // columnHeader24
             // 
@@ -937,6 +937,7 @@
             this.listBase.TabIndex = 62;
             this.listBase.UseCompatibleStateImageBehavior = false;
             this.listBase.View = System.Windows.Forms.View.Details;
+            this.listBase.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.listBase_ColumnClick);
             this.listBase.ItemChecked += new System.Windows.Forms.ItemCheckedEventHandler(this.listBase_ItemChecked);
             // 
             // BaseStringType
@@ -1517,7 +1518,6 @@
             this.columnHeader8});
             this.listViewBase.ContextMenuStrip = this.contextMenuStripForUser;
             this.listViewBase.FullRowSelect = true;
-            this.listViewBase.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.listViewBase.Location = new System.Drawing.Point(0, 161);
             this.listViewBase.Name = "listViewBase";
             this.listViewBase.ShowItemToolTips = true;
@@ -1525,6 +1525,7 @@
             this.listViewBase.TabIndex = 63;
             this.listViewBase.UseCompatibleStateImageBehavior = false;
             this.listViewBase.View = System.Windows.Forms.View.Details;
+            this.listViewBase.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.listViewBase_ColumnClick);
             // 
             // columnHeader2
             // 
@@ -1694,7 +1695,8 @@
             this.btnLoadAllChat,
             this.btnLoadGreenChat,
             this.btnLoadBlueChat,
-            this.btnLoadAdminChat});
+            this.btnLoadAdminChat,
+            this.btnChatIPFilter});
             this.menuStrip2.Location = new System.Drawing.Point(0, 0);
             this.menuStrip2.Name = "menuStrip2";
             this.menuStrip2.Size = new System.Drawing.Size(776, 27);
@@ -1740,6 +1742,14 @@
             this.btnLoadAdminChat.Size = new System.Drawing.Size(163, 23);
             this.btnLoadAdminChat.Text = "Чат \"Администраторы\"";
             this.btnLoadAdminChat.Click += new System.EventHandler(this.btnLoadAdminChat_Click);
+            // 
+            // btnChatIPFilter
+            // 
+            this.btnChatIPFilter.Image = ((System.Drawing.Image)(resources.GetObject("btnChatIPFilter.Image")));
+            this.btnChatIPFilter.Name = "btnChatIPFilter";
+            this.btnChatIPFilter.Size = new System.Drawing.Size(94, 23);
+            this.btnChatIPFilter.Text = "Вывести IP";
+            this.btnChatIPFilter.Click += new System.EventHandler(this.btnChatIPFilter_Click);
             // 
             // listChatHistory
             // 
@@ -1882,6 +1892,7 @@
             this.PlayersCheaterList.TabIndex = 77;
             this.PlayersCheaterList.UseCompatibleStateImageBehavior = false;
             this.PlayersCheaterList.View = System.Windows.Forms.View.Details;
+            this.PlayersCheaterList.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.PlayersCheaterList_ColumnClick);
             this.PlayersCheaterList.ItemChecked += new System.Windows.Forms.ItemCheckedEventHandler(this.PlayersCheaterList_ItemChecked);
             this.PlayersCheaterList.Click += new System.EventHandler(this.PlayersCheaterList_Click);
             // 
@@ -1996,6 +2007,7 @@
             this.ListCheaterBlockedEvents.TabIndex = 78;
             this.ListCheaterBlockedEvents.UseCompatibleStateImageBehavior = false;
             this.ListCheaterBlockedEvents.View = System.Windows.Forms.View.Details;
+            this.ListCheaterBlockedEvents.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.ListCheaterBlockedEvents_ColumnClick);
             // 
             // columnHeader22
             // 
@@ -4380,5 +4392,6 @@
         private System.Windows.Forms.Label gui_filter1;
         private System.Windows.Forms.PictureBox btn_gui_filter1;
         private System.Windows.Forms.ComboBox FirewallRulesSearch;
+        private System.Windows.Forms.ToolStripMenuItem btnChatIPFilter;
     }
 }

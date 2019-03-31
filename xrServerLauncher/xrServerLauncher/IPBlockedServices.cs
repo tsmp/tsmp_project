@@ -51,10 +51,8 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                 FW_RULE.Direction = NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_IN;  // Входящее соединение
                 FW_RULE.Enabled = true;                                         // устанавливает флаг - включен/отключен
                 FW_RULE.InterfaceTypes = "All";                                 // тип сетевого интерфейса
-                 
-                if ((remoteip == " 0.0.0.0" || remoteip == " 127.0.0.1" || remoteip == " 255.255.255.255"))
-                    return;
-                else if (remoteip.Length == 0)
+                
+                if (remoteip == " 0.0.0.0" || remoteip == " 127.0.0.1" || remoteip == " 255.255.255.255" || remoteip.Length == 0)
                     return;
 
                 if (SubnetFlag == true)
@@ -110,7 +108,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                     if (rule.Name.Contains("STALKER_SRV"))
                     {
                         var get_address = rule.Name.Split()[6];
-                        if (get_address == cmp_address)                    
+                        if (get_address == cmp_address)
                             return;                       
                     }
                 }

@@ -39,15 +39,55 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
             base.WndProc(ref m);
         }
 
+        // ========================================================================================
+        int name_skip_space = 0;
+        int server_version = 0;
+        int server_chat_warning = 0;
+        int server_attack_blocked = 0;
+        int ERROR_COUNTER = 0;                                                 // counter read/write error proc 
+        int SIGNAL_BANNED = 0;                                                 // counter ban players
+        int ADDRESS_COUNTER_AUTO = 0;                                          // Количество адресов в списке
+        int EventsCount = 0;                                                   // Число завышенных данных пользователем, требуется для автоматической блокировки
+        int EventsWeaponsCount = 0;
+        int handler_writer_base = 0;                                           // Блокирует запись данных в базу, когда это не нужно
+        int START_LEVEL_THREAD = 0;                                            // 0 - AUTO START // 2 - USER START // 4 - USER START & TRANSFER DATA TO BASE
+        long finish_log_size = 0;
+        int get_show_informer_at_threading_complited = 0;                      // выводим подсказку о успешном переносе в базу
+        int statistics_new_players = 0;                                        // Счетчик новых игроков за время работы программы
+        int statistics_new_blocked = 0;                                        // Счетчик новых блокировок за время работы программы                   
+
+        int EventsControllerMaxHPLimit = 20;                                   // Максимальное число пуль для параметра Hit Power
+        int MAX_LEN_SIZE_CHAT = 150;                                           // Максимальная длина чата
+         
+        int StartReadIndex = 0;
+        int FinishReadIndex = 0;
+
+        HashSet<string> SrvEventsBuffer = new HashSet<string>();               // История событий
+        HashSet<string> SrvPlayersBuffer = new HashSet<string>();              // Список игроков и их события для проверки на читерство         
+        HashSet<string> CHEATERPLAYERSLIST = new HashSet<string>();            // Лист текущих нарушителей
+        HashSet<string> ListplayersEvents = new HashSet<string>();             // check listplayers
+
+        HashSet<string> CHECK_PLAYER_INPROXYLIST = new HashSet<string>();      // Список всех адресов с сервера
+        HashSet<string> CHECK_ADDR = new HashSet<string>();
+
+        HashSet<string> html_buffer = new HashSet<string>();                   // Сведения для формаирования файла web html
+
+        HashSet<string> PlayersBaseFilter = new HashSet<string>();             // [V+] [N+] [R+]
+
         public HashSet<string> PlayersBaseBuffer = new HashSet<string>();
+        public static HashSet<string> BaseEvents = new HashSet<string>();      // События которые относятся к временным событиям
+        // ========================================================================================
+
         private void BaseLoadInBuffer()
         {
             try
             {
-                PlayersBaseBuffer.Clear();
+                PlayersBaseBuffer.Clear(); PlayersBaseFilter.Clear();
                 foreach (string UpdateData in File.ReadLines(@"PlayersDataBase\Players.xrBase", Encoding.GetEncoding("UTF-8")))
                 {
                     PlayersBaseBuffer.Add(UpdateData + Environment.NewLine);
+                    if (UpdateData.Contains("[V+]") || UpdateData.Contains("[R+]") || UpdateData.Contains("[N+]"))
+                        PlayersBaseFilter.Add(UpdateData + Environment.NewLine);
                 }
                 str_base_value.Text = "Данных в базе: " + PlayersBaseBuffer.Count;
                 handler_writer_base = PlayersBaseBuffer.Count;
@@ -290,6 +330,13 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
             GetChatFilter(8, false);
         }
 
+        private void btnChatIPFilter_Click(object sender, EventArgs e)
+        {
+            DialogResult result_ok = MessageBox.Show("Внимание! Данная функция автоматически находит адреса игроков из списка listplayers.\nЭти данные могут быть СОВЕРШЕННО неверны в том случаи, если Вы уже выполняли clear_log, а программа работала в автоматическом режиме.\nПричина проста: Т.к на момент работы программы в авто-режиме программа сохраняет всю историю и выгружает ее при закрытий окна базы.\n\n\nДля верного определения данных, пожалуйста перезапустите окно базы или не очищайте лог сервера, на момент его работы.\nДля продолжения нажмите ОК", "S.E.R.V.E.R - Shadow Of Chernobyl", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+            if (DialogResult.OK == result_ok)
+                GetChatFilter(32, true);
+        }
+
         private void btnLoadAllChat_Click(object sender, EventArgs e)
         {
             GetChatFilter(0, true);
@@ -398,6 +445,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
             }
         }
 
+        string get_address_by_name;
         private void GetChatFilter(int FILTER_MSG, bool AllMsg)
         {
             try
@@ -410,14 +458,35 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                         var color_msg = Messages.Split()[0];
                         var check_msg = Messages.Split()[1];
 
+                        if (FILTER_MSG == 32 && AllMsg == true)
+                        {
+                            get_address_by_name = null;
+                            int count = 0;
+                            var get_player_name = Messages.Split(':')[1];
+                            foreach (string get_address in SrvPlayersBuffer)
+                            {
+                                if (get_address.Contains("name:" + get_player_name))
+                                {
+                                    count++;
+                                    get_address_by_name = "IP: " + get_address.Split()[5]  + " : ";
+                                    if ((count > 1) || (get_address_by_name.Length < 5))
+                                    {
+                                        get_address_by_name = "IP: not found : ";
+                                        count = 0;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+
                         if ((color_msg + " " + check_msg == "- Чат:") && (FILTER_MSG == 2 || AllMsg == true))
                         {
-                            var green = Messages.Replace("- Чат:", "[Свобода]: ");
+                            var green = Messages.Replace("- Чат:", "[Свобода]: " + get_address_by_name);
                             listChatHistory.Items.Add(green).BackColor = Color.PaleGreen;
                         }
                         if ((color_msg + " " + check_msg == "~ Чат:") && (FILTER_MSG == 4 || AllMsg == true))
                         {
-                            var blue = Messages.Replace("~ Чат:", "[Наемники]: ");
+                            var blue = Messages.Replace("~ Чат:", "[Наемники]: " + get_address_by_name);
                             listChatHistory.Items.Add(blue).BackColor = Color.LightBlue;
                         }
                         if ((color_msg + " " + check_msg == "Чат: ServerAdmin") && (FILTER_MSG == 8 || AllMsg == true))
@@ -427,7 +496,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                         }
                         if ((color_msg + " " + check_msg.Length == "Чат: " + check_msg.Length) && (AllMsg == true) && (check_msg != "ServerAdmin") && (check_msg != "SERVER"))
                         {
-                            var all_msg = Messages.Replace("Чат: ", "[Общий чат]: ");
+                            var all_msg = Messages.Replace("Чат: ", "[Общий чат]: " + get_address_by_name);
                             listChatHistory.Items.Add(all_msg).BackColor = Color.Honeydew;
                         }
                     }
@@ -474,37 +543,6 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
             }
         }
 
-
-        int name_skip_space = 0;
-        int server_version = 0;
-        int server_chat_warning = 0;
-        int server_attack_blocked = 0;
-        int ERROR_COUNTER = 0;                                                 // counter read/write error proc 
-        int SIGNAL_BANNED = 0;                                                 // counter ban players
-        int ADDRESS_COUNTER_AUTO = 0;                                          // Количество адресов в списке
-        int EventsCount = 0;                                                   // Число завышенных данных пользователем, требуется для автоматической блокировки
-        int EventsWeaponsCount = 0;
-        int handler_writer_base = 0;                                           // Блокирует запись данных в базу, когда это не нужно
-        int START_LEVEL_THREAD = 0;                                            // 0 - AUTO START // 2 - USER START // 4 - USER START & TRANSFER DATA TO BASE
-        long finish_log_size = 0;
-        int get_show_informer_at_threading_complited = 0;                      // выводим подсказку о успешном переносе в базу
-        int statistics_new_players = 0;                                        // Счетчик новых игроков за время работы программы
-        int statistics_new_blocked = 0;                                        // Счетчик новых блокировок за время работы программы                   
-
-        int EventsControllerMaxHPLimit = 20;                                   // Максимальное число пуль для параметра Hit Power
-
-        int StartReadIndex = 0;
-        int FinishReadIndex = 0;
-
-        HashSet<string> SrvEventsBuffer = new HashSet<string>();               // Events history
-        HashSet<string> SrvPlayersBuffer = new HashSet<string>();              // HIM Players Автоматический режим           
-        HashSet<string> CHEATERPLAYERSLIST = new HashSet<string>();            // Лист нарушителей которые были обнаружены с завышенными данными
-        HashSet<string> ListplayersEvents = new HashSet<string>();             // для просмотра списка игроков.
-
-        public static HashSet<string> BaseEvents = new HashSet<string>();      // События которые относятся к временным событиям
-
-        HashSet<string> CHECK_PLAYER_INPROXYLIST = new HashSet<string>();      // Список всех адресов с сервера
-        HashSet<string> CHECK_ADDR = new HashSet<string>();
         private void ListProxyLoad()
         {
             try
@@ -558,7 +596,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                         server_version = 0;
                         break;
                     }
-                    if (s.Contains("session_id:")) // 1 - stalker controller
+                    if (s.Contains("session_id:"))   // 1 - stalker controller
                     {
                         server_version = 1;
                         break;
@@ -569,7 +607,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                 {
                     FinishReadIndex = 0;
                 }             
-                else if ((StartReadIndex > 0) && (START_LEVEL_THREAD == 0))
+                else if (START_LEVEL_THREAD == 0)
                 {
                     SrvPlayersBuffer.Clear();
                     CHEATERPLAYERSLIST.Clear();
@@ -932,17 +970,17 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
 
                     if (color_msg + " " + check_msg == "- Чат:")
                     {
-                        if (Messages.Length > 200)
+                        if (Messages.Length > MAX_LEN_SIZE_CHAT)
                             server_chat_warning++;
                     }
                     else if (color_msg + " " + check_msg == "~ Чат:")
                     {
-                        if (Messages.Length > 200)
+                        if (Messages.Length > MAX_LEN_SIZE_CHAT)
                             server_chat_warning++;
                     }
                     else if ((color_msg + " " + check_msg.Length == "Чат: " + check_msg.Length) && (check_msg != "ServerAdmin"))
                     {
-                        if (Messages.Length > 200)
+                        if (Messages.Length > MAX_LEN_SIZE_CHAT)
                             server_chat_warning++;
                     }
                 }
@@ -1191,15 +1229,17 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                     GUI_INFO_3.Text = "Новых игроков: " + statistics_new_players;
                     GUI_INFO_BASE.Text = "Игроков в базе: " + PlayersBaseBuffer.Count;
                     GUI_INFO_2.Text = "Атак на сервер: " + (server_chat_warning + server_attack_blocked);
+                    if (server_chat_warning + server_attack_blocked > 0) GUI_INFO_2.BackColor = Color.LightCoral;
                     str_base_value.Text = "Данных в базе: " + PlayersBaseBuffer.Count;
                     GUI_INFO_EVENTS.Text = "Игровых событий: " + SrvEventsBuffer.Count;
-                    GUI_STATUS.Text = "Обработка не требуется";
-                    GUI_STATUS.BackColor = Color.White;
+                    GUI_STATUS.Text = "Обработка не требуется"; GUI_STATUS.BackColor = Color.White;
+                    GUI_INFO_BLOCKED.Text = "Новых блокировок: " + statistics_new_blocked;
+                    if (statistics_new_blocked > 0) GUI_INFO_BLOCKED.BackColor = Color.Orange;
                     if ((EventsControllerAutoCheckPlayers.CheckState == CheckState.Checked) && (server_version == 1))
                     {
                         if (SIGNAL_BANNED > 0)
                         {
-                            GUI_INFO_1.Text = "Нарушителей:" + CHEATERPLAYERSLIST.Count + "/" + SIGNAL_BANNED;
+                            GUI_INFO_1.Text = "Под наблюдением:" + CHEATERPLAYERSLIST.Count + "/" + SIGNAL_BANNED;
                         }
                         else if (SIGNAL_BANNED == 0)
                         {
@@ -1225,7 +1265,6 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
         {
             try
             {
-
                 string desc = null;
                 foreach (string FoundAddressInBlocked in AddressBuffer)
                 {
@@ -1285,24 +1324,28 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
             catch (Exception)
             {
                 ERROR_COUNTER++;
-            }
+            }         
         }
 
         private void LoadInCheaterList()
         {
-            PlayersCheaterList.Items.Clear();
-            foreach (string add_ip in CHEATERPLAYERSLIST)
+            try
             {
-                string[] values = add_ip.Split('%');
-                if (add_ip.Contains("% [CHEATER] "))
+                PlayersCheaterList.Items.Clear();
+                foreach (string add_ip in CHEATERPLAYERSLIST)
                 {
-                    PlayersCheaterList.Items.Add(new ListViewItem(values)).BackColor = Color.Violet;
-                }
-                else if (add_ip.Contains("% [HWEAPONS] "))
-                {
-                    PlayersCheaterList.Items.Add(new ListViewItem(values)).BackColor = Color.PaleVioletRed;
+                    string[] values = add_ip.Split('%');
+                    if (add_ip.Contains("% [CHEATER] "))
+                    {
+                        PlayersCheaterList.Items.Add(new ListViewItem(values)).BackColor = Color.Violet;
+                    }
+                    else if (add_ip.Contains("% [HWEAPONS] "))
+                    {
+                        PlayersCheaterList.Items.Add(new ListViewItem(values)).BackColor = Color.PaleVioletRed;
+                    }
                 }
             }
+            catch (Exception) { }
         }
 
         private void WriteToCheaterList(string pName, string pAddr, string pHash, string pFlagsCount, int pReason)
@@ -1331,12 +1374,6 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                     Write.SubItems.Add(DateTime.Now.ToString("dd.MM.yyyy---HH:mm:ss"));
                     ListCheaterBlockedEvents.Items.Add(Write).BackColor = Color.Gold;
                 }
-                else if (pReason == 16)
-                {
-                    Write.SubItems.Add("[FAKE-PLAYER]: " + pFlagsCount);
-                    Write.SubItems.Add(DateTime.Now.ToString("dd.MM.yyyy---HH:mm:ss"));
-                    ListCheaterBlockedEvents.Items.Add(Write).BackColor = Color.Lime;
-                }
             }
             catch (Exception)
             {
@@ -1348,7 +1385,6 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
         {
             try
             {
-                GUI_INFO_BLOCKED.Text = "Новых блокировок: " + statistics_new_blocked;
                 if (START_LEVEL_THREAD == 0)
                 {
                     ScanDataFiles.Start();
@@ -1365,7 +1401,8 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                     StartAutoCheckThread.Enabled = true;
                     try
                     {
-                        if (EventsChangeWindow.CheckState == CheckState.Checked) // используется старый интерфейс
+                        // используется главное меню
+                        if (EventsChangeWindow.CheckState == CheckState.Checked)
                         {
                             listBase.Items.Clear();
 
@@ -1375,245 +1412,275 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                                 listBase.Items.Add(new ListViewItem(values));
                             }
                         }
-                        else  // используется новый интерфейс     
+                        else // используется интерфейс со списком игроков  
                         {
+                            // ListplayersEvents.OrderBy(x => x);
                             ListTableChange1.Items.Clear();
+                            if (ListplayersEvents.Count > 0) // Загружаем список игроков
+                            {
+                                ListViewItem items = new ListViewItem("[A]");
+                                items.SubItems.Add(Convert.ToString("Найдено игроков: " + ListplayersEvents.Count));
+                                ListTableChange1.Items.Add(items).BackColor = Color.Aqua;
+                            }
+                            else
+                            {
+                                string[] Server = "[A]%Нет данных%0.0.0.0%".Split('%');
+                                ListTableChange1.Items.Add(new ListViewItem(Server)).BackColor = Color.DarkOrange;
+                            }
+                                           
+                            foreach (string LISTPLAYERS in ListplayersEvents.ToArray())
+                            {
+                                if (LISTPLAYERS.Contains("server") || (LISTPLAYERS.Contains("0.0.0.0")))
+                                {
+                                    string[] Server = LISTPLAYERS.Split('%');
+                                    ListTableChange1.Items.Add(new ListViewItem(Server)).BackColor = Color.Lime;
+                                    break;
+                                }
+                            }
+
+                            int listcount = 0;
+                            foreach (string filters in ListplayersEvents.ToArray())
+                            {
+                                var PLAYER_ADDR = filters.Split('%')[4];
+                                foreach (string search_player_in_notes in PlayersBaseFilter)
+                                {
+                                    string[] values = search_player_in_notes.Split('%');
+                                    if (search_player_in_notes.Contains("[N+]%"))
+                                    {
+                                        if (search_player_in_notes.Contains(PLAYER_ADDR))
+                                        {
+                                            listcount++;
+                                            if (listcount == 1)
+                                            {
+                                                string[] SYS_MSG = "[A]%-----[ОБНАРУЖЕНЫ В БАЗЕ]-----%%%0.0.0.0%".Split('%');
+                                                ListTableChange1.Items.Add(new ListViewItem(SYS_MSG)).BackColor = Color.Lime;
+                                            }
+                                            ListTableChange1.Items.Add(new ListViewItem(values)).BackColor = Color.LightGreen;
+                                            ListplayersEvents.Remove(filters); // удаляем нарушителей
+                                            break;
+                                        }
+                                    }
+                                    else if (search_player_in_notes.Contains("[V+]%"))
+                                    {
+                                        if (search_player_in_notes.Contains(PLAYER_ADDR))
+                                        {
+                                            listcount++;
+                                            if (listcount == 1)
+                                            {
+                                                string[] SYS_MSG = "[A]%-----[ОБНАРУЖЕНЫ В БАЗЕ]-----%%%0.0.0.0%".Split('%');
+                                                ListTableChange1.Items.Add(new ListViewItem(SYS_MSG)).BackColor = Color.Lime;
+                                            }
+                                            ListTableChange1.Items.Add(new ListViewItem(values)).BackColor = Color.Gold;
+                                            ListplayersEvents.Remove(filters);
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+
+                            listcount = 0;
+                            foreach (string PLAYER_CHEATER in ListplayersEvents.ToArray())
+                            {
+                                var PLAYER_NAME = PLAYER_CHEATER.Split('%')[1];
+                                foreach (string PLAYER_CHEATER_FOUND in SrvPlayersBuffer)
+                                {
+                                    if (PLAYER_CHEATER_FOUND.Contains("# " + PLAYER_NAME + " ["))
+                                    {
+                                        listcount++;
+                                        if (listcount == 1)
+                                        {
+                                            string[] SYS_MSG1 = "[A]%-----[ИСПОЛЬЗУЮТ ЧИТ ПО]-----%%%0.0.0.0%".Split('%');
+                                            ListTableChange1.Items.Add(new ListViewItem(SYS_MSG1)).BackColor = Color.Lime;
+                                        }
+                                        string[] values = PLAYER_CHEATER.Split('%');
+                                        ListTableChange1.Items.Add(new ListViewItem(values)).BackColor = Color.Blue;
+                                        ListplayersEvents.Remove(PLAYER_CHEATER);
+                                        break;
+                                    }
+                                }
+                            }
+
+                            listcount = 0;
                             foreach (string ipblocked in SrvEventsBuffer)
                             {
                                 if (ipblocked.Contains("stalkazz_attack"))
                                 {
+                                    listcount++;
+                                    if (listcount == 1)
+                                    {
+                                        string[] SYS_MSG2 = "[A]%-----[АТАКИ?]-----%%%0.0.0.0%".Split('%');
+                                        ListTableChange1.Items.Add(new ListViewItem(SYS_MSG2)).BackColor = Color.Lime;
+                                    }
                                     var IP = ipblocked.Split('%')[4];
                                     var blocked = ipblocked.Replace("stalkazz_attack", "[ATTACK]:" + IP);
                                     string[] values = blocked.Split('%');
                                     ListTableChange1.Items.Add(new ListViewItem(values)).BackColor = Color.DeepPink;
                                 }
                             }
-                            if (EventsPlayersAutoColor.CheckState == CheckState.Unchecked)
+
+                            listcount = 0;
+                            foreach (string PLAYER_HWEAPONS in ListplayersEvents.ToArray())
                             {
-                                foreach (string s in ListplayersEvents)
+                                var PNAME = PLAYER_HWEAPONS.Split('%')[1];
+                                string[] values = PLAYER_HWEAPONS.Split('%');
+                                foreach (string WeaponsEVE in SrvEventsBuffer)
                                 {
-                                    try
+                                    if (WeaponsEVE.Contains("от Заряд ВОГ-25") || WeaponsEVE.Contains("M209"))
                                     {
-                                        int color_str = 0;
-                                        int warning_chat_events = 0;
-                                        var PNAME = s.Split('%')[1];
-                                        var PADDR = s.Split('%')[4];
-                                        foreach (string ServerEVE in ListplayersEvents)
+                                        listcount++;
+                                        if (listcount == 1)
                                         {
-                                            if (ServerEVE.Contains(PNAME))
-                                            {
-                                                if (ServerEVE.Contains("server") || (ServerEVE.Contains("0.0.0.0")))
-                                                {
-                                                    color_str = 14;
-                                                    break;
-                                                }
-                                            }
+                                            string[] SYS_MSG3 = "[A]%-----[ТЯЖЕЛОЕ СНАРЯЖЕНИЕ]-----%%%0.0.0.0%".Split('%');
+                                            ListTableChange1.Items.Add(new ListViewItem(SYS_MSG3)).BackColor = Color.Lime;
                                         }
-
-                                        foreach (string CheckChatSize in SrvEventsBuffer)
-                                        {
-                                            if (CheckChatSize.Contains("~ Чат: " + PNAME))
-                                            {
-                                                if (CheckChatSize.Length >= 150)
-                                                {
-                                                    var correct_msg = CheckChatSize.Split(':')[1].Replace(" ", "");
-                                                    if (correct_msg == PNAME)
-                                                    {
-                                                        color_str = 8;
-                                                        warning_chat_events = 1;
-                                                        break;
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    var correct_msg = CheckChatSize.Split(':')[1].Replace(" ", "");
-                                                    if (correct_msg == PNAME)
-                                                    {
-                                                        color_str = 10;
-                                                        break;
-                                                    }
-                                                }
-                                            }
-
-                                            else if (CheckChatSize.Contains("- Чат: " + PNAME))
-                                            {
-                                                if (CheckChatSize.Length >= 150)
-                                                {
-                                                    var correct_msg = CheckChatSize.Split(':')[1].Replace(" ", "");
-                                                    if (correct_msg == PNAME)
-                                                    {
-                                                        color_str = 8;
-                                                        warning_chat_events = 1;
-                                                        break;
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    var correct_msg = CheckChatSize.Split(':')[1].Replace(" ", "");
-                                                    if (correct_msg == PNAME)
-                                                    {
-                                                        color_str = 10;
-                                                        break;
-                                                    }
-                                                }
-                                            }
-
-                                            else if (CheckChatSize.Contains("Чат: " + PNAME))
-                                            {
-                                                if (CheckChatSize.Length >= 150)
-                                                {
-                                                    var correct_msg = CheckChatSize.Split(':')[1].Replace(" ", "");
-                                                    if (correct_msg == PNAME)
-                                                    {
-                                                        color_str = 8;
-                                                        warning_chat_events = 1;
-                                                        break;
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    var correct_msg = CheckChatSize.Split(':')[1].Replace(" ", "");
-                                                    if (correct_msg == PNAME)
-                                                    {
-                                                        color_str = 10;
-                                                        break;
-                                                    }
-                                                }
-                                            }
-                                        }
-
-                                        // Check Use Weapons
-                                        foreach (string WeaponsEVE in SrvEventsBuffer)
-                                        {
-                                            if (WeaponsEVE.Contains("от Заряд ВОГ-25") || WeaponsEVE.Contains("M209"))
-                                            {
-                                                var StartLineScan = WeaponsEVE.Split()[0];
-                                                int CheckLineMaxSpace = WeaponsEVE.Count(simbolcount => simbolcount == ' ');
-                                                if (server_version == 1)
-                                                {
-                                                    if (WeaponsEVE.Contains(StartLineScan + " " + PNAME) && (CheckLineMaxSpace == 5 || CheckLineMaxSpace == 6) && (StartLineScan == "*"))
-                                                    {
-                                                        var CMP_PNAME = WeaponsEVE.Split()[1];
-                                                        if (CMP_PNAME == PNAME)
-                                                        {
-                                                            color_str = 12;
-                                                            break;
-                                                        }
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    if (WeaponsEVE.Contains(PNAME) && (CheckLineMaxSpace == 4 || CheckLineMaxSpace == 5) && (StartLineScan == PNAME))
-                                                    {
-                                                        var CMP_PNAME = WeaponsEVE.Split()[0];
-                                                        if (CMP_PNAME == PNAME)
-                                                        {
-                                                            color_str = 12;
-                                                            break;
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-
-                                        foreach (string search_player_in_notes in PlayersBaseBuffer)
-                                        {
-                                            if (search_player_in_notes.Contains("[N+]%"))
-                                            {
-                                                if (search_player_in_notes.Contains(PADDR))
-                                                {
-                                                    color_str = 1;
-                                                    break;
-                                                }
-                                            }
-                                        }
-
-                                        foreach (string search_player_in_cheaterlist in PlayersBaseBuffer)
-                                        {
-                                            if (search_player_in_cheaterlist.Contains("[V+]%"))
-                                            {
-                                                if (search_player_in_cheaterlist.Contains(PADDR))
-                                                {
-                                                    color_str = 2;
-                                                    break;
-                                                }
-                                            }
-                                        }
-
+                                        var StartLineScan = WeaponsEVE.Split()[0];
+                                        int CheckLineMaxSpace = WeaponsEVE.Count(simbolcount => simbolcount == ' ');
                                         if (server_version == 1)
                                         {
-                                            foreach (string PLAYER_CHEATER_FOUND in SrvPlayersBuffer)
+                                            if (WeaponsEVE.Contains(StartLineScan + " " + PNAME) && (CheckLineMaxSpace == 5 || CheckLineMaxSpace == 6) && (StartLineScan == "*"))
                                             {
-                                                if (PLAYER_CHEATER_FOUND.Contains("# " + PNAME + " ["))
+                                                var CMP_PNAME = WeaponsEVE.Split()[1];
+                                                if (CMP_PNAME == PNAME)
                                                 {
-                                                    var str_cmp_name = PLAYER_CHEATER_FOUND.Split()[1];
-                                                    if (str_cmp_name == PNAME)
-                                                    {                                                                                           
-                                                        color_str = 4;
-                                                        break;
-                                                    }
+                                                    ListTableChange1.Items.Add(new ListViewItem(values)).BackColor = Color.Aquamarine;
+                                                    ListplayersEvents.Remove(PLAYER_HWEAPONS);
+                                                    break;
                                                 }
                                             }
                                         }
-
-                                        if (!(PADDR.Length >= 7 && PADDR.Length <= 15))      // check format address                                   
-                                            color_str = 16;
-                                       
-                                        string result_scan = s;
-                                        if (color_str == 4)                                   // cheater found
-                                            result_scan = s.Replace("[A]", "[PK]");
-                                        else if (color_str == 2 && warning_chat_events == 0)  // chat hack + cheater
-                                            result_scan = s.Replace("[A]", "[PJ]");
-                                        else if (color_str == 2 && warning_chat_events == 1)
-                                            result_scan = s.Replace("[A]", "[PL]");
-                                        else if (color_str == 16)
-                                            result_scan = s.Replace("[A]", "[PL]").Replace(PNAME, "[ERROR FORMAT]: " + PNAME);
-
-                                        string[] values = result_scan.Split('%');
-                                        if (color_str == 1)                                                                     // Notes
-                                            ListTableChange1.Items.Add(new ListViewItem(values)).BackColor = Color.LightGreen;
-                                        if (color_str == 2 && warning_chat_events == 0)                                         // cheater in base list
-                                            ListTableChange1.Items.Add(new ListViewItem(values)).BackColor = Color.Gold;
-                                        else if (color_str == 4)                                                                // cheater detect
-                                            ListTableChange1.Items.Add(new ListViewItem(values)).BackColor  = Color.Blue;                                      
-                                        else if (color_str == 6)                                                                // radmin login
-                                            ListTableChange1.Items.Add(new ListViewItem(values)).BackColor = Color.ForestGreen;
-                                        else if (color_str == 2 && warning_chat_events == 1)                                    // chat hack + cheater
-                                            ListTableChange1.Items.Add(new ListViewItem(values)).BackColor = Color.Red;
-                                        else if (color_str == 8 || warning_chat_events == 1)                                    // chat size 
-                                            ListTableChange1.Items.Add(new ListViewItem(values)).BackColor = Color.Magenta;
-                                        else if (color_str == 10)                                                               // new chat msg
-                                            ListTableChange1.Items.Add(new ListViewItem(values)).BackColor = Color.Honeydew;
-                                        else if (color_str == 12)                                                               // heavy weapons
-                                            ListTableChange1.Items.Add(new ListViewItem(values)).BackColor = Color.Aquamarine;
-                                        else if (color_str == 14)                                                               // server
-                                            ListTableChange1.Items.Add(new ListViewItem(values)).BackColor = Color.Lime;
-                                        else if (color_str == 16)                                                               // bad address format
-                                            ListTableChange1.Items.Add(new ListViewItem(values)).BackColor = Color.Coral;
                                         else
-                                            ListTableChange1.Items.Add(new ListViewItem(values));
+                                        {
+                                            if (WeaponsEVE.Contains(PNAME) && (CheckLineMaxSpace == 4 || CheckLineMaxSpace == 5) && (StartLineScan == PNAME))
+                                            {
+                                                var CMP_PNAME = WeaponsEVE.Split()[0];
+                                                if (CMP_PNAME == PNAME)
+                                                {
+                                                    ListTableChange1.Items.Add(new ListViewItem(values)).BackColor = Color.Aquamarine;
+                                                    ListplayersEvents.Remove(PLAYER_HWEAPONS);
+                                                    break;
+                                                }
+                                            }
+                                        }
                                     }
-                                    catch (Exception)
-                                    {
-                                        ERROR_COUNTER++;
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                foreach (string s in ListplayersEvents)
-                                {
-                                    string[] values = s.Split('%');
-                                    ListTableChange1.Items.Add(new ListViewItem(values));
                                 }
                             }
 
-                            if (ListTableChange1.Items.Count > 0)                // Загружаем список игроков
+                            listcount = 0;
+                            foreach (string CHAT_CHECK in ListplayersEvents.ToArray())
                             {
-                                ListViewItem items = new ListViewItem("[PL]");
-                                items.SubItems.Add(Convert.ToString("Найдено игроков: " + (ListTableChange1.Items.Count)));
-                                ListTableChange1.Items.Add(items).BackColor = Color.Aqua;
+                                var PNAME = CHAT_CHECK.Split('%')[1];
+                                var PADDR = CHAT_CHECK.Split('%')[4];
+                                string[] CHAT_MSG = CHAT_CHECK.Split('%');
+                                foreach (string CheckChatSize in SrvEventsBuffer)
+                                {
+                                    if (CheckChatSize.Contains("~ Чат: " + PNAME))
+                                    {
+                                        listcount++;
+                                        if (listcount == 1)
+                                        {
+                                            string[] SYS_MSG4 = "[A]%-----[ИСПОЛЬЗОВАЛИ ЧАТ]-----%%%0.0.0.0%".Split('%');
+                                            ListTableChange1.Items.Add(new ListViewItem(SYS_MSG4)).BackColor = Color.Lime;
+                                        }
+                                        if (CheckChatSize.Length >= MAX_LEN_SIZE_CHAT)
+                                        {
+                                            var correct_msg = CheckChatSize.Split(':')[1].Replace(" ", "");
+                                            if (correct_msg == PNAME)
+                                            {
+                                                ListTableChange1.Items.Add(new ListViewItem(CHAT_MSG)).BackColor = Color.Violet;
+                                                ListplayersEvents.Remove(CHAT_CHECK);
+                                                break;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            var correct_msg = CheckChatSize.Split(':')[1].Replace(" ", "");
+                                            if (correct_msg == PNAME)
+                                            {
+                                                ListTableChange1.Items.Add(new ListViewItem(CHAT_MSG)).BackColor = Color.Honeydew;
+                                                ListplayersEvents.Remove(CHAT_CHECK);
+                                                break;
+                                            }
+                                        }
+                                    }
+
+                                    else if (CheckChatSize.Contains("- Чат: " + PNAME))
+                                    {
+                                        listcount++;
+                                        if (listcount == 1)
+                                        {
+                                            string[] SYS_MSG4 = "[A]%-----[ИСПОЛЬЗОВАЛИ ЧАТ]-----%%%0.0.0.0%".Split('%');
+                                            ListTableChange1.Items.Add(new ListViewItem(SYS_MSG4)).BackColor = Color.Lime;
+                                        }
+                                        if (CheckChatSize.Length >= MAX_LEN_SIZE_CHAT)
+                                        {
+                                            var correct_msg = CheckChatSize.Split(':')[1].Replace(" ", "");
+                                            if (correct_msg == PNAME)
+                                            {
+                                                ListTableChange1.Items.Add(new ListViewItem(CHAT_MSG)).BackColor = Color.Violet;
+                                                ListplayersEvents.Remove(CHAT_CHECK);
+                                                break;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            var correct_msg = CheckChatSize.Split(':')[1].Replace(" ", "");
+                                            if (correct_msg == PNAME)
+                                            {
+                                                ListTableChange1.Items.Add(new ListViewItem(CHAT_MSG)).BackColor = Color.Honeydew;
+                                                ListplayersEvents.Remove(CHAT_CHECK);
+                                                break;
+                                            }
+                                        }
+                                    }
+
+                                    else if (CheckChatSize.Contains("Чат: " + PNAME))
+                                    {
+                                        listcount++;
+                                        if (listcount == 1)
+                                        {
+                                            string[] SYS_MSG4 = "[A]%-----[ИСПОЛЬЗОВАЛИ ЧАТ]-----%%%0.0.0.0%".Split('%');
+                                            ListTableChange1.Items.Add(new ListViewItem(SYS_MSG4)).BackColor = Color.Lime;
+                                        }
+                                        if (CheckChatSize.Length >= MAX_LEN_SIZE_CHAT)
+                                        {
+                                            var correct_msg = CheckChatSize.Split(':')[1].Replace(" ", "");
+                                            if (correct_msg == PNAME)
+                                            {
+                                                ListTableChange1.Items.Add(new ListViewItem(CHAT_MSG)).BackColor = Color.Violet;
+                                                ListplayersEvents.Remove(CHAT_CHECK);
+                                                break;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            var correct_msg = CheckChatSize.Split(':')[1].Replace(" ", "");
+                                            if (correct_msg == PNAME)
+                                            {
+                                                ListTableChange1.Items.Add(new ListViewItem(CHAT_MSG)).BackColor = Color.Honeydew;
+                                                ListplayersEvents.Remove(CHAT_CHECK);
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
                             }
+ 
+                            if (ListplayersEvents.Count > 0)
+                            {
+                                listcount = 0;
+                                foreach (string OLD_EVENTS in ListplayersEvents.ToArray())
+                                {
+                                    listcount++;
+                                    if (listcount == 1)
+                                    {
+                                        string[] SYS_MSG5 = "[A]%-----[БЕЗ СОБЫТИЙ]-----%%%0.0.0.0%".Split('%');
+                                        ListTableChange1.Items.Add(new ListViewItem(SYS_MSG5)).BackColor = Color.Lime;
+                                    }
+                                    string[] PRINT = OLD_EVENTS.Split('%');
+                                    ListTableChange1.Items.Add(new ListViewItem(PRINT)).BackColor = Color.White;
+                                }
+                            }
+
                             blocked_events_handler = 0;
                             if (server_version == 1)
                             {
@@ -1633,7 +1700,6 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                     }
                 }
             }
-
             catch (Exception)
             {
                 ERROR_COUNTER++;
@@ -1686,7 +1752,6 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
             }
         }
 
-        HashSet<string> html_buffer = new HashSet<string>();
         private void btnExportToHTML_Click(object sender, EventArgs e)
         {
             try
@@ -1711,12 +1776,14 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
         {
             try
             {
-                html_buffer.Add("<html><head><meta> <meta http-equiv='content-type' content ='text/html; charset=utf-8'> <title>" + html_name + " - S.E.R.V.E.R - Shadow Of Chernobyl</title></head><body> <center><h1> Информация об игроке: <font style='color:green'>" + html_name + "</font></h1></center><hr>");
+                html_buffer.Add("<html><head><meta> <meta http-equiv='content-type' content ='text/html; charset=utf-8'> <title>" + html_name + " - S.E.R.V.E.R - Shadow Of Chernobyl</title></head><body> <center><h1> Информация об игроке: <font style='color:green'>" + html_name + " | " + address + "</font></h1></center><hr>");
                 foreach (string print in SrvPlayersBuffer)
                 {
                     if (print.Contains("name: " + html_name))
                     {
-                        html_buffer.Add(@"<hr align='left' width='500' size='3' color='gold'<br><span style=""background-color:gold"">" + print + "</span><br><hr align='left' width='500' size='3' color='gold'<br>");
+                        var cmp_name = print.Split()[1];
+                        if (cmp_name == html_name)
+                            html_buffer.Add(@"<hr align='left' width='500' size='3' color='gold'<br><span style=""background-color:gold"">" + print + "</span><br><hr align='left' width='500' size='3' color='gold'<br>");
                     }
 
                     if (print.Contains("# " + html_name))
@@ -2373,7 +2440,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                     SelectedTable2.Visible = true;
                     ListTableChange2.Visible = true;
                     ListTableChange3.Visible = true;
-                    blocked_events_handler = 1;       // Если открыт интерфейс, и пользователь нажимает кнопку, то всегда == true
+                    blocked_events_handler = 1;       // Если открыт интерфейс, и пользователь нажимает кнопку, то всегда == true              
                 }
              
                 if (SearchPanel.Visible == true)
@@ -2644,7 +2711,6 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                     Save(string.Concat(PlayersBaseBuffer));
                     ListViewItem del_str = listViewBase.FocusedItem;
                     listViewBase.Items.Remove(del_str);
-                    Thread.Sleep(100);
                     BaseLoadInBuffer();
                 }
                 catch (Exception ex)
@@ -3130,6 +3196,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                         listViewBase.Items.Add(new ListViewItem(values)).BackColor = Color.Honeydew;
                     }
                     Save(string.Concat(PlayersBaseBuffer));
+                    BaseLoadInBuffer();
                 }
             }
             catch (Exception ex)
@@ -3672,7 +3739,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                 Table1Hash = ListTableChange1.FocusedItem.SubItems[3].Text;            // Hash
                 Table1IPAddress = ListTableChange1.FocusedItem.SubItems[4].Text;       // IP
 
-                if (!(Table1IPAddress.Length >= 7 && Table1IPAddress.Length <= 15))    // check format address
+                if (!(Table1IPAddress.Length >= 7 && Table1IPAddress.Length <= 16))    // check format address
                 {
                     ListTableChange1.FocusedItem.BackColor = Color.Coral;
                     SelectedTable1.Text = "Player: " + Table1NamePlayers + " Bad Address Format => " + Table1IPAddress;
@@ -3747,7 +3814,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                     // blue msg
                     if (str.Contains("~ Чат: " + Table1NamePlayers))
                     {
-                        if (str.Length >= 150)
+                        if (str.Length >= MAX_LEN_SIZE_CHAT)
                         {
                             color_pointer_chat_size = 1;
                             string blue = str.Replace("~ Чат: ", "[Наемники] Size Chat [" + str.Length + "]: ");
@@ -3771,7 +3838,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                     // green msg
                     if (str.Contains("- Чат: " + Table1NamePlayers))
                     {
-                        if (str.Length >= 150)
+                        if (str.Length >= MAX_LEN_SIZE_CHAT)
                         {
                             color_pointer_chat_size = 1;
                             string green = str.Replace("- Чат: ", "[Свобода] Size Chat [" + str.Length + "]: ");
@@ -3795,7 +3862,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                     // all chat msg
                     if (str.Contains("Чат: " + Table1NamePlayers))
                     {
-                        if (str.Length >= 200)
+                        if (str.Length >= MAX_LEN_SIZE_CHAT)
                         {
                             color_pointer_chat_size = 1;
                             string chat = str.Replace("Чат: ", "[Общий чат] Size Chat [" + str.Length + "]: ");
@@ -4617,7 +4684,6 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                         }
                     }
                     Save(string.Concat(PlayersBaseBuffer));
-                    Thread.Sleep(500);
                     BaseLoadInBuffer();
                     MessageBox.Show("Было успешно удалено [" + result_scan + "] некорректных данных.", "S.E.R.V.E.R - Shadow Of Chernobyl", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
                 }
@@ -4639,8 +4705,6 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                     var ADDRESS_INFO = get_state.Split()[4];
                     var FLAGS_INFO = get_state.Split()[7];
                     var DATE_INFO = get_state.Split()[9];
-                    //FirewallMsgTransferAddress.FirewallAddressInTables = RULE_INFO + " [LIST] " + PLAYER_INFO + " " + FLAGS_INFO + " IP:  " + ADDRESS_INFO + " Time: " + DATE_INFO;
-                    //IPBlockedServices.FirewallAllUserRuleDelete();
                     IPBlockedServices.CleanAllRules("[HIDE] " + PLAYER_INFO + " " + FLAGS_INFO + " IP:  " + ADDRESS_INFO + " Time: " + DATE_INFO);
                     completed_proc++;
                 }
@@ -4684,48 +4748,53 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
             tabControl1.SelectedIndex = 5;
         }
 
-        int EnterCulumnTable = -1;
         private void FirewallList_ColumnClick(object sender, ColumnClickEventArgs e)
         {
-            // Получим нажатый индекс
-            if (e.Column != EnterCulumnTable)
+            LVComparer(e, FirewallList);
+        }
+
+        private void listViewBase_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            LVComparer(e, listViewBase);
+        }
+
+        private void PlayersCheaterList_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            LVComparer(e, PlayersCheaterList);
+        }
+
+        private void ListCheaterBlockedEvents_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            LVComparer(e, ListCheaterBlockedEvents);
+        }
+
+        private void listBase_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            LVComparer(e, listBase);
+        }
+
+        private void ListTableChange3_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            LVComparer(e, ListTableChange3);
+        }
+
+        int SortingHeader = -1;
+        private void LVComparer(ColumnClickEventArgs element, ListView idtable)
+        {
+            if (element.Column != SortingHeader)
             {
-                EnterCulumnTable = e.Column;
-                FirewallList.Sorting = SortOrder.Ascending;
+                SortingHeader = element.Column;
+                idtable.Sorting = SortOrder.Ascending;
             }
             else
             {
-                if (FirewallList.Sorting == SortOrder.Ascending)
-                    FirewallList.Sorting = SortOrder.Descending;
+                if (idtable.Sorting == SortOrder.Ascending)
+                    idtable.Sorting = SortOrder.Descending;
                 else
-                    FirewallList.Sorting = SortOrder.Ascending;
+                    idtable.Sorting = SortOrder.Ascending;
             }
-            FirewallList.Sort();
-            FirewallList.ListViewItemSorter = new ListViewItemComparer(e.Column, FirewallList.Sorting);
+            idtable.Sort();
+            idtable.ListViewItemSorter = new ListViewComparer(element.Column, idtable.Sorting);
         }
-    }
-}
-
-public class ListViewItemComparer : IComparer
-{
-    private int idx;
-    private SortOrder order;
-    public ListViewItemComparer()
-    {
-        idx = 0;
-        order = SortOrder.Ascending;
-    }
-    public ListViewItemComparer(int column, SortOrder order)
-    {
-        idx = column;
-        this.order = order;
-    }
-    public int Compare(object x, object y)
-    {
-        int returnVal = -1;
-        returnVal = string.Compare(((ListViewItem)x).SubItems[idx].Text, ((ListViewItem)y).SubItems[idx].Text);
-        if (order == SortOrder.Descending)
-            returnVal *= -1;
-        return returnVal;
     }
 }
