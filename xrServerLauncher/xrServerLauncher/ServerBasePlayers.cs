@@ -712,7 +712,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                             }
                         }
 
-                        if (s.Contains("logged as") || s.Contains("Access denied") || s.Contains("! too large packet size") || s.Contains("Disconnecting and Banning: ") || s.Contains("~ Чат:") || s.Contains("- Чат:") || s.Contains("Чат:"))
+                        if (s.Contains("logged as") || s.Contains("Access denied") || s.Contains("! too large packet size") || s.Contains("Disconnecting and Banning: ") || s.Contains("Чат:"))
                         {
                             SrvEventsBuffer.Add(s);
                         }
@@ -2114,7 +2114,6 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
         // Проверка игроков
         int badshots = 0;
         int PlayersCount = 0;
-        int find_address = 0;
         int update_blocked = 0;
         int weapons_counter = 0;
 
@@ -2180,24 +2179,23 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
         {
             update_blocked = 0;
             ListCheaterEvents.Items.Clear();
-            ListCheaterScanner(null, null);
+            ListCheaterScanner();
         }
 
         private void PlayersCheaterList_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
             update_blocked = 1;
-            ListCheaterScanner(null, null);
+            ListCheaterScanner();
         }
 
-        private void ListCheaterScanner(string StrNameBuffer, string StrAddressBuffer)
+        private void ListCheaterScanner()
         {
             badshots = 0;
             PlayersCount = 0;
-            find_address = 0;
             weapons_counter = 0;
    
-            StrNameBuffer = PlayersCheaterList.FocusedItem.SubItems[0].Text;    // NAME   
-            StrAddressBuffer = PlayersCheaterList.FocusedItem.SubItems[1].Text; // IP ADDRESS
+            string StrNameBuffer = PlayersCheaterList.FocusedItem.SubItems[0].Text;    // NAME   
+            string StrAddressBuffer = PlayersCheaterList.FocusedItem.SubItems[1].Text; // IP ADDRESS
           
             SelectTable3.Text = "Сведения из буфера событий.";
             foreach (string anticheat in SrvPlayersBuffer)
@@ -2253,7 +2251,6 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                     {
                         if (ip.Contains(player_ip))
                         {
-                            find_address = 1;
                             PlayersCheaterList.FocusedItem.BackColor = Color.ForestGreen;
                             PlayersCheaterList.FocusedItem.SubItems.Add("This Address is Banned");   
                             if ((badshots > 0) && (weapons_counter == 0))
@@ -2272,19 +2269,19 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                         }
                     }
                     // Завышенные данные статистики
-                    if ((find_address == 0) && (EventsControllerMaxLimit.Value > badshots) && (weapons_counter == 0))
+                    if ((EventsControllerMaxLimit.Value > badshots) && (weapons_counter == 0))
                     {
                         PlayersCheaterList.FocusedItem.SubItems.Add("Wait Banning [HIM]");
                         PlayersCheaterList.FocusedItem.SubItems.Add(badshots + "/" + EventsControllerMaxLimit.Value);
                     }
                     // Завышенные данные статистики и статистика снаряжения
-                    else if ((find_address == 0) && (EventsControllerMaxLimit.Value < badshots) && (EventsWeaponsMaxLimit.Value < weapons_counter))
+                    else if ((EventsControllerMaxLimit.Value < badshots) && (EventsWeaponsMaxLimit.Value < weapons_counter))
                     {
                         PlayersCheaterList.FocusedItem.SubItems.Add("Wait Banning [HIM+WS]");
                         PlayersCheaterList.FocusedItem.SubItems.Add(badshots + "/" + EventsControllerMaxLimit.Value + " | " + weapons_counter + "/" + EventsWeaponsMaxLimit.Value);
                     }
                     // Статистика снаряжения
-                    else if ((find_address == 0) && (EventsWeaponsMaxLimit.Value > weapons_counter) && (badshots == 0))
+                    else if ((EventsWeaponsMaxLimit.Value > weapons_counter) && (badshots == 0))
                     {
                         PlayersCheaterList.FocusedItem.SubItems.Add("Wait Banning [WS]");
                         PlayersCheaterList.FocusedItem.SubItems.Add(weapons_counter + "/" + EventsWeaponsMaxLimit.Value);
@@ -2887,15 +2884,15 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                 {
                     listEventsSrv.Items.Add("[ATTACK]: " + MSG).BackColor = Color.Violet;
                 }
-                else if (MSG.Contains("Disconnecting and Banning:"))
-                {
-                    var blocked = MSG.Replace("Disconnecting and Banning:", "Отключен и заблокирован:");
-                    listEventsSrv.Items.Add(blocked).BackColor = Color.Gold;
-                }
                 else if (MSG.Contains("Disconnecting and Banning: 0.0.0.0"))
                 {
                     var blocked = MSG.Replace("Disconnecting and Banning:", "Отключен и заблокирован:");
                     listEventsSrv.Items.Add(blocked + " [server ip address]").BackColor = Color.Red;
+                }
+                else if (MSG.Contains("Disconnecting and Banning:"))
+                {
+                    var blocked = MSG.Replace("Disconnecting and Banning:", "Отключен и заблокирован:");
+                    listEventsSrv.Items.Add(blocked).BackColor = Color.Gold;
                 }
                 else if (MSG.Contains("от Заряд ВОГ-25"))
                 {
@@ -2929,15 +2926,15 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
             listEventsSrv.Items.Clear();
             foreach (string Messages in SrvEventsBuffer)
             {
-                if (Messages.Contains("Disconnecting and Banning:"))
-                {
-                    var blocked = Messages.Replace("Disconnecting and Banning:", "Отключен и заблокирован:");
-                    listEventsSrv.Items.Add(blocked).BackColor = Color.Gold;
-                }
-                else if (Messages.Contains("Disconnecting and Banning: 0.0.0.0"))
+                if (Messages.Contains("Disconnecting and Banning: 0.0.0.0"))
                 {
                     var blocked = Messages.Replace("Disconnecting and Banning:", "Отключен и заблокирован:");
                     listEventsSrv.Items.Add(blocked + " [server ip address]").BackColor = Color.Red;
+                }
+                else if (Messages.Contains("Disconnecting and Banning:"))
+                {
+                    var blocked = Messages.Replace("Disconnecting and Banning:", "Отключен и заблокирован:");
+                    listEventsSrv.Items.Add(blocked).BackColor = Color.Gold;
                 }
             }
         }
@@ -3229,40 +3226,33 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                     var reg = Messages.Replace("logged as remote administrator", "- Зарегистрирован как Удаленный Администратор").Replace("# User", "").Replace("# Player", "").Replace("with login", "используя логин"); ;
                     listEventsSrv.Items.Add(reg).BackColor = Color.LightGreen;
                 }
-
                 if (Messages.Contains("tried to login as remote administrator. Access denied"))
                 {
                     var reg = Messages.Replace("tried to login as remote administrator. Access denied", "- Доступ запрещен").Replace("# User", "").Replace("# Player", "").Replace("with login", "используя логин");
                     listEventsSrv.Items.Add(reg).BackColor = Color.LightPink;    
                 }
-
                 if (Messages.Contains("! too large packet size"))
                 {
                     listEventsSrv.Items.Add(Messages).BackColor = Color.LightBlue;
                 }
-
-                if (Messages.Contains("Disconnecting and Banning:")) 
-                {
-                    var blocked = Messages.Replace("Disconnecting and Banning:", "Отключен и заблокирован: ");
-                    listEventsSrv.Items.Add(blocked).BackColor = Color.Gold;
-                }
-                else if (Messages.Contains("Disconnecting and Banning: 0.0.0.0"))
+                if (Messages.Contains("Disconnecting and Banning: 0.0.0.0"))
                 {
                     var blocked = Messages.Replace("Disconnecting and Banning:", "Отключен и заблокирован: ");
                     listEventsSrv.Items.Add(blocked + " [server ip address]").BackColor = Color.Red;
                 }
-
+                else if (Messages.Contains("Disconnecting and Banning:")) 
+                {
+                    var blocked = Messages.Replace("Disconnecting and Banning:", "Отключен и заблокирован: ");
+                    listEventsSrv.Items.Add(blocked).BackColor = Color.Gold;
+                }
                 if (Messages.Contains("stalkazz_attack"))
                 {
-                    if (Messages.Contains("stalkazz_attack"))
-                    {
-                        string str = Messages.Replace("[IP]", "").Replace("-", "").Replace("%", "").Replace("stalkazz_attack", "[ATTACK]: ");
-                        listEventsSrv.Items.Add(str).BackColor = Color.LightCoral;
-                    }
-                    if (Messages.Contains("! too large packet size"))
-                    {
-                        listEventsSrv.Items.Add("[!ATTACK]:" + Messages).BackColor = Color.Violet;
-                    }
+                    string str = Messages.Replace("[IP]", "").Replace("-", "").Replace("%", "").Replace("stalkazz_attack", "[ATTACK]: ");
+                    listEventsSrv.Items.Add(str).BackColor = Color.LightCoral;
+                }
+                if (Messages.Contains("! too large packet size"))
+                {
+                    listEventsSrv.Items.Add("[!ATTACK]:" + Messages).BackColor = Color.Violet;
                 }
 
                 try
