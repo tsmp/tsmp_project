@@ -46,6 +46,7 @@
             this.BaseMenu2GetSearch = new System.Windows.Forms.ToolStripMenuItem();
             this.BaseMenu2OpenEvents = new System.Windows.Forms.ToolStripMenuItem();
             this.BaseMenu2StatsEvent = new System.Windows.Forms.ToolStripMenuItem();
+            this.BtnScreen = new System.Windows.Forms.ToolStripMenuItem();
             this.SearchPanel = new System.Windows.Forms.Panel();
             this.ui_search_exit = new System.Windows.Forms.Label();
             this.index_search = new System.Windows.Forms.Button();
@@ -255,11 +256,6 @@
             this.mp_wpn_knife = new System.Windows.Forms.CheckBox();
             this.tabPage7 = new System.Windows.Forms.TabPage();
             this.btnConnectAllFiles = new System.Windows.Forms.Button();
-            this.PlayersInDump = new System.Windows.Forms.Label();
-            this.CreateDirectoryDumpFiles = new System.Windows.Forms.Button();
-            this.EventsAutoCollectDumpStats = new System.Windows.Forms.CheckBox();
-            this.info_dump_stats = new System.Windows.Forms.Label();
-            this.DmpCurrentDirectory = new System.Windows.Forms.Label();
             this.btnBaseRecovery = new System.Windows.Forms.Button();
             this.btnConnectionBase = new System.Windows.Forms.Button();
             this.btnExportCheaterBase = new System.Windows.Forms.Button();
@@ -350,7 +346,6 @@
             this.GUI_STATUS = new System.Windows.Forms.Label();
             this.toolTipHelMenu = new System.Windows.Forms.ToolTip(this.components);
             this.ThreadDumpPlayers = new System.ComponentModel.BackgroundWorker();
-            this.TimerDumpFiles = new System.Windows.Forms.Timer(this.components);
             this.btnMinimized = new System.Windows.Forms.Label();
             this.GUI_INFO_3 = new System.Windows.Forms.Label();
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
@@ -360,7 +355,6 @@
             this.GUI_INFO_BLOCKED = new System.Windows.Forms.Label();
             this.GUIEvents = new System.Windows.Forms.Label();
             this.GUI_MINI_MENU = new System.Windows.Forms.Label();
-            this.BtnScreen = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.BaseMenu2.SuspendLayout();
@@ -592,6 +586,14 @@
             this.BaseMenu2StatsEvent.Size = new System.Drawing.Size(140, 23);
             this.BaseMenu2StatsEvent.Text = "Статистика работы";
             this.BaseMenu2StatsEvent.Click += new System.EventHandler(this.BaseMenu2StatsEvent_Click);
+            // 
+            // BtnScreen
+            // 
+            this.BtnScreen.Image = ((System.Drawing.Image)(resources.GetObject("BtnScreen.Image")));
+            this.BtnScreen.Name = "BtnScreen";
+            this.BtnScreen.Size = new System.Drawing.Size(93, 23);
+            this.BtnScreen.Text = "Скриншот";
+            this.BtnScreen.Click += new System.EventHandler(this.BtnScreen_Click);
             // 
             // SearchPanel
             // 
@@ -2772,11 +2774,6 @@
             // tabPage7
             // 
             this.tabPage7.Controls.Add(this.btnConnectAllFiles);
-            this.tabPage7.Controls.Add(this.PlayersInDump);
-            this.tabPage7.Controls.Add(this.CreateDirectoryDumpFiles);
-            this.tabPage7.Controls.Add(this.EventsAutoCollectDumpStats);
-            this.tabPage7.Controls.Add(this.info_dump_stats);
-            this.tabPage7.Controls.Add(this.DmpCurrentDirectory);
             this.tabPage7.Controls.Add(this.btnBaseRecovery);
             this.tabPage7.Controls.Add(this.btnConnectionBase);
             this.tabPage7.Controls.Add(this.btnExportCheaterBase);
@@ -2794,79 +2791,19 @@
             // 
             this.btnConnectAllFiles.BackColor = System.Drawing.Color.WhiteSmoke;
             this.btnConnectAllFiles.ForeColor = System.Drawing.Color.Black;
-            this.btnConnectAllFiles.Location = new System.Drawing.Point(260, 219);
+            this.btnConnectAllFiles.Location = new System.Drawing.Point(260, 217);
             this.btnConnectAllFiles.Name = "btnConnectAllFiles";
             this.btnConnectAllFiles.Size = new System.Drawing.Size(254, 31);
             this.btnConnectAllFiles.TabIndex = 88;
-            this.btnConnectAllFiles.Text = "Выполнить обработку дамп файлов";
+            this.btnConnectAllFiles.Text = "Перенос данных из дамп файлов в Базу";
             this.btnConnectAllFiles.UseVisualStyleBackColor = false;
             this.btnConnectAllFiles.Click += new System.EventHandler(this.btnConnectAllFiles_Click);
-            // 
-            // PlayersInDump
-            // 
-            this.PlayersInDump.AutoSize = true;
-            this.PlayersInDump.BackColor = System.Drawing.Color.White;
-            this.PlayersInDump.ForeColor = System.Drawing.Color.DimGray;
-            this.PlayersInDump.Location = new System.Drawing.Point(3, 333);
-            this.PlayersInDump.Name = "PlayersInDump";
-            this.PlayersInDump.Size = new System.Drawing.Size(228, 39);
-            this.PlayersInDump.TabIndex = 89;
-            this.PlayersInDump.Text = "Статус: Укажите папку с dmp файлами.\r\nПрограмма перенесет все данные дампов \r\nв а" +
-    "втоматическом режиме.";
-            // 
-            // CreateDirectoryDumpFiles
-            // 
-            this.CreateDirectoryDumpFiles.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.CreateDirectoryDumpFiles.ForeColor = System.Drawing.Color.Black;
-            this.CreateDirectoryDumpFiles.Location = new System.Drawing.Point(260, 188);
-            this.CreateDirectoryDumpFiles.Name = "CreateDirectoryDumpFiles";
-            this.CreateDirectoryDumpFiles.Size = new System.Drawing.Size(254, 31);
-            this.CreateDirectoryDumpFiles.TabIndex = 90;
-            this.CreateDirectoryDumpFiles.Text = "Установить директорию DumpFiles";
-            this.CreateDirectoryDumpFiles.UseVisualStyleBackColor = false;
-            this.CreateDirectoryDumpFiles.Click += new System.EventHandler(this.CreateDirectoryDumpFiles_Click);
-            // 
-            // EventsAutoCollectDumpStats
-            // 
-            this.EventsAutoCollectDumpStats.Appearance = System.Windows.Forms.Appearance.Button;
-            this.EventsAutoCollectDumpStats.BackColor = System.Drawing.Color.Orange;
-            this.EventsAutoCollectDumpStats.Location = new System.Drawing.Point(260, 250);
-            this.EventsAutoCollectDumpStats.Name = "EventsAutoCollectDumpStats";
-            this.EventsAutoCollectDumpStats.Size = new System.Drawing.Size(254, 31);
-            this.EventsAutoCollectDumpStats.TabIndex = 92;
-            this.EventsAutoCollectDumpStats.Text = "Автоматическая обработка Дамп-Файлов";
-            this.toolTipHelMenu.SetToolTip(this.EventsAutoCollectDumpStats, resources.GetString("EventsAutoCollectDumpStats.ToolTip"));
-            this.EventsAutoCollectDumpStats.UseVisualStyleBackColor = false;
-            this.EventsAutoCollectDumpStats.CheckedChanged += new System.EventHandler(this.EventsAutoCollectDumpStats_CheckedChanged);
-            // 
-            // info_dump_stats
-            // 
-            this.info_dump_stats.AutoSize = true;
-            this.info_dump_stats.ForeColor = System.Drawing.Color.Blue;
-            this.info_dump_stats.Location = new System.Drawing.Point(3, 380);
-            this.info_dump_stats.Name = "info_dump_stats";
-            this.info_dump_stats.Size = new System.Drawing.Size(136, 13);
-            this.info_dump_stats.TabIndex = 93;
-            this.info_dump_stats.Text = "Пожалуйста подождите...";
-            this.info_dump_stats.Visible = false;
-            // 
-            // DmpCurrentDirectory
-            // 
-            this.DmpCurrentDirectory.BackColor = System.Drawing.Color.White;
-            this.DmpCurrentDirectory.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.DmpCurrentDirectory.ForeColor = System.Drawing.Color.Gray;
-            this.DmpCurrentDirectory.Location = new System.Drawing.Point(2, 394);
-            this.DmpCurrentDirectory.Name = "DmpCurrentDirectory";
-            this.DmpCurrentDirectory.Size = new System.Drawing.Size(767, 17);
-            this.DmpCurrentDirectory.TabIndex = 91;
-            this.DmpCurrentDirectory.Text = "Dump Files: Директория не задана";
-            this.DmpCurrentDirectory.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // btnBaseRecovery
             // 
             this.btnBaseRecovery.BackColor = System.Drawing.Color.WhiteSmoke;
             this.btnBaseRecovery.ForeColor = System.Drawing.Color.Black;
-            this.btnBaseRecovery.Location = new System.Drawing.Point(260, 126);
+            this.btnBaseRecovery.Location = new System.Drawing.Point(260, 155);
             this.btnBaseRecovery.Name = "btnBaseRecovery";
             this.btnBaseRecovery.Size = new System.Drawing.Size(254, 31);
             this.btnBaseRecovery.TabIndex = 72;
@@ -2878,7 +2815,7 @@
             // 
             this.btnConnectionBase.BackColor = System.Drawing.Color.WhiteSmoke;
             this.btnConnectionBase.ForeColor = System.Drawing.Color.Black;
-            this.btnConnectionBase.Location = new System.Drawing.Point(260, 95);
+            this.btnConnectionBase.Location = new System.Drawing.Point(260, 124);
             this.btnConnectionBase.Name = "btnConnectionBase";
             this.btnConnectionBase.Size = new System.Drawing.Size(254, 31);
             this.btnConnectionBase.TabIndex = 73;
@@ -2890,7 +2827,7 @@
             // 
             this.btnExportCheaterBase.BackColor = System.Drawing.Color.WhiteSmoke;
             this.btnExportCheaterBase.ForeColor = System.Drawing.Color.Black;
-            this.btnExportCheaterBase.Location = new System.Drawing.Point(260, 157);
+            this.btnExportCheaterBase.Location = new System.Drawing.Point(260, 186);
             this.btnExportCheaterBase.Name = "btnExportCheaterBase";
             this.btnExportCheaterBase.Size = new System.Drawing.Size(254, 31);
             this.btnExportCheaterBase.TabIndex = 111;
@@ -2902,7 +2839,7 @@
             // 
             this.btnBaseCopy.BackColor = System.Drawing.Color.WhiteSmoke;
             this.btnBaseCopy.ForeColor = System.Drawing.Color.Black;
-            this.btnBaseCopy.Location = new System.Drawing.Point(260, 64);
+            this.btnBaseCopy.Location = new System.Drawing.Point(260, 93);
             this.btnBaseCopy.Name = "btnBaseCopy";
             this.btnBaseCopy.Size = new System.Drawing.Size(254, 31);
             this.btnBaseCopy.TabIndex = 71;
@@ -3859,12 +3796,6 @@
             // 
             this.ThreadDumpPlayers.WorkerSupportsCancellation = true;
             this.ThreadDumpPlayers.DoWork += new System.ComponentModel.DoWorkEventHandler(this.ThreadDumpPlayers_DoWork);
-            this.ThreadDumpPlayers.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.ThreadDumpPlayers_RunWorkerCompleted);
-            // 
-            // TimerDumpFiles
-            // 
-            this.TimerDumpFiles.Interval = 30000;
-            this.TimerDumpFiles.Tick += new System.EventHandler(this.TimerDumpFiles_Tick);
             // 
             // btnMinimized
             // 
@@ -3956,14 +3887,6 @@
             this.GUI_MINI_MENU.Visible = false;
             this.GUI_MINI_MENU.Click += new System.EventHandler(this.GUI_MINI_MENU_Click);
             // 
-            // BtnScreen
-            // 
-            this.BtnScreen.Image = ((System.Drawing.Image)(resources.GetObject("BtnScreen.Image")));
-            this.BtnScreen.Name = "BtnScreen";
-            this.BtnScreen.Size = new System.Drawing.Size(93, 23);
-            this.BtnScreen.Text = "Скриншот";
-            this.BtnScreen.Click += new System.EventHandler(this.BtnScreen_Click);
-            // 
             // ServerBasePlayers
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -4034,7 +3957,6 @@
             this.panelItemsCheckBox.ResumeLayout(false);
             this.panelItemsCheckBox.PerformLayout();
             this.tabPage7.ResumeLayout(false);
-            this.tabPage7.PerformLayout();
             this.tabPage9.ResumeLayout(false);
             this.tabPage9.PerformLayout();
             this.tabPage8.ResumeLayout(false);
@@ -4131,17 +4053,11 @@
         private System.Windows.Forms.ColumnHeader columnHeader9;
         private System.Windows.Forms.ToolStripMenuItem SearchPlayersInBase;
         private System.Windows.Forms.Button btnConnectAllFiles;
-        private System.Windows.Forms.Label PlayersInDump;
         private System.ComponentModel.BackgroundWorker ThreadDumpPlayers;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem baseServerLoad;
         private System.Windows.Forms.ToolStripMenuItem baseRadminLoad;
         private System.Windows.Forms.ToolStripMenuItem baseDumpLoad;
-        private System.Windows.Forms.Button CreateDirectoryDumpFiles;
-        private System.Windows.Forms.Label DmpCurrentDirectory;
-        private System.Windows.Forms.Label info_dump_stats;
-        private System.Windows.Forms.CheckBox EventsAutoCollectDumpStats;
-        private System.Windows.Forms.Timer TimerDumpFiles;
         private System.Windows.Forms.Label btnMinimized;
         private System.Windows.Forms.ListView ListTableChange1;
         private System.Windows.Forms.ColumnHeader columnHeader10;

@@ -59,21 +59,23 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
         int EventsControllerMaxHPLimit = 20;                                   // Максимальное число пуль для параметра Hit Power
         int MAX_LEN_SIZE_CHAT = 150;                                           // Максимальная длина чата
          
-        int StartReadIndex = 0;
+        int StartReadIndex = 0;                                                // SaveLogFileIndexPos
         int FinishReadIndex = 0;
 
+
+        string PlayerName;                                                     // DumpFilesPlayerName
+        string PlayerAddress;                                                  // DumpFilesPlayerAddr
+        string DmpCurrentDirectory;                                            // DumpFilesCurrentDirectory
+
+        HashSet<string> BufferDumpFiles = new HashSet<string>();               // Dump Files Collect
         HashSet<string> SrvEventsBuffer = new HashSet<string>();               // История событий
         HashSet<string> SrvPlayersBuffer = new HashSet<string>();              // Список игроков и их события для проверки на читерство         
         HashSet<string> CHEATERPLAYERSLIST = new HashSet<string>();            // Лист текущих нарушителей
         HashSet<string> ListplayersEvents = new HashSet<string>();             // check listplayers
-
         HashSet<string> CHECK_PLAYER_INPROXYLIST = new HashSet<string>();      // Список всех адресов с сервера
         HashSet<string> CHECK_ADDR = new HashSet<string>();
-
         HashSet<string> html_buffer = new HashSet<string>();                   // Сведения для формаирования файла web html
-
         HashSet<string> PlayersBaseFilter = new HashSet<string>();             // [V+] [N+] [R+]
-
         public HashSet<string> PlayersBaseBuffer = new HashSet<string>();
         public static HashSet<string> BaseEvents = new HashSet<string>();      // События которые относятся к временным событиям
         // ========================================================================================
@@ -1225,7 +1227,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                     {
                         SrvEventsBuffer.Clear();
                     }
-
+                    // ==========================================================================================
                     GUI_INFO_3.Text = "Новых игроков: " + statistics_new_players;
                     GUI_INFO_BASE.Text = "Игроков в базе: " + PlayersBaseBuffer.Count;
                     GUI_INFO_2.Text = "Атак на сервер: " + (server_chat_warning + server_attack_blocked);
@@ -1235,16 +1237,24 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                     GUI_STATUS.Text = "Обработка не требуется"; GUI_STATUS.BackColor = Color.White;
                     GUI_INFO_BLOCKED.Text = "Новых блокировок: " + statistics_new_blocked;
                     if (statistics_new_blocked > 0) GUI_INFO_BLOCKED.BackColor = Color.Orange;
+                    // ==========================================================================================
                     if (EventsControllerAutoCheckPlayers.CheckState == CheckState.Checked)
                     {
-                        if (SIGNAL_BANNED > 0)
+                        if (CHEATERPLAYERSLIST.Count > 0)
                         {
-                            GUI_INFO_1.Text = "Под наблюдением:" + CHEATERPLAYERSLIST.Count + "/" + SIGNAL_BANNED;
+                            GUI_INFO_1.Text = "Под наблюдением: " + CHEATERPLAYERSLIST.Count;
+                            GUI_INFO_1.BackColor = Color.LightPink;
                         }
-                        else if (SIGNAL_BANNED == 0)
+                        else if (CHEATERPLAYERSLIST.Count == 0)
                         {
-                            GUI_INFO_1.Text = "Нарушителей: " + CHEATERPLAYERSLIST.Count;
+                            GUI_INFO_1.Text = "Нарушителей нет!";
+                            GUI_INFO_1.BackColor = Color.LightGreen;
                         }
+                    }
+                    else
+                    {
+                        GUI_INFO_1.Text = "Автопроверка отключена!";
+                        GUI_INFO_1.BackColor = Color.Gold;
                     }
                 }
                 else
@@ -1438,7 +1448,31 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                                 }
                             }
 
+
                             int listcount = 0;
+                            foreach (string ThisAddrBlocked in ListplayersEvents.ToArray())
+                            {
+                                var PLAYER_ADDR = ThisAddrBlocked.Split('%')[4];          
+                                foreach (string AdressInBlocked in AddressBuffer) // this address is blocked
+                                {
+                                    if (AdressInBlocked.Contains(PLAYER_ADDR))
+                                    {
+                                        listcount++;
+                                        if (listcount == 1)
+                                        {
+                                            string[] SYS_MSG = "[A]%[ЗАБЛОКИРОВАНЫ НАРУШИТЕЛИ]%%%0.0.0.0%".Split('%');
+                                            ListTableChange1.Items.Add(new ListViewItem(SYS_MSG)).BackColor = Color.Lime;
+                                        }
+                                        string[] values = ThisAddrBlocked.Split('%');
+                                        ListTableChange1.Items.Add(new ListViewItem(values)).BackColor = Color.Red;
+                                        ListplayersEvents.Remove(ThisAddrBlocked); // удаляем нарушителей
+                                        break;
+                                    }
+                                }
+                            }
+
+
+                            listcount = 0;
                             foreach (string filters in ListplayersEvents.ToArray())
                             {
                                 var PLAYER_ADDR = filters.Split('%')[4];
@@ -1800,7 +1834,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                         var str_hp_count = str_find_hp.Substring(0, str_find_hp.LastIndexOf("+"));
 
                         // Игрок / Снаряжение / Параметр хит тип / параметр хит павер / боне тип / хит импульс /тип патронов
-                        if ((str_find_weapons == "[mp_wpn_knife]") && (str_find_weapons != "[mp_actor]"))
+                        if (str_find_weapons == "[mp_wpn_knife]")
                         {
                             // Если завышено и то и другое
                             if ((str_find_hp.Length >= 8 || Convert.ToInt64(str_hp_count) > EventsControllerMaxHPLimit) && (Convert.ToInt64(str_find) > 120))
@@ -1813,7 +1847,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | HIM " + str_find + " </font> | K_AP " + str_K_APcount + "<br>");
                         }
 
-                        else if ((str_find_weapons == "[mp_wpn_pm]") && (str_find_weapons != "[mp_actor]"))
+                        else if (str_find_weapons == "[mp_wpn_pm]")
                         {
                             if ((str_find_hp.Length >= 8 || Convert.ToInt64(str_hp_count) > EventsControllerMaxHPLimit) && (Convert.ToInt64(str_find) > 91))
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | <font style='color:red'>HIM " + str_find + " [Max: 91] </font> | K_AP " + str_K_APcount + "<br>");
@@ -1822,7 +1856,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                             else if (str_find_hp.Length >= 8 || Convert.ToInt64(str_hp_count) > EventsControllerMaxHPLimit)
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | HIM " + str_find + " </font> | K_AP " + str_K_APcount + "<br>");
                         }
-                        else if ((str_find_weapons == "[mp_wpn_fort]") && (str_find_weapons != "[mp_actor]"))
+                        else if (str_find_weapons == "[mp_wpn_fort]")
                         {
                             if ((str_find_hp.Length >= 8 || Convert.ToInt64(str_hp_count) > EventsControllerMaxHPLimit) && (Convert.ToInt64(str_find) > 100))
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | <font style='color:red'>HIM " + str_find + " [Max: 100] </font> | K_AP " + str_K_APcount + "<br>");
@@ -1831,7 +1865,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                             else if (str_find_hp.Length >= 8 || Convert.ToInt64(str_hp_count) > EventsControllerMaxHPLimit)
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | HIM " + str_find + " </font> | K_AP " + str_K_APcount + "<br>");
                         }
-                        else if ((str_find_weapons == "[mp_wpn_walther]") && (str_find_weapons != "[mp_actor]"))
+                        else if (str_find_weapons == "[mp_wpn_walther]")
                         {
                             if ((str_find_hp.Length >= 8 || Convert.ToInt64(str_hp_count) > EventsControllerMaxHPLimit) && (Convert.ToInt64(str_find) > 131))
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | <font style='color:red'>HIM " + str_find + " [Max: 131] </font> | K_AP " + str_K_APcount + "<br>");
@@ -1840,7 +1874,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                             else if (str_find_hp.Length >= 8 || Convert.ToInt64(str_hp_count) > EventsControllerMaxHPLimit)
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | HIM " + str_find + " </font> | K_AP " + str_K_APcount + "<br>");
                         }
-                        else if ((str_find_weapons == "[mp_wpn_sig220]") && (str_find_weapons != "[mp_actor]"))
+                        else if (str_find_weapons == "[mp_wpn_sig220]")
                         {
                             if ((str_find_hp.Length >= 8 || Convert.ToInt64(str_hp_count) > EventsControllerMaxHPLimit) && (Convert.ToInt64(str_find) > 126))
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | <font style='color:red'>HIM " + str_find + " [Max: 126] </font> | K_AP " + str_K_APcount + "<br>");
@@ -1849,7 +1883,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                             else if (str_find_hp.Length >= 8 || Convert.ToInt64(str_hp_count) > EventsControllerMaxHPLimit)
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | HIM " + str_find + " </font> | K_AP " + str_K_APcount + "<br>");
                         }
-                        else if ((str_find_weapons == "[mp_wpn_usp]") && (str_find_weapons != "[mp_actor]"))
+                        else if (str_find_weapons == "[mp_wpn_usp]")
                         {
                             if ((str_find_hp.Length >= 8 || Convert.ToInt64(str_hp_count) > EventsControllerMaxHPLimit) && (Convert.ToInt64(str_find) > 126))
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | <font style='color:red'>HIM " + str_find + " [Max: 126] </font> | K_AP " + str_K_APcount + "<br>");
@@ -1858,7 +1892,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                             else if (str_find_hp.Length >= 8 || Convert.ToInt64(str_hp_count) > EventsControllerMaxHPLimit)
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | HIM " + str_find + " </font> | K_AP " + str_K_APcount + "<br>");
                         }
-                        else if ((str_find_weapons == "[mp_wpn_desert_eagle]") && (str_find_weapons != "[mp_actor]"))
+                        else if (str_find_weapons == "[mp_wpn_desert_eagle]")
                         {
                             if ((str_find_hp.Length >= 8 || Convert.ToInt64(str_hp_count) > EventsControllerMaxHPLimit) && (Convert.ToInt64(str_find) > 144))
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | <font style='color:red'>HIM " + str_find + " [Max: 144] </font> | K_AP " + str_K_APcount + "<br>");
@@ -1867,7 +1901,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                             else if (str_find_hp.Length >= 8 || Convert.ToInt64(str_hp_count) > EventsControllerMaxHPLimit)
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | HIM " + str_find + " </font> | K_AP " + str_K_APcount + "<br>");
                         }
-                        else if ((str_find_weapons == "[mp_wpn_pb]") && (str_find_weapons != "[mp_actor]"))
+                        else if (str_find_weapons == "[mp_wpn_pb]")
                         {
                             if ((str_find_hp.Length >= 8 || Convert.ToInt64(str_hp_count) > EventsControllerMaxHPLimit) && (Convert.ToInt64(str_find) > 72))
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | <font style='color:red'>HIM " + str_find + " [Max: 72] </font> | K_AP " + str_K_APcount + "<br>");
@@ -1876,7 +1910,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                             else if (str_find_hp.Length >= 8)
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | HIM " + str_find + " </font> | K_AP " + str_K_APcount + "<br>");
                         }
-                        else if ((str_find_weapons == "[mp_wpn_colt1911]") && (str_find_weapons != "[mp_actor]"))
+                        else if (str_find_weapons == "[mp_wpn_colt1911]")
                         {
                             if ((str_find_hp.Length >= 8 || Convert.ToInt64(str_hp_count) > EventsControllerMaxHPLimit) && (Convert.ToInt64(str_find) > 126))
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | <font style='color:red'>HIM " + str_find + " [Max: 126] </font> | K_AP " + str_K_APcount + "<br>");
@@ -1885,7 +1919,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                             else if (str_find_hp.Length >= 8 || Convert.ToInt64(str_hp_count) > EventsControllerMaxHPLimit)
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | HIM " + str_find + " </font> | K_AP " + str_K_APcount + "<br>");
                         }
-                        else if ((str_find_weapons == "[mp_wpn_bm16]") && (str_find_weapons != "[mp_actor]"))
+                        else if (str_find_weapons == "[mp_wpn_bm16]")
                         {
                             if ((str_find_hp.Length >= 8) && (Convert.ToInt64(str_find) > 315))
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | <font style='color:red'>HIM " + str_find + " [Max: 315] </font> | K_AP " + str_K_APcount + "<br>");
@@ -1894,7 +1928,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                             else if (str_find_hp.Length >= 8)
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | HIM " + str_find + " </font> | K_AP " + str_K_APcount + "<br>");
                         }
-                        else if ((str_find_weapons == "[mp_wpn_wincheaster1300]") && (str_find_weapons != "[mp_actor]"))
+                        else if (str_find_weapons == "[mp_wpn_wincheaster1300]")
                         {
                             if ((str_find_hp.Length >= 8) && (Convert.ToInt64(str_find) > 315))
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | <font style='color:red'>HIM " + str_find + " [Max: 315] </font> | K_AP " + str_K_APcount + "<br>");
@@ -1903,7 +1937,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                             else if (str_find_hp.Length >= 8)
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | HIM " + str_find + " </font> | K_AP " + str_K_APcount + "<br>");
                         }
-                        else if ((str_find_weapons == "[mp_wpn_spas12]") && (str_find_weapons != "[mp_actor]"))
+                        else if (str_find_weapons == "[mp_wpn_spas12]")
                         {
                             if ((str_find_hp.Length >= 8) && (Convert.ToInt64(str_find) > 315))
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | <font style='color:red'>HIM " + str_find + " [Max: 315] </font> | K_AP " + str_K_APcount + "<br>");
@@ -1912,7 +1946,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                             else if (str_find_hp.Length >= 8)
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | HIM " + str_find + " </font> | K_AP " + str_K_APcount + "<br>");
                         }
-                        else if ((str_find_weapons == "[mp_wpn_ak74u]") && (str_find_weapons != "[mp_actor]"))
+                        else if (str_find_weapons == "[mp_wpn_ak74u]")
                         {
                             if ((str_find_hp.Length >= 8 || Convert.ToInt64(str_hp_count) > EventsControllerMaxHPLimit) && (Convert.ToInt64(str_find) > 140))
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | <font style='color:red'>HIM " + str_find + " [Max: 140] </font> | K_AP " + str_K_APcount + "<br>");
@@ -1921,7 +1955,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                             else if (str_find_hp.Length >= 8 || Convert.ToInt64(str_hp_count) > EventsControllerMaxHPLimit)
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | HIM " + str_find + " </font> | K_AP " + str_K_APcount + "<br>");
                         }
-                        else if ((str_find_weapons == "[mp_wpn_ak74]") && (str_find_weapons != "[mp_actor]"))
+                        else if (str_find_weapons == "[mp_wpn_ak74]")
                         {
                             if ((str_find_hp.Length >= 8 || Convert.ToInt64(str_hp_count) > EventsControllerMaxHPLimit) && (Convert.ToInt64(str_find) > 140))
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | <font style='color:red'>HIM " + str_find + " [Max: 140] </font> | K_AP " + str_K_APcount + "<br>");
@@ -1930,7 +1964,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                             else if (str_find_hp.Length >= 8 || Convert.ToInt64(str_hp_count) > EventsControllerMaxHPLimit)
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | HIM " + str_find + " </font> | K_AP " + str_K_APcount + "<br>");
                         }
-                        else if ((str_find_weapons == "[mp_wpn_abakan]") && (str_find_weapons != "[mp_actor]"))
+                        else if (str_find_weapons == "[mp_wpn_abakan]")
                         {
                             if ((str_find_hp.Length >= 8 || Convert.ToInt64(str_hp_count) > EventsControllerMaxHPLimit) && (Convert.ToInt64(str_find) > 140))
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | <font style='color:red'>HIM " + str_find + " [Max: 140] </font> | K_AP " + str_K_APcount + "<br>");
@@ -1939,7 +1973,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                             else if (str_find_hp.Length >= 8 || Convert.ToInt64(str_hp_count) > EventsControllerMaxHPLimit)
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | HIM " + str_find + " </font> | K_AP " + str_K_APcount + "<br>");
                         }
-                        else if ((str_find_weapons == "[mp_wpn_groza]") && (str_find_weapons != "[mp_actor]"))
+                        else if (str_find_weapons == "[mp_wpn_groza]")
                         {
                             if ((str_find_hp.Length >= 8 || Convert.ToInt64(str_hp_count) > EventsControllerMaxHPLimit) && (Convert.ToInt64(str_find) > 184))
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | <font style='color:red'>HIM " + str_find + " [Max: 184] </font> | K_AP " + str_K_APcount + "<br>");
@@ -1948,7 +1982,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                             else if (str_find_hp.Length >= 8 || Convert.ToInt64(str_hp_count) > EventsControllerMaxHPLimit)
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | HIM " + str_find + " </font> | K_AP " + str_K_APcount + "<br>");
                         }
-                        else if ((str_find_weapons == "[mp_wpn_val]") && (str_find_weapons != "[mp_actor]"))
+                        else if (str_find_weapons == "[mp_wpn_val]")
                         {
                             if ((str_find_hp.Length >= 8 || Convert.ToInt64(str_hp_count) > EventsControllerMaxHPLimit) && (Convert.ToInt64(str_find) > 114))
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | <font style='color:red'>HIM " + str_find + " [Max: 114] </font> | K_AP " + str_K_APcount + "<br>");
@@ -1957,7 +1991,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                             else if (str_find_hp.Length >= 8 || Convert.ToInt64(str_hp_count) > EventsControllerMaxHPLimit)
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | HIM " + str_find + " </font> | K_AP " + str_K_APcount + "<br>");
                         }
-                        else if ((str_find_weapons == "[mp_wpn_fn2000]") && (str_find_weapons != "[mp_actor]"))
+                        else if (str_find_weapons == "[mp_wpn_fn2000]")
                         {
                             if ((str_find_hp.Length >= 8 || Convert.ToInt64(str_hp_count) > EventsControllerMaxHPLimit) && (Convert.ToInt64(str_find) > 105))
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | <font style='color:red'>HIM " + str_find + " [Max: 105] </font> | K_AP " + str_K_APcount + "<br>");
@@ -1966,7 +2000,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                             else if (str_find_hp.Length >= 8 || Convert.ToInt64(str_hp_count) > EventsControllerMaxHPLimit)
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | HIM " + str_find + " </font> | K_AP " + str_K_APcount + "<br>");
                         }
-                        else if ((str_find_weapons == "[mp_wpn_mp5]") && (str_find_weapons != "[mp_actor]"))
+                        else if (str_find_weapons == "[mp_wpn_mp5]")
                         {
                             if ((str_find_hp.Length >= 8 || Convert.ToInt64(str_hp_count) > EventsControllerMaxHPLimit) && (Convert.ToInt64(str_find) > 210))
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | <font style='color:red'>HIM " + str_find + " [Max: 210] </font> | K_AP " + str_K_APcount + "<br>");
@@ -1975,7 +2009,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                             else if (str_find_hp.Length >= 8 || Convert.ToInt64(str_hp_count) > EventsControllerMaxHPLimit)
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | HIM " + str_find + " </font> | K_AP " + str_K_APcount + "<br>");
                         }
-                        else if ((str_find_weapons == "[mp_wpn_l85]") && (str_find_weapons != "[mp_actor]"))
+                        else if (str_find_weapons == "[mp_wpn_l85]")
                         {
                             if ((str_find_hp.Length >= 8 || Convert.ToInt64(str_hp_count) > EventsControllerMaxHPLimit) && (Convert.ToInt64(str_find) > 140))
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | <font style='color:red'>HIM " + str_find + " [Max: 140] </font> | K_AP " + str_K_APcount + "<br>");
@@ -1984,7 +2018,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                             else if (str_find_hp.Length >= 8 || Convert.ToInt64(str_hp_count) > EventsControllerMaxHPLimit)
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | HIM " + str_find + " </font> | K_AP " + str_K_APcount + "<br>");
                         }
-                        else if ((str_find_weapons == "[mp_wpn_lr300]") && (str_find_weapons != "[mp_actor]"))
+                        else if (str_find_weapons == "[mp_wpn_lr300]")
                         {
                             if ((str_find_hp.Length >= 8 || Convert.ToInt64(str_hp_count) > EventsControllerMaxHPLimit) && (Convert.ToInt64(str_find) > 140))
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | <font style='color:red'>HIM " + str_find + " [Max: 140] </font> | K_AP " + str_K_APcount + "<br>");
@@ -1993,7 +2027,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                             else if (str_find_hp.Length >= 8 || Convert.ToInt64(str_hp_count) > EventsControllerMaxHPLimit)
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | HIM " + str_find + " </font> | K_AP " + str_K_APcount + "<br>");
                         }
-                        else if ((str_find_weapons == "[mp_wpn_sig550]") && (str_find_weapons != "[mp_actor]"))
+                        else if (str_find_weapons == "[mp_wpn_sig550]")
                         {
                             if ((str_find_hp.Length >= 8 || Convert.ToInt64(str_hp_count) > EventsControllerMaxHPLimit) && (Convert.ToInt64(str_find) > 140))
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | <font style='color:red'>HIM " + str_find + " [Max: 140] </font> | K_AP " + str_K_APcount + "<br>");
@@ -2002,7 +2036,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                             else if (str_find_hp.Length >= 8 || Convert.ToInt64(str_hp_count) > EventsControllerMaxHPLimit)
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | HIM " + str_find + " </font> | K_AP " + str_K_APcount + "<br>");
                         }
-                        else if ((str_find_weapons == "[mp_wpn_g36]") && (str_find_weapons != "[mp_actor]"))
+                        else if (str_find_weapons == "[mp_wpn_g36]")
                         {
                             if ((str_find_hp.Length >= 8 || Convert.ToInt64(str_hp_count) > EventsControllerMaxHPLimit) && (Convert.ToInt64(str_find) > 105))
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | <font style='color:red'>HIM " + str_find + " [Max: 105] </font> | K_AP " + str_K_APcount + "<br>");
@@ -2011,7 +2045,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                             else if (str_find_hp.Length >= 8 || Convert.ToInt64(str_hp_count) > EventsControllerMaxHPLimit)
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | HIM " + str_find + " </font> | K_AP " + str_K_APcount + "<br>");
                         }
-                        else if ((str_find_weapons == "[mp_wpn_vintorez]") && (str_find_weapons != "[mp_actor]"))
+                        else if (str_find_weapons == "[mp_wpn_vintorez]")
                         {
                             if ((str_find_hp.Length >= 8 || Convert.ToInt64(str_hp_count) > EventsControllerMaxHPLimit) && (Convert.ToInt64(str_find) > 104))
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | <font style='color:red'>HIM " + str_find + " [Max: 104] </font> | K_AP " + str_K_APcount + "<br>");
@@ -2020,7 +2054,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                             else if (str_find_hp.Length >= 8 || Convert.ToInt64(str_hp_count) > EventsControllerMaxHPLimit)
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | HIM " + str_find + " </font> | K_AP " + str_K_APcount + "<br>");
                         }
-                        else if ((str_find_weapons == "[mp_wpn_svu]") && (str_find_weapons != "[mp_actor]"))
+                        else if (str_find_weapons == "[mp_wpn_svu]")
                         {
                             if ((str_find_hp.Length >= 8 || Convert.ToInt64(str_hp_count) > EventsControllerMaxHPLimit) && (Convert.ToInt64(str_find) > 224))
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | <font style='color:red'>HIM " + str_find + " [Max: 224] </font> | K_AP " + str_K_APcount + "<br>");
@@ -2029,7 +2063,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                             else if (str_find_hp.Length >= 8 || Convert.ToInt64(str_hp_count) > EventsControllerMaxHPLimit)
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | HIM " + str_find + " </font> | K_AP " + str_K_APcount + "<br>");
                         }
-                        else if ((str_find_weapons == "[mp_wpn_svd]") && (str_find_weapons != "[mp_actor]"))
+                        else if (str_find_weapons == "[mp_wpn_svd]")
                         {
                             if ((str_find_hp.Length >= 8 || Convert.ToInt64(str_hp_count) > EventsControllerMaxHPLimit) && (Convert.ToInt64(str_find) > 245))
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | <font style='color:red'>HIM " + str_find + " [Max: 245] </font> | K_AP " + str_K_APcount + "<br>");
@@ -2038,7 +2072,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                             else if (str_find_hp.Length >= 8 || Convert.ToInt64(str_hp_count) > EventsControllerMaxHPLimit)
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | HIM " + str_find + " </font> | K_AP " + str_K_APcount + "<br>");
                         }
-                        else if ((str_find_weapons == "[mp_wpn_gauss]") && (str_find_weapons != "[mp_actor]"))
+                        else if (str_find_weapons == "[mp_wpn_gauss]")
                         {
                             if ((str_find_hp.Length >= 8 || Convert.ToInt64(str_hp_count) > EventsControllerMaxHPLimit) && (Convert.ToInt64(str_find) > 3001))
                                 html_buffer.Add(str_pname + " " + str_find_weapons + " " + str_ht + " " + str_count + " <font style='color:blue'>HP " + str_find_hp + " </font> | BT " + str_btcount + " | <font style='color:red'>HIM " + str_find + " [Max: 3000] </font> | K_AP " + str_K_APcount + "<br>");
@@ -2324,7 +2358,6 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
         private void save_settings()
         {
             _base_settings.EventsAutoColor = EventsPlayersAutoColor.Checked;
-            _base_settings.EventsDirectoryDF = DmpCurrentDirectory.Text;
             _base_settings.EventsChangeWindow = EventsChangeWindow.Checked;
             _base_settings.FirewallActivated = WinFirewallActivate.Checked;
             _base_settings.EventsControllerCheckPlayers = EventsControllerCheckPlayers.Checked;
@@ -2370,7 +2403,6 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
         private void Initialize_save_form()
         {
             EventsPlayersAutoColor.Checked = _base_settings.EventsAutoColor;
-            DmpCurrentDirectory.Text = _base_settings.EventsDirectoryDF;
             EventsChangeWindow.Checked = _base_settings.EventsChangeWindow;
             WinFirewallActivate.Checked = _base_settings.FirewallActivated;
             EventsControllerCheckPlayers.Checked = _base_settings.EventsControllerCheckPlayers;
@@ -3351,198 +3383,77 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
             }
         }
 
-    
-        // Полностью переделать перенос из дампов статистики. Без таймера и в ручной режим
-        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-
-
-        // EDIT 2017 
-        // ==================================================
-        // Добавление данных из дампов статистики                           доработать в нормальный вид
-        // ======================================================================================================================================================
-        private static void DumpPlayersWrite(string AddPlayersInBase)
-        {
-            StreamWriter writer = new StreamWriter(@"PlayersDataBase\base_temp.txt", true, Encoding.GetEncoding("UTF-8")); //  windows-1251
-            writer.Write(AddPlayersInBase);
-            writer.Close();
-        }
-        /*
-        // ==================================================
-        int Timer = 3600; // 1 hour
-        int TimerProcessFinished = 0;
-        int TimerProcessError = 0;
-        string pos1;
-        string pos2;
-        string del1;
-        string del2;
-        string symbol_1;
-        string symbol_2;
-        string symbol_3;
-        string symbol_4;
-        string symbol_5;
-        string symbol_6;
-        string dump_statistics_buffer;*/
-
-        private void CreateDirectoryDumpFiles_Click(object sender, EventArgs e)
-        {
-            FolderBrowserDialog DumpFilesDirectory = new FolderBrowserDialog();
-            if (DumpFilesDirectory.ShowDialog() == DialogResult.OK)
-            {
-                DmpCurrentDirectory.Text = DumpFilesDirectory.SelectedPath;
-            }
-        }
-        HashSet<string> dump = new HashSet<string>();
-
         private void btnConnectAllFiles_Click(object sender, EventArgs e)
         {
-           /*
-            if (DmpCurrentDirectory.Text != "")
+            try
             {
-                try
+                if (ThreadDumpPlayers.IsBusy == false)
                 {
-                    btnConnectAllFiles.Enabled = false;
-                    PlayersInDump.Text = "Выполняется обработка...";
-                    foreach (string ReadAllFiles in Directory.EnumerateFiles(DmpCurrentDirectory.Text, "*.ltx", SearchOption.AllDirectories))
+                    string[] SEARCH_DIRECTORY = Directory.GetDirectories(@"server_settings\logs\mp_stats\", "*", SearchOption.AllDirectories);
+                    foreach (string item in SEARCH_DIRECTORY)
                     {
-                        foreach (string cmp in File.ReadLines(ReadAllFiles, Encoding.GetEncoding(1251)))
+                        // Найдем нужную нам директорию, упростим настройку юзерам :)
+                        int max_line_symbol = item.Count(str => str == '\\');
+                        if (max_line_symbol == 4)
                         {
-                            if (cmp.Contains("player_ip"))
-                            {
-                                del1 = cmp.Replace(" ", string.Empty);
-                                symbol_1 = del1.Replace("=", "");
-                                symbol_2 = symbol_1.Replace("-", "");
-                                symbol_3 = symbol_2.Replace("%", "");
-                                pos1 = symbol_3.Replace("player_ip", "");
-                            }
-                            if (cmp.Contains("player_name"))
-                            {
-                                del2 = cmp.Replace(" ", string.Empty);
-                                symbol_4 = del2.Replace("=", "");
-                                symbol_5 = symbol_4.Replace("-", "");
-                                symbol_6 = symbol_5.Replace("%", "");
-                                pos2 = symbol_6.Replace("player_name", "");
-                                dump_statistics_buffer += ("[A+]%" + pos2 + "%ID:<Unknown>%hash:<Unknown>%" + pos1 + "%%" + Environment.NewLine);
-                            }
+                            DmpCurrentDirectory = item;
+                            break;
                         }
                     }
-
-                    File.WriteAllText("1.txt", dump_statistics_buffer);
-
-                    /*
-                    using (var READING_DUMP = new FileStream(@"PlayersDataBase\dump_files.txt", FileMode.Create, FileAccess.Write, FileShare.Read))
-                    {
-                        foreach (string ReadAllFiles in Directory.EnumerateFiles(DmpCurrentDirectory.Text, "*.ltx", SearchOption.AllDirectories))
-                        {
-                            using (var WriteAllFiles = File.OpenRead(ReadAllFiles))
-                            {
-                                WriteAllFiles.CopyTo(READING_DUMP);
-                            }
-                            READING_DUMP.WriteByte(Convert.ToByte('\r')); // 13 \r https://stackoverflow.com/questions/2915785/how-many-bytes-is-n-r  
-                            READING_DUMP.WriteByte(Convert.ToByte('\n')); // 10 \n In ASCII encoding, \n is the Newline character 0x0A (decimal 10), \r is the Carriage Return character 0x0D (decimal 13).        
-                        }
-                    } 
-                }
-                catch (Exception)
-                {
-                    TimerProcessError++;
-                }
-                ThreadDumpPlayers.WorkerSupportsCancellation = true;
-                ThreadDumpPlayers.RunWorkerAsync();
-            }
-            else
-            {
-                if (EventsAutoCollectDumpStats.CheckState == CheckState.Checked)
-                {
-                    TimerDumpFiles.Stop();
-                    info_dump_stats.Text = "Внимание! Работа функции остановлена в связи с отсутствием или не назначенной вами директории...";
-                    info_dump_stats.ForeColor = Color.Red;
-                }
+                    //MessageBox.Show(DmpCurrentDirectory);
+                    MessageBox.Show("Пожалуйста дождитесь завершения процедуры.\nМы дадим знать, когда данные будут добавлены в базу.", "S.E.R.V.E.R - Shadow Of Chernobyl", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    ThreadDumpPlayers.RunWorkerAsync();
+                }          
                 else
                 {
-                    MessageBox.Show("Пожалуйста установите директорию нахождения Dump Files!\nКонечная папка Online", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Обработка уже выполняется, пожалуйста подождите ее завершения.", "S.E.R.V.E.R - Shadow Of Chernobyl", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
-            }*/
-        }
-
-
-        private void ThreadDumpPlayers_DoWork(object sender, DoWorkEventArgs e)
-        {
-            /*
-            PlayersInDump.Text = "Обработка данных...\nПожалуйста подождите...";
-            try
-            {
-                string[] readText = File.ReadAllLines(@"PlayersDataBase\dump_files.txt", Encoding.GetEncoding(1251));
-                foreach (string s in readText)
-                {
-                    if (s.Contains("player_ip"))
-                    {
-                        del1 = s.Replace(" ", string.Empty);
-                        symbol_1 = del1.Replace("=", "");
-                        symbol_2 = symbol_1.Replace("-", "");
-                        symbol_3 = symbol_2.Replace("%", "");
-                        pos1 = symbol_3.Replace("player_ip", "");
-                    }
-                    if (s.Contains("player_name"))
-                    {
-                        del2 = s.Replace(" ", string.Empty);
-                        symbol_4 = del2.Replace("=", "");
-                        symbol_5 = symbol_4.Replace("-", "");
-                        symbol_6 = symbol_5.Replace("%", "");
-                        pos2 = symbol_6.Replace("player_name", "");
-                        dump_statistics_buffer += ("[A+]%" + pos2 + "%ID:<Unknown>%hash:<Unknown>%" + pos1 + "%%" + Environment.NewLine);                       
-                    }
-                }
-                DumpPlayersWrite(dump_statistics_buffer);
-            }
-            catch (Exception)
-            {
-                TimerProcessError++;
-            }
-            PlayersInDump.Text = "Формирование таблицы...\nПожалуйста подождите...";
-            Thread.Sleep(1000);
-            dump_statistics_buffer = null;*/
-        }
-
-        private void ThreadDumpPlayers_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            /*
-            try
-            {
-                // =========================================================== BASE PLAYERS FORMAT - НОВАЯ ВЕРСИЯ ОБРАБОТКИ ===========================================================
-                // Обработанные новые данные записываются в файл base_temp.txt 
-                // Объединение НОВОЙ БАЗЫ и СТАРОЙ БАЗЫ ВМЕСТЕ ВО ВРЕМЕННЫЙ ФАЙЛ
-                string BaseOut = string.Empty;
-                using (StreamReader BaseLoad = new StreamReader(@"PlayersDataBase\Players.xrBase", Encoding.GetEncoding("UTF-8"))) // 1251
-                {
-                    BaseOut = BaseLoad.ReadToEnd();
-                }
-                ResultStatusScanCollect(BaseOut); // Players.xrBase => base_temp.txt  
-                // Finish
-                // Обработанная данные вместе с базой                   // Входящие данные  (UTF-8)                                          // 1251                                      // Удаляем всю строку, если она начинается с данных слов                                                                               // Удаляем все пробелы
-                File.WriteAllLines((@"PlayersDataBase\Players.xrBase"), File.ReadLines(@"PlayersDataBase\base_temp.txt", Encoding.GetEncoding("UTF-8")).Distinct().Where(x => !x.Contains("[A]%<Unknown>")).Where(x => !x.Contains("[A]%%<Unknown>")).Where(x => !x.Contains("[A]%%ID:")).Where(x => !x.Contains("[A]%%%hash:")).Where(x => !string.IsNullOrWhiteSpace(x)).ToArray());
-                File.WriteAllText(@"PlayersDataBase\base_temp.txt", string.Empty);
-                File.WriteAllText(@"PlayersDataBase\dump_files.txt", string.Empty); // clear  
-                // =========================================================== BASE PLAYERS FORMAT - НОВАЯ ВЕРСИЯ ОБРАБОТКИ ===========================================================
             }
             catch (Exception ex)
             {
-                if (EventsAutoCollectDumpStats.CheckState == CheckState.Checked)
+                MessageBox.Show("Программа не смогла установить путь до DumpFiles автоматически.\nERROR REASON: " + ex.Message, "S.E.R.V.E.R - Shadow Of Chernobyl", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void ThreadDumpPlayers_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                // Открываем и обрабатываем каждый файл построчно из нашей папки
+                int count = 0;
+                foreach (string ReadAllFiles in Directory.EnumerateFiles(DmpCurrentDirectory, "*.ltx", SearchOption.AllDirectories))
                 {
-                    TimerDumpFiles.Stop();
-                    PlayersInDump.Text = "Обработка завершена с ошибкой.";
-                    info_dump_stats.Text = "Внимание! Работа функции остановлена в связи с ошибкой: " + ex.Message;
-                    info_dump_stats.ForeColor = Color.Red;
+                    foreach (string cmp in File.ReadLines(ReadAllFiles, Encoding.GetEncoding(1251)))
+                    {
+                        if (cmp.Contains("player_ip"))
+                        {
+                            PlayerAddress = cmp.Replace(" ", "").Replace("=", "").Replace("%", "").Replace("player_ip", "");
+                        }
+                        if (cmp.Contains("player_name"))
+                        {
+                            count++;
+                            PlayerName = cmp.Replace(" ", "").Replace("=", "").Replace("%", "").Replace("player_name", "");
+                            BufferDumpFiles.Add("[A]%" + PlayerName + "%%%" + PlayerAddress + "%%"); // добавляем только IP и NAME
+                        }
+                    }
                 }
-                else
+                // Теперь полученный список необходимо передать в нашу базу
+                DialogResult OK = MessageBox.Show("В основную базу сейчас будет добавлено: " + count + " записей из DumpFiles.\nПродолжить выполнение?", "S.E.R.V.E.R - Shadow Of Chernobyl", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                if (DialogResult.Yes == OK)
                 {
-                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    foreach (string sss in BufferDumpFiles)
+                    {
+                        PlayersBaseBuffer.Add(sss + Environment.NewLine);
+                    }
+                    Save(string.Concat(PlayersBaseBuffer));
+                    BufferDumpFiles.Clear();
+                    MessageBox.Show("Успешное перемещение данных в базу из DumpFiles!", "S.E.R.V.E.R - Shadow Of Chernobyl", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
-            PlayersInDump.Text = "Обработка успешно завершена!";
-            btnConnectAllFiles.Enabled = true;
-            Thread.Sleep(100);
-            BaseLoadInBuffer();             // вызывать всегда и везде, при каких либо действий с базой. */
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка при работе с файлами.\nERROR REASON: " + ex.Message, "S.E.R.V.E.R - Shadow Of Chernobyl", MessageBoxButtons.OK, MessageBoxIcon.Error);            
+            }
         }
 
         private void baseServerLoad_Click(object sender, EventArgs e)
@@ -3604,57 +3515,6 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
             if (WinFirewallActivate.CheckState == CheckState.Checked)          
                GetFuncCreateInFirewall.Enabled = true;           
         }
-
-        private void EventsAutoCollectDumpStats_CheckedChanged(object sender, EventArgs e)
-        {
-            /*
-            if (EventsAutoCollectDumpStats.CheckState == CheckState.Checked)
-            {
-                TimerDumpFiles.Start();
-                StartAutoCheckThread.Enabled = false;
-                info_dump_stats.Text = "Пожалуйста подождите...";
-                info_dump_stats.Visible = true;
-                info_dump_stats.ForeColor = Color.Blue;
-                Timer = 3600;
-                TimerProcessFinished = 0;
-                TimerProcessError = 0;
-                btnMinimized.Visible = true;
-                EventsAutoCollectDumpStats.BackColor = Color.Lime;
-            }
-            else
-            {
-                TimerDumpFiles.Stop();
-                StartAutoCheckThread.Enabled = true;
-                info_dump_stats.Visible = false;
-                btnMinimized.Visible = false;
-                EventsAutoCollectDumpStats.BackColor = Color.Orange;
-            }*/
-        }
-
-        private void TimerDumpFiles_Tick(object sender, EventArgs e)
-        {/*
-            Timer -= 30;
-            if (Timer == 0)
-            {
-                Timer = 3600;
-                btnConnectAllFiles.PerformClick();
-                TimerProcessFinished++;
-            }
-            else
-            {
-                info_dump_stats.Text = "Обработка выполнится через: [" + TimeSpan.FromSeconds(Timer).ToString(@"hh\:mm\:ss") + "]" + " Выполнено успешно: [" + TimerProcessFinished + "]" + " Ошибок выполнения: [" + TimerProcessError + "]";
-            }
-            if (TimerProcessError >= 5)
-            {
-                TimerDumpFiles.Stop();
-                info_dump_stats.Text = "Внимание! Работа функции остановлена в связи с превышением лимита ошибок: [" + TimerProcessError + "]";
-                info_dump_stats.ForeColor = Color.Violet;
-            }*/
-        }
-
-
-        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
 
         // обновляем данные на новый интерфейс
         private void ListPage2CheckUpdate_Click(object sender, EventArgs e)

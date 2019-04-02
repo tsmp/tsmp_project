@@ -55,7 +55,6 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
         public bool EventsControllerAutoSaveHistoryActivate { get; set; }
         public bool EventsControllerTrayMessage { get; set; }
         public bool AutoSaveParams { get; set; }
-        public string EventsDirectoryDF { get; set; }
         public string EventsControllerMaxLimit { get; set; }
         public string EventsWeaponsMaxLimit { get; set; }
         public string versionPath { get; set; }

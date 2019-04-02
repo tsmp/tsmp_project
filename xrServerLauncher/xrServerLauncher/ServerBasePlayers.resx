@@ -120,6 +120,18 @@
   <metadata name="BaseMenu2.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>311, 55</value>
   </metadata>
+  <metadata name="BaseMenu1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>411, 92</value>
+  </metadata>
+  <metadata name="menuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>526, 92</value>
+  </metadata>
+  <metadata name="menuStrip2.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>639, 82</value>
+  </metadata>
+  <metadata name="BaseMenu2.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>311, 55</value>
+  </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="ListPage2CheckUpdate.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -1154,12 +1166,6 @@ This function works only if the server is running on Stalker Controller
 Stalker Controller runs on server 4 and 5 in the program list.
 This feature allows you to disable event handling for a specific type of equipment.</value>
   </data>
-  <data name="EventsAutoCollectDumpStats.ToolTip" xml:space="preserve">
-    <value>Автоматическая обработка Dump Файлов. Выполняется раз в час.
-Если функция включена, то кнопка подсвечивается зеленым цветом.
-Automatic processing of Dump files. Performed once per hour.
-If the function is enabled, the button is highlighted in green.</value>
-  </data>
   <data name="UI_HELP.Text" xml:space="preserve">
     <value>Назначение клавиш для быстрых действий:
 F1 - Поиск по Name
@@ -1358,11 +1364,11 @@ The hidden server will not be visible to everyone - including the server adminis
   <metadata name="ScanDataFiles.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>745, 17</value>
   </metadata>
+  <metadata name="toolTipHelMenu.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>865, 16</value>
+  </metadata>
   <metadata name="ThreadDumpPlayers.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>595, 17</value>
-  </metadata>
-  <metadata name="TimerDumpFiles.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>171, 55</value>
   </metadata>
   <metadata name="notifyIcon.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>790, 53</value>
