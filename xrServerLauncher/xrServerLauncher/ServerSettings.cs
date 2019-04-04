@@ -16,6 +16,9 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
         {
             server_settings = Settings.GetSettings();
             InitializeComponent();
+            change_interface();
+            DYNAMIC_SET_COLOR();
+            Initialize_server_settings();
 #if (!DEBUG)
             tabControl1.TabPages[6].Parent = null; // скрываем вкладу tab control
             tabControl1.TabPages[5].Parent = null; // скрываем вкладу tab control
@@ -26,10 +29,6 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
             //tabControl1.TabPages[6].Parent = null; // скрываем вкладу tab control, нельзя в общий доступ :)
             //tabControl1.TabPages[5].Parent = null; // скрываем вкладу tab control
             //tabControl1.TabPages[4].Parent = null; // скрываем вкладу tab control
-
-            change_interface();
-            DYNAMIC_SET_COLOR();
-            Initialize_server_settings();
         }
         int v_value = 0;
         private void change_interface()

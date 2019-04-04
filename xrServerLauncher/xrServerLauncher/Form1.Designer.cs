@@ -3262,7 +3262,7 @@
             this.checkLevel4.Name = "checkLevel4";
             this.checkLevel4.Size = new System.Drawing.Size(141, 23);
             this.checkLevel4.TabIndex = 66;
-            this.checkLevel4.Text = "SURVIVAL GAME MODE";
+            this.checkLevel4.Text = "Уникальные карты";
             this.checkLevel4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.checkLevel4.UseVisualStyleBackColor = false;
             this.checkLevel4.CheckedChanged += new System.EventHandler(this.checkLevel4_CheckedChanged);

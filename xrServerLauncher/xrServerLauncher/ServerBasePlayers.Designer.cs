@@ -45,7 +45,6 @@
             this.BaseMenu2GetListplayers = new System.Windows.Forms.ToolStripMenuItem();
             this.BaseMenu2GetSearch = new System.Windows.Forms.ToolStripMenuItem();
             this.BaseMenu2OpenEvents = new System.Windows.Forms.ToolStripMenuItem();
-            this.BaseMenu2StatsEvent = new System.Windows.Forms.ToolStripMenuItem();
             this.BtnScreen = new System.Windows.Forms.ToolStripMenuItem();
             this.SearchPanel = new System.Windows.Forms.Panel();
             this.ui_search_exit = new System.Windows.Forms.Label();
@@ -172,9 +171,7 @@
             this.BadPlayers = new System.Windows.Forms.TabPage();
             this.tabControl3 = new System.Windows.Forms.TabControl();
             this.tabPage10 = new System.Windows.Forms.TabPage();
-            this.btnOpenDirHTML = new System.Windows.Forms.PictureBox();
             this.btnUpdatePlayerState = new System.Windows.Forms.PictureBox();
-            this.btnClearCheaterBuffer = new System.Windows.Forms.PictureBox();
             this.btnSaveCheatTableInFile = new System.Windows.Forms.PictureBox();
             this.SelectTable3 = new System.Windows.Forms.Label();
             this.PlayersCheaterList = new System.Windows.Forms.ListView();
@@ -355,6 +352,7 @@
             this.GUI_INFO_BLOCKED = new System.Windows.Forms.Label();
             this.GUIEvents = new System.Windows.Forms.Label();
             this.GUI_MINI_MENU = new System.Windows.Forms.Label();
+            this.btnAuto = new System.Windows.Forms.PictureBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.BaseMenu2.SuspendLayout();
@@ -374,9 +372,7 @@
             this.BadPlayers.SuspendLayout();
             this.tabControl3.SuspendLayout();
             this.tabPage10.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.btnOpenDirHTML)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnUpdatePlayerState)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.btnClearCheaterBuffer)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnSaveCheatTableInFile)).BeginInit();
             this.ContextMenuBanPlayersList.SuspendLayout();
             this.tabPage11.SuspendLayout();
@@ -414,6 +410,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.FirewallBlockedPort)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.img_rules)).BeginInit();
             this.notifyIconcontextMenuStrip.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.btnAuto)).BeginInit();
             this.SuspendLayout();
             // 
             // btnExit
@@ -539,7 +536,6 @@
             this.BaseMenu2GetListplayers,
             this.BaseMenu2GetSearch,
             this.BaseMenu2OpenEvents,
-            this.BaseMenu2StatsEvent,
             this.BtnScreen});
             this.BaseMenu1.Location = new System.Drawing.Point(0, 0);
             this.BaseMenu1.Name = "BaseMenu1";
@@ -578,14 +574,6 @@
             this.BaseMenu2OpenEvents.Size = new System.Drawing.Size(84, 23);
             this.BaseMenu2OpenEvents.Text = "События";
             this.BaseMenu2OpenEvents.Click += new System.EventHandler(this.BaseMenu2OpenEvents_Click);
-            // 
-            // BaseMenu2StatsEvent
-            // 
-            this.BaseMenu2StatsEvent.Image = ((System.Drawing.Image)(resources.GetObject("BaseMenu2StatsEvent.Image")));
-            this.BaseMenu2StatsEvent.Name = "BaseMenu2StatsEvent";
-            this.BaseMenu2StatsEvent.Size = new System.Drawing.Size(140, 23);
-            this.BaseMenu2StatsEvent.Text = "Статистика работы";
-            this.BaseMenu2StatsEvent.Click += new System.EventHandler(this.BaseMenu2StatsEvent_Click);
             // 
             // BtnScreen
             // 
@@ -1799,9 +1787,8 @@
             // 
             // tabPage10
             // 
-            this.tabPage10.Controls.Add(this.btnOpenDirHTML);
+            this.tabPage10.Controls.Add(this.btnAuto);
             this.tabPage10.Controls.Add(this.btnUpdatePlayerState);
-            this.tabPage10.Controls.Add(this.btnClearCheaterBuffer);
             this.tabPage10.Controls.Add(this.btnSaveCheatTableInFile);
             this.tabPage10.Controls.Add(this.SelectTable3);
             this.tabPage10.Controls.Add(this.PlayersCheaterList);
@@ -1813,19 +1800,6 @@
             this.tabPage10.TabIndex = 0;
             this.tabPage10.Text = "Текущие сведения";
             this.tabPage10.UseVisualStyleBackColor = true;
-            // 
-            // btnOpenDirHTML
-            // 
-            this.btnOpenDirHTML.BackColor = System.Drawing.SystemColors.Control;
-            this.btnOpenDirHTML.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnOpenDirHTML.BackgroundImage")));
-            this.btnOpenDirHTML.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnOpenDirHTML.Location = new System.Drawing.Point(685, 235);
-            this.btnOpenDirHTML.Name = "btnOpenDirHTML";
-            this.btnOpenDirHTML.Size = new System.Drawing.Size(20, 20);
-            this.btnOpenDirHTML.TabIndex = 78;
-            this.btnOpenDirHTML.TabStop = false;
-            this.toolTipHelMenu.SetToolTip(this.btnOpenDirHTML, "Открыть директорию расположения HTML файлов нарушителей");
-            this.btnOpenDirHTML.Click += new System.EventHandler(this.btnOpenDirHTML_Click);
             // 
             // btnUpdatePlayerState
             // 
@@ -1840,25 +1814,12 @@
             this.toolTipHelMenu.SetToolTip(this.btnUpdatePlayerState, "Обновить статусы игроков.");
             this.btnUpdatePlayerState.Click += new System.EventHandler(this.btnUpdatePlayerState_Click);
             // 
-            // btnClearCheaterBuffer
-            // 
-            this.btnClearCheaterBuffer.BackColor = System.Drawing.SystemColors.Control;
-            this.btnClearCheaterBuffer.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnClearCheaterBuffer.BackgroundImage")));
-            this.btnClearCheaterBuffer.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnClearCheaterBuffer.Location = new System.Drawing.Point(748, 235);
-            this.btnClearCheaterBuffer.Name = "btnClearCheaterBuffer";
-            this.btnClearCheaterBuffer.Size = new System.Drawing.Size(20, 20);
-            this.btnClearCheaterBuffer.TabIndex = 73;
-            this.btnClearCheaterBuffer.TabStop = false;
-            this.toolTipHelMenu.SetToolTip(this.btnClearCheaterBuffer, "Очистить буфер событий");
-            this.btnClearCheaterBuffer.Click += new System.EventHandler(this.btnClearCheaterBuffer_Click);
-            // 
             // btnSaveCheatTableInFile
             // 
             this.btnSaveCheatTableInFile.BackColor = System.Drawing.SystemColors.Control;
             this.btnSaveCheatTableInFile.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnSaveCheatTableInFile.BackgroundImage")));
             this.btnSaveCheatTableInFile.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnSaveCheatTableInFile.Location = new System.Drawing.Point(727, 235);
+            this.btnSaveCheatTableInFile.Location = new System.Drawing.Point(748, 235);
             this.btnSaveCheatTableInFile.Name = "btnSaveCheatTableInFile";
             this.btnSaveCheatTableInFile.Size = new System.Drawing.Size(20, 20);
             this.btnSaveCheatTableInFile.TabIndex = 74;
@@ -1902,12 +1863,12 @@
             // 
             // columnHeader17
             // 
-            this.columnHeader17.Text = "Name";
+            this.columnHeader17.Text = "Игрок";
             this.columnHeader17.Width = 111;
             // 
             // columnHeader18
             // 
-            this.columnHeader18.Text = "IP Address";
+            this.columnHeader18.Text = "IP Адрес";
             this.columnHeader18.Width = 119;
             // 
             // columnHeader19
@@ -1917,17 +1878,17 @@
             // 
             // columnHeader23
             // 
-            this.columnHeader23.Text = "Reason";
+            this.columnHeader23.Text = "Причина";
             this.columnHeader23.Width = 89;
             // 
             // columnHeader20
             // 
-            this.columnHeader20.Text = "Status";
+            this.columnHeader20.Text = "Статус блокировки";
             this.columnHeader20.Width = 145;
             // 
             // columnHeader21
             // 
-            this.columnHeader21.Text = "Counter";
+            this.columnHeader21.Text = "Счетчик";
             this.columnHeader21.Width = 78;
             // 
             // ContextMenuBanPlayersList
@@ -2015,12 +1976,12 @@
             // 
             // columnHeader22
             // 
-            this.columnHeader22.Text = "Name";
+            this.columnHeader22.Text = "Игрок";
             this.columnHeader22.Width = 111;
             // 
             // columnHeader31
             // 
-            this.columnHeader31.Text = "IP Address";
+            this.columnHeader31.Text = "IP Адрес";
             this.columnHeader31.Width = 119;
             // 
             // columnHeader32
@@ -2030,12 +1991,12 @@
             // 
             // columnHeader33
             // 
-            this.columnHeader33.Text = "Reason";
+            this.columnHeader33.Text = "Причина";
             this.columnHeader33.Width = 132;
             // 
             // columnHeader35
             // 
-            this.columnHeader35.Text = "Time Blocked";
+            this.columnHeader35.Text = "Время блокировки";
             this.columnHeader35.Width = 140;
             // 
             // tabPage5
@@ -3395,7 +3356,7 @@
             // FirewallAddressMaskAdd
             // 
             this.FirewallAddressMaskAdd.AutoSize = true;
-            this.FirewallAddressMaskAdd.Location = new System.Drawing.Point(6, 59);
+            this.FirewallAddressMaskAdd.Location = new System.Drawing.Point(6, 60);
             this.FirewallAddressMaskAdd.Name = "FirewallAddressMaskAdd";
             this.FirewallAddressMaskAdd.Size = new System.Drawing.Size(129, 17);
             this.FirewallAddressMaskAdd.TabIndex = 74;
@@ -3887,6 +3848,19 @@
             this.GUI_MINI_MENU.Visible = false;
             this.GUI_MINI_MENU.Click += new System.EventHandler(this.GUI_MINI_MENU_Click);
             // 
+            // btnAuto
+            // 
+            this.btnAuto.BackColor = System.Drawing.SystemColors.Control;
+            this.btnAuto.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnAuto.BackgroundImage")));
+            this.btnAuto.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnAuto.Location = new System.Drawing.Point(727, 235);
+            this.btnAuto.Name = "btnAuto";
+            this.btnAuto.Size = new System.Drawing.Size(20, 20);
+            this.btnAuto.TabIndex = 78;
+            this.btnAuto.TabStop = false;
+            this.toolTipHelMenu.SetToolTip(this.btnAuto, "Перейти в автоматический режим работы");
+            this.btnAuto.Click += new System.EventHandler(this.btnAuto_Click);
+            // 
             // ServerBasePlayers
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3940,9 +3914,7 @@
             this.BadPlayers.ResumeLayout(false);
             this.tabControl3.ResumeLayout(false);
             this.tabPage10.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.btnOpenDirHTML)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnUpdatePlayerState)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.btnClearCheaterBuffer)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnSaveCheatTableInFile)).EndInit();
             this.ContextMenuBanPlayersList.ResumeLayout(false);
             this.tabPage11.ResumeLayout(false);
@@ -3988,6 +3960,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.FirewallBlockedPort)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.img_rules)).EndInit();
             this.notifyIconcontextMenuStrip.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.btnAuto)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -4136,7 +4109,6 @@
         private System.Windows.Forms.TabPage BadPlayers;
         private System.Windows.Forms.CheckBox EventsControllerAutoCheckPlayers;
         private System.Windows.Forms.PictureBox btnSaveCheatTableInFile;
-        private System.Windows.Forms.PictureBox btnClearCheaterBuffer;
         private System.Windows.Forms.Label SelectTable3;
         private System.Windows.Forms.ListView ListCheaterEvents;
         private System.Windows.Forms.ColumnHeader CH_EVENTS;
@@ -4247,7 +4219,6 @@
         private System.Windows.Forms.ToolStripMenuItem CheckBaseLineStatus;
         private System.Windows.Forms.Label GUI_9;
         private System.Windows.Forms.Label GUI_2;
-        private System.Windows.Forms.PictureBox btnOpenDirHTML;
         private System.Windows.Forms.ListView ListCheaterBlockedEvents;
         private System.Windows.Forms.ColumnHeader columnHeader22;
         private System.Windows.Forms.ColumnHeader columnHeader31;
@@ -4282,7 +4253,6 @@
         private System.Windows.Forms.ToolStripMenuItem BaseMenu2GetSearch;
         private System.Windows.Forms.CheckBox StartAutoCheckThread;
         private System.Windows.Forms.ToolStripMenuItem BaseMenu2StartAutoCheck;
-        private System.Windows.Forms.ToolStripMenuItem BaseMenu2StatsEvent;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem BaseMenu3_Events;
         private System.Windows.Forms.ToolStripMenuItem BaseMenu3_EventsWeapon;
@@ -4320,5 +4290,6 @@
         private System.Windows.Forms.ComboBox FirewallRulesSearch;
         private System.Windows.Forms.ToolStripMenuItem btnChatIPFilter;
         private System.Windows.Forms.ToolStripMenuItem BtnScreen;
+        private System.Windows.Forms.PictureBox btnAuto;
     }
 }

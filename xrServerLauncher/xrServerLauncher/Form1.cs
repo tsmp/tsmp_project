@@ -62,8 +62,58 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
             }
         }
 
-        // 29 slots
+        // =========================================================================================
+
+        // 29 slots - original level pack
         string[] buffer_listmaps = { "l01_escape", "l02_garbage", "l03_agroprom", "l03u_agr_underground", "l04_darkvalley", "l04u_labx18", "l05_bar", "l06_rostok", "l07_military", "l08_yantar", "l08u_brainlab", "l10_radar", "l10u_bunker", "l11_pripyat", "l12_stancia", "l12_stancia_2", "l12u_sarcofag", "l12u_control_monolith", "testers_mp_atp", "testers_mp_military_1", "testers_mp_agroprom", "testers_mp_factory", "testers_mp_rostok", "testers_mp_darkvalley", "testers_mp_workshop", "testers_mp_lost_village", "testers_mp_railroad", "testers_mp_bath", "testers_mp_pool" };
+        string[] tsmp_listmaps = { "[DM] Деревня Новичков", "[TDM] Деревня Новичков", "[DM] Депо", "[TDM] Депо", "[AH] Депо", "[DM] База Долга", "[TDM] База Долга", "[AH] База Долга" };
+        //MessageBox.Show(tsmp_listmaps.GetValue(4).ToString());
+
+        int PID_SRV1;
+        int PID_SRV2;
+        int PID_SRV3;
+        int PID_SRV4, GetPIDSV4;
+        int PID_SRV5, GetPIDSV5;
+        int srv1_running_time;
+        int srv2_running_time;
+        int srv3_running_time;
+        int srv4_running_time;
+        int srv5_running_time;
+        int srv1_reconnection_counter;
+        int srv2_reconnection_counter;
+        int srv3_reconnection_counter;
+        int srv4_reconnection_counter;
+        int srv5_reconnection_counter;
+        string status = " -$sv_status";
+        string KeySV1;
+        string KeySV2;
+        string KeySV3;
+        string KeySV4;
+        string KeySV5;
+        string ServerOnline = "1";
+        string NAT_IP_ATTACH = "localhost";
+        string StartKeyArgument;
+        bool MAPS_NAME_FOR_SERVER_NAME = false;
+
+
+        // Патч от Maks0 
+        // ==================================
+        string RUS_CHAT1;     // -rus_test      - Русский чат 
+        string RUS_CHAT2;
+        string RUS_CHAT3;
+        string NO_SPEECH1;    // -nospeech      - Отключает рацию
+        string NO_SPEECH2;
+        string NO_SPEECH3;
+        string NO_KEY1;       // -check_cd_key  - Включить проверку на наличие ключа
+        string NO_KEY2;
+        string NO_KEY3;
+        string DEBUG_MODE1;   // -debug         - Дебаг сообщения
+        string DEBUG_MODE2;   // -noalwaysflush - Отключает подробную запись логи и stack trace
+        string DEBUG_MODE3;
+        string check;         // -noalwaysflush - Записывает данные в файл в реальном времени
+        string server_new_engine;          // Переключение на новую версию движка
+        // ==================================
+        // =========================================================================================
         private void InitializeScanMaps()
         {
             try
@@ -146,7 +196,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
             if (btnStartStop1.Text == "Старт")
             {
                 btnStartStop1.Text = "Стоп";
-                LoadingServer1();
+                ServersLoader(1);
                 Srv1ProcessScan.Start();
                 Srv1Time.Start();
                 ServerEvents.Items.Add((DateTime.Now.ToString("[dd.MM.yyyy - HH:mm:ss] ")) + "Server [1] started by user").ForeColor = Color.Lime;
@@ -177,7 +227,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
             if (btnStartStop2.Text == "Старт")
             {
                 btnStartStop2.Text = "Стоп";
-                LoadingServer2();
+                ServersLoader(2);
                 Srv2ProcessScan.Start();
                 Srv2Time.Start();
                 ServerEvents.Items.Add((DateTime.Now.ToString("[dd.MM.yyyy - HH:mm:ss] ")) + "Server [2] started by user").ForeColor = Color.Lime;
@@ -208,7 +258,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
             if (btnStartStop3.Text == "Старт")
             {
                 btnStartStop3.Text = "Стоп";
-                LoadingServer3();
+                ServersLoader(3);
                 Srv3ProcessScan.Start();
                 Srv3Time.Start();
                 ServerEvents.Items.Add((DateTime.Now.ToString("[dd.MM.yyyy - HH:mm:ss] ")) + "Server [3] started by user").ForeColor = Color.Lime;
@@ -239,7 +289,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
             if (btnStartStop4.Text == "Старт")
             {
                 btnStartStop4.Text = "Стоп";
-                LoadingServer4();
+                ServersLoader(4);
                 Srv4ProcessScan.Start();
                 Srv4Time.Start();
                 ServerEvents.Items.Add((DateTime.Now.ToString("[dd.MM.yyyy - HH:mm:ss] ")) + "Server [4] started by user").ForeColor = Color.Lime;
@@ -255,12 +305,12 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                 Srv4Time.Stop();
                 try
                 {
-                    Process Id = Process.GetProcessById(PID4);
+                    Process Id = Process.GetProcessById(PID_SRV4);
                     Id.Kill();
                 }
                 catch (Exception)
                 {
-                    MessageBox.Show("Запрашиваемый сервер не отвечает! " + PID4, "S.E.R.V.E.R - Shadow Of Chernobyl", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Запрашиваемый сервер не отвечает! " + PID_SRV4, "S.E.R.V.E.R - Shadow Of Chernobyl", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
         }
@@ -270,7 +320,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
             if (btnStartStop5.Text == "Старт")
             {
                 btnStartStop5.Text = "Стоп";
-                LoadingServer5();
+                ServersLoader(5);
                 Srv5ProcessScan.Start();
                 Srv5Time.Start();
                 ServerEvents.Items.Add((DateTime.Now.ToString("[dd.MM.yyyy - HH:mm:ss] ")) + "Server [5] started by user").ForeColor = Color.Lime;
@@ -286,7 +336,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                 Srv5Time.Stop();
                 try
                 {
-                    Process Id = Process.GetProcessById(PID5);
+                    Process Id = Process.GetProcessById(PID_SRV5);
                     Id.Kill();
                 }
                 catch (Exception)
@@ -296,45 +346,156 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
             }
         }
 
+        private void ServersLoader(int ServerNum)
+        {
+            if (SrvStartArgument.CheckState == CheckState.Checked && myKeyCreated.TextLength > 0)
+            {   // Т.к все это выполняется на всех сервера, вызовем 1 раз
+                StartKeyArgument = myKeyCreated.Text;
+                ParseStartArgument();
+            }
+            if (ServerNum == 1)
+            {
+                srv1_running_time = 0; SrvName1.Text.Replace("_", " ").Replace("%", " ");
+                if (SrvPsw1.Text.Length > 0) KeySV1 = "/psw=" + SrvPsw1.Text; else KeySV1 = "";
+                try
+                {
+                    Process proc = new Process();
+                    proc.StartInfo.FileName = current_directory + "\\bin" + server_new_engine + "\\dedicated\\XR_3DA.exe"; // для TSMP без dedicated
+                    proc.StartInfo.WorkingDirectory = current_directory + "\\bin" + server_new_engine + "\\";
+                    proc.StartInfo.Arguments = ("-i -nosound -noprefetch " + StartKeyArgument + check + RUS_CHAT1 + NO_KEY1 + NO_SPEECH1 + DEBUG_MODE1 + status + " -start server(" + SrvMaps1.Text + "/" + SrvGameType1.Text + KeySV1 + "/hname=" + SrvName1.Text + "/maxplayers=" + svPlayers.Text + "/public=" + ServerOnline + "/battleye=1/maxping=" + svPing.Text + "/spectr=20/spectrmds=31/vote=1/dmgblock=0/fraglimit=" + svFraglim.Text + "/timelimit=" + svTimeLim.Text + "/ffire=" + svFriendlyFire.Text + "/fn=" + svIco.Text + "/fi=" + svIco.Text + "/ans=0/warmup=" + svWurmUp.Text + "/etimef=0.0/estime=" + svWeatherTime.Text + "/portgs=" + PortGS1.Text + "/portsv=" + PortSV1.Text + "portcl = " + PortCL1.Text + "/anum=" + Artefacts.Text + "/astime=" + svTimeArtefact.Text + ") client(localhost/name=server)");
+                    proc.Start();
+                    PID_SRV1 = proc.Id;
+                    btnStartStop1.Text = "Стоп"; info_sv_time1.Text = "Loading...";
+                    if (SRV_PROTECT1.CheckState == CheckState.Checked) ProcessStartAsm();
+                    FunctionServer1UsingCore();
+                    FuncPriorityClassChangeServer1();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Ошибка загрузки исполняемых файлов сервера [1].\nКод ошибки:\n" + ex.Message, "S.E.R.V.E.R - Shadow Of Chernobyl", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+            else if (ServerNum == 2)
+            {
+                srv2_running_time = 0; SrvName2.Text.Replace("_", " ").Replace("%", " ");
+                if (SrvPsw2.Text.Length > 0) KeySV2 = "/psw=" + SrvPsw2.Text; else KeySV2 = "";
+                try
+                {
+                    Process proc = new Process();
+                    proc.StartInfo.FileName = current_directory + "\\bin" + server_new_engine + "\\dedicated\\XR_3DA.exe";
+                    proc.StartInfo.WorkingDirectory = current_directory + "\\bin" + server_new_engine + "\\";
+                    proc.StartInfo.Arguments = ("-i -nosound -noprefetch " + StartKeyArgument + check + RUS_CHAT2 + NO_KEY2 + NO_SPEECH2 + DEBUG_MODE2 + status + " -start server(" + SrvMaps2.Text + "/" + SrvGameType2.Text + KeySV2 + "/hname=" + SrvName2.Text + "/maxplayers=" + svPlayers.Text + "/public=" + ServerOnline + "/battleye=1/maxping=" + svPing.Text + "/spectr=20/spectrmds=31/vote=1/dmgblock=0/fraglimit=" + svFraglim.Text + "/timelimit=" + svTimeLim.Text + "/ffire=" + svFriendlyFire.Text + "/fn=" + svIco.Text + "/fi=" + svIco.Text + "/ans=0/warmup=" + svWurmUp.Text + "/etimef=0.0/estime=" + svWeatherTime.Text + "/portgs=" + PortGS2.Text + "/portsv=" + PortSV2.Text + "portcl = " + PortCL2.Text + "/anum=" + Artefacts.Text + "/astime=" + svTimeArtefact.Text + ") client(localhost/name=server)");
+                    proc.Start();
+                    PID_SRV2 = proc.Id;
+                    btnStartStop2.Text = "Стоп"; info_sv_time2.Text = "Loading...";
+                    if (SRV_PROTECT2.CheckState == CheckState.Checked) ProcessStartAsm();
+                    FunctionServer2UsingCore();
+                    FuncPriorityClassChangeServer2();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Ошибка загрузки исполняемых файлов сервера [2].\nКод ошибки:\n" + ex.Message, "S.E.R.V.E.R - Shadow Of Chernobyl", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+            else if (ServerNum == 3)
+            {
+                srv3_running_time = 0; SrvName3.Text.Replace("_", " ").Replace("%", " ");
+                if (SrvPsw3.Text.Length > 0) KeySV3 = "/psw=" + SrvPsw3.Text; else KeySV3 = "";
+                try
+                {
+                    Process proc = new Process();
+                    proc.StartInfo.FileName = current_directory + @"\bin" + server_new_engine + "\\dedicated\\XR_3DA.exe";
+                    proc.StartInfo.WorkingDirectory = current_directory + @"\bin" + server_new_engine + "\\";
+                    proc.StartInfo.Arguments = ("-i -nosound -noprefetch " + StartKeyArgument + check + RUS_CHAT3 + NO_KEY3 + NO_SPEECH3 + DEBUG_MODE3 + status + " -start server(" + SrvMaps3.Text + "/" + SrvGameType3.Text + KeySV3 + "/hname=" + SrvName3.Text + "/maxplayers=" + svPlayers.Text + "/public=" + ServerOnline + "/battleye=1/maxping=" + svPing.Text + "/spectr=20/spectrmds=31/vote=1/dmgblock=0/fraglimit=" + svFraglim.Text + "/timelimit=" + svTimeLim.Text + "/ffire=" + svFriendlyFire.Text + "/fn=" + svIco.Text + "/fi=" + svIco.Text + "/ans=0/warmup=" + svWurmUp.Text + "/etimef=0.0/estime=" + svWeatherTime.Text + "/portgs=" + PortGS3.Text + "/portsv=" + PortSV3.Text + "portcl=" + PortCL3.Text + "/anum=" + Artefacts.Text + "/astime=" + svTimeArtefact.Text + ") client(localhost/name=server)");
+                    proc.Start();
+                    PID_SRV3 = proc.Id;
+                    btnStartStop3.Text = "Стоп"; info_sv_time3.Text = "Loading...";
+                    if (SRV_PROTECT3.CheckState == CheckState.Checked) ProcessStartAsm();
+                    FunctionServer3UsingCore();
+                    FuncPriorityClassChangeServer3();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Ошибка загрузки исполняемых файлов сервера [3].\nКод ошибки:\n" + ex.Message, "S.E.R.V.E.R - Shadow Of Chernobyl", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+            else if (ServerNum == 4)
+            {
+                srv4_running_time = 0; SrvName4.Text.Replace("_", " ").Replace("%", " ");
+                if (SrvPsw4.Text.Length > 0) KeySV4 = "/psw=" + SrvPsw4.Text; else KeySV4 = "";
+                btnStartStop4.Text = "Стоп"; btnStartStop4.Enabled = false; info_sv_time4.Text = "Loading..."; 
+                try
+                {
+                    ProcessStartInfo CONTROLLER = new ProcessStartInfo(current_directory + @"\bin\stalker_csoc.exe", @"bin\dedicated\xr_3da.exe -i -nosound -noprefetch " + StartKeyArgument + " -$sv_status -start server(" + SrvMaps4.Text + "/" + SrvGameType4.Text + KeySV4 + "/hname=" + SrvName4.Text + "/maxplayers=" + svPlayers.Text + "/public=" + ServerOnline + "/battleye=1/maxping=" + svPing.Text + "/spectr=20/spectrmds=31/vote=1/dmgblock=0/fraglimit=" + svFraglim.Text + "/timelimit=" + svTimeLim.Text + "/ffire=" + svFriendlyFire.Text + "/fn=" + svIco.Text + "/fi=" + svIco.Text + "/ans=0/warmup=" + svWurmUp.Text + "/etimef=0.0/estime=" + svWeatherTime.Text + "/portgs=" + PortGS4.Text + "/portsv=" + PortSV4.Text + "portcl=" + PortCL4.Text + "/anum=" + Artefacts.Text + "/astime=" + svTimeArtefact.Text + ") client(" + NAT_IP_ATTACH + "/name=server)");
+                    CONTROLLER.WorkingDirectory = Path.GetDirectoryName(CONTROLLER.FileName);
+                    Process load = Process.Start(CONTROLLER);
+                    // Выполним поиск дочернего процесса
+                    new Thread(() =>
+                    {
+                        Thread.Sleep(3000);
+                        try
+                        {
+                            var search = new ManagementObjectSearcher("root\\CIMV2", "SELECT ProcessId FROM Win32_Process WHERE ParentProcessId = " + load.Id);
+                            foreach (var PIDResult in search.Get())
+                            {
+                                PID_SRV4 = Convert.ToInt32((uint)PIDResult["ProcessID"]);
+                                ServerEvents.Items.Add((DateTime.Now.ToString("[dd.MM.yyyy - HH:mm:ss]")) + "SERVER[4] CHILDREN PID => " + PID_SRV4).BackColor = Color.Coral;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            btnStartStop4.Enabled = true;
+                            btnStartStop4.PerformClick();
+                            ServerEvents.Items.Add((DateTime.Now.ToString("[dd.MM.yyyy - HH:mm:ss]")) + "ERROR -> SERVER [4] STOPPED : " + PID_SRV4 + " " + ex.Message).BackColor = Color.Coral;
+                        }
+                        finally { btnStartStop4.Enabled = true; }
+                    }).Start();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Ошибка загрузки исполняемых файлов сервера.\nКод ошибки:\n" + ex.Message, "S.E.R.V.E.R - Shadow Of Chernobyl", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }       
+            }
+            else if (ServerNum == 5)
+            {
+                srv5_running_time = 0; SrvName5.Text.Replace("_", " ").Replace("%", " ");
+                if (SrvPsw5.Text.Length > 0) KeySV5 = "/psw=" + SrvPsw5.Text; else KeySV5 = "";
+                btnStartStop5.Text = "Стоп"; btnStartStop5.Enabled = false; info_sv_time5.Text = "Loading...";
+                try
+                {
+                    ProcessStartInfo CONTROLLER = new ProcessStartInfo(current_directory + @"\bin\stalker_csoc.exe", @"bin\dedicated\xr_3da.exe -i -nosound -noprefetch " + StartKeyArgument + " -$sv_status -start server(" + SrvMaps5.Text + "/" + SrvGameType5.Text + KeySV5 + "/hname=" + SrvName5.Text + "/maxplayers=" + svPlayers.Text + "/public=" + ServerOnline + "/battleye=1/maxping=" + svPing.Text + "/spectr=20/spectrmds=31/vote=1/dmgblock=0/fraglimit=" + svFraglim.Text + "/timelimit=" + svTimeLim.Text + "/ffire=" + svFriendlyFire.Text + "/fn=" + svIco.Text + "/fi=" + svIco.Text + "/ans=0/warmup=" + svWurmUp.Text + "/etimef=0.0/estime=" + svWeatherTime.Text + "/portgs=" + PortGS5.Text + "/portsv=" + PortSV5.Text + "portcl=" + PortCL5.Text + "/anum=" + Artefacts.Text + "/astime=" + svTimeArtefact.Text + ") client(" + NAT_IP_ATTACH + "/name=server)");
+                    CONTROLLER.WorkingDirectory = Path.GetDirectoryName(CONTROLLER.FileName);
+                    Process load = Process.Start(CONTROLLER);
+                    // Выполним поиск дочернего процесса
+                    new Thread(() =>
+                    {
+                        Thread.Sleep(3000);
+                        try
+                        {
+                            var search = new ManagementObjectSearcher("root\\CIMV2", "SELECT ProcessId FROM Win32_Process WHERE ParentProcessId = " + load.Id);
+                            foreach (var PIDResult in search.Get())
+                            {
+                                PID_SRV5 = Convert.ToInt32((uint)PIDResult["ProcessID"]);
+                                ServerEvents.Items.Add((DateTime.Now.ToString("[dd.MM.yyyy - HH:mm:ss]")) + "SERVER[5] CHILDREN PID => " + PID_SRV5).BackColor = Color.Coral;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            btnStartStop5.Enabled = true;
+                            btnStartStop5.PerformClick();
+                            ServerEvents.Items.Add((DateTime.Now.ToString("[dd.MM.yyyy - HH:mm:ss]")) + "ERROR -> SERVER [5] STOPPED : " + PID_SRV5 + " " + ex.Message).BackColor = Color.Coral;
+                        }
+                        finally { btnStartStop5.Enabled = true; }
+                    }).Start();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Ошибка загрузки исполняемых файлов сервера.\nКод ошибки:\n" + ex.Message, "S.E.R.V.E.R - Shadow Of Chernobyl", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+        }
+        /*
         // ==================================START SERVER 1==================================
-        int PID_SRV1;
-        int PID_SRV2;
-        int PID_SRV3;
-        int srv1_running_time;          
-        int srv2_running_time;
-        int srv3_running_time;
-        int srv4_running_time;
-        int srv5_running_time;
-        int srv1_reconnection_counter;
-        int srv2_reconnection_counter;
-        int srv3_reconnection_counter;
-        int srv4_reconnection_counter;
-        int srv5_reconnection_counter;
-        string status = " -$sv_status";  
-        string KeySV1;                     
-        string ServerOnline = "1";       
-        string NAT_IP_ATTACH = "localhost";
-
-
-        // Патч от Maks0 
-        // ==================================
-        string RUS_CHAT1;     // -rus_test      - Русский чат 
-        string RUS_CHAT2;
-        string RUS_CHAT3;
-        string NO_SPEECH1;    // -nospeech      - Отключает рацию
-        string NO_SPEECH2;
-        string NO_SPEECH3;
-        string NO_KEY1;       // -check_cd_key  - Включить проверку на наличие ключа
-        string NO_KEY2;
-        string NO_KEY3;
-        string DEBUG_MODE1;   // -debug         - Дебаг сообщения
-        string DEBUG_MODE2;   // -noalwaysflush - Отключает подробную запись логи и stack trace
-        string DEBUG_MODE3;
-        string check;         // -noalwaysflush - Записывает данные в файл в реальном времени
-        string server_new_engine;          // Переключение на новую версию движка
-        // ==================================
-        string StartKeyArgument;
-
         private void LoadingServer1()
         {
             srv1_running_time = 0;
@@ -361,29 +522,15 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                     {
                         PID_SRV1 = process.Id;
                     }
-                    /*
-                    Process proc = new Process();
-                    proc.StartInfo.FileName = current_directory + @"\bin" + server_new_engine + "\\dedicated\\XR_3DA.exe";
-                    proc.StartInfo.WorkingDirectory = current_directory + @"\bin" + server_new_engine + "\\";
-                    proc.StartInfo.Arguments = "-i -nosound -noprefetch " + StartKeyArgument + check + RUS_CHAT1 + NO_KEY1 + NO_SPEECH1 + DEBUG_MODE1 + status + " -start server(" + SrvMaps1.Text + "/" + SrvGameType1.Text + KeySV1 + "/hname=" + SrvName1.Text + "/maxplayers=" + svPlayers.Text + "/public=" + ServerOnline + "/battleye=1/maxping=" + svPing.Text + "/spectr=20/spectrmds=31/vote=1/dmgblock=0/fraglimit=" + svFraglim.Text + "/timelimit=" + svTimeLim.Text + "/ffire=" + svFriendlyFire.Text + "/fn=" + svIco.Text + "/fi=" + svIco.Text + "/ans=0/warmup=" + svWurmUp.Text + "/etimef=0.0/estime=" + svWeatherTime.Text + "/portgs=" + PortGS1.Text + "/portsv=" + PortSV1.Text + "portcl = " + PortCL1.Text + "/anum=" + Artefacts.Text + "/astime=" + svTimeArtefact.Text + ") client(localhost/name=server";
-                    proc.Start();
-                    PID_SRV1 = proc.Id;*/
                 }
-                else // SURVIVAL MODE
-                {
-                    using (Process process = Process.Start(@"bin" + server_new_engine + "\\xr_3da.exe", "-i -nosound -nolog" + StartKeyArgument + RUS_CHAT1 + NO_KEY1 + NO_SPEECH1 + DEBUG_MODE1 + " -start server(" + SrvMaps1.Text + "/" + SrvGameType1.Text + KeySV1 + "/hname=" + SrvName1.Text + "[survival]/maxplayers=" + svPlayers.Text + "/public=" + ServerOnline + "/battleye=1/maxping=" + svPing.Text + "/spectr=20/spectrmds=31/vote=1/dmgblock=0/fraglimit=50/timelimit=60/frcrspwn=1/ans=1/warmup=60/etimef=0.0/estime=21:00/portgs=" + PortGS1.Text + "/portsv=" + PortSV1.Text + "portcl=" + PortCL1.Text + ") -$sv_no_auth_check 1 -client(" + NAT_IP_ATTACH + "/name=server)"))
-                    {
-                        PID_SRV1 = process.Id;
-                        ProcessStartAsm();
-                    }
-                }
-                /*
+
+                
                 Process proc = new Process();
                 proc.StartInfo.FileName = current_directory + @"\bin" + server_new_engine + "\\dedicated\\XR_3DA.exe";
                 proc.StartInfo.WorkingDirectory = current_directory + @"\bin" + server_new_engine + "\\";
                 proc.StartInfo.Arguments = "-i -nosound -noprefetch " + StartKeyArgument + check + RUS_CHAT1 + NO_KEY1 + NO_SPEECH1 + DEBUG_MODE1 + status + " -start server(" + SrvMaps1.Text + "/" + SrvGameType1.Text + KeySV1 + "/hname=" + SrvName1.Text + srv1_crash_informer + "/maxplayers=" + svPlayers.Text + "/public=" + ServerOnline + "/battleye=1/maxping=" + svPing.Text + "/spectr=20/spectrmds=31/vote=1/dmgblock=0/fraglimit=" + svFraglim.Text + "/timelimit=" + svTimeLim.Text + "/ffire=" + svFriendlyFire.Text + "/fn=" + svIco.Text + "/fi=" + svIco.Text + "/ans=0/warmup=" + svWurmUp.Text + "/etimef=0.0/estime=" + svWeatherTime.Text + "/portgs=" + PortGS1.Text + "/portsv=" + PortSV1.Text + "portcl = " + PortCL1.Text + "/anum=" + Artefacts.Text + "/astime=" + svTimeArtefact.Text + ") client(localhost/name=server";
                 proc.Start();
-                PID_SRV1 = proc.Id;*/
+                PID_SRV1 = proc.Id;
 
                 if (SRV_PROTECT1.CheckState == CheckState.Checked)
                     ProcessStartAsm();
@@ -399,7 +546,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
         }
 
         // ==================================START SERVER 2==================================
-        string KeySV2;
+
         private void LoadingServer2()
         {
             srv2_running_time = 0;
@@ -420,13 +567,13 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
             {
                 btnStartStop2.Text = "Стоп";
                 info_sv_time2.Text = "Loading...";
-                /*
+                
                 Process proc = new Process();
                 proc.StartInfo.FileName = current_directory + @"\bin" + server_new_engine + "\\dedicated\\XR_3DA.exe";
                 proc.StartInfo.WorkingDirectory = current_directory + @"\bin" + server_new_engine + "\\";
                 proc.StartInfo.Arguments = ("-i -nosound -noprefetch " + StartKeyArgument + check + RUS_CHAT2 + NO_KEY2 + NO_SPEECH2 + DEBUG_MODE2 + status + " -start server(" + SrvMaps2.Text + "/" + SrvGameType2.Text + KeySV2 + "/hname=" + SrvName2.Text + srv2_crash_informer + "/maxplayers=" + svPlayers.Text + "/public=" + ServerOnline + "/battleye=1/maxping=" + svPing.Text + "/spectr=20/spectrmds=31/vote=1/dmgblock=0/fraglimit=" + svFraglim.Text + "/timelimit=" + svTimeLim.Text + "/ffire=" + svFriendlyFire.Text + "/fn=" + svIco.Text + "/fi=" + svIco.Text + "/ans=0/warmup=" + svWurmUp.Text + "/etimef=0.0/estime=" + svWeatherTime.Text + "/portgs=" + PortGS2.Text + "/portsv=" + PortSV2.Text + "portcl = " + PortCL2.Text + "/anum=" + Artefacts.Text + "/astime=" + svTimeArtefact.Text + ") client(localhost/name=server");             
                 proc.Start();
-                PID_SRV2 = proc.Id;*/
+                PID_SRV2 = proc.Id;
 
                 using (Process process = Process.Start(@"bin" + server_new_engine + "\\xr_3da.exe", "-i -nosound -noprefetch " + StartKeyArgument + check + RUS_CHAT2 + NO_KEY2 + NO_SPEECH2 + DEBUG_MODE2 + status + " -start server(" + SrvMaps2.Text + "/" + SrvGameType2.Text + KeySV2 + "/hname=" + SrvName2.Text + "/maxplayers=" + svPlayers.Text + "/public=" + ServerOnline + "/battleye=1/maxping=" + svPing.Text + "/spectr=20/spectrmds=31/vote=1/dmgblock=0/fraglimit=" + svFraglim.Text + "/timelimit=" + svTimeLim.Text + "/ffire=" + svFriendlyFire.Text + "/fn=" + svIco.Text + "/fi=" + svIco.Text + "/ans=0/warmup=" + svWurmUp.Text + "/etimef=0.0/estime=" + svWeatherTime.Text + "/portgs=" + PortGS2.Text + "/portsv=" + PortSV2.Text + "portcl=" + PortCL2.Text + "/anum=" + Artefacts.Text + "/astime=" + svTimeArtefact.Text + ") client(" + NAT_IP_ATTACH + "/name=server)"))
                 {
@@ -448,7 +595,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
         }
 
         // ==================================START SERVER 3==================================
-        string KeySV3;
+
         private void LoadingServer3()
         {
             srv3_running_time = 0;
@@ -469,13 +616,13 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
             {
                 btnStartStop3.Text = "Стоп";
                 info_sv_time3.Text = "Loading...";
-                /*
+                
                 Process proc = new Process();
                 proc.StartInfo.FileName = current_directory + @"\bin" + server_new_engine + "\\dedicated\\XR_3DA.exe";
                 proc.StartInfo.WorkingDirectory = current_directory + @"\bin" + server_new_engine + "\\";
                 proc.StartInfo.Arguments = ("-i -nosound -noprefetch " + StartKeyArgument + check + RUS_CHAT3 + NO_KEY3 + NO_SPEECH3 + DEBUG_MODE3 + status + " -start server(" + SrvMaps3.Text + "/" + SrvGameType3.Text + KeySV3 + "/hname=" + SrvName3.Text + srv3_crash_informer + "/maxplayers=" + svPlayers.Text + "/public=" + ServerOnline + "/battleye=1/maxping=" + svPing.Text + "/spectr=20/spectrmds=31/vote=1/dmgblock=0/fraglimit=" + svFraglim.Text + "/timelimit=" + svTimeLim.Text + "/ffire=" + svFriendlyFire.Text + "/fn=" + svIco.Text + "/fi=" + svIco.Text + "/ans=0/warmup=" + svWurmUp.Text + "/etimef=0.0/estime=" + svWeatherTime.Text + "/portgs=" + PortGS3.Text + "/portsv=" + PortSV3.Text + "portcl=" + PortCL3.Text + "/anum=" + Artefacts.Text + "/astime=" + svTimeArtefact.Text + ") client(localhost/name=server");
                 proc.Start();
-                PID_SRV3 = proc.Id;*/
+                PID_SRV3 = proc.Id;
 
                 using (Process process = Process.Start(@"bin" + server_new_engine + "\\xr_3da.exe", "-i -nosound -noprefetch " + StartKeyArgument + check + RUS_CHAT3 + NO_KEY3 + NO_SPEECH3 + DEBUG_MODE3 + status + " -start server(" + SrvMaps3.Text + "/" + SrvGameType3.Text + KeySV3 + "/hname=" + SrvName3.Text + "/maxplayers=" + svPlayers.Text + "/public=" + ServerOnline + "/battleye=1/maxping=" + svPing.Text + "/spectr=20/spectrmds=31/vote=1/dmgblock=0/fraglimit=" + svFraglim.Text + "/timelimit=" + svTimeLim.Text + "/ffire=" + svFriendlyFire.Text + "/fn=" + svIco.Text + "/fi=" + svIco.Text + "/ans=0/warmup=" + svWurmUp.Text + "/etimef=0.0/estime=" + svWeatherTime.Text + "/portgs=" + PortGS3.Text + "/portsv=" + PortSV3.Text + "portcl=" + PortCL3.Text + "/anum=" + Artefacts.Text + "/astime=" + svTimeArtefact.Text + ") client(" + NAT_IP_ATTACH + "/name=server)"))
                 {
@@ -495,8 +642,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
         }
 
         // ==================================START SERVER 4================================== https://docs.microsoft.com/en-us/windows/desktop/cimwin32prov/win32-process
-        string KeySV4;
-        int PID4, GetPIDSV4;               // Записываем PID процесса, если он действительно есть
+
         private void LoadingServer4()
         {
             srv4_running_time = 0;
@@ -519,12 +665,12 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                 info_sv_time4.Text = "Loading...";
 
                 // Call Of Pripyat
-                /*
+                
                 Process load = new Process();
                 load.StartInfo.FileName = "soLauncher.exe";
                 //proc.StartInfo.WorkingDirectory = current_directory + @"\soProject\";
                 load.StartInfo.Arguments = ("-dedicated -perfhud_hack -i -nosound -silent_error_mode " + StartKeyArgument +" -start server("+SrvMaps4.Text+"/tdm"+ KeySV4+"/ver=1.0/hname=" +SrvName4.Text+"/portsv="+PortSV4.Text+"/portgs="+PortGS4.Text+"/maxplayers="+svPlayers.Text+ "/public=" + ServerOnline + "estime=9:00/etimef=1.0/ans=1/anslen=3/pdahunt=0/warmup=0/timelimit=0/dmgblock=0/dmbi=0/fraglimit=0/spectrmds=31/vote=26/frcrspwn=0/abalance=0/aswap=0/fi=0/fn=0/ffire=1.0) client(" + NAT_IP_ATTACH+"/portcl="+PortCL4.Text);
-                load.Start();*/
+                load.Start();
                 
                 ProcessStartInfo CONTROLLER = new ProcessStartInfo(current_directory + @"\bin\stalker_csoc.exe", @"bin\dedicated\xr_3da.exe -i -nosound -noprefetch " + StartKeyArgument + " -$sv_status -start server(" + SrvMaps4.Text + "/" + SrvGameType4.Text + KeySV4 + "/hname=" + SrvName4.Text + "/maxplayers=" + svPlayers.Text + "/public=" + ServerOnline + "/battleye=1/maxping=" + svPing.Text + "/spectr=20/spectrmds=31/vote=1/dmgblock=0/fraglimit=" + svFraglim.Text + "/timelimit=" + svTimeLim.Text + "/ffire=" + svFriendlyFire.Text + "/fn=" + svIco.Text + "/fi=" + svIco.Text + "/ans=0/warmup=" + svWurmUp.Text + "/etimef=0.0/estime=" + svWeatherTime.Text + "/portgs=" + PortGS4.Text + "/portsv=" + PortSV4.Text + "portcl=" + PortCL4.Text + "/anum=" + Artefacts.Text + "/astime=" + svTimeArtefact.Text + ") client(" + NAT_IP_ATTACH + "/name=server)");
                 CONTROLLER.WorkingDirectory = Path.GetDirectoryName(CONTROLLER.FileName);
@@ -533,7 +679,6 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                 new Thread(() =>
                 {
                     Thread.Sleep(3500);
-
                     var search = new ManagementObjectSearcher("root\\CIMV2", "SELECT ProcessId FROM Win32_Process WHERE ParentProcessId = " + load.Id);
                     foreach (var PIDResult in search.Get())
                     {
@@ -546,7 +691,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                         try                                     // Проверяем точно ли существует наш процесс, и если он существует, то продолжаем работу
                         {
                             Process.GetProcessById(GetPIDSV4);
-                            PID4 = GetPIDSV4;                   // если процесс действительно существует, то берем его под контроль. 
+                            PID_SRV4 = GetPIDSV4;                   // если процесс действительно существует, то берем его под контроль. 
                             FunctionServer4UsingCore();
                             FuncPriorityClassChangeServer4();
                         }
@@ -578,6 +723,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                         }
                     }
                 }).Start();
+
             }
             catch (Exception ex)
             {
@@ -586,8 +732,6 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
             }
         }
         // ==================================START SERVER 5==================================
-        string KeySV5;
-        int PID5, GetPIDSV5;
         private void LoadingServer5()
         {
             srv5_running_time = 0;
@@ -611,11 +755,11 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                 btnStartStop5.Text = "Стоп";
                 info_sv_time5.Text = "Loading...";
                 // Call Of Pripyat
-                /*
+                
                 Process load = new Process();
                  load.StartInfo.FileName = "soLauncher.exe";
                  load.StartInfo.Arguments = ("-dedicated -perfhud_hack -i -nosound -silent_error_mode "+StartKeyArgument + " -start server(" + SrvMaps5.Text + "/tdm"+ KeySV5+"/ver=1.0/hname=" + SrvName5.Text + "/portsv=" + PortSV5.Text + "/portgs=" + PortGS5.Text + "/maxplayers=" + svPlayers.Text + "/estime=9:00/etimef=1.0/ans=1/anslen=3/pdahunt=0/warmup=0/timelimit=0/dmgblock=0/dmbi=0/fraglimit=0/spectrmds=31/vote=26/frcrspwn=0/abalance=0/aswap=0/fi=0/fn=0/ffire=1.0) client("+NAT_IP_ATTACH+"/portcl=" + PortCL5.Text + "/name=server)");
-                 load.Start();*/
+                 load.Start();
                
                ProcessStartInfo CONTROLLER = new ProcessStartInfo(current_directory + @"\bin\stalker_csoc.exe", @"bin\dedicated\xr_3da.exe -i -nosound -noprefetch " + StartKeyArgument + " -$sv_status -start server(" + SrvMaps5.Text + "/" + SrvGameType5.Text + KeySV5 + "/hname=" + SrvName5.Text + "/maxplayers=" + svPlayers.Text + "/public=" + ServerOnline + "/battleye=1/maxping=" + svPing.Text + "/spectr=20/spectrmds=31/vote=1/dmgblock=0/fraglimit=" + svFraglim.Text + "/timelimit=" + svTimeLim.Text + "/ffire=" + svFriendlyFire.Text + "/fn=" + svIco.Text + "/fi=" + svIco.Text + "/ans=0/warmup=" + svWurmUp.Text + "/etimef=0.0/estime=" + svWeatherTime.Text + "/portgs=" + PortGS5.Text + "/portsv=" + PortSV5.Text + "portcl=" + PortCL5.Text + "/anum=" + Artefacts.Text + "/astime=" + svTimeArtefact.Text + ") client(" + NAT_IP_ATTACH + "/name=server)");
                CONTROLLER.WorkingDirectory = Path.GetDirectoryName(CONTROLLER.FileName);
@@ -635,7 +779,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                         try
                         {
                             Process.GetProcessById(GetPIDSV5);
-                            PID5 = GetPIDSV5;
+                           PID_SRV5 = GetPIDSV5;
                             FunctionServer4UsingCore();
                             FuncPriorityClassChangeServer4();
                             AsmLoading.Start();
@@ -674,7 +818,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                 btnStartStop5.Text = "Старт";
                 MessageBox.Show("Ошибка загрузки исполняемых файлов сервера.\nКод ошибки:\n" + ex.Message, "S.E.R.V.E.R - Shadow Of Chernobyl", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-        }
+        }*/
 
         /*
         private void ServerProcessController(Process pID, int ServerByID)
@@ -726,7 +870,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                         ChangeServer1();
                         ServerEvents.Items.Add((DateTime.Now.ToString("[dd.MM.yyyy - HH:mm:ss] ")) + "Server [1] Restarting server...").ForeColor = Color.LightGreen;
                         CheckBannedList();
-                        LoadingServer1();
+                        ServersLoader(1);
                     }
                 }
                 else
@@ -735,7 +879,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                     ChangeServer1();
                     ServerEvents.Items.Add((DateTime.Now.ToString("[dd.MM.yyyy - HH:mm:ss] ")) + "Server [1] Restarting server...").ForeColor = Color.LightGreen;
                     CheckBannedList();
-                    LoadingServer1();
+                    ServersLoader(1);
                 }
             }
         }
@@ -774,7 +918,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                         ChangeServer2();
                         ServerEvents.Items.Add((DateTime.Now.ToString("[dd.MM.yyyy - HH:mm:ss] ")) + "Server [2] Restarting server...").ForeColor = Color.LightGreen;
                         CheckBannedList();
-                        LoadingServer2();
+                        ServersLoader(2);
                     }
                 }
                 else
@@ -783,7 +927,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                     ChangeServer2();
                     ServerEvents.Items.Add((DateTime.Now.ToString("[dd.MM.yyyy - HH:mm:ss] ")) + "Server [2] Restarting server...").ForeColor = Color.LightGreen;
                     CheckBannedList();
-                    LoadingServer2();
+                    ServersLoader(2);
                 }
             }
         }
@@ -822,7 +966,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                         ChangeServer3();
                         ServerEvents.Items.Add((DateTime.Now.ToString("[dd.MM.yyyy - HH:mm:ss]")) + "Server [3] Restarting server...").ForeColor = Color.LightGreen;
                         CheckBannedList();
-                        LoadingServer3();
+                        ServersLoader(3);
                     }
                 }
                 else
@@ -831,7 +975,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                     ChangeServer3();
                     ServerEvents.Items.Add((DateTime.Now.ToString("[dd.MM.yyyy - HH:mm:ss] ")) + "Server [3] Restarting server...").ForeColor = Color.LightGreen;
                     CheckBannedList();
-                    LoadingServer3();
+                    ServersLoader(3);
                 }
             }
         }
@@ -842,10 +986,10 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
             {
                 //ServerProcessController(Process.GetProcessById(PID4), 4);
                 
-                Process ProcessSrvID1 = Process.GetProcessById(PID4);
+                Process ProcessSrvID1 = Process.GetProcessById(PID_SRV4);
                 Process Proc = new Process();
                 Proc.StartInfo.FileName = "taskkill.exe";
-                Proc.StartInfo.Arguments = "/F /PID " + PID4 + " /FI \"status eq not responding";
+                Proc.StartInfo.Arguments = "/F /PID " + PID_SRV4 + " /FI \"status eq not responding";
                 Proc.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                 Proc.Start();
                 Proc.WaitForExit();
@@ -870,7 +1014,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                         ChangeServer4();
                         ServerEvents.Items.Add((DateTime.Now.ToString("[dd.MM.yyyy - HH:mm:ss] ")) + "Server [4] Restarting server...").ForeColor = Color.LightGreen;
                         CheckBannedList();
-                        LoadingServer4();
+                        ServersLoader(4);
                     }
                 }
                 else
@@ -879,7 +1023,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                     ChangeServer4();
                     ServerEvents.Items.Add((DateTime.Now.ToString("[dd.MM.yyyy - HH:mm:ss] ")) + "Server [4] Restarting server...").ForeColor = Color.LightGreen;
                     CheckBannedList();
-                    LoadingServer4();
+                    ServersLoader(4);
                 }
             }
         }
@@ -890,10 +1034,10 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
             {
                 //ServerProcessController(Process.GetProcessById(PID5), 5);
                 
-                Process.GetProcessById(PID5);
+                Process.GetProcessById(PID_SRV5);
                 Process Proc = new Process();
                 Proc.StartInfo.FileName = "taskkill.exe";
-                Proc.StartInfo.Arguments = "/F /PID " + PID5 + " /FI \"status eq not responding";
+                Proc.StartInfo.Arguments = "/F /PID " + PID_SRV5 + " /FI \"status eq not responding";
                 Proc.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                 Proc.Start();
                 Proc.WaitForExit();
@@ -918,7 +1062,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                         ChangeServer5();
                         ServerEvents.Items.Add((DateTime.Now.ToString("[dd.MM.yyyy - HH:mm:ss] ")) + "Server [5] Restarting server...").ForeColor = Color.LightGreen;
                         CheckBannedList();
-                        LoadingServer5();
+                        ServersLoader(5);
                     }
                 }
                 else
@@ -927,7 +1071,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                     ChangeServer5();
                     ServerEvents.Items.Add((DateTime.Now.ToString("[dd.MM.yyyy - HH:mm:ss] ")) + "Server [5] Restarting server...").ForeColor = Color.LightGreen;
                     CheckBannedList();
-                    LoadingServer5();
+                    ServersLoader(5);
                 }
             }
         }
@@ -1023,7 +1167,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
         {
             try
             {
-                Process.GetProcessById(PID4);
+                Process.GetProcessById(PID_SRV4);
                 btnStartStop4.Text = "Стоп";
                 srv4_running_time += 30;
                 info_sv_time4.Text = "Running: [" + TimeSpan.FromSeconds(srv4_running_time).ToString(@"dd\:hh\:mm\:ss") + "]";
@@ -1042,7 +1186,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
         {
             try
             {
-                Process.GetProcessById(PID5);
+                Process.GetProcessById(PID_SRV5);
                 btnStartStop5.Text = "Стоп";
                 srv5_running_time += 30;
                 info_sv_time5.Text = "Running: [" + TimeSpan.FromSeconds(srv5_running_time).ToString(@"dd\:hh\:mm\:ss") + "]";
@@ -1654,41 +1798,41 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                 if (btnStartStop1.Text == "Старт" && btnStartStop2.Text == "Старт" && btnStartStop3.Text == "Старт" && btnStartStop4.Text == "Старт" && btnStartStop5.Text == "Старт")
                 {
                     int skip_apply_mod = 0;
+                    SrvMaps1.Items.Clear(); SrvMaps2.Items.Clear(); SrvMaps3.Items.Clear(); SrvMaps4.Items.Clear(); SrvMaps5.Items.Clear();
                     if (checkLevel4.CheckState == CheckState.Checked)
                     {
-                        DialogResult ok = MessageBox.Show("При включений данного режима игры, будет возможность запустить максимум 1 сервер с данной сборки.\nПродолжить?", "S.E.R.V.E.R - Shadow Of Chernobyl", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
+                        DialogResult ok = MessageBox.Show("Добавлять русское название карты в название сервера?\nПродолжить?", "S.E.R.V.E.R - Shadow Of Chernobyl", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
                         {
-                            // Перед загрузкой проверить размер архива
-                            // Если dbe имеет другой размер то переименовываем его в xr2
-                            // а оригинальный файл заменяем на dbe
-                            long SizeOrigin = new FileInfo("gamedata.dbe").Length / 1024; // standart dbe 7437
-                            if (SizeOrigin == 7437)
-                            {
-                                if (File.Exists("gamedata.dbe"))
-                                    skip_apply_mod++;
-                                if (File.Exists("gamedata.xr2"))
-                                    skip_apply_mod++;
-                            }
-                            if (skip_apply_mod == 2)
-                            {
-                                File.Move("gamedata.dbe", "gamedata.xr1");  // original
-                                File.Move("gamedata.xr2", "gamedata.dbe");  // mod
-                            }
-                            else
-                            {
-                                checkLevel4.Checked = false;
-                                //MessageBox.Show("Что-то пошло не так. Не найдены исполняемые файлы для данного режима.\nВозможно Вы используете устаревшую сборку.", "S.E.R.V.E.R - Shadow Of Chernobyl", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                                return;
-                            }
-
-                            checkLevel4.BackColor = Color.Gold;
-                            SrvGameType1.SelectedIndex = 2;
-                            SrvGameType1.Enabled = false;
-                            btnStartStop2.Enabled = false;
-                            btnStartStop3.Enabled = false;
-                            btnStartStop4.Enabled = false;
-                            btnStartStop5.Enabled = false;
+                            MAPS_NAME_FOR_SERVER_NAME = true;
                         }
+                        // Перед загрузкой проверить размер архива
+                        // Если dbe имеет другой размер то переименовываем его в xr2
+                        // а оригинальный файл заменяем на dbe
+                        long SizeOrigin = new FileInfo("gamedata.dbe").Length / 1024; // standart dbe 7437
+                        if (SizeOrigin == 7437)
+                        {
+                            if (File.Exists("gamedata.dbe"))
+                                skip_apply_mod++;
+                            if (File.Exists("gamedata.xr2"))
+                                skip_apply_mod++;
+                        }
+                        if (skip_apply_mod == 2)
+                        {
+                            File.Move("gamedata.dbe", "gamedata.xr1");  // original
+                            File.Move("gamedata.xr2", "gamedata.dbe");  // mod
+                        }
+                        else
+                        {
+                            checkLevel4.BackColor = Color.LightPink;
+                            checkLevel4.Checked = false;
+                            //MessageBox.Show("Что-то пошло не так. Не найдены исполняемые файлы для данного режима.\nВозможно Вы используете устаревшую сборку.", "S.E.R.V.E.R - Shadow Of Chernobyl", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            return;
+                        }
+                        foreach (string sv in tsmp_listmaps)
+                        {
+                            SrvMaps1.Items.Add(sv); SrvMaps2.Items.Add(sv); SrvMaps3.Items.Add(sv); SrvMaps4.Items.Add(sv); SrvMaps5.Items.Add(sv);
+                        }
+                        checkLevel4.BackColor = Color.Gold;
                     }
                     else
                     {
@@ -1703,17 +1847,16 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                             File.Move("gamedata.dbe", "gamedata.xr2");  // mod                      
                             File.Move("gamedata.xr1", "gamedata.dbe");  // original
                         }
-
-                        SrvGameType1.Enabled = true;
-                        btnStartStop2.Enabled = true;
-                        btnStartStop3.Enabled = true;
-                        btnStartStop4.Enabled = true;
-                        btnStartStop5.Enabled = true;
+                        foreach (string sv in buffer_listmaps)
+                        {
+                            SrvMaps1.Items.Add(sv);  SrvMaps2.Items.Add(sv); SrvMaps3.Items.Add(sv); SrvMaps4.Items.Add(sv); SrvMaps5.Items.Add(sv);
+                        }
                         checkLevel4.BackColor = Color.White;
                     }
                 }
                 else
                 {
+                    MAPS_NAME_FOR_SERVER_NAME = false;
                     checkLevel4.Checked = false;
                     checkLevel4.BackColor = Color.LightCoral;
                     MessageBox.Show("Переключение режима игры будет возможно\nтолько при всех остановленных серверов.", "S.E.R.V.E.R - Shadow Of Chernobyl", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -1722,10 +1865,10 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
             catch (Exception)
             {
                 checkLevel4.Checked = false;
+                MAPS_NAME_FOR_SERVER_NAME = false;
                 checkLevel4.BackColor = Color.LightCoral;
             }
         }
-
 
         private void ServerEventsClear_Click(object sender, EventArgs e)
         {
@@ -3543,7 +3686,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                 {
                     try
                     {
-                        Process.GetProcessById(PID4).ProcessorAffinity = (IntPtr)Resultsv4;
+                        Process.GetProcessById(PID_SRV4).ProcessorAffinity = (IntPtr)Resultsv4;
                         ServerEvents.Items.Add("[SYSTEM] Using from server [4] values: " + Resultsv4).ForeColor = Color.ForestGreen;
                     }
                     catch (Exception)
@@ -3565,7 +3708,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                 {
                     try
                     {
-                        Process.GetProcessById(PID5).ProcessorAffinity = (IntPtr)Resultsv4;
+                        Process.GetProcessById(PID_SRV5).ProcessorAffinity = (IntPtr)Resultsv4;
                         ServerEvents.Items.Add("[SYSTEM] Using from server [5] values: " + Resultsv4).ForeColor = Color.ForestGreen;
                     }
                     catch (Exception)
@@ -3671,8 +3814,8 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                 {
                     try
                     {
-                        Process.GetProcessById(PID4);
-                        SetPriorityClass(Process.GetProcessById(PID4).Handle, ProcessPriorityClassResult);
+                        Process.GetProcessById(PID_SRV4);
+                        SetPriorityClass(Process.GetProcessById(PID_SRV4).Handle, ProcessPriorityClassResult);
                     }
                     catch (Exception)
                     {
@@ -3683,8 +3826,8 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                 {
                     try
                     {
-                        Process.GetProcessById(PID5);
-                        SetPriorityClass(Process.GetProcessById(PID5).Handle, ProcessPriorityClassResult);
+                        Process.GetProcessById(PID_SRV5);
+                        SetPriorityClass(Process.GetProcessById(PID_SRV5).Handle, ProcessPriorityClassResult);
                     }
                     catch (Exception)
                     {
@@ -3755,7 +3898,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                             Process Id = Process.GetProcessById(PID_SRV1);
                             Id.Kill();
                             Thread.Sleep(500);
-                            LoadingServer1(); // calling func start server
+                            ServersLoader(1);
                             ServerEvents.Items.Add((DateTime.Now.ToString("[dd.MM.yyyy - HH:mm:ss]")) + "[SYSTEM] Server: 1 Restarted").ForeColor = Color.Aqua;
 
                         }
@@ -3783,7 +3926,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                             Process Id = Process.GetProcessById(PID_SRV2);
                             Id.Kill();
                             Thread.Sleep(500);
-                            LoadingServer2();
+                            ServersLoader(2);
                             ServerEvents.Items.Add((DateTime.Now.ToString("[dd.MM.yyyy - HH:mm:ss]")) + "[SYSTEM] Server: 2 Restarted").ForeColor = Color.Aqua;
                         }
                         catch (Exception)
@@ -3810,7 +3953,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                             Process Id = Process.GetProcessById(PID_SRV3);
                             Id.Kill();
                             Thread.Sleep(500);
-                            LoadingServer3();
+                            ServersLoader(3);
                             ServerEvents.Items.Add((DateTime.Now.ToString("[dd.MM.yyyy - HH:mm:ss]")) + "[SYSTEM] Server: 3 Restarted").ForeColor = Color.Aqua;
                         }
                         catch (Exception)
@@ -3828,16 +3971,16 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
             {
                 try
                 {
-                    var ProcMemoryValue = (Process.GetProcessById(PID4).WorkingSet64);
+                    var ProcMemoryValue = (Process.GetProcessById(PID_SRV4).WorkingSet64);
                     if (ProcMemoryValue / 1024 / 1024 > Convert.ToUInt32(MaxMemoryValue.Text))
                     {
-                        ServerEvents.Items.Add((DateTime.Now.ToString("[dd.MM.yyyy - HH:mm:ss]")) + "[MEMORY] Использование памяти процессом сервера превышает заданный лимит: " + ProcMemoryValue / 1024 / 1024 + " [Server: 4] ID: " + PID4).ForeColor = Color.Aqua;
+                        ServerEvents.Items.Add((DateTime.Now.ToString("[dd.MM.yyyy - HH:mm:ss]")) + "[MEMORY] Использование памяти процессом сервера превышает заданный лимит: " + ProcMemoryValue / 1024 / 1024 + " [Server: 4] ID: " + PID_SRV4).ForeColor = Color.Aqua;
                         try
                         {
-                            Process Id = Process.GetProcessById(PID4);
+                            Process Id = Process.GetProcessById(PID_SRV4);
                             Id.Kill();
                             Thread.Sleep(500);
-                            LoadingServer4();
+                            ServersLoader(4);
                             ServerEvents.Items.Add((DateTime.Now.ToString("[dd.MM.yyyy - HH:mm:ss]")) + "[SYSTEM] Server: 4 Restarted").ForeColor = Color.Aqua;
                         }
                         catch (Exception)
@@ -3855,16 +3998,16 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
             {
                 try
                 {
-                    var ProcMemoryValue = (Process.GetProcessById(PID5).WorkingSet64);
+                    var ProcMemoryValue = (Process.GetProcessById(PID_SRV5).WorkingSet64);
                     if (ProcMemoryValue / 1024 / 1024 > Convert.ToUInt32(MaxMemoryValue.Text))
                     {
-                        ServerEvents.Items.Add((DateTime.Now.ToString("[dd.MM.yyyy - HH:mm:ss]")) + "[MEMORY] Использование памяти процессом сервера превышает заданный лимит: " + ProcMemoryValue / 1024 / 1024 + " [Server: 5] ID: " + PID5).ForeColor = Color.Aqua;
+                        ServerEvents.Items.Add((DateTime.Now.ToString("[dd.MM.yyyy - HH:mm:ss]")) + "[MEMORY] Использование памяти процессом сервера превышает заданный лимит: " + ProcMemoryValue / 1024 / 1024 + " [Server: 5] ID: " + PID_SRV5).ForeColor = Color.Aqua;
                         try
                         {
-                            Process Id = Process.GetProcessById(PID5);
+                            Process Id = Process.GetProcessById(PID_SRV5);
                             Id.Kill();
                             Thread.Sleep(500);
-                            LoadingServer5();
+                            ServersLoader(5);
                             ServerEvents.Items.Add((DateTime.Now.ToString("[dd.MM.yyyy - HH:mm:ss]")) + "[SYSTEM] Server: 5 Restarted").ForeColor = Color.Aqua;
                         }
                         catch (Exception)

@@ -1316,12 +1316,12 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                             Thread.Sleep(3000);
                         }
                     }
-                    else if (Description == 8)
+                    else if ((Description == 8) || (Description == 16))
                     {
                         desc = " [ADMIN] ";
                     }
 
-                    if (EventsBlockedSubnet.CheckState == CheckState.Checked)
+                    if ((EventsBlockedSubnet.CheckState == CheckState.Checked && Description != 8) || (Description == 16 && FirewallAddressMaskAdd.CheckState == CheckState.Checked))
                         SubnetActivate = true;
                     else
                         SubnetActivate = false;
@@ -2156,30 +2156,14 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
             OpenDirHTML();
         }
 
-        private void btnClearCheaterBuffer_Click(object sender, EventArgs e)
+        private void btnAuto_Click(object sender, EventArgs e)
         {
-            CHEATERPLAYERSLIST.Clear();
-            SrvPlayersBuffer.Clear();
-            ListCheaterEvents.Items.Clear();
-            PlayersCheaterList.Items.Clear();
-            SIGNAL_BANNED = 0;
-            ListCheaterEvents.Items.Add("[SYSTEM]: successfully buffer cleared!").BackColor = Color.Lime;
+            StartAutoCheckThread.Checked = true;
         }
 
         private void btnSaveCheatTableInFile_Click(object sender, EventArgs e)
         {
-            try
-            {
-                SaveFileDialog ExportData = new SaveFileDialog();
-                ExportData.DefaultExt = "*.log";
-                ExportData.Filter = "Текстовый файл|*.log";
-                if (ExportData.ShowDialog() == DialogResult.OK && ExportData.FileName.Length > 0)               
-                    File.WriteAllLines(ExportData.FileName, SrvPlayersBuffer);               
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "S.E.R.V.E.R - Shadow Of Chernobyl", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            OpenDirHTML();
         }
 
         private void btnUpdatePlayerState_Click(object sender, EventArgs e)
@@ -2494,12 +2478,6 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
                 SearchPanel.Visible = true;
             else
                 SearchPanel.Visible = false;
-        }
-
-        private void BaseMenu2StatsEvent_Click(object sender, EventArgs e)
-        {
-            update_stats();
-            MessageBox.Show("Всего данных в базе: " + PlayersBaseBuffer.Count + "\nДанных добавленные пользователем: " + UsersAddInBase + "\nДобавлено в автоматическом режиме: " + AutoAddInBase + "\nЗаблокировано всего атак: " + BaseAttackBlock + "\nПеренесено из дампов статистики: " + BaseDumpPlayers + "\nДобавлено как \"Нарушителей: \"" + CheaterList + "\n\nТекущие сведения\nОбнаружно атак: " + server_attack_blocked + "\nПопыток краша при помощи чата: " + server_chat_warning + "\nСобытий сервера: " + SrvEventsBuffer.Count + "\nЗаблокировано \"Нарушителей\" в Авто режиме: " + SIGNAL_BANNED + "\nОшибок выполнения (Read/Write): " + ERROR_COUNTER, "Сведения по базе", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void BaseMenu1OpenEvents_Click(object sender, EventArgs e)
@@ -4176,7 +4154,7 @@ namespace S.E.R.V.E.R___Shadow_Of_Chernobyl_1._0006
             if ((FirewallIPBox.Text.Length > 0) && (FirewallTextBox.Text.Length > 0))
             {
                 if (FirewallAddressMaskAdd.CheckState == CheckState.Checked)
-                    BlockedClient(8, FirewallTextBox.Text.Replace(" ", "_").Replace("%", "_"), " Flags:[null] IP: ", FirewallIPBox.Text + "/" + AddressByteMask.Text, "@");
+                    BlockedClient(16, FirewallTextBox.Text.Replace(" ", "_").Replace("%", "_"), " Flags:[null] IP: ", FirewallIPBox.Text, "@");
                 else
                     BlockedClient(8, FirewallTextBox.Text.Replace(" ", "_").Replace("%", "_"), " Flags:[null] IP: ", FirewallIPBox.Text, "@");
             }
