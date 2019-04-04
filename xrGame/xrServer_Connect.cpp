@@ -168,8 +168,12 @@ void xrServer::UnloadDll()
 {	
 	if (bIsSysMsgsDllLoaded)
 	{		
-		FZSysMsgsFree FreeFZ = (FZSysMsgsFree)GetProcAddress(dll, "FZSysMsgsFree");
-		FreeFZ();
+		Msg("unloading dll");
+
+	//	FZSysMsgsFree FreeFZ = (FZSysMsgsFree)GetProcAddress(dll, "FZSysMsgsFree");
+
+	//	FreeFZ();
+#pragma todo("tsmp: разобраться почему вылет")
 		FreeLibrary(dll);
 
 		Msg("- DLL unloaded");
