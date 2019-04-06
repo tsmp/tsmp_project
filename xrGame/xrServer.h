@@ -115,8 +115,6 @@ public:
 	void					CheckPlayerName			(string1024 &sName);
 	void					Export_game_type		(IClient* CL);
 	void					Perform_game_export		();
-	BOOL					PerformRP				(CSE_Abstract* E);
-	void					PerformMigration		(CSE_Abstract* E, xrClientData* from, xrClientData* to);
 	
 	IC void					clear_ids				()
 	{
