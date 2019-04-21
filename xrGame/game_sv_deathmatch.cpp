@@ -1089,6 +1089,19 @@ void	game_sv_Deathmatch::OnPlayerHitPlayer		(u16 id_hitter, u16 id_hitted, NET_P
 
 	if (!ps_hitter || !ps_hitted) return;
 
+	/*
+	CObject* pNewObject = nullptr;
+	CActor* pActor = nullptr;
+
+	pNewObject = Level().Objects.net_Find(ps_hitter->GameID);
+
+	if(pNewObject)
+		pActor = smart_cast<CActor*>(pNewObject);
+
+	if (pActor && pActor->isLookout())
+		return;
+		*/
+
 	SHit	HitS;
 	HitS.Read_Packet(P);
 

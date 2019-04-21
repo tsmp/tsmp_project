@@ -125,6 +125,16 @@ public:
 	virtual void	 NewPdaContact		(CInventoryOwner*);
 	virtual void	 LostPdaContact		(CInventoryOwner*);
 
+	/*
+	bool isLookout()
+	{
+		if (mstate_real & mcLookout)
+			return true;
+		
+		return false;
+	}
+	*/
+
 protected:
 //	virtual void AddMapLocationsFromInfo (const CInfoPortion* info_portion) const;
 	virtual void AddEncyclopediaArticle	(const CInfoPortion* info_portion) const;

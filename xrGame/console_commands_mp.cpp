@@ -67,6 +67,7 @@ extern	int		g_sv_mp_nickname_change_mode;
         int     g_sv_mp_RemoveHabarTimeSec = 10;
         int     g_sv_mp_RemoveDropHabarTimeSec = 15;
 
+		extern u32 MinValueHitTime;
 
 extern	u32		g_sv_dm_dwForceRespawn			;
 extern	s32		g_sv_dm_dwFragLimit				;
@@ -1834,6 +1835,7 @@ void register_mp_console_commands()
 	CMD4(CCC_SV_Integer,	"tsmp_weapon_hits_show"	,	    (int*)&g_sv_mp_ShowHits, 0, 1);	
 	CMD4(CCC_SV_Integer,	"tsmp_weapon_hits_check"	,	(int*)&g_sv_mp_CheckHitsEnabled, 0, 1);
 
+	CMD4(CCC_SV_Integer, "tsmp_weapon_hit_time_difference", (int*)&MinValueHitTime, 0, 1800000);		//min
 	CMD4(CCC_SV_Integer,	"tsmp_nickname_change_mode"	,	(int*)&g_sv_mp_nickname_change_mode, 1, 3);
 	CMD4(CCC_SV_Integer,	"tsmp_vote_time"			,	(int*)&g_sv_mp_fVoteTime, 15, 180);
 	CMD1(CCC_WeaponDisable, "tsmp_weapon_disable");

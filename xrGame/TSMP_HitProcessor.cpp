@@ -8,6 +8,16 @@ volatile int g_sv_mp_ShowHits = 1;
 
 #define MinHitsToProcess 50
 
+u32 MinValueHitTime = 0;
+
+bool TimeCompare(u32 First, u32 Second)
+{
+	if (First - Second <= MinValueHitTime)
+		return true;
+	else
+		return false;
+}
+
 HitProcessor::~HitProcessor() 
 {
 	Msg("- Destroying hit processor");
@@ -97,7 +107,7 @@ void HitProcessingThread(void *P)
 	HitProcessor *HP = (HitProcessor*)P;
 
 	HP->ThreadWorking = true;
-	SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_BELOW_NORMAL);
+	SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_LOWEST);
 
 	while (true)
 	{
@@ -152,9 +162,9 @@ static std::vector<Weapon> WPN = {
 { "mp_wpn_bm16"				, 1.80 , 315.00		, 1.26, 273.00	, true },
 { "mp_wpn_wincheaster1300"	, 1.80 , 315.00		, 1.26, 273.00	, true },
 { "mp_wpn_spas12"			, 2.00 , 315.00		, 1.40, 273.00	, true },
-{ "mp_wpn_ak74u"			, 0.70 , 140.00		, 0.60, 133.00	, false },
-{ "mp_wpn_ak74"				, 0.81 , 140.00		, 0.69, 133.00	, false },
-{ "mp_wpn_abakan"			, 0.90 , 140.00		, 0.77, 133.00	, false },
+{ "mp_wpn_ak74u"			, 0.70 , 140.00		, 0.60, 140.00	, false },
+{ "mp_wpn_ak74"				, 0.81 , 140.00		, 0.69, 140.00	, false },
+{ "mp_wpn_abakan"			, 0.90 , 140.00		, 0.77, 140.00	, false },
 { "mp_wpn_groza"			, 0.95 , 184.80		, 0.81, 146.30	, false },
 { "mp_wpn_val"				, 1.00 , 114.00		, 0.85, 90.25	, false },
 { "mp_wpn_fn2000"			, 0.86 , 105.00		, 0.73, 105.00	, false },

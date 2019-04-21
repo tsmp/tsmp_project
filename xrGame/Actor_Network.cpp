@@ -63,7 +63,7 @@ CActor*			Actor()
 };
 
 //--------------------------------------------------------------------
-void	CActor::ConvState(u32 mstate_rl, string128 *buf)
+void	CActor::ConvState(u32 mstate_rl, string128 *buf) // tsmp: бесполезный метод?
 {
 	strcpy(*buf,"");
 	if (isActorAccelerated(mstate_rl, IsZoomAimingMode()))		strcat(*buf,"Accel ");
@@ -91,31 +91,23 @@ void CActor::net_Export	(NET_Packet& P)					// export to server
 	Fvector				p = Position();
 	P.w_vec3			(p);//Position());
 
-	P.w_float /*w_angle8*/			(angle_normalize(r_model_yaw)); //Device.vCameraDirection.getH());//
-	P.w_float /*w_angle8*/			(angle_normalize(unaffected_r_torso.yaw));//(r_torso.yaw);
-	P.w_float /*w_angle8*/			(angle_normalize(unaffected_r_torso.pitch));//(r_torso.pitch);
-	P.w_float /*w_angle8*/			(angle_normalize(unaffected_r_torso.roll));//(r_torso.roll);
+	P.w_float(angle_normalize(r_model_yaw)); //Device.vCameraDirection.getH());//
+	P.w_float(angle_normalize(unaffected_r_torso.yaw));//(r_torso.yaw);
+	P.w_float(angle_normalize(unaffected_r_torso.pitch));//(r_torso.pitch);
+	P.w_float(angle_normalize(unaffected_r_torso.roll));//(r_torso.roll);
 	P.w_u8				(u8(g_Team()));
 	P.w_u8				(u8(g_Squad()));
 	P.w_u8				(u8(g_Group()));
 
-
-	//CSE_ALifeCreatureTrader
-//	P.w_float			(inventory().TotalWeight());
-//	P.w_u32				(m_dwMoney);
-
-	//CSE_ALifeCreatureActor
 	
 	u16 ms	= (u16)(mstate_real & 0x0000ffff);
 	P.w_u16				(u16(ms));
 	P.w_sdir			(NET_SavedAccel);
 	Fvector				v = character_physics_support()->movement()->GetVelocity();
-	P.w_sdir			(v);//m_PhysicMovementControl.GetVelocity());
-//	P.w_float_q16		(fArmor,-500,1000);
+	P.w_sdir			(v);
 	P.w_float			(g_Radiation());
 
 	P.w_u8				(u8(inventory().GetActiveSlot()));
-	/////////////////////////////////////////////////
 	u16 NumItems		= PHGetSyncItemsNumber();
 	
 	if (H_Parent() || (GameID() == GAME_SINGLE) || ((NumItems > 1) && OnClient()))
@@ -130,7 +122,7 @@ void CActor::net_Export	(NET_Packet& P)					// export to server
 	{
 		SPHNetState	State;
 
-		CPHSynchronize* pSyncObj = NULL;
+		CPHSynchronize* pSyncObj = nullptr;
 		pSyncObj = PHGetSyncItem(0);
 		pSyncObj->get_State(State);
 
@@ -150,9 +142,7 @@ void CActor::net_Export	(NET_Packet& P)					// export to server
 		P.w_float				( State.quaternion.w );
 	}
 	else
-	{
-		net_ExportDeadBody(P);
-	};
+		net_ExportDeadBody(P);	
 };
 
 static void w_vec_q8(NET_Packet& P,const Fvector& vec,const Fvector& min,const Fvector& max)
@@ -161,6 +151,7 @@ static void w_vec_q8(NET_Packet& P,const Fvector& vec,const Fvector& min,const F
 	P.w_float_q8(vec.y,min.y,max.y);
 	P.w_float_q8(vec.z,min.z,max.z);
 }
+
 static void r_vec_q8(NET_Packet& P,Fvector& vec,const Fvector& min,const Fvector& max)
 {
 	P.r_float_q8(vec.x,min.x,max.x);
@@ -171,39 +162,17 @@ static void r_vec_q8(NET_Packet& P,Fvector& vec,const Fvector& min,const Fvector
 	clamp(vec.y,min.y,max.y);
 	clamp(vec.z,min.z,max.z);
 }
+
 static void w_qt_q8(NET_Packet& P,const Fquaternion& q)
 {
-	//Fvector Q;
-	//Q.set(q.x,q.y,q.z);
-	//if(q.w<0.f)	Q.invert();
-	//P.w_float_q8(Q.x,-1.f,1.f);
-	//P.w_float_q8(Q.y,-1.f,1.f);
-	//P.w_float_q8(Q.z,-1.f,1.f);
-	///////////////////////////////////////////////////
 	P.w_float_q8(q.x,-1.f,1.f);
 	P.w_float_q8(q.y,-1.f,1.f);
 	P.w_float_q8(q.z,-1.f,1.f);
 	P.w_float_q8(q.w,-1.f,1.f);
-
-	///////////////////////////////////////////
-
-
-	//P.w_float_q8(q.x,-1.f,1.f);
-	//P.w_float_q8(q.y,-1.f,1.f);
-	//P.w_float_q8(q.z,-1.f,1.f);
-	//P.w(sign())
 }
+
 static void r_qt_q8(NET_Packet& P,Fquaternion& q)
 {
-	//// x^2 + y^2 + z^2 + w^2 = 1
-	//P.r_float_q8(q.x,-1.f,1.f);
-	//P.r_float_q8(q.y,-1.f,1.f);
-	//P.r_float_q8(q.z,-1.f,1.f);
-	//float w2=1.f-q.x*q.x-q.y*q.y-q.z*q.z;
-	//w2=w2<0.f ? 0.f : w2;
-	//q.w=_sqrt(w2);
-	/////////////////////////////////////////////////////
-	///////////////////////////////////////////////////
 	P.r_float_q8(q.x,-1.f,1.f);
 	P.r_float_q8(q.y,-1.f,1.f);
 	P.r_float_q8(q.z,-1.f,1.f);
@@ -239,13 +208,13 @@ static void	UpdateLimits (Fvector &p, Fvector& min, Fvector& max)
 
 void		CActor::net_ExportDeadBody		(NET_Packet &P)
 {
-	/////////////////////////////
 	Fvector min,max;
 
 	min.set(F_MAX,F_MAX,F_MAX);
 	max.set(-F_MAX,-F_MAX,-F_MAX);
-	/////////////////////////////////////
+
 	u16 bones_number		= PHGetSyncItemsNumber();
+
 	for(u16 i=0;i<bones_number;i++)
 	{
 		SPHNetState state;
@@ -268,11 +237,9 @@ void		CActor::net_ExportDeadBody		(NET_Packet &P)
 	{
 		SPHNetState state;
 		PHGetSyncItem(i)->get_State(state);
-//		state.net_Save(P,min,max);
 		w_vec_q8(P,state.position,min,max);
 		w_qt_q8(P,state.quaternion);
 
-		//---------------------------------
 		Fvector px =state.linear_vel;
 		px.div(10.0f);
 		px.add(state.position);
@@ -282,15 +249,14 @@ void		CActor::net_ExportDeadBody		(NET_Packet &P)
 
 void CActor::net_Import		(NET_Packet& P)					// import from server
 {
-	//-----------------------------------------------
 	net_Import_Base(P);
-	//-----------------------------------------------
 
 	m_u16NumBones = P.r_u16();
-	if (m_u16NumBones == 0) return;
-	//-----------------------------------------------
+
+	if (!m_u16NumBones) 
+		return;
+
 	net_Import_Physic(P);
-	//-----------------------------------------------
 };
 
 void		CActor::net_Import_Base				( NET_Packet& P)

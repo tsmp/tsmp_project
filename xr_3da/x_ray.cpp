@@ -332,6 +332,8 @@ int APIENTRY WinMain_impl(HINSTANCE hInstance, HINSTANCE hPrevInstance, char *lp
 	LPCSTR prior = "-priority ";
 	if (!strstr(lpCmdLine, prior) == NULL) SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_HIGHEST);
 
+	SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS);
+
 	HANDLE hCheckPresenceMutex = NULL;
 
 #ifdef DEDICATED_SERVER

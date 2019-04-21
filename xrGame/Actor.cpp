@@ -1005,19 +1005,22 @@ void CActor::shedule_Update(u32 DT)
 		g_SetAnimation			(mstate_real);
 		
 		// Check for game-contacts
-		Fvector C; float R;		
+		Fvector C; 
+		float R;		
 		
 		Center(C);
 		R=Radius();
 		feel_touch_update		(C,R);
 
 		// Dropping
-		if (b_DropActivated)	{
+		if (b_DropActivated)	
+		{
 			f_DropPower			+= dt*0.1f;
 			clamp				(f_DropPower,0.f,1.f);
-		} else {
+		} 
+		else 
 			f_DropPower			= 0.f;
-		}
+		
 		if (!Level().IsDemoPlay())
 		{		
 
@@ -1028,7 +1031,9 @@ void CActor::shedule_Update(u32 DT)
 		mstate_wishful &=~mcRLookout;
 		mstate_wishful &=~mcFwd;
 		mstate_wishful &=~mcBack;
+
 		extern bool g_bAutoClearCrouch;
+
 		if (g_bAutoClearCrouch)
 			mstate_wishful &=~mcCrouch;
 		}
@@ -1041,9 +1046,11 @@ void CActor::shedule_Update(u32 DT)
 		{
 			g_sv_Orientate				(mstate_real,dt			);
 			g_Orientate					(mstate_real,dt			);
-			g_Physics					(NET_SavedAccel,NET_Jump,dt	);			
+			g_Physics					(NET_SavedAccel,NET_Jump,dt	);		
+
 			if (!m_bInInterpolation)
 				g_cl_ValidateMState			(dt,mstate_wishful);
+
 			g_SetAnimation				(mstate_real);
 
 			if (NET_Last.mstate & mcCrouch)
