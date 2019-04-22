@@ -3,12 +3,13 @@
 
 #include "fs_internal.h"
 
-#pragma warning(disable:4995)
+#pragma warning(push)
+#pragma warning(disable: 4995)
 #include <io.h>
 #include <direct.h>
 #include <fcntl.h>
 #include <sys\stat.h>
-#pragma warning(default:4995)
+#pragma warning(pop)
 
 typedef void DUMMY_STUFF (const void*,const u32&,void*);
 XRCORE_API DUMMY_STUFF	*g_dummy_stuff = 0;
@@ -122,35 +123,6 @@ typedef char MARK[9];
 IC void mk_mark(MARK& M, const char* S)
 {	strncpy(M,S,8); }
 
-void  FileCompress	(const char *fn, const char* sign, void* data, u32 size)
-{
-	MARK M; mk_mark(M,sign);
-
-	int H	= open(fn,O_BINARY|O_CREAT|O_WRONLY|O_TRUNC,S_IREAD|S_IWRITE);
-	R_ASSERT2(H>0,fn);
-	_write	(H,&M,8);
-	_writeLZ(H,data,size);
-	_close	(H);
-}
-
-void*  FileDecompress	(const char *fn, const char* sign, u32* size)
-{
-	MARK M,F; mk_mark(M,sign);
-
-	int	H = open	(fn,O_BINARY|O_RDONLY);
-	R_ASSERT2(H>0,fn);
-	_read	(H,&F,8);
-	if (strncmp(M,F,8)!=0)		{
-		F[8]=0;		Msg("FATAL: signatures doesn't match, file(%s) / requested(%s)",F,sign);
-	}
-    R_ASSERT(strncmp(M,F,8)==0);
-
-	void* ptr = 0; u32 SZ;
-	SZ = _readLZ (H, ptr, filelength(H)-8);
-	_close	(H);
-	if (size) *size = SZ;
-	return ptr;
-}
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -400,18 +372,12 @@ CFileReader::CFileReader(const char *name)
     data	= (char *)FileDownload(name,(u32 *)&Size);
     Pos		= 0;
 };
+
 CFileReader::~CFileReader()
 {	xr_free(data);	};
-//---------------------------------------------------
-// compressed stream
-CCompressedReader::CCompressedReader(const char *name, const char *sign)
-{
-    data	= (char *)FileDecompress(name,sign,(u32*)&Size);
-    Pos		= 0;
-}
-CCompressedReader::~CCompressedReader()
-{	xr_free(data);	};
 
+
+#pragma todo("tsmp: один раз используется")
 
 CVirtualFileRW::CVirtualFileRW(const char *cFileName) 
 {

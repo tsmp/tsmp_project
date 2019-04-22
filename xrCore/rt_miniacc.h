@@ -33,6 +33,7 @@
    http://www.oberhumer.com/opensource/lzo/
  */
 
+#pragma todo("tsmp: слишком много макросов")
 
 #ifndef __ACC_H_INCLUDED
 #define __ACC_H_INCLUDED 1

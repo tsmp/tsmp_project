@@ -153,7 +153,7 @@ void gather_info		(const char *expression, const char *description, const char *
 			{
 				if (argument1) 
 				{
-					buffer	+= sprintf(buffer,"%s%s",argument0,endline);
+					buffer	+= sprintf(buffer,"%s%s",argument0,endline); //-V576
 					buffer	+= sprintf(buffer,"%s%s",argument1,endline);
 				}
 				else

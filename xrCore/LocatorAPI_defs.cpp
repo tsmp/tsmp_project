@@ -2,12 +2,14 @@
 #pragma hdrstop
 
 #include "LocatorAPI_defs.h"
-#pragma warning(disable:4995)
+
+#pragma warning(push)
+#pragma warning(disable: 4995)
 #include <io.h>
 #include <direct.h>
 #include <fcntl.h>
 #include <sys\stat.h>
-#pragma warning(default:4995)
+#pragma warning(pop)
 
 //////////////////////////////////////////////////////////////////////
 // FS_File
@@ -30,7 +32,6 @@ void FS_File::set(xr_string nm, long sz, time_t modif,unsigned attr)
 //////////////////////////////////////////////////////////////////////
 FS_Path::FS_Path	(LPCSTR _Root, LPCSTR _Add, LPCSTR _DefExt, LPCSTR _FilterCaption, u32 flags)
 {
-//	VERIFY			(_Root&&_Root[0]);
 	string_path		temp;
     strcpy_s		(temp,sizeof(temp),_Root); 
     if (_Add) 		strcat(temp,_Add);
@@ -39,7 +40,7 @@ FS_Path::FS_Path	(LPCSTR _Root, LPCSTR _Add, LPCSTR _DefExt, LPCSTR _FilterCapti
 	m_DefExt		= _DefExt?xr_strlwr(xr_strdup(_DefExt)):0;
 	m_FilterCaption	= _FilterCaption?xr_strlwr(xr_strdup(_FilterCaption)):0;
 	m_Add			= _Add?xr_strlwr(xr_strdup(_Add)):0;
-	m_Root			= _Root?xr_strlwr(xr_strdup(_Root)):0;
+	m_Root			= xr_strlwr(xr_strdup(_Root));
     m_Flags.assign	(flags);
 #ifdef _EDITOR
 	// Editor(s)/User(s) wants pathes already created in "real" file system :)
@@ -111,8 +112,8 @@ void FS_Path::rescan_path_cb	()
 
 bool XRCORE_API PatternMatch(LPCSTR s, LPCSTR mask)
 {
-	LPCSTR cp=0;
-	LPCSTR mp=0;
+	LPCSTR cp = nullptr;
+	LPCSTR mp = nullptr;
 
 	for (; *s&&*mask!='*'; mask++,s++) 
 		if (*mask!=*s&&*mask!='?') return false;
@@ -145,5 +146,7 @@ bool XRCORE_API PatternMatch(LPCSTR s, LPCSTR mask)
 
 		mask=mp; 
 		s=cp++;
+
+#pragma todo("tsmp: это че такое?")
 	}
 }

@@ -225,36 +225,39 @@ public:
 	}
 };
 
-class XRCORE_API IReader : public IReaderBase<IReader> {
+class XRCORE_API IReader : public IReaderBase<IReader> 
+{
 protected:
-	char *			data	;
-	int			Pos		;
-	int				Size	;
-	int				iterpos	;
+	char *data;
+	int	Pos;
+	int	Size;
+	int	iterpos;
 
 public:
-	IC				IReader			()
+	IC IReader()
 	{
-		Pos			= 0;
+		data=nullptr;
+		Pos = Size = iterpos = 0;
 	}
 
-	IC				IReader			(void *_data, int _size, int _iterpos=0)
+	IC IReader(void *_data, int _size, int _iterpos = 0)
 	{
-		data		= (char *)_data	;
-		Size		= _size			;
-		Pos			= 0				;
-		iterpos		= _iterpos		;
+		data = (char *)_data;
+		Size = _size;
+		Pos	= 0;
+		iterpos	= _iterpos;
 	}
 
 protected:
-	IC u32			correction					(u32 p)
+	IC u32 correction(u32 p)
 	{
-		if (p%16) {
+		if (p%16) 
 			return ((p%16)+1)*16 - p;
-		} return 0;
+
+		 return 0;
 	}
 	
-	u32 			advance_term_string			();
+	u32 advance_term_string();
 
 public:
 	IC int			elapsed		()	const	{	return Size-Pos;		};
@@ -265,26 +268,26 @@ public:
 	IC void			advance		(int cnt)	{	Pos+=cnt;VERIFY((Pos<=Size) && (Pos>=0));};
 
 public:
-	void			r			(void *p,int cnt);
+	void r			(void *p,int cnt);
 
-	void			r_string	(char *dest, u32 tgt_sz);
-	void			r_string	(xr_string& dest);
+	void r_string	(char *dest, u32 tgt_sz);
+	void r_string	(xr_string& dest);
 
-	void			skip_stringZ();
+	void skip_stringZ();
 
-	void			r_stringZ	(char *dest, u32 tgt_sz);
-	void			r_stringZ	(shared_str& dest);
-	void			r_stringZ	(xr_string& dest);
+	void r_stringZ	(char *dest, u32 tgt_sz);
+	void r_stringZ	(shared_str& dest);
+	void r_stringZ	(xr_string& dest);
 
 public:
-	void			close		();
+	void close		();
 
 public:
 	// поиск XR Chunk'ов - возврат - размер или 0
-	IReader*		open_chunk	(u32 ID);
+	IReader *open_chunk	(u32 ID);
 
 	// iterators
-	IReader*		open_chunk_iterator		(u32& ID, IReader* previous=NULL);	// NULL=first
+	IReader *open_chunk_iterator		(u32& ID, IReader* previous=NULL);	// NULL=first
 };
 
 class XRCORE_API CVirtualFileRW : public IReader

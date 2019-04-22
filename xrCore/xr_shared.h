@@ -60,6 +60,8 @@ public:
 	}
 };
 
+#pragma todo("tsmp: удалить и переписать без него")
+
 template <class T>
 class shared_item
 {

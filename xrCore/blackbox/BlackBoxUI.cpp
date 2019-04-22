@@ -9,18 +9,21 @@ int g_stackTraceCount = 0;
 
 void BuildStackTrace	(struct _EXCEPTION_POINTERS *g_BlackBoxUIExPtrs)
 {
-	FillMemory(&g_stackTrace,MAX_STACK_TRACE*256, 0);
+	memset(g_stackTrace, 0, sizeof(g_stackTrace));
 
 	const TCHAR* traceDump = 
 		GetFirstStackTraceString( GSTSO_MODULE | GSTSO_SYMBOL | GSTSO_SRCLINE,g_BlackBoxUIExPtrs );
+
 	g_stackTraceCount = 0;
 
 	int incr = 85;
+
 	while ( NULL != traceDump ) 
 	{
 		int				length = strlen(traceDump);
 
-		if (length < 4096) lstrcpy(g_stackTrace[g_stackTraceCount], traceDump);
+		if (length < 4096) 
+			lstrcpy(g_stackTrace[g_stackTraceCount], traceDump);
 		else 
 		{
 			memcpy		(g_stackTrace[g_stackTraceCount],traceDump,4092);

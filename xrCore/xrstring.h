@@ -3,11 +3,11 @@
 #pragma once
 
 #pragma pack(push,4)
-//////////////////////////////////////////////////////////////////////////
+
 typedef const char*		str_c;
 
-//////////////////////////////////////////////////////////////////////////
-#pragma warning(disable : 4200)
+#pragma warning(push)
+#pragma warning(disable: 4200)
 struct		XRCORE_API	str_value
 {
 	u32					dwReference		;
@@ -18,9 +18,8 @@ struct		XRCORE_API	str_value
 struct		XRCORE_API	str_value_cmp	{ // less
 	IC bool		operator ()	(const str_value* A, const str_value* B) const	{ return A->dwCRC<B->dwCRC;	};
 };
-#pragma warning(default : 4200)
+#pragma warning(pop)
 
-//////////////////////////////////////////////////////////////////////////
 class		XRCORE_API	str_container
 {
 private:

@@ -9,8 +9,6 @@
 #include <share.h>
 
 void*			FileDownload	(LPCSTR fn, u32* pdwSize=NULL);
-void			FileCompress	(const char *fn, const char* sign, void* data, u32 size);
-void * 			FileDecompress	(const char *fn, const char* sign, u32* size=NULL);
 
 class CFileWriter : public IWriter
 {
@@ -96,12 +94,7 @@ public:
 				CFileReader(const char *name);
 	virtual		~CFileReader();
 };
-class CCompressedReader : public IReader
-{
-public:
-				CCompressedReader(const char *name, const char *sign);
-	virtual		~CCompressedReader();
-};
+
 class CVirtualFileReader : public IReader
 {
 private:
