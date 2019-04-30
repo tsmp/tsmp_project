@@ -143,8 +143,9 @@ void xrServer::OnBuildVersionRespond(IClient* CL, NET_Packet& P)
 	u64 _him = P.r_u64();
 
 	u64 _our_new = 1189233227;
+	u64 tsmp_client = 962690809;
 	
-	if (( _our_new == _him )||(_our == _him))
+	if (( _our_new == _him )||(_our == _him)||(_him==tsmp_client))
 	{				
 		bool bAccessUser = false;
 		string512 res_check;

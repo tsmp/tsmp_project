@@ -774,7 +774,7 @@ PIItem CInventory::SameSlot(const u32 slot, PIItem pIItem, bool bSearchRuck) con
 PIItem CInventory::Get(const char *name, bool bSearchRuck) const   //найти в инвенторе вещь с указанным именем
 {
 	if (!name)
-		return;
+		return nullptr;
 
 	const TIItemContainer &list = bSearchRuck ? m_ruck : m_belt;
 

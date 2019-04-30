@@ -74,6 +74,8 @@ int APIENTRY WinMain(HINSTANCE hInstance,
                      LPSTR     lpCmdLine,
                      int       nCmdShow)
 {
+	SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS);
+
 	// KD: let's init debug to enable exception handling
 	Debug._initialize	(false);
 
