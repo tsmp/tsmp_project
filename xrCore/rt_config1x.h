@@ -39,9 +39,7 @@
    to change.
  */
 
-
-#ifndef __LZO_CONFIG1X_H
-#define __LZO_CONFIG1X_H
+#pragma once
 
 #if !defined(LZO1X) && !defined(LZO1Y) && !defined(LZO1Z)
 #  define LZO1X
@@ -103,12 +101,3 @@
 #include "rt_lzo_dict.h"
 
 #endif
-
-
-
-#endif /* already included */
-
-/*
-vi:ts=4:et
-*/
-

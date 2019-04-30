@@ -79,19 +79,31 @@ Fvector2 CUICursor::GetCursorPositionDelta()
 	return res_delta;
 }
 
-void CUICursor::UpdateCursorPosition()
+Flags32	psMouseAccel = { FALSE };
+
+void CUICursor::UpdateCursorPosition(int xx, int yy)
 {
+	if (psMouseAccel.test(1))
+	{
+		POINT p;
+		BOOL r = GetCursorPos(&p);
+		R_ASSERT(r);
 
-	POINT		p;
-	BOOL r		= GetCursorPos(&p);
-	R_ASSERT	(r);
+		vPrevPos = vPos;
 
-	vPrevPos = vPos;
+		vPos.x = (float)p.x * (UI_BASE_WIDTH / (float)Device.dwWidth);
+		vPos.y = (float)p.y * (UI_BASE_HEIGHT / (float)Device.dwHeight);
+	}
+	else
+	{
+		vPrevPos = vPos;
 
-	vPos.x			= (float)p.x * (UI_BASE_WIDTH/(float)Device.dwWidth);
-	vPos.y			= (float)p.y * (UI_BASE_HEIGHT/(float)Device.dwHeight);
-	clamp			(vPos.x, 0.f, UI_BASE_WIDTH);
-	clamp			(vPos.y, 0.f, UI_BASE_HEIGHT);
+		vPos.x += (float)xx;
+		vPos.y += (float)yy;
+	}
+
+	clamp(vPos.x, 0.f, UI_BASE_WIDTH);
+	clamp(vPos.y, 0.f, UI_BASE_HEIGHT);
 }
 
 void CUICursor::SetUICursorPosition(Fvector2 pos)
