@@ -574,36 +574,28 @@ void game_sv_Deathmatch::SM_SwitchOnNextActivePlayer()
 void game_sv_Deathmatch::net_Relcase(CObject* O)
 {
 	if(m_pSM_CurViewEntity==O)
-		m_pSM_CurViewEntity = NULL;
-	
+		m_pSM_CurViewEntity = NULL;	
 }
 
-void	game_sv_Deathmatch::SM_SwitchOnPlayer(CObject* pNewObject)
+void	game_sv_Deathmatch::SM_SwitchOnPlayer(CObject *pNewObject)
 {
-	if (!pNewObject)					return;
+	if (!pNewObject)
+		return;
 
-	Level().SetEntity					(pNewObject);
+	Level().SetEntity(pNewObject);
 
 	if (pNewObject != m_pSM_CurViewEntity)
 	{
-		CActor* pActor					= smart_cast<CActor*>(m_pSM_CurViewEntity);
+		CActor *pActor = smart_cast<CActor*>(m_pSM_CurViewEntity);
 		
 		if (pActor)
 			pActor->inventory().Items_SetCurrentEntityHud(false);
 	}
 
-	CActor* pActor = smart_cast<CActor*> (pNewObject);
+	CActor *pActor = smart_cast<CActor*> (pNewObject);
+
 	if (pActor)
-	{
-		pActor->inventory().Items_SetCurrentEntityHud(true);
-/*
-		CHudItem* pHudItem = smart_cast<CHudItem*>(pActor->inventory().ActiveItem());
-		if (pHudItem) 
-		{
-			pHudItem->OnStateSwitch(pHudItem->GetState());
-		};
-*/
-	}
+		pActor->inventory().Items_SetCurrentEntityHud(true);	
 
 	m_pSM_CurViewEntity				= pNewObject;
 	m_dwSM_CurViewEntity			= pNewObject->ID();
@@ -611,25 +603,30 @@ void	game_sv_Deathmatch::SM_SwitchOnPlayer(CObject* pNewObject)
 }
 
 
-BOOL	game_sv_Deathmatch::AllPlayers_Ready ()
+BOOL game_sv_Deathmatch::AllPlayers_Ready ()
 {
-	if (!m_server->GetServerClient()) return FALSE;	
+	if (!m_server->GetServerClient()) 
+		return FALSE;	
+
 	// Check if all players ready
-	u32		cnt		= get_players_count	();
-	u32		ready	= 0;
-	for		(u32 it=0; it<cnt; ++it)	
+	u32	cnt		= get_players_count	();
+	u32	ready	= 0;
+
+	for(u32 it=0; it<cnt; ++it)	
 	{
-		xrClientData *l_pC = (xrClientData*)	m_server->client_Get	(it);
-		game_PlayerState* ps	= l_pC->ps;
+		xrClientData *l_pC = (xrClientData*) m_server->client_Get(it);
+		game_PlayerState *ps = l_pC->ps;
+
 		if (!l_pC->net_Ready)
 		{
 			if (l_pC->ID == m_server->GetServerClient()->ID)
-			{
 				continue;
-			}
+			
 			++ready;
-		};
-		if (ps->testFlag(GAME_PLAYER_FLAG_READY) )	++ready;
+		}
+
+		if (ps->testFlag(GAME_PLAYER_FLAG_READY))	
+			++ready;
 		else
 			if (ps->IsSkip()) ++ready;
 	}
@@ -713,72 +710,89 @@ void game_sv_Deathmatch::OnPlayerDisconnect(ClientID id_who, LPSTR Name, u16 Gam
 	inherited::OnPlayerDisconnect	(id_who, Name, GameID);
 };
 
-u32 game_sv_Deathmatch::RP_2_Use(CSE_Abstract* E)
+u32 game_sv_Deathmatch::RP_2_Use(CSE_Abstract *E)
 {
 	return 0;
 };
 
-void game_sv_Deathmatch::assign_RP(CSE_Abstract* E, game_PlayerState* ps_who)
+void game_sv_Deathmatch::assign_RP(CSE_Abstract *E, game_PlayerState *ps_who)
 {
-	VERIFY				(E);
-	u32		Team		= RP_2_Use(E);
-	VERIFY				(rpoints[Team].size());
+	VERIFY(E);
+	u32 Team = RP_2_Use(E);
+	VERIFY(rpoints[Team].size());
 
-	CSE_Spectator		*pSpectator = smart_cast<CSE_Spectator*>(E);
+	CSE_Spectator *pSpectator = smart_cast<CSE_Spectator*>(E);
+
 	if (pSpectator)
 	{
 		inherited::assign_RP(E, ps_who);
 		return;
 	};
 
-	CSE_ALifeCreatureActor	*pA	=	smart_cast<CSE_ALifeCreatureActor*>(E);
+	CSE_ALifeCreatureActor *pA = smart_cast<CSE_ALifeCreatureActor*>(E);
+	
 	if (!pA)
 	{
 		inherited::assign_RP(E, ps_who);
 		return;
 	};
-	//-------------------------------------------------------------------------------
+
 	xr_vector<RPoint>&	rp	= rpoints[Team];
 
-	xr_vector <u32>					pEnemies;
-	xr_vector <u32>					pFriends;
+	xr_vector <u32>	pEnemies;
+	xr_vector <u32> pFriends;
 
-	u32		cnt = get_players_count();
-	for		(u32 it=0; it<cnt; ++it)	
+	u32	cnt = get_players_count();
+
+	for	(u32 it=0; it<cnt; ++it)	
 	{
 		// init
-		game_PlayerState*	ps	=	get_it	(it);
-		if (ps->testFlag(GAME_PLAYER_FLAG_VERY_VERY_DEAD) ) continue;
-		if (ps->team == pA->s_team && !teams.empty()) pFriends.push_back(it);
-		else pEnemies.push_back(it);
-	};
-	//-------------------------------------------------------------------------------
+		game_PlayerState *ps = get_it(it);
+
+		if (ps->testFlag(GAME_PLAYER_FLAG_VERY_VERY_DEAD) ) 
+			continue;
+
+		if (ps->team == pA->s_team && !teams.empty()) 
+			pFriends.push_back(it);
+		else 
+			pEnemies.push_back(it);
+	}
+
 	if (m_vFreeRPoints.empty())
 	{
 		for (u32 i=0; i<rp.size(); i++)
 		{
-			if (i==m_dwLastRPoint && rp.size()>1) continue;
+			if (i==m_dwLastRPoint && rp.size()>1) 
+				continue;
+
 			m_vFreeRPoints.push_back(i);
 		}
-	};
+	}
+
 	R_ASSERT(m_vFreeRPoints.size());
-	xr_vector<RPointData>	tmpPoints;
+	xr_vector<RPointData> tmpPoints;
+
 	for (u32 i=0; i<m_vFreeRPoints.size(); i++)
 	{
-		RPoint&				r	= rp[m_vFreeRPoints[i]];
+		RPoint &r = rp[m_vFreeRPoints[i]];
 		float MinEnemyDist = 10000.0f;
+
 		for (u32 e=0; e<pEnemies.size(); e++)
 		{
 			xrClientData* xrCData	=	m_server->ID_to_client(get_it_2_id(pEnemies[e]));
-			if (!xrCData || !xrCData->owner) continue;
 
-			CSE_Abstract* pOwner = xrCData->owner;
+			if (!xrCData || !xrCData->owner) 
+				continue;
+
+			CSE_Abstract *pOwner = xrCData->owner;
 			float Dist = r.P.distance_to_sqr(pOwner->o_Position);
 
-			if (MinEnemyDist > Dist) MinEnemyDist = Dist;
-		};
+			if (MinEnemyDist > Dist) 
+				MinEnemyDist = Dist;
+		}
 		tmpPoints.push_back(RPointData(i, MinEnemyDist, false));
 	}
+
 	R_ASSERT(tmpPoints.size());
 	std::sort(tmpPoints.begin(), tmpPoints.end());
 	u32 HalfList = tmpPoints.size()/(pEnemies.empty() ? 1 : 2);
@@ -794,7 +808,9 @@ void game_sv_Deathmatch::assign_RP(CSE_Abstract* E, game_PlayerState* ps_who)
 
 bool	game_sv_Deathmatch::IsBuyableItem			(LPCSTR	ItemName)
 {
-	if (m_strWeaponsData->GetItemIdx(ItemName) == u32(-1)) return false;
+	if (m_strWeaponsData->GetItemIdx(ItemName) == u32(-1)) 
+		return false;
+
 	return true;
 };
 
@@ -803,83 +819,92 @@ void game_sv_Deathmatch::CheckItem(game_PlayerState* ps, PIItem pItem, xr_vector
 	if (!pItem || !pItemsDesired || !pItemsToDelete) return;
 
 	if (m_strWeaponsData->GetItemIdx(pItem->object().cNameSect()) == u32(-1)) return;
-	//-------------------------------------------
-	bool	found = false;
+
+	bool found = false;
+
 	for (u32 it = 0; it < pItemsDesired->size(); it++)
 	{
 		s16 ItemID = (*pItemsDesired)[it];
 		if ((ItemID & 0x00ff) != u16(m_strWeaponsData->GetItemIdx(pItem->object().cNameSect()))) continue;
 
 		found = true;
-		CWeaponAmmo* pAmmo = 	smart_cast<CWeaponAmmo*>(pItem);
-		if (pAmmo)
-		{
-			if (pAmmo->m_boxCurr != pAmmo->m_boxSize) break;
-		};
+		CWeaponAmmo *pAmmo = smart_cast<CWeaponAmmo*>(pItem);
+
+		if (pAmmo && pAmmo->m_boxCurr != pAmmo->m_boxSize) 
+			break;
+		
 		//----- Check for Addon Changes ---------------------
-		CWeapon		*pWeapon	=	smart_cast<CWeapon*>(pItem);
+		CWeapon	*pWeapon = smart_cast<CWeapon*>(pItem);
+
 		if (pWeapon)
 		{
 			u8 OldAddons  = pWeapon->GetAddonsState();
-			u8 NewAddons  = u8((ItemID&0xff00)>>0x08)/*u8(ItemID&0x00ff)>>0x05*/;
-			if (ExactMatch)
+			u8 NewAddons  = u8((ItemID&0xff00)>>0x08);
+
+			if (ExactMatch && OldAddons != NewAddons)
 			{
-				if (OldAddons != NewAddons)
-				{
-					found = false;
-					continue;
-				}
+				found = false;
+				continue;
 			}
+			
 			if (OldAddons != NewAddons)
 			{
-				CSE_ALifeItemWeapon* pSWeapon = smart_cast<CSE_ALifeItemWeapon*>(get_entity_from_eid(pWeapon->ID()));
+				CSE_ALifeItemWeapon *pSWeapon = smart_cast<CSE_ALifeItemWeapon*>(get_entity_from_eid(pWeapon->ID()));
+
 				if (pSWeapon)
 				{
 					pSWeapon->m_addon_flags.zero();
 					pSWeapon->m_addon_flags.set(NewAddons, TRUE);
 				}
 
-				NET_Packet	P;
+				NET_Packet P;
 				u_EventGen(P, GE_ADDON_CHANGE, pWeapon->ID());
 				P.w_u8(NewAddons);
 				u_EventSend(P);
 			}
-		};
-		//---------------------------------------------------
+		}
+
 		pItemsDesired->erase(pItemsDesired->begin()+it);
 		break;
-	};
-	if (found) return;
+	}
+
+	if (found)
+		return;
+
 	pItemsToDelete->push_back(pItem->object().ID());
 };
 
-
-void	game_sv_Deathmatch::OnPlayerBuyFinished		(ClientID id_who, NET_Packet& P)
+void game_sv_Deathmatch::OnPlayerBuyFinished(ClientID id_who, NET_Packet& P)
 {
-	game_PlayerState*	ps		= get_id	(id_who);
-	if (!ps || ps->IsSkip())		return;	
+	game_PlayerState *ps = get_id(id_who);
+
+	if (!ps || ps->IsSkip())		
+		return;	
 	
 	P.r_s32(ps->LastBuyAcount);	
-	if (ps->LastBuyAcount != 0) ps->m_bClearRun = false;
 
-	xr_vector<s16>		ItemsDesired;
+	if (ps->LastBuyAcount != 0) 
+		ps->m_bClearRun = false;
+
+	xr_vector<s16> ItemsDesired;
 
 	u8 NumItems;
 	P.r_u8(NumItems);
+
 	for (u8 i=0; i<NumItems; i++)
 	{
 		s16	ItemID;
 		P.r_s16(ItemID);
-//		Msg("------------- Player wants %d", ItemID);
 		ItemsDesired.push_back(ItemID);
-	};
+	}
 
-	CSE_ALifeCreatureActor*		e_Actor	= smart_cast<CSE_ALifeCreatureActor*>(get_entity_from_eid	(ps->GameID));
-	CActor* pActor = smart_cast<CActor*>(Level().Objects.net_Find	(ps->GameID));
+	CSE_ALifeCreatureActor *e_Actor	= smart_cast<CSE_ALifeCreatureActor*>(get_entity_from_eid	(ps->GameID));
+	CActor *pActor = smart_cast<CActor*>(Level().Objects.net_Find	(ps->GameID));
+
 	if (pActor)
 	{
-		PIItem pItem = NULL;
-		xr_vector<u16>				ItemsToDelete;
+		PIItem pItem = nullptr;
+		xr_vector<u16> ItemsToDelete;
 
 		bool ExactMatch	= true;
 		//проверяем пояс
@@ -898,8 +923,11 @@ void	game_sv_Deathmatch::OnPlayerBuyFinished		(ClientID id_who, NET_Packet& P)
 
 		for ( ; IRuck != ERuck; ++IRuck) 
 		{
-			pItem = (*IRuck);			
-			if (!pItem) continue;
+			pItem = (*IRuck);	
+
+			if (!pItem)
+				continue;
+
 			CheckItem(ps, pItem, &ItemsDesired, &ItemsToDelete, ExactMatch);
 		};
 
@@ -915,6 +943,7 @@ void	game_sv_Deathmatch::OnPlayerBuyFinished		(ClientID id_who, NET_Packet& P)
 		
 		xr_vector<u16>::iterator	IDI = ItemsToDelete.begin();
 		xr_vector<u16>::iterator	EDI = ItemsToDelete.end();
+
 		for ( ; IDI != EDI; ++IDI) 
 		{
 			NET_Packet			P;
@@ -924,34 +953,35 @@ void	game_sv_Deathmatch::OnPlayerBuyFinished		(ClientID id_who, NET_Packet& P)
 	};
 
 	ps->pItemList.clear();
-	for (u32 it = 0; it<ItemsDesired.size(); it++)
-	{
-		ps->pItemList.push_back(ItemsDesired[it]);
-	};
 
-	if (!pActor) return;
+	for (u32 it = 0; it<ItemsDesired.size(); it++)
+		ps->pItemList.push_back(ItemsDesired[it]);	
+
+	if (!pActor)
+		return;
 
  	SpawnWeaponsForActor(e_Actor, ps);
 };
 
-void	game_sv_Deathmatch::SpawnWeaponsForActor(CSE_Abstract* pE, game_PlayerState*	ps)
+void game_sv_Deathmatch::SpawnWeaponsForActor(CSE_Abstract *pE, game_PlayerState *ps)
 {
-	CSE_ALifeCreatureActor* pA	=	smart_cast<CSE_ALifeCreatureActor*>(pE);
+	CSE_ALifeCreatureActor *pA	=	smart_cast<CSE_ALifeCreatureActor*>(pE);
 	R_ASSERT2(pA, "Owner not a Actor");
-	if (!pA) return;
 
-	if (!(ps->team < s16(TeamList.size()))) return;
+	if (!pA) 
+		return;
+
+	if (!(ps->team < s16(TeamList.size()))) 
+		return;
 
 	for (u32 i = 0; i<ps->pItemList.size(); i++)
 	{
 		u16 ItemID			= ps->pItemList[i];
 		SpawnWeapon4Actor	(pA->ID, *m_strWeaponsData->GetItemName(ItemID& 0x00FF), u8((ItemID & 0xFF00)>>0x08));
 		Game().m_WeaponUsageStatistic->OnWeaponBought(ps, *m_strWeaponsData->GetItemName(ItemID& 0x00FF));
-	};
-#ifndef	NDEBUG
-	if (!g_sv_dm_bDMIgnore_Money_OnBuy)
-#endif
-		Player_AddMoney(ps, ps->LastBuyAcount);
+	}
+	
+	Player_AddMoney(ps, ps->LastBuyAcount);
 };
 
 void game_sv_Deathmatch::LoadSkinsForTeam(const shared_str& caSection, TEAM_SKINS_NAMES* pTeamSkins)
@@ -1493,16 +1523,21 @@ void	game_sv_Deathmatch::StartAnomalies			(int AnomalySet)
 #endif
 };
 
-BOOL	game_sv_Deathmatch::OnTouch			(u16 eid_who, u16 eid_what, BOOL bForced)
+BOOL game_sv_Deathmatch::OnTouch(u16 eid_who, u16 eid_what, BOOL bForced)
 {
-	CSE_Abstract*		e_who	= m_server->ID_to_entity(eid_who);		VERIFY(e_who	);
-	CSE_Abstract*		e_what	= m_server->ID_to_entity(eid_what);		VERIFY(e_what	);	
+	CSE_Abstract *e_who	= m_server->ID_to_entity(eid_who);		
+	CSE_Abstract *e_what = m_server->ID_to_entity(eid_what);			
 
-	CSE_ALifeCreatureActor*			A		= smart_cast<CSE_ALifeCreatureActor*> (e_who);
+	VERIFY(e_who);
+	VERIFY(e_what);
+
+	CSE_ALifeCreatureActor *A = smart_cast<CSE_ALifeCreatureActor*> (e_who);
+
 	if (A)
 	{
 		// Actor touches something
-		CSE_ALifeItemWeapon*	W			=	smart_cast<CSE_ALifeItemWeapon*> (e_what);
+		CSE_ALifeItemWeapon *W = smart_cast<CSE_ALifeItemWeapon*> (e_what);
+
 		if (W) 
 		{
 			// Weapon
@@ -1511,9 +1546,13 @@ BOOL	game_sv_Deathmatch::OnTouch			(u16 eid_who, u16 eid_what, BOOL bForced)
 			for (u32 it=0; it<C.size(); ++it)
 			{
 				CSE_Abstract*		Et	= m_server->ID_to_entity				(C[it]);
+
 				if (0==Et)				continue;
+
 				CSE_ALifeItemWeapon*		T	= smart_cast<CSE_ALifeItemWeapon*>	(Et);
+
 				if (0==T)				continue;
+
 				if (slot == T->get_slot())	
 				{
 					if (bForced)
@@ -1592,6 +1631,12 @@ BOOL	game_sv_Deathmatch::OnTouch			(u16 eid_who, u16 eid_what, BOOL bForced)
 						EventPack.w		(&PacketReject.B.data, PacketReject.B.count);
 						EventPack.w_u8	(u8(PacketTake.B.count));
 						EventPack.w		(&PacketTake.B.data, PacketTake.B.count);
+
+						if ((EventPack.B.count + 100) > NET_PacketSizeLimit)
+						{
+							u_EventSend(EventPack);
+							EventPack.w_begin(M_EVENT_PACK);
+						}
 					}
 					if (EventPack.B.count > 2)	u_EventSend(EventPack);
 				}
@@ -1703,25 +1748,21 @@ void game_sv_Deathmatch::OnDetach(u16 eid_who, u16 eid_what)
 		NET_Packet							PacketReject;
 		NET_Packet							PacketTake;
 		EventPack.w_begin					(M_EVENT_PACK);
-		
-#pragma todo("tsmp: клиент вылетит от большого хабара")
 
 		for( ;tr_it!=tr_it_e; ++tr_it)
 		{
 			m_server->Perform_transfer		(PacketReject, PacketTake, *tr_it, e_parent, e_entity);
 
-			u32 EstimatedSize = PacketReject.B.count + PacketTake.B.count + EventPack.B.count;
-
-			if (EstimatedSize >= NET_PacketSizeLimit) 
-			{
-				u_EventSend(EventPack);
-				EventPack.w_begin(M_EVENT_PACK);
-			}
-
 			EventPack.w_u8					(u8(PacketReject.B.count));
 			EventPack.w						(&PacketReject.B.data, PacketReject.B.count);
 			EventPack.w_u8					(u8(PacketTake.B.count));
 			EventPack.w						(&PacketTake.B.data, PacketTake.B.count);
+			
+			if ((EventPack.B.count + 100) > NET_PacketSizeLimit)
+			{
+				u_EventSend(EventPack);
+				EventPack.w_begin(M_EVENT_PACK);
+			}
 		}
 
 		if (EventPack.B.count > 2)	 // tsmp: дважды пишутся данные, поэтому проверка на два;
