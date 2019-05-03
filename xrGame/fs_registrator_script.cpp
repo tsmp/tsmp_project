@@ -79,59 +79,6 @@ bool nameSorter(const FS_item& itm1, const FS_item& itm2){
 	return			(xr_strcmp(itm2.name,itm1.name)<0);
 }
 
-class FS_file_list_ex{
-	xr_vector<FS_item>	m_file_items;
-public:
-	enum{
-		eSortByNameUp	=0,
-		eSortByNameDown,
-		eSortBySizeUp,
-		eSortBySizeDown,
-		eSortByModifUp,
-		eSortByModifDown
-	};
-	FS_file_list_ex		(LPCSTR path, u32 flags, LPCSTR mask);
-
-	u32			Size()						{return m_file_items.size();}
-	FS_item		GetAt(u32 idx)				{return m_file_items[idx];}
-	void		Sort(u32 flags);
-};
-
-FS_file_list_ex::FS_file_list_ex(LPCSTR path, u32 flags, LPCSTR mask)
-{
-	FS_Path* P = FS.get_path(path);
-	P->m_Flags.set	(FS_Path::flNeedRescan,TRUE);
-	FS.m_Flags.set	(CLocatorAPI::flNeedCheck,TRUE);
-	FS.rescan_pathes();
-
-	FS_FileSet		files;
-	FS.file_list(files,path,flags,mask);
-
-	for(FS_FileSetIt it=files.begin();it!=files.end();++it){
-		m_file_items.push_back	(FS_item());
-		FS_item& itm			= m_file_items.back();
-		ZeroMemory				(itm.name,sizeof(itm.name));
-		strcat					(itm.name,it->name.c_str());
-		itm.modif				= (u32)it->time_write;
-		itm.size				= it->size;
-	}
-
-	FS.m_Flags.set	(CLocatorAPI::flNeedCheck,FALSE);
-}
-
-void FS_file_list_ex::Sort(u32 flags)
-{
-	if(flags==eSortByNameUp)		std::sort(m_file_items.begin(),m_file_items.end(),nameSorter<true>);
-	else if(flags==eSortByNameDown)	std::sort(m_file_items.begin(),m_file_items.end(),nameSorter<false>);
-	else if(flags==eSortBySizeUp)	std::sort(m_file_items.begin(),m_file_items.end(),sizeSorter<true>);
-	else if(flags==eSortBySizeDown)	std::sort(m_file_items.begin(),m_file_items.end(),sizeSorter<false>);
-	else if(flags==eSortByModifUp)	std::sort(m_file_items.begin(),m_file_items.end(),modifSorter<true>);
-	else if(flags==eSortByModifDown)std::sort(m_file_items.begin(),m_file_items.end(),modifSorter<false>);
-}
-
-FS_file_list_ex file_list_open_ex(CLocatorAPI* fs, LPCSTR path, u32 flags, LPCSTR mask)
-{return FS_file_list_ex(path,flags,mask);}
-
 FS_file_list file_list_open_script(CLocatorAPI* fs, LPCSTR initial, u32 flags)
 {	return FS_file_list(fs->file_list_open(initial,flags));}
 
@@ -164,23 +111,11 @@ void fs_registrator::script_register(lua_State *L)
 			.def("ModifDigitOnly",						&FS_item::ModifDigitOnly)
 			.def("Modif",								&FS_item::Modif),
 
-		class_<FS_file_list_ex>("FS_file_list_ex")
-			.def("Size",								&FS_file_list_ex::Size)
-			.def("GetAt",								&FS_file_list_ex::GetAt)
-			.def("Sort",								&FS_file_list_ex::Sort),
-
 		class_<FS_file_list>("FS_file_list")
 			.def("Size",								&FS_file_list::Size)
 			.def("GetAt",								&FS_file_list::GetAt)
 			.def("Free",								&FS_file_list::Free),
 
-/*		class_<FS_Path>("FS_Path")
-			.def_readonly("m_Path",						&FS_Path::m_Path)
-			.def_readonly("m_Root",						&FS_Path::m_Root)
-			.def_readonly("m_Add",						&FS_Path::m_Add)
-			.def_readonly("m_DefExt",					&FS_Path::m_DefExt)
-			.def_readonly("m_FilterCaption",			&FS_Path::m_FilterCaption),
-*/
 		class_<CLocatorAPI::file>("fs_file")
 			.def_readonly("name",						&CLocatorAPI::file::name)
 			.def_readonly("vfs",						&CLocatorAPI::file::vfs)
@@ -191,15 +126,6 @@ void fs_registrator::script_register(lua_State *L)
 
 
 		class_<CLocatorAPI>("FS")
-			.enum_("FS_sort_mode")
-			[
-				value("FS_sort_by_name_up",				int(FS_file_list_ex::eSortByNameUp)),
-				value("FS_sort_by_name_down",			int(FS_file_list_ex::eSortByNameDown)),
-				value("FS_sort_by_size_up",				int(FS_file_list_ex::eSortBySizeUp)),
-				value("FS_sort_by_size_down",			int(FS_file_list_ex::eSortBySizeDown)),
-				value("FS_sort_by_modif_up",			int(FS_file_list_ex::eSortByModifUp)),
-				value("FS_sort_by_modif_down",			int(FS_file_list_ex::eSortByModifDown))
-			]
 			.enum_("FS_List")
 			[
 				value("FS_ListFiles",					int(FS_ListFiles)),
@@ -236,8 +162,7 @@ void fs_registrator::script_register(lua_State *L)
 			.def("w_close",								&CLocatorAPI::w_close)
 
 			.def("file_list_open",						&file_list_open_script)
-			.def("file_list_open",						&file_list_open_script_2)
-			.def("file_list_open_ex",					&file_list_open_ex),
+			.def("file_list_open",						&file_list_open_script_2),
 
 		def("getFS",									getFS)
 	];

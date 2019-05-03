@@ -97,56 +97,9 @@ LPCSTR FS_Path::_update(string_path& dest, LPCSTR src)const
 	strconcat			(sizeof(dest), dest, m_Path, temp);
 	return xr_strlwr	(dest);
 }
-/*
-void FS_Path::_update(xr_string& dest, LPCSTR src)const
-{
-    R_ASSERT(src);
-    dest			= xr_string(m_Path)+src;
-    xr_strlwr		(dest);
-}*/
+
 void FS_Path::rescan_path_cb	()
 {
 	m_Flags.set(flNeedRescan,TRUE);
     FS.m_Flags.set(CLocatorAPI::flNeedRescan,TRUE);
-}
-
-bool XRCORE_API PatternMatch(LPCSTR s, LPCSTR mask)
-{
-	LPCSTR cp = nullptr;
-	LPCSTR mp = nullptr;
-
-	for (; *s&&*mask!='*'; mask++,s++) 
-		if (*mask!=*s&&*mask!='?') return false;
-
-	for (;;) 
-	{
-		if (!*s) 
-		{ 
-			while (*mask=='*') 
-				mask++; 
-			
-			return !*mask; 
-		}
-
-		if (*mask=='*') 
-		{ 
-			if (!*++mask) 
-				return true; 
-			
-			mp=mask; 
-			cp=s+1; 
-			continue; 
-		}
-
-		if (*mask==*s||*mask=='?') 
-		{ 
-			mask++, s++; 
-			continue; 
-		}
-
-		mask=mp; 
-		s=cp++;
-
-#pragma todo("tsmp: это че такое?")
-	}
 }

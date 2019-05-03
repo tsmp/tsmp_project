@@ -48,11 +48,14 @@ public:
 #	define _FINDDATA_T	_finddata64i32_t
 #endif
 
-struct XRCORE_API FS_File{
-	enum{ 
+struct XRCORE_API FS_File
+{
+	enum
+	{ 
 		flSubDir= (1<<0),
 		flVFS	= (1<<1),
 	};
+
 	unsigned 	attrib;
 	time_t	  	time_write;
 	long     	size;
@@ -66,7 +69,9 @@ public:
 				FS_File		(xr_string nm, long sz, time_t modif,unsigned attr);
 	bool 		operator<	(const FS_File& _X) const	{return xr_strcmp(name.c_str(),_X.name.c_str())<0; }
 };
-DEFINE_SET		(FS_File,FS_FileSet,FS_FileSetIt);
+
+//DEFINE_SET		(FS_File,FS_FileSet,FS_FileSetIt);
+using FileList = std::vector<std::string>;
 
 extern bool	XRCORE_API PatternMatch(LPCSTR s, LPCSTR mask);
 

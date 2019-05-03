@@ -8,8 +8,10 @@
 #include "object_broker.h"
 #include "string_table.h"
 
-struct predicate_remove_stat {
-	bool	operator() (SDrawStaticStruct& s) {
+struct predicate_remove_stat 
+{
+	bool operator() (SDrawStaticStruct& s) 
+	{
 		return ( !s.IsActual() );
 	}
 };
@@ -33,13 +35,12 @@ CUIGameCustom::~CUIGameCustom()
 	delete_data				(m_msgs_xml);
 }
 
-
-float CUIGameCustom::shedule_Scale		() 
+float CUIGameCustom::shedule_Scale() 
 {
 	return 0.5f;
 };
 
-void CUIGameCustom::shedule_Update		(u32 dt)
+void CUIGameCustom::shedule_Update(u32 dt)
 {
 	inherited::shedule_Update(dt);
 }
@@ -72,9 +73,9 @@ void CUIGameCustom::Render()
 {
 	GameCaptions()->Draw();
 	st_vec::iterator it = m_custom_statics.begin();
+
 	for(;it!=m_custom_statics.end();++it)
 		(*it).Draw();
-
 }
 
 bool CUIGameCustom::IR_OnKeyboardPress(int dik) 
@@ -91,33 +92,33 @@ bool CUIGameCustom::IR_OnMouseMove(int dx,int dy)
 {
 	return false;
 }
-bool CUIGameCustom::IR_OnMouseWheel			(int direction)
+
+bool CUIGameCustom::IR_OnMouseWheel(int direction)
 {
 	return false;
 }
 
-void CUIGameCustom::AddDialogToRender(CUIWindow* pDialog)
+void CUIGameCustom::AddDialogToRender(CUIWindow *pDialog)
 {
 	HUD().GetUI()->AddDialogToRender(pDialog);
-
 }
 
-void CUIGameCustom::RemoveDialogToRender(CUIWindow* pDialog)
+void CUIGameCustom::RemoveDialogToRender(CUIWindow *pDialog)
 {
 	HUD().GetUI()->RemoveDialogToRender(pDialog);
 }
 
-CUIDialogWnd* CUIGameCustom::MainInputReceiver	()
+CUIDialogWnd *CUIGameCustom::MainInputReceiver	()
 { 
 	return HUD().GetUI()->MainInputReceiver();
 };
 
-void CUIGameCustom::AddCustomMessage		(LPCSTR id, float x, float y, float font_size, CGameFont *pFont, u16 alignment, u32 color/* LPCSTR def_text*/ )
+void CUIGameCustom::AddCustomMessage(LPCSTR id, float x, float y, float font_size, CGameFont *pFont, u16 alignment, u32 color/* LPCSTR def_text*/ )
 {
 	GameCaptions()->addCustomMessage(id,x,y,font_size,pFont,(CGameFont::EAligment)alignment,color,"");
 }
 
-void CUIGameCustom::AddCustomMessage		(LPCSTR id, float x, float y, float font_size, CGameFont *pFont, u16 alignment, u32 color, /*LPCSTR def_text,*/ float flicker )
+void CUIGameCustom::AddCustomMessage(LPCSTR id, float x, float y, float font_size, CGameFont *pFont, u16 alignment, u32 color, /*LPCSTR def_text,*/ float flicker )
 {
 	AddCustomMessage(id,x,y,font_size, pFont, alignment, color);
 	GameCaptions()->customizeMessage(id, CUITextBanner::tbsFlicker)->fPeriod = flicker;
@@ -128,75 +129,82 @@ void CUIGameCustom::CustomMessageOut(LPCSTR id, LPCSTR msg, u32 color)
 	GameCaptions()->setCaption(id,msg,color,true);
 }
 
-void CUIGameCustom::RemoveCustomMessage		(LPCSTR id)
+void CUIGameCustom::RemoveCustomMessage	(LPCSTR id)
 {
 	GameCaptions()->removeCustomMessage(id);
 }
 
-SDrawStaticStruct* CUIGameCustom::AddCustomStatic			(LPCSTR id, bool bSingleInstance)
+SDrawStaticStruct *CUIGameCustom::AddCustomStatic(LPCSTR id, bool bSingleInstance)
 {
-	if(bSingleInstance){
+	if(bSingleInstance)
+	{
 		st_vec::iterator it = std::find(m_custom_statics.begin(),m_custom_statics.end(), id);
+		
 		if(it!=m_custom_statics.end())
 			return &(*it);
 	}
 	
 	CUIXmlInit xml_init;
-	m_custom_statics.push_back		(SDrawStaticStruct());
-	SDrawStaticStruct& sss			= m_custom_statics.back();
+	m_custom_statics.push_back(SDrawStaticStruct());
 
-	sss.m_static					= xr_new<CUIStatic>();
-	sss.m_name						= id;
-	xml_init.InitStatic				(*m_msgs_xml, id, 0, sss.m_static);
-	float ttl						= m_msgs_xml->ReadAttribFlt(id, 0, "ttl", -1);
+	SDrawStaticStruct &sss = m_custom_statics.back();
+	sss.m_static = xr_new<CUIStatic>();
+	sss.m_name = id;
+
+	xml_init.InitStatic(*m_msgs_xml, id, 0, sss.m_static);
+	float ttl = m_msgs_xml->ReadAttribFlt(id, 0, "ttl", -1);
+
 	if(ttl>0.0f)
-		sss.m_endTime				= Device.fTimeGlobal + ttl;
+		sss.m_endTime = Device.fTimeGlobal + ttl;
 
 	return &sss;
 }
 
-SDrawStaticStruct* CUIGameCustom::GetCustomStatic		(LPCSTR id)
+SDrawStaticStruct *CUIGameCustom::GetCustomStatic(LPCSTR id)
 {
 	st_vec::iterator it = std::find(m_custom_statics.begin(),m_custom_statics.end(), id);
-	if(it!=m_custom_statics.end()){
+	
+	if(it!=m_custom_statics.end())
 		return &(*it);
-	}
-	return NULL;
+	
+	return nullptr;
 }
 
-void CUIGameCustom::RemoveCustomStatic		(LPCSTR id)
+void CUIGameCustom::RemoveCustomStatic(LPCSTR id)
 {
 	st_vec::iterator it = std::find(m_custom_statics.begin(),m_custom_statics.end(), id);
-	if(it!=m_custom_statics.end()){
+	
+	if(it!=m_custom_statics.end())
+	{
 		xr_delete((*it).m_static);
 		m_custom_statics.erase(it);
 	}
 }
 
-
 #include "ui/UIGameTutorial.h"
 
-extern CUISequencer* g_tutorial;
-extern CUISequencer* g_tutorial2;
+extern CUISequencer *g_tutorial;
+extern CUISequencer *g_tutorial2;
 
 void CUIGameCustom::reset_ui()
 {
 	if(g_tutorial2)
 	{ 
-		g_tutorial2->Destroy	();
-		xr_delete				(g_tutorial2);
+		g_tutorial2->Destroy();
+		xr_delete(g_tutorial2);
 	}
 
 	if(g_tutorial)
 	{
-		g_tutorial->Destroy	();
+		g_tutorial->Destroy();
 		xr_delete(g_tutorial);
 	}
 }
-SDrawStaticStruct::SDrawStaticStruct	()
+
+SDrawStaticStruct::SDrawStaticStruct()
 {
-	m_static	= NULL;
-	m_endTime	= -1.0f;	
+	m_static = nullptr;
+	m_endTime = -1.0f;	
 }
 
 void SDrawStaticStruct::destroy()
@@ -206,7 +214,9 @@ void SDrawStaticStruct::destroy()
 
 bool SDrawStaticStruct::IsActual()
 {
-	if(m_endTime<0) return true;
+	if(m_endTime<0) 
+		return true;
+
 	return Device.fTimeGlobal < m_endTime;
 }
 
@@ -224,127 +234,141 @@ void SDrawStaticStruct::Update()
 		m_static->Update();
 }
 
-CMapListHelper	gMapListHelper;
-xr_token		game_types[];
+CMapListHelper gMapListHelper;
+xr_token game_types[];
 
 void CMapListHelper::Load()
 {
-	string_path					fn;
-	FS.update_path				(fn, "$game_config$", "mp\\map_list.ltx");
-	CInifile map_list_cfg		(fn);
+	string_path	fn;
+	FS.update_path(fn, "$game_config$", "mp\\map_list.ltx");
+	CInifile map_list_cfg(fn);
 
 	//read weathers set
-	CInifile::Sect w			= map_list_cfg.r_section("weather");
-	CInifile::SectCIt wi		= w.Data.begin();
-	CInifile::SectCIt wi_e		= w.Data.end();
+	CInifile::Sect w = map_list_cfg.r_section("weather");
+	CInifile::SectCIt wi = w.Data.begin();
+	CInifile::SectCIt wi_e = w.Data.end();
+
 	for( ;wi!=wi_e; ++wi)
 	{
-		m_weathers.resize		(m_weathers.size()+1);
-		SGameWeathers& gw		= m_weathers.back();
-		gw.m_weather_name		= (*wi).first;
-		gw.m_start_time			= (*wi).second;
+		m_weathers.resize(m_weathers.size()+1);
+		SGameWeathers& gw = m_weathers.back();
+		gw.m_weather_name = (*wi).first;
+		gw.m_start_time = (*wi).second;
 	}
 
 	//read original maps from config
-	CInifile::RootIt it			= map_list_cfg.sections().begin();
-	CInifile::RootIt it_e		= map_list_cfg.sections().end();
-	for( ;it!=it_e; ++it)
-	{
-		m_storage.resize		(m_storage.size()+1);
-		SGameTypeMaps&	Itm		= m_storage.back();
-		Itm.m_game_type_name	= (*it)->Name;
-		Itm.m_game_type_id		= (EGameTypes)get_token_id(game_types, Itm.m_game_type_name.c_str() );
+	CInifile::RootIt it	= map_list_cfg.sections().begin();
+	CInifile::RootIt it_e = map_list_cfg.sections().end();
 
-		CInifile::SectCIt sit	= (*it)->Data.begin();
-		CInifile::SectCIt sit_e	= (*it)->Data.end();
-		
-		for( ;sit!=sit_e; ++sit)
-		{
-			Itm.m_map_names.push_back	((*sit).first);
-		}
+	for (; it != it_e; ++it)
+	{
+		m_storage.resize(m_storage.size() + 1);
+		SGameTypeMaps & Itm = m_storage.back();
+		Itm.m_game_type_name = (*it)->Name;
+		Itm.m_game_type_id = (EGameTypes)get_token_id(game_types, Itm.m_game_type_name.c_str());
+
+		CInifile::SectCIt sit = (*it)->Data.begin();
+		CInifile::SectCIt sit_e = (*it)->Data.end();
+
+		for (; sit != sit_e; ++sit)
+			Itm.m_map_names.push_back((*sit).first);
 	}
-	// scan for additional maps
-	FS_FileSet			fset;
-	FS.file_list		(fset,"$game_levels$",FS_ListFiles,"*level.ltx");
-
-	FS_FileSetIt fit	= fset.begin();
-	FS_FileSetIt fit_e	= fset.end();
-
-	for( ;fit!=fit_e; ++fit)
+	
+	FileList lst;
+	FS.file_list(lst, "$game_levels$", "level.ltx");
+	
+	for(u32 it=0 ; it<lst.size(); it++)
 	{
-		string_path					map_cfg_fn;
-		FS.update_path				(map_cfg_fn, "$game_levels$", (*fit).name.c_str());
-		CInifile	map_ini			(map_cfg_fn);
+		std::string str = lst[it];
+		CInifile map_ini(str.c_str());
 
 		if(map_ini.section_exist("map_usage"))
 		{
-			CInifile::Sect S			= map_ini.r_section("map_usage");
-			CInifile::SectCIt si		= S.Data.begin();
-			CInifile::SectCIt si_e		= S.Data.end();
+			CInifile::Sect S = map_ini.r_section("map_usage");
+			CInifile::SectCIt si = S.Data.begin();
+			CInifile::SectCIt si_e = S.Data.end();
+
 			for( ;si!=si_e; ++si)
 			{
-				const shared_str& game_type = (*si).first;
-				SGameTypeMaps* M			= GetMapListInt(game_type);
+				const shared_str &game_type = (*si).first;
+				SGameTypeMaps *M = GetMapListInt(game_type);
+
 				if(!M)
 				{
-					Msg						("--unknown game type-%s",game_type.c_str());
-					m_storage.resize		(m_storage.size()+1);
-					SGameTypeMaps&	Itm		= m_storage.back();
-					Itm.m_game_type_name	= game_type;
-					Itm.m_game_type_id		= (EGameTypes)get_token_id(game_types, game_type.c_str() );
-					M						= &m_storage.back();
+					Msg("--unknown game type-%s",game_type.c_str());
+					m_storage.resize(m_storage.size()+1);
+
+					SGameTypeMaps &Itm = m_storage.back();
+					Itm.m_game_type_name = game_type;
+					Itm.m_game_type_id = (EGameTypes)get_token_id(game_types, game_type.c_str() );
+					M = &m_storage.back();
 				}
-				shared_str _map_name			= (*fit).name.substr(0,(*fit).name.find('\\')).c_str();
+								
+				// tsmp: данный код получает подстроку имени папки из строки полного пути
+				// берем адрес последнего символа / в строке, вычитаем из него 
+				// адрес начала строки, получаем размер строки до последнего / и имени файла
+				unsigned step = reinterpret_cast<unsigned>(strrchr(str.c_str(), '\\')) - reinterpret_cast<unsigned>(str.c_str());
+
+				// во временную переменную записываем строку без имени файла
+				char ch[128]{ 0 };
+				strncpy_s(ch, str.c_str(), step);
+
+				// получаем строку только имени папки с картой
+				shared_str _map_name = strrchr(ch, '\\') + 1;
 				
 				if(M->m_map_names.end()==std::find(M->m_map_names.begin(),M->m_map_names.end(),_map_name))
-					M->m_map_names.push_back	(_map_name);
+					M->m_map_names.push_back(_map_name);
 			}			
 		}
 	}
 
-	R_ASSERT2	(m_storage.size(), "unable to fill map list");
-	R_ASSERT2	(m_weathers.size(), "unable to fill weathers list");
+	R_ASSERT2(m_storage.size(), "unable to fill map list");
+	R_ASSERT2(m_weathers.size(), "unable to fill weathers list");
 }
 
-const SGameTypeMaps& CMapListHelper::GetMapListFor(const shared_str& game_type)
+const SGameTypeMaps &CMapListHelper::GetMapListFor(const shared_str &game_type)
 {
-	if( !m_storage.size() )
-		Load		();
+	if(!m_storage.size())
+		Load();
 
 	return *GetMapListInt(game_type);
 }
 
-SGameTypeMaps* CMapListHelper::GetMapListInt(const shared_str& game_type)
+SGameTypeMaps *CMapListHelper::GetMapListInt(const shared_str &game_type)
 {
+	TSTORAGE_CIT it	= m_storage.begin();
+	TSTORAGE_CIT it_e = m_storage.end();
 
-	TSTORAGE_CIT it		= m_storage.begin();
-	TSTORAGE_CIT it_e	= m_storage.end();
 	for( ;it!=it_e; ++it)
 	{
 		if(game_type==(*it).m_game_type_name )
 			return &(*it);
 	}
-	return NULL;
+
+	return nullptr;
 }
 
-const SGameTypeMaps& CMapListHelper::GetMapListFor(const EGameTypes game_id)
+const SGameTypeMaps &CMapListHelper::GetMapListFor(const EGameTypes game_id)
 {
-	if( !m_storage.size() )
+	if(!m_storage.size())
 	{
-		Load		();
-		R_ASSERT2	(m_storage.size(), "unable to fill map list");
+		Load();
+		R_ASSERT2(m_storage.size(), "unable to fill map list");
 	}
-	TSTORAGE_CIT it		= m_storage.begin();
-	TSTORAGE_CIT it_e	= m_storage.end();
+
+	TSTORAGE_CIT it	= m_storage.begin();
+	TSTORAGE_CIT it_e = m_storage.end();
+
 	for( ;it!=it_e; ++it)
 	{
-		if(game_id==(*it).m_game_type_id )
+		if (game_id == (*it).m_game_type_id)
 			return (*it);
 	}
+
 	return m_storage[0];
 }
 
-const GAME_WEATHERS& CMapListHelper::GetGameWeathers() 
+const GAME_WEATHERS &CMapListHelper::GetGameWeathers() 
 {
 	if(!m_weathers.size())
 		Load();

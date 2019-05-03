@@ -778,7 +778,7 @@ xr_vector<char*>* CLocatorAPI::file_list_open			(const char* _path, u32 flags)
 {
 	R_ASSERT		(_path);
 	VERIFY			(flags);
-	// проверить нужно ли пересканировать пути
+
 	check_pathes	();
 
 	string_path		N;
@@ -844,73 +844,31 @@ void	CLocatorAPI::file_list_close	(xr_vector<char*>* &lst)
 	}
 }
 
-int CLocatorAPI::file_list(FS_FileSet& dest, LPCSTR path, u32 flags, LPCSTR mask)
+void CLocatorAPI::file_list(FileList &list, LPCSTR path, LPCSTR mask)
 {
-	R_ASSERT		(path);
-	VERIFY			(flags);
-	// проверить нужно ли пересканировать пути
-    check_pathes	();
-               
-	string_path		N;
-	if (path_exist(path))	
-		update_path	(N,path,"");
-    else			
-		strcpy_s(N,sizeof(N),path);
+	check_pathes();
 
-	file			desc;
-	desc.name		= N;
-	files_it	I 	= files.find(desc);
-	if (I==files.end())	return 0;
+	string_path	N{0};
 
-	SStringVec 		masks;
-	_SequenceToList	(masks,mask);
-    BOOL b_mask 	= !masks.empty();
+	if (path_exist(path))
+		update_path(N, path, "");
+	else
+		strcpy_s(N, sizeof(N), path);
 
-	size_t base_len	= xr_strlen(N);
-	
-	for (++I; I!=files.end(); ++I)
+	file desc;
+	desc.name = N;
+	files_it I = files.find(desc);
+
+	if (I == files.end()) 
+		return;
+
+	for (++I; I != files.end(); ++I)
 	{
-		const file& entry = *I;
-		if (0!=strncmp(entry.name,N,base_len))	break;	// end of list
-		LPCSTR end_symbol = entry.name+xr_strlen(entry.name)-1;
-		if ((*end_symbol) !='\\')	
-		{
-			// file
-			if ((flags&FS_ListFiles) == 0)	continue;
-			LPCSTR entry_begin 		= entry.name+base_len;
-			if ((flags&FS_RootOnly)&&strchr(entry_begin,'\\'))	continue;	// folder in folder
-			// check extension
-			if (b_mask)
-			{
-				bool bOK			= false;
-				for (SStringVecIt it=masks.begin(); it!=masks.end(); ++it)
-				{
-					if (PatternMatch(entry_begin,it->c_str()))
-					{
-						bOK=true; 
-						break;
-					}
-				}
-				if (!bOK)			continue;
-			}
-			xr_string fn			= entry_begin;
-			// insert file entry
-			if (flags&FS_ClampExt)fn= EFS.ChangeFileExt(fn,"");
-			u32 fl = (entry.vfs!=0xffffffff?FS_File::flVFS:0);
-			dest.insert(FS_File(fn,entry.size_real,entry.modif,fl));
-		} 
-		else 
-		{
-			// folder
-			if ((flags&FS_ListFolders) == 0)	continue;
-			LPCSTR entry_begin 		= entry.name+base_len;
+		const file &entry = *I;
 
-			if ((flags&FS_RootOnly)&&(strchr(entry_begin,'\\')!=end_symbol))	continue;	// folder in folder
-			u32 fl = FS_File::flSubDir|(entry.vfs?FS_File::flVFS:0);
-			dest.insert(FS_File(entry_begin,entry.size_real,entry.modif,fl));
-		}
+		if (strstr(strrchr(entry.name, '\\') + 1 , mask) && strstr(entry.name, N))
+			list.push_back(entry.name);
 	}
-	return dest.size();
 }
 
 void CLocatorAPI::check_cached_files	(LPSTR fname, const file &desc, LPCSTR &source_name)
@@ -1146,7 +1104,6 @@ void CLocatorAPI::copy_file_to_build	(T *&r, LPCSTR source_name)
 
 bool CLocatorAPI::check_for_file	(LPCSTR path, LPCSTR _fname, string_path& fname, const file *&desc)
 {
-	// проверить нужно ли пересканировать пути
     check_pathes			();
 
 	// correct path
@@ -1266,7 +1223,6 @@ void	CLocatorAPI::w_close(IWriter* &S)
 
 CLocatorAPI::files_it CLocatorAPI::file_find_it(LPCSTR fname)
 {
-	// проверить нужно ли пересканировать пути
     check_pathes	();
 
 	file			desc_f;
@@ -1360,7 +1316,7 @@ void CLocatorAPI::file_copy(LPCSTR src, LPCSTR dest)
 	}
 }
 
-void CLocatorAPI::file_rename(LPCSTR src, LPCSTR dest, bool bOwerwrite)
+void CLocatorAPI::file_rename(LPCSTR src, LPCSTR dest, bool bOverwrite)
 {
 	files_it	S		= file_find_it(src);
 	if (S!=files.end())
@@ -1368,7 +1324,7 @@ void CLocatorAPI::file_rename(LPCSTR src, LPCSTR dest, bool bOwerwrite)
 		files_it D		= file_find_it(dest);
 		if (D!=files.end())
 		{ 
-	        if (!bOwerwrite) return;
+	        if (!bOverwrite) return;
             unlink		(D->name);
 			char* str	= LPSTR(D->name);
 			xr_free		(str);
@@ -1392,17 +1348,17 @@ void CLocatorAPI::file_rename(LPCSTR src, LPCSTR dest, bool bOwerwrite)
 
 int	CLocatorAPI::file_length(LPCSTR src)
 {
-	files_it	I		= file_find_it(src);
+	files_it I = file_find_it(src);
 	return (I!=files.end())?I->size_real:-1;
 }
 
 bool CLocatorAPI::path_exist(LPCSTR path)
 {
-    PathPairIt P 			= pathes.find(path); 
-    return					(P!=pathes.end());
+    PathPairIt P = pathes.find(path); 
+    return (P!=pathes.end());
 }
 
-FS_Path* CLocatorAPI::append_path(LPCSTR path_alias, LPCSTR root, LPCSTR add, BOOL recursive)
+FS_Path *CLocatorAPI::append_path(LPCSTR path_alias, LPCSTR root, LPCSTR add, BOOL recursive)
 {
 	VERIFY			(root/**&&root[0]/**/);
 	VERIFY			(false==path_exist(path_alias));
@@ -1427,7 +1383,6 @@ LPCSTR CLocatorAPI::update_path(string_path& dest, LPCSTR initial, LPCSTR src)
 
 u32 CLocatorAPI::get_file_age(LPCSTR nm)
 {
-	// проверить нужно ли пересканировать пути
     check_pathes	();
 
 	files_it I 		= file_find_it(nm);
@@ -1436,7 +1391,6 @@ u32 CLocatorAPI::get_file_age(LPCSTR nm)
 
 void CLocatorAPI::set_file_age(LPCSTR nm, u32 age)
 {
-	// проверить нужно ли пересканировать пути
     check_pathes	();
 
     // set file
@@ -1575,22 +1529,17 @@ BOOL CLocatorAPI::can_modify_file(LPCSTR path, LPCSTR name)
 
 void CLocatorAPI::ProcessExternalArch()
 {
-	FS_FileSet		fset;
-	file_list		(fset, "$mod_dir$", FS_ListFiles, "*.xdb*");
+	FileList lst;
+	file_list(lst, "$mod_dir$",".xdb");
+	string_path path{0};
 
-	FS_FileSetIt	it		= fset.begin();
-	FS_FileSetIt	it_e	= fset.end();
-
-	string_path		full_mod_name, _path;
-	for( ;it!=it_e; ++it)
+	for (u32 it = 0; it < lst.size(); it++)
 	{
-		Msg					("--found external arch %s",(*it).name.c_str());
-		update_path			(full_mod_name,"$mod_dir$",(*it).name.c_str());
+		Msg("--found external arch %s",lst[it].c_str());
 
-		FS_Path* pFSRoot		= FS.get_path("$fs_root$");
-		
-		strconcat			(sizeof(_path), _path, pFSRoot->m_Path, "gamedata");
+		FS_Path *pFSRoot = FS.get_path("$fs_root$");		
+		strconcat(sizeof(path), path, pFSRoot->m_Path, "gamedata");
 
-		ProcessArchive		(full_mod_name, _path);
+		ProcessArchive(lst[it].c_str(), path);
 	}
 }

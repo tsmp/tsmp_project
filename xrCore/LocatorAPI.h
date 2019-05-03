@@ -155,9 +155,9 @@ public:
     bool						path_exist			(LPCSTR path);
     FS_Path*					get_path			(LPCSTR path);
     FS_Path*					append_path			(LPCSTR path_alias, LPCSTR root, LPCSTR add, BOOL recursive);
-    LPCSTR						update_path			(string_path& dest, LPCSTR initial, LPCSTR src);
+    LPCSTR						update_path			(string_path &dest, LPCSTR initial, LPCSTR src);
 
-	int							file_list			(FS_FileSet& dest, LPCSTR path, u32 flags=FS_ListFiles, LPCSTR mask=0);
+	void						file_list			(FileList &list, LPCSTR path, LPCSTR mask);
 //.    void						update_path			(xr_string& dest, LPCSTR initial, LPCSTR src);
 
 	// 

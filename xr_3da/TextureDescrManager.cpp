@@ -104,36 +104,36 @@ void CTextureDescrMngr::LoadLTX()
 
 void CTextureDescrMngr::LoadTHM()
 {
-	FS_FileSet				flist;
-	FS.file_list			(flist,"$game_textures$",FS_ListFiles,"*.thm");
-	Msg						("count of .thm files=%d", flist.size());
-	FS_FileSetIt It			= flist.begin();
-	FS_FileSetIt It_e		= flist.end();
-	STextureParams			tp;
-	string_path				fn;
-	for(;It!=It_e;++It)
-	{
-		
-		FS.update_path		(fn,"$game_textures$", (*It).name.c_str());
-		IReader* F			= FS.r_open(fn);
-		strcpy_s				(fn,(*It).name.c_str());
+	FileList lst;
+	FS.file_list(lst, "$game_textures$", ".thm");
+
+	Msg("count of .thm files=%d", lst.size());
+	STextureParams tp;
+	string_path	fn{0};
+
+	for(u32 it=0; it<lst.size(); it++)
+	{		
+		IReader *F = FS.r_open(lst[it].c_str());
+
+		strcpy_s(fn, strrchr(lst[it].c_str(), '\\')+1);
 		fix_texture_thm_name(fn);
 
-		R_ASSERT			(F->find_chunk(THM_CHUNK_TYPE));
-		F->r_u32			();
-		tp.Clear			();
-		tp.Load				(*F);
-		FS.r_close			(F);
+		R_ASSERT(F->find_chunk(THM_CHUNK_TYPE));
+		F->r_u32();
+		tp.Clear();
+		tp.Load(*F);
+		FS.r_close(F);
+
 #ifdef _EDITOR
 		texture_desc& desc		= m_texture_details[fn];
                 desc.m_type                     = tp.type;
 #endif
-		if (STextureParams::ttImage		== tp.fmt ||
-			STextureParams::ttTerrain	== tp.fmt ||
-			STextureParams::ttNormalMap	== tp.fmt	)
+		if (STextureParams::ttImage	== tp.fmt 
+			|| STextureParams::ttTerrain == tp.fmt
+			|| STextureParams::ttNormalMap == tp.fmt)
 		{
 #ifndef _EDITOR
-		texture_desc& desc		 = m_texture_details[fn];
+		texture_desc& desc = m_texture_details[fn];
 #endif
 
 			if( tp.detail_name.size() &&
