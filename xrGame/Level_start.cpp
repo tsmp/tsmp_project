@@ -310,9 +310,6 @@ bool xr_stdcall net_start_finalizer()
 					sprintf(str11, "%x", m_crc32);
 
 					Msg("crc %i %s",m_crc32,str11);
-
-					
-
 					Msg("map exists, loading");
 
 					string_path sp;
@@ -333,12 +330,11 @@ bool xr_stdcall net_start_finalizer()
 				 if (remove(cfg_full_name)) Msg("file removed");			 
 			 }
 
-			 Xr_Downloader *DWLDR;
-			 DWLDR->DownloadFile(TSMP_MAPLIST_URL, cfg_full_name);
-			 DWLDR->~Xr_Downloader();
+			 DownloadFile *DWLDR= new DownloadFile(TSMP_MAPLIST_URL, cfg_full_name);
+			 DWLDR->StartDownload();
+			 DWLDR->~DownloadFile();
 
 				Msg("%s", cfg_full_name);
-
 				std::vector<std::string> StrVec;
 
 				std::string s, s1;
@@ -396,9 +392,9 @@ bool xr_stdcall net_start_finalizer()
 
 					Men = MainMenu();
 
-					Xr_Downloader *xrdownloader;
+					DownloadFile *xrdownloader = new DownloadFile(DownloadFrom, Arch);
 
-					auto ThTh = [](Xr_Downloader *xrldr)
+					auto ThTh = [](DownloadFile *xrldr, std::string Arch_)
 					{
 						Msg("ThTh started");
 
@@ -407,26 +403,19 @@ bool xr_stdcall net_start_finalizer()
 						while (true)
 						{
 							std::this_thread::sleep_for(std::chrono::milliseconds(500));
+							
+							if (!xrldr)
+								break;
+							
 							int Pr = xrldr->GetProgress();
 							Men->OnDownloadPatchProgress(Pr, 100);
 							Msg("downloaded %i %%", Pr);
 
-							if (Pr == 100) break;
+							if (Pr == 100) 
+								break;
 						}
-						Msg("ThTh end");					
-					};
 
-					std::thread thread_1(ThTh,xrdownloader);
-
-					auto ThD = [](std::string url, std::string Arch_, Xr_Downloader *XRDW)
-					{
-						Msg("ThD started");
-						
-						Msg("ThD: Downloader defined");
-						XRDW->DownloadFile(url, Arch_);
-						XRDW->~Xr_Downloader();
-
-						Msg("ThD downloaded");
+						xrldr->~DownloadFile();
 
 						Men->OnDownloadMapEnd();
 						Msg("Загрузка карты завершена (Map is downloaded) 100 %%");
@@ -438,13 +427,30 @@ bool xr_stdcall net_start_finalizer()
 						pApp->Level_Scan();
 
 						std::string Reconnect;
-						Reconnect = "start client("+LastConnectParams+")";
+						Reconnect = "start client(" + LastConnectParams + ")";
 						Console->Execute(Reconnect.c_str());
+
+						Msg("ThTh end");					
+					};
+
+					std::thread thread_1(ThTh,xrdownloader, Arch);
+
+					auto ThD = [](DownloadFile *XRDW)
+					{
+						Msg("ThD started");
+						
+						Msg("ThD: Downloader defined");
+						XRDW->StartDownload();
+						
+
+						Msg("ThD downloaded");
+
+					
 
 						Msg("ThD finished");					
 					};
 
-					std::thread thread_D(ThD,DownloadFrom,Arch,xrdownloader);
+					std::thread thread_D(ThD,xrdownloader);
 
 					thread_D.detach();
 					thread_1.detach();

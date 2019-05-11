@@ -1,75 +1,81 @@
-// xrDownloader.cpp: определяет экспортированные функции для приложения DLL.
-//
-
 #include "stdafx.h"
 #include "xrDownloader.h"
 
-CURL *curl = NULL;
-
-std::string Xr_Downloader::CorrectFilename(std::string ssss)
+std::string CorrectFilename(std::string ssss)
 {
-		std::string DPath = ssss;
+	std::string DPath = ssss;
 
-		for (int i = 0; ; i++)
+	for (int i = 0; ; i++)
+	{
+		if (DPath[i] == '/') DPath[i] = '\\';
+		if (DPath[i] == '\\')
 		{
-			if (DPath[i] == '/') DPath[i] = '\\';
-			if (DPath[i] == '\\')
+			DPath += " ";
+
+			for (int j = DPath.size() - 1; j > i; j--)
 			{
-				DPath += " ";
-
-				for (int j = DPath.size() - 1; j > i; j--)
-				{
-					DPath[j] = DPath[j - 1];
-				}
-
-				DPath[i + 1] = '\\';
-				i++;
+				DPath[j] = DPath[j - 1];
 			}
 
-			if (i == (DPath.size() - 1)) break;
-
+			DPath[i + 1] = '\\';
+			i++;
 		}
-		Msg("was %s become %s", ssss.c_str(), DPath.c_str());
 
-		return DPath;
+		if (i == (DPath.size() - 1)) break;
+
 	}
+	Msg("was %s become %s", ssss.c_str(), DPath.c_str());
 
-void Xr_Downloader::DownloadFile(std::string Url, std::string OutFile_)
+	return DPath;
+}
+
+int xferinfo(void* userdata, curl_off_t dltotal, curl_off_t dlnow, curl_off_t, curl_off_t) 
 {
-		Msg("ThD: DownloadFile Called");
+	auto downloader = static_cast<DownloadFile*>(userdata);
+	downloader->SetProgress((double)dlnow, (double)dltotal);
+
+	return 0;
+}
+
+DownloadFile::DownloadFile(std::string From, std::string To) : Url(From), Path(To) { Downloaded = 0; Total = 1000; };
+
+void DownloadFile::StartDownload()
+{
+	CURL *curl = nullptr;
 	curl = curl_easy_init();
 
-		iTotalProgress = 0;
-
-		Msg("ThD: CorrectFile Called");
-		std::string OutFile = CorrectFilename(OutFile_);
-		Msg("ThD: CorrectFile Finished");
-
-		FILE *fp;
-		CURLcode res;
-
-		if (curl)
-		{
-			Msg("ThD: Curl initialization ok");
-
-			fp = fopen(OutFile.c_str(), "wb");
-			curl_easy_setopt(curl, CURLOPT_URL, Url.c_str());
-			curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, NULL);
-
-			curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0);
-			curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, CURL_ProgressUpdate);
-			curl_easy_setopt(curl, CURLOPT_PROGRESSDATA, &PR);
-
-			curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
-			res = curl_easy_perform(curl);
-			fclose(fp);
-
-			Msg("task completed!");
-			curl_easy_cleanup(curl);
-		}
+	if (!curl)
+	{
+		Msg("! Cant init curl");
+		return;
 	}
 
-int Xr_Downloader::GetProgress()
-{
-	return iTotalProgress;
+	FILE *fp = nullptr;
+	CURLcode res;
+
+	fp = fopen(CorrectFilename(Path).c_str(), "wb");
+
+	curl_easy_setopt(curl, CURLOPT_URL,Url.c_str());
+	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, NULL);
+	curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0);
+	curl_easy_setopt(curl, CURLOPT_XFERINFOFUNCTION, xferinfo);
+	curl_easy_setopt(curl, CURLOPT_XFERINFODATA, this);
+	curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
+
+	Msg("Downloading file %s", Path.c_str());
+	Msg("From %s", Url.c_str());
+
+	res = curl_easy_perform(curl);
+	fclose(fp);
+
+	Msg("File %s downloaded", Path.c_str());
+	curl_easy_cleanup(curl);
 }
+
+void DownloadFile::SetProgress(double progr, double from)
+{
+	Total = from;
+	Downloaded = progr;
+}
+
+int DownloadFile::GetProgress() { return (int)(Downloaded/Total*(double)100); };
