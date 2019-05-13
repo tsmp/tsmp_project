@@ -12,194 +12,193 @@
 #include "MainMenu.h"
 
 #include "RegistryFuncs.h"
+#include "hudmanager.h"
 
-#include "..\xrDownloader\xrDownloader.h"
-#include <fstream>
-#include <thread>
-
+BOOL g_start_total_res = TRUE;
+xrServer::EConnect g_connect_server_err = xrServer::ErrConnect;
 extern bool bIsDedicatedServer;
+std::string LastConnectParams = " ";
 
-#define TSMP_MAPLIST_URL "http://dark-stalker.clan.su/tsmp/tsmp_maplist.txt"
-
-CMainMenu *Men;
-std::string LastConnectParams=" ";
-
-BOOL CLevel::net_Start	( LPCSTR op_server, LPCSTR op_client )
+BOOL CLevel::net_Start(LPCSTR op_server, LPCSTR op_client)
 {
 	string128 m_pl_name;
 	ReadRegistry_StrValue(REGISTRY_VALUE_USERNAME, m_pl_name);
-	if (xr_strlen(m_pl_name)>17)
+
+	if (xr_strlen(m_pl_name) > 17)
 		m_pl_name[17] = 0;
 
-	net_start_result_total				= TRUE;
+	net_start_result_total = TRUE;
+	pApp->LoadBegin();
 
-	pApp->LoadBegin				();
-
-	//make Client Name if options doesn't have it
-	LPCSTR	NameStart	= strstr(op_client,"/name=");
+	LPCSTR NameStart = strstr(op_client, "/name="); 	//make Client Name if options don't have it
+	
 	if (!NameStart)
 	{
 		string512 tmp;
 		strcpy_s(tmp, op_client);
 		strcat_s(tmp, "/name=");
-	//	strcat_s(tmp, xr_strlen(Core.UserName) ? Core.UserName : Core.CompName);
-	
-		strcat_s(tmp,xr_strlen(m_pl_name)? m_pl_name: (xr_strlen(Core.UserName) ? Core.UserName : Core.CompName));
+		//	strcat_s(tmp, xr_strlen(Core.UserName) ? Core.UserName : Core.CompName);
 
+		strcat_s(tmp, xr_strlen(m_pl_name) ? m_pl_name : (xr_strlen(Core.UserName) ? Core.UserName : Core.CompName));
 
-		m_caClientOptions			= tmp;
-	} 
-	else 
+		m_caClientOptions = tmp;
+	}
+	else
 	{
-		string1024	ret="";
-		LPCSTR		begin	= NameStart + xr_strlen("/name="); 
-		sscanf			(begin, "%[^/]",ret);
-		
+		string1024 ret = "";
+		LPCSTR begin = NameStart + xr_strlen("/name=");
+		sscanf(begin, "%[^/]", ret);
+
 		if (!xr_strlen(ret))
 		{
 			string1024 tmpstr;
 			strcpy_s(tmpstr, op_client);
-			*(strstr(tmpstr, "name=")+5) = 0;
+			*(strstr(tmpstr, "name=") + 5) = 0;
 			strcat_s(tmpstr, xr_strlen(Core.UserName) ? Core.UserName : Core.CompName);
-		
+
 			const char* ptmp = strstr(strstr(op_client, "name="), "/");
-			
+
 			if (ptmp)
 				strcat_s(tmpstr, ptmp);
 			m_caClientOptions = tmpstr;
 		}
 		else
-		{
-			m_caClientOptions			= op_client;
-		};		
-	};
-	m_caServerOptions			    = op_server;
-	//---------------------------------------------------------------------
+			m_caClientOptions = op_client;		
+	}
+
+	m_caServerOptions = op_server;
 	m_bDemoPlayMode = FALSE;
 	m_aDemoData.clear();
-	m_bDemoStarted	= FALSE;
-	
-	if (strstr(Core.Params,"-tdemo ") || strstr(Core.Params,"-tdemof "))
+	m_bDemoStarted = FALSE;
+
+	if (strstr(Core.Params, "-tdemo ") || strstr(Core.Params, "-tdemof "))
 	{
-		string1024				f_name;
-		
-		if (strstr(Core.Params,"-tdemo "))
+		string1024 f_name;
+
+		if (strstr(Core.Params, "-tdemo "))
 		{
-			sscanf					(strstr(Core.Params,"-tdemo ")+7,"%[^ ] ",f_name);
+			sscanf(strstr(Core.Params, "-tdemo ") + 7, "%[^ ] ", f_name);
 			m_bDemoPlayByFrame = FALSE;
 
-			Demo_Load	(f_name);	
+			Demo_Load(f_name);
 		}
 		else
 		{
-			sscanf					(strstr(Core.Params,"-tdemof ")+8,"%[^ ] ",f_name);
+			sscanf(strstr(Core.Params, "-tdemof ") + 8, "%[^ ] ", f_name);
 			m_bDemoPlayByFrame = TRUE;
 
 			m_lDemoOfs = 0;
 			Demo_Load_toFrame(f_name, 100, m_lDemoOfs);
-		};		
+		}
 	}
 	else
 	{
 		if (m_caServerOptions.size() == 0 || !strstr(*m_caServerOptions, "single"))
-		{
-			Demo_PrepareToStore();
-		}
+			Demo_PrepareToStore();		
 	}
-	
-	LastConnectParams = m_caClientOptions.c_str();
-	//---------------------------------------------------------------------------
-	g_loading_events.push_back	(LOADING_EVENT(this,&CLevel::net_start1));
-	g_loading_events.push_back	(LOADING_EVENT(this,&CLevel::net_start2));
-	g_loading_events.push_back	(LOADING_EVENT(this,&CLevel::net_start3));
-	g_loading_events.push_back	(LOADING_EVENT(this,&CLevel::net_start4));
-	g_loading_events.push_back	(LOADING_EVENT(this,&CLevel::net_start5));
-	g_loading_events.push_back	(LOADING_EVENT(this,&CLevel::net_start6));
-	
-	return net_start_result_total;
 
+	LastConnectParams = m_caClientOptions.c_str();
+
+	Msg("params: %s", LastConnectParams.c_str());
+
+	g_loading_events.push_back(LOADING_EVENT(this, &CLevel::net_start1));
+	g_loading_events.push_back(LOADING_EVENT(this, &CLevel::net_start2));
+	g_loading_events.push_back(LOADING_EVENT(this, &CLevel::net_start3));
+	g_loading_events.push_back(LOADING_EVENT(this, &CLevel::net_start4));
+	g_loading_events.push_back(LOADING_EVENT(this, &CLevel::net_start5));
+	g_loading_events.push_back(LOADING_EVENT(this, &CLevel::net_start6));
+
+	return net_start_result_total;
 }
 
-bool CLevel::net_start1				()
+bool CLevel::net_start1()
 {
 	// Start client and server if need it
+
 	if (m_caServerOptions.size())
 	{
-		g_pGamePersistent->LoadTitle		("st_server_starting");
+		g_pGamePersistent->LoadTitle("st_server_starting");
 
 		typedef IGame_Persistent::params params;
-		params							&p = g_pGamePersistent->m_game_params;
+		params& p = g_pGamePersistent->m_game_params;
+
 		// Connect
-		if (!xr_strcmp(p.m_game_type,"single"))
-			Server					= xr_new<xrServer>();		
+		if (!xr_strcmp(p.m_game_type, "single"))
+			Server = xr_new<xrServer>();
 		else
-			Server					= xr_new<xrGameSpyServer>();
-		
-//		if (!strstr(*m_caServerOptions,"/alife")) 
-		if (xr_strcmp(p.m_alife,"alife"))
+			Server = xr_new<xrGameSpyServer>();
+
+		if (xr_strcmp(p.m_alife, "alife"))
 		{
-			string64			l_name = "";
+			string64 l_name = "";
 			const char* SOpts = *m_caServerOptions;
+
 			strncpy(l_name, *m_caServerOptions, strchr(SOpts, '/') - SOpts);
 			// Activate level
-			if (strchr(l_name,'/'))
-				*strchr(l_name,'/')	= 0;
+			if (strchr(l_name, '/'))
+				* strchr(l_name, '/') = 0;
 
-			m_name					= l_name;
+			m_name = l_name;
 
-			int						id = pApp->Level_ID(l_name);
+			int id = pApp->Level_ID(l_name);
 
-			if (id<0) {
-				pApp->LoadEnd				();
-				Log							("Can't find level: ",l_name);
-				net_start_result_total		= FALSE;
+			if (id < 0) 
+			{
+				pApp->LoadEnd();
+				Log("Can't find level: ", l_name);
+				net_start_result_total = FALSE;
 				return true;
 			}
-			pApp->Level_Set			(id);
+
+			pApp->Level_Set(id);
 		}
 	}
 	return true;
 }
 
-bool CLevel::net_start2				()
+bool CLevel::net_start2()
 {
 	if (net_start_result_total && m_caServerOptions.size())
 	{
-		if ((m_connect_server_err=Server->Connect(m_caServerOptions))!=xrServer::ErrNoError)
+		if ((m_connect_server_err = Server->Connect(m_caServerOptions)) != xrServer::ErrNoError)
 		{
 			net_start_result_total = false;
-			Msg				("! Failed to start server.");
-//			Console->Execute("main_menu on");
+			Msg("! Failed to start server.");
+			//			Console->Execute("main_menu on");
 			return true;
 		}
-		Server->SLS_Default		();
-		m_name					= Server->level_name(m_caServerOptions);
+
+		Server->SLS_Default();
+		m_name = Server->level_name(m_caServerOptions);
 	}
 	return true;
 }
 
-bool CLevel::net_start3				()
+bool CLevel::net_start3()
 {
-	if(!net_start_result_total) return true;
+	if (!net_start_result_total) return true;
 	//add server port if don't have one in options
 	if (!strstr(m_caClientOptions.c_str(), "port=") && Server)
 	{
-		string64	PortStr;
+		string64 PortStr;
 		sprintf_s(PortStr, "/port=%d", Server->GetPort());
 
-		string4096	tmp;
+		string4096 tmp;
 		strcpy_s(tmp, m_caClientOptions.c_str());
 		strcat_s(tmp, PortStr);
-		
+
 		m_caClientOptions = tmp;
 	}
+
 	//add password string to client, if don't have one
-	if(m_caServerOptions.size()){
+	if (m_caServerOptions.size()) 
+	{
 		if (strstr(m_caServerOptions.c_str(), "psw=") && !strstr(m_caClientOptions.c_str(), "psw="))
 		{
-			string64	PasswordStr = "";
+			string64 PasswordStr = "";
 			const char* PSW = strstr(m_caServerOptions.c_str(), "psw=") + 4;
-			if (strchr(PSW, '/')) 
+
+			if (strchr(PSW, '/'))
 				strncpy(PasswordStr, PSW, strchr(PSW, '/') - PSW);
 			else
 				strcpy_s(PasswordStr, PSW);
@@ -207,316 +206,142 @@ bool CLevel::net_start3				()
 			string4096	tmp;
 			sprintf_s(tmp, "%s/psw=%s", m_caClientOptions.c_str(), PasswordStr);
 			m_caClientOptions = tmp;
-		};
-	};
+		}
+	}
+
 	//setting players GameSpy CDKey if it comes from command line
 	if (strstr(m_caClientOptions.c_str(), "/cdkey="))
 	{
 		string64 CDKey;
-		const char* start = strstr(m_caClientOptions.c_str(),"/cdkey=") +xr_strlen("/cdkey=");
-		sscanf			(start, "%[^/]",CDKey);
+		const char* start = strstr(m_caClientOptions.c_str(), "/cdkey=") + xr_strlen("/cdkey=");
+		sscanf(start, "%[^/]", CDKey);
 		string128 cmd;
 		sprintf_s(cmd, "cdkey %s", _strupr(CDKey));
-		Console->Execute			(cmd);
+		Console->Execute(cmd);
 	}
 	return true;
 }
 
-bool CLevel::net_start4				()
+bool CLevel::net_start4()
 {
-	if(!net_start_result_total) return true;
+	if (!net_start_result_total) 
+		return true;
 
 	g_loading_events.pop_front();
 
-	g_loading_events.push_front	(LOADING_EVENT(this,&CLevel::net_start_client6));
-	g_loading_events.push_front	(LOADING_EVENT(this,&CLevel::net_start_client5));
-	g_loading_events.push_front	(LOADING_EVENT(this,&CLevel::net_start_client4));
-	g_loading_events.push_front	(LOADING_EVENT(this,&CLevel::net_start_client3));
-	g_loading_events.push_front	(LOADING_EVENT(this,&CLevel::net_start_client2));
-	g_loading_events.push_front	(LOADING_EVENT(this,&CLevel::net_start_client1));
+	g_loading_events.push_front(LOADING_EVENT(this, &CLevel::net_start_client6));
+	g_loading_events.push_front(LOADING_EVENT(this, &CLevel::net_start_client5));
+	g_loading_events.push_front(LOADING_EVENT(this, &CLevel::net_start_client4));
+	g_loading_events.push_front(LOADING_EVENT(this, &CLevel::net_start_client3));
+	g_loading_events.push_front(LOADING_EVENT(this, &CLevel::net_start_client2));
+	g_loading_events.push_front(LOADING_EVENT(this, &CLevel::net_start_client1));
 
 	return false;
 }
 
-bool CLevel::net_start5				()
+bool CLevel::net_start5()
 {
 	if (net_start_result_total)
 	{
-		NET_Packet		NP;
-		NP.w_begin		(M_CLIENTREADY);
-		Send			(NP,net_flags(TRUE,TRUE));
+		NET_Packet NP;
+		NP.w_begin(M_CLIENTREADY);
+		Send(NP, net_flags(TRUE, TRUE));
 
 		if (OnClient() && Server)
-		{
-			Server->SLS_Clear();
-		};
-	};
+			Server->SLS_Clear();		
+	}
+
 	return true;
 }
-#include "hudmanager.h"
-BOOL				g_start_total_res		= TRUE;
-xrServer::EConnect	g_connect_server_err	= xrServer::ErrConnect;
 
 struct LevelLoadFinalizer
 {
-bool xr_stdcall net_start_finalizer()
-{
-	if(g_pGameLevel && !g_start_total_res)
+	bool xr_stdcall net_start_finalizer()
 	{
-		shared_str ln	= Level().name();
-		Msg				("! Failed to start client. Check the connection or level existance.");
-		DEL_INSTANCE	(g_pGameLevel);
-		Console->Execute("main_menu on");
+		if (g_pGameLevel && !g_start_total_res)
+		{
+			shared_str ln = Level().name();
+			Msg("! Failed to start client. Check the connection or level existance.");
+			DEL_INSTANCE(g_pGameLevel);
+			Console->Execute("main_menu on");
 
-		if (g_connect_server_err==xrServer::ErrBELoad)
-		{
-			MainMenu()->OnLoadError("BattlEye/BEServer.dll");
-		}
-		else
-		if(g_connect_server_err==xrServer::ErrConnect && !psNET_direct_connect && !bIsDedicatedServer) 
-		{
-			MainMenu()->SwitchToMultiplayerMenu();
-		}else
-			if (g_connect_server_err == xrServer::ErrNoLevel)
+			switch (g_connect_server_err)
 			{
-				MainMenu()->SwitchToMultiplayerMenu();
 
-				Msg("cant find level %s", ln.c_str());
-				bool IsInList = false;
-				std::string DownloadFrom;
-				std::string Arch;
-
-				string_path	cfg_name = "tsmp_maplist.txt";
-				string_path cfg_full_name;
-
-				string_path map_full_name;
-
-				FS.update_path(cfg_full_name, "$app_data_root$", cfg_name);
-				FS.update_path(map_full_name, "$app_data_root$", ln.c_str());
-
-				Arch = map_full_name;
-				Arch += ".xdb0";
-
-				if (GetFileAttributes(Arch.c_str()) != DWORD(-1))
-				{
-					std::string SS = ln.c_str();
-					SS += ".xdb0";
-
-					IReader* r = FS.r_open("$app_data_root$", SS.c_str());
-					u32 m_crc32 = crc32(r->pointer(), r->length());
-					FS.r_close(r);
-
-					char str11[80];
-					sprintf(str11, "%x", m_crc32);
-
-					Msg("crc %i %s",m_crc32,str11);
-					Msg("map exists, loading");
-
-					string_path sp;
-					FS.update_path(sp, "$fs_root$", "\gamedata");
-
-					FS.ProcessArchive(Arch.c_str(), sp);
-					pApp->Level_Scan();
-
-					std::string Reconnect;
-					Reconnect = "start client(" + LastConnectParams + ")";
-					Console->Execute(Reconnect.c_str());
-					return true;
-				}
-
-			 if(GetFileAttributes(cfg_full_name) != DWORD(-1))	
-			 {
-				 Msg("file exists");
-				 if (remove(cfg_full_name)) Msg("file removed");			 
-			 }
-
-			 DownloadFile *DWLDR= new DownloadFile(TSMP_MAPLIST_URL, cfg_full_name);
-			 DWLDR->StartDownload();
-			 DWLDR->~DownloadFile();
-
-				Msg("%s", cfg_full_name);
-				std::vector<std::string> StrVec;
-
-				std::string s, s1;
-				std::ifstream file(cfg_full_name);
-
-				while (true)
-				{
-					std::getline(file, s);
-					if (s == s1) break;
-					StrVec.push_back(s);
-					s1 = s;
-				}
-
-				file.close();
-
-				for (int IT = 0; IT < StrVec.size(); IT++)
-				{
-					std::string First, Second;
-
-					char *s = new char[StrVec[IT].size() + 1];
-
-					strcpy(s, StrVec[IT].c_str());
-
-					char *p = strtok(s, "=");
-					int iii = 0;
-				
-					while (p != NULL)
-					{
-						if (iii == 0) First = p;
-						else Second = p;
-						p = strtok(NULL, "=");
-						iii++;
-					}
-
-					delete[] s;
-					
-					Msg("%s \n", First.c_str());
-					Msg("%s \n", Second.c_str());
-
-					if (strncmp(First.c_str(), ln.c_str(), First.size() - 2)==0)
-					{
-						IsInList = true;
-						DownloadFrom = Second;
-						Msg("Found in list map %s url %s", First.c_str(), Second.c_str());
-					}
-				}
-
-				if (IsInList)
-				{
-					Msg("map is in list, so downloadnig it, outname: %s , url: %s",Arch.c_str(),DownloadFrom.c_str());
-
-					MainMenu()->OnDownloadMapStart(ln);
-
-					Msg("ondownloadmpastart");
-
-					Men = MainMenu();
-
-					DownloadFile *xrdownloader = new DownloadFile(DownloadFrom, Arch);
-
-					auto ThTh = [](DownloadFile *xrldr, std::string Arch_)
-					{
-						Msg("ThTh started");
-
-						std::this_thread::sleep_for(std::chrono::milliseconds(2000));
-
-						while (true)
-						{
-							std::this_thread::sleep_for(std::chrono::milliseconds(500));
-							
-							if (!xrldr)
-								break;
-							
-							int Pr = xrldr->GetProgress();
-							Men->OnDownloadPatchProgress(Pr, 100);
-							Msg("downloaded %i %%", Pr);
-
-							if (Pr == 100) 
-								break;
-						}
-
-						xrldr->~DownloadFile();
-
-						Men->OnDownloadMapEnd();
-						Msg("«агрузка карты завершена (Map is downloaded) 100 %%");
-
-						string_path sp;
-						FS.update_path(sp, "$fs_root$", "\gamedata");
-
-						FS.ProcessArchive(Arch_.c_str(), sp);
-						pApp->Level_Scan();
-
-						std::string Reconnect;
-						Reconnect = "start client(" + LastConnectParams + ")";
-						Console->Execute(Reconnect.c_str());
-
-						Msg("ThTh end");					
-					};
-
-					std::thread thread_1(ThTh,xrdownloader, Arch);
-
-					auto ThD = [](DownloadFile *XRDW)
-					{
-						Msg("ThD started");
-						
-						Msg("ThD: Downloader defined");
-						XRDW->StartDownload();
-						
-
-						Msg("ThD downloaded");
-
-					
-
-						Msg("ThD finished");					
-					};
-
-					std::thread thread_D(ThD,xrdownloader);
-
-					thread_D.detach();
-					thread_1.detach();
-				
-					MainMenu()->OnMainMenuMessageBox("ѕосле загрузки карты вы сможете играть на данном сервере. You can play on this server after downloading map.");
-					Msg("onloaderror");
-				}
-				else
-				{
-					Msg("cant find level in maplist");
-					MainMenu()->OnLoadError(ln.c_str());
-				}
-
+			case IPureServer::ErrConnect:
+			{
+				if (!psNET_direct_connect && !bIsDedicatedServer)
+					MainMenu()->SwitchToMultiplayerMenu();
 			}
+				break;
+
+			case IPureServer::ErrBELoad:
+			{
+				Msg("cant load BattlEye/BEServer.dll");
+				MainMenu()->OnLoadError("BattlEye/BEServer.dll");
+			}
+				break;
+
+			case IPureServer::ErrNoLevel:
+			{
+					MainMenu()->SwitchToMultiplayerMenu();
+					Msg("cant find level %s", ln.c_str());
+					MainMenu()->OnLoadError(ln.c_str());				
+			}
+				break;
+			}
+
+		}
+
+		return true;
 	}
-	return true;
-}
 };
+
 LevelLoadFinalizer LF;
 
 bool CLevel::net_start6()
 {
-	g_start_total_res			= net_start_result_total;
-	g_connect_server_err		= m_connect_server_err;
-	g_loading_events.pop_front	();
-	g_loading_events.push_front	(LOADING_EVENT(&LF, &LevelLoadFinalizer::net_start_finalizer));
+	g_start_total_res = net_start_result_total;
+	g_connect_server_err = m_connect_server_err;
+	g_loading_events.pop_front();
+	g_loading_events.push_front(LOADING_EVENT(&LF, &LevelLoadFinalizer::net_start_finalizer));
 
 	//init bullet manager
-	BulletManager().Clear		();
-	BulletManager().Load		();
+	BulletManager().Clear();
+	BulletManager().Load();
 
-	pApp->LoadEnd				();
+	pApp->LoadEnd();
 
-	if(net_start_result_total)
+	if (net_start_result_total)
 	{
-		if (strstr(Core.Params,"-$")) 
+		if (strstr(Core.Params, "-$"))
 		{
-			string256				buf,cmd,param;
-			sscanf					(strstr(Core.Params,"-$")+2,"%[^ ] %[^ ] ",cmd,param);
-			strconcat				(sizeof(buf),buf,cmd," ",param);
-			Console->Execute		(buf);
+			string256				buf, cmd, param;
+			sscanf(strstr(Core.Params, "-$") + 2, "%[^ ] %[^ ] ", cmd, param);
+			strconcat(sizeof(buf), buf, cmd, " ", param);
+			Console->Execute(buf);
 		}
 
-		if	(!bIsDedicatedServer)
-		{
-			if (g_hud)
-				HUD().GetUI()->OnConnected();
-		}
+		if (!bIsDedicatedServer && g_hud)
+				HUD().GetUI()->OnConnected();		
 	}
 
 	return false;
 }
 
-
-void CLevel::InitializeClientGame	(NET_Packet& P)
+void CLevel::InitializeClientGame(NET_Packet & P)
 {
 	string256 game_type_name;
 	P.r_stringZ(game_type_name);
-	if(game && !xr_strcmp(game_type_name, game->type_name()) )
+
+	if (game && !xr_strcmp(game_type_name, game->type_name()))
 		return;
-	
+
 	xr_delete(game);
 	Msg("- Game configuring : Started ");
-	CLASS_ID clsid			= game_GameState::getCLASS_ID(game_type_name,false);
-	game					= smart_cast<game_cl_GameState*> ( NEW_INSTANCE ( clsid ) );
+	CLASS_ID clsid = game_GameState::getCLASS_ID(game_type_name, false);
+	game = smart_cast<game_cl_GameState*> (NEW_INSTANCE(clsid));
 	game->set_type_name(game_type_name);
 	game->Init();
-	m_bGameConfigStarted	= TRUE;
+	m_bGameConfigStarted = TRUE;
 }

@@ -233,8 +233,12 @@ void xrServer::AttachNewClient(IClient* CL)
 			moddllinfo.fileinfo.error_already_has_dl_msg = "Error happens";  //Сообщение, выводимое пользователю при возникновении ошибки во время закачки
 			moddllinfo.fileinfo.compression = FZ_COMPRESSION_NO_COMPRESSION; //Используемый тип компрессии
 			moddllinfo.procname = "ModLoad";  //Имя процедуры в dll мода, которая должна быть вызвана; должна иметь тип FZDllModFun
-			moddllinfo.procarg1 = "tsmp"; //Аргументы для передачи в процедуру
-
+			
+			if(strstr(Core.Params, "-tsmp_debug"))
+				moddllinfo.procarg1 = "tsmp_debug"; //Аргументы для передачи в процедуру
+			else 
+				moddllinfo.procarg1 = "tsmp"; //Аргументы для передачи в процедуру
+			
 			ip_address Address;
 			DWORD dwPort = 0;
 
