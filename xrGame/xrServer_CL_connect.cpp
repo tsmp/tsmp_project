@@ -121,56 +121,18 @@ void xrServer::Check_GameSpy_CDKey_Success			(IClient* CL)
 };
 
 BOOL	g_SV_Disable_Auth_Check = FALSE;
-extern int g_sv_mp_ModLoaderEnabled;
-
-bool server_connected = false;
 
 bool xrServer::NeedToCheckClient_BuildVersion		(IClient* CL)	
 {
-	if (!server_connected)
-	{
-		server_connected = true;
-		return false;
-	}
-
-	if (!g_sv_mp_ModLoaderEnabled)
-	{
-		if (g_SV_Disable_Auth_Check)
+	if (g_SV_Disable_Auth_Check)
 			return false;
-
-		CL->flags.bVerified = FALSE;
-		NET_Packet	P;
-		P.w_begin(M_AUTH_CHALLENGE);
-		SendTo(CL->ID, P);
-
-		return true;
-	}
-	else
-	{
-		NET_Packet	P;
-		P.w_begin(M_AUTH_CHALLENGE);
-		P.w_stringZ("mapname");
-		P.w_stringZ(Level().name().c_str());
-
-		
-
-		if (g_SV_Disable_Auth_Check)
-		{
-			P.w_u32(1);
-			SendTo(CL->ID, P);
-
-			return false;
-		}
-
-		CL->flags.bVerified = FALSE;
-
-		SendTo(CL->ID, P);
-		P.w_u32(2);
-
-		CL->flags.bVerified = FALSE;
-
-		return true;
-	}
+	
+	CL->flags.bVerified = FALSE;
+	NET_Packet P;
+	P.w_begin(M_AUTH_CHALLENGE);
+	SendTo(CL->ID, P);
+	
+	return true;
 };
 
 void xrServer::OnBuildVersionRespond(IClient* CL, NET_Packet& P)

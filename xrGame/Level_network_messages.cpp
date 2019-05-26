@@ -243,25 +243,7 @@ void CLevel::ClientReceive()
 			}break;
 		case M_AUTH_CHALLENGE:
 			{
-			shared_str str1,str2;
-			u32 NeedToCheck = 0;
-
-			P->r_stringZ(str1);
-			P->r_stringZ(str2);
-			P->r_u32(NeedToCheck);
-
-			if (strstr(str1.c_str(), "mapname"))
-			{
-				Msg("TSMP Server send data");
-
-				Msg("%s", str2.c_str());
-
-				if (NeedToCheck==2)
-					OnBuildVersionChallenge();					
-			}
-			else
 				OnBuildVersionChallenge();
-
 			}break;
 		case M_CLIENT_CONNECT_RESULT:
 			{

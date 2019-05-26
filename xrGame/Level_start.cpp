@@ -254,10 +254,107 @@ bool CLevel::net_start5()
 	return true;
 }
 
+
+#include "..\xrDownloader\xrDownloader.h"
+#include <thread>
+
+CMainMenu* Men;
+
+bool TSMP_HasNewUpdates()
+{
+	bool b = CheckForUpdates();
+
+	if (b)
+		Msg("TSMP need to update");
+	else
+		Msg("TSMP is up to date");
+
+	return b;
+}
+
+void TSMP_Update(std::string level="none")
+{
+	if (!Men)
+	{
+		Msg("! error tsmp cant get menu");
+		return;
+	}
+
+	bool DownloadMap = (level == "none") ? false : true;
+
+	if(g_pGameLevel)
+		DEL_INSTANCE(g_pGameLevel);
+
+	Console->Execute("main_menu on");
+	Men->SwitchToMultiplayerMenu();
+
+	DownloadFiles* xrdownloader = new DownloadFiles();
+	FillDownloadList(xrdownloader, level);
+
+	//std::string DownloadFrom, Arch;
+	//DownloadFrom = "http://stalker.stagila.ru:8080/web_drive/shadow_of_chernobyl/mods/military_kuznya.xdb0";
+	//Arch="C:\\sdk\\kuznya.xdb0";
+
+	
+	Men->OnDownloadMapStart("Загрузка контента (Downloading content)");
+
+	auto ThUI = [](DownloadFiles * xrldr)
+	{
+		Msg("ThUI started");
+
+		std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+
+		Men->OnMainMenuMessageBox("Загрузка ресурсов. После загрузки игра перезапустится и вы сможете играть на сервере.");
+
+		while (true)
+		{
+			std::this_thread::sleep_for(std::chrono::milliseconds(500));
+
+			if (!xrldr)
+				break;
+
+			int Pr = xrldr->GetProgress();
+			Men->OnDownloadPatchProgress(Pr, 100);
+			Msg("downloaded %i %%", Pr);
+
+			if (Pr == 100)
+				break;
+		}
+
+		xrldr->~DownloadFiles();
+
+		Men->OnDownloadMapEnd();
+
+		RunUpdater(LastConnectParams);
+		Console->Execute("quit");
+
+		Msg("ThUI end");
+	};
+
+
+	auto ThD = [](DownloadFiles * XRDW)
+	{
+		Msg("ThD started");
+		Msg("ThD: Downloader defined");
+		XRDW->StartDownload();
+		Msg("ThD downloaded");
+		Msg("ThD finished");
+	};
+
+	std::thread thread_D(ThD, xrdownloader);
+	std::thread thread_UI(ThUI, xrdownloader);
+
+	thread_D.detach();
+	thread_UI.detach();
+}
+
 struct LevelLoadFinalizer
 {
 	bool xr_stdcall net_start_finalizer()
 	{
+		Men = MainMenu();
+		bool NoMap = false;
+
 		if (g_pGameLevel && !g_start_total_res)
 		{
 			shared_str ln = Level().name();
@@ -286,11 +383,21 @@ struct LevelLoadFinalizer
 			{
 					MainMenu()->SwitchToMultiplayerMenu();
 					Msg("cant find level %s", ln.c_str());
-					MainMenu()->OnLoadError(ln.c_str());				
+				//	MainMenu()->OnLoadError(ln.c_str());
+					NoMap = true;
+
+					
 			}
 				break;
 			}
 
+			if(NoMap)
+				TSMP_Update(ln.c_str());
+			else
+			{
+				if (TSMP_HasNewUpdates())
+					TSMP_Update();
+			}
 		}
 
 		return true;
