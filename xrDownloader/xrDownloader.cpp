@@ -115,6 +115,8 @@ void DownloadFile::SetProgress(double progr, double from)
 	Downloaded = progr;
 }
 
+
+
 int DownloadFile::GetProgress() { return (int)(Downloaded/Total*(double)100); };
 
 void ParseMaplist(std::vector<std::string>& all, std::vector<Map>& maps)
@@ -320,6 +322,7 @@ void WhoNeedUpdate(std::vector<std::string> &Filess, std::vector<std::string>& U
 	Msg("checking resources");
 
 	std::string ModDir = WithoutSlashAndText(WithoutSlashAndText(GetProgrammPath()));
+		
 	std::vector<std::string> Files2;
 	ScanFiles(Files2);
 
@@ -334,7 +337,7 @@ void WhoNeedUpdate(std::vector<std::string> &Filess, std::vector<std::string>& U
 			full = ModDir + str;
 			str2 = Files2[i];
 
-			Msg("comparing %s %s", full.c_str(), str2.c_str());
+			//Msg("comparing %s %s", full.c_str(), str2.c_str());
 
 			u32 size1, size2;
 			std::transform(str2.begin(), str2.end(), str2.begin(), ::tolower);
@@ -342,7 +345,7 @@ void WhoNeedUpdate(std::vector<std::string> &Filess, std::vector<std::string>& U
 			size1 = full.size();
 			size2 = str2.size();
 
-			Msg("%u %u", size1, size2);
+			//Msg("%u %u", size1, size2);
 
 			if ((size1 == size2) && (!str2.compare(full)))
 			{
@@ -392,7 +395,7 @@ bool NeedToUpdate(std::vector<sFile>& FilesList)
 			full = ModDir + str;
 			str2 = Files[i];
 
-			Msg("comparing %s %s",full.c_str(), str2.c_str());
+		//	Msg("comparing %s %s",full.c_str(), str2.c_str());
 
 			u32 size1, size2;
 			std::transform(str2.begin(), str2.end(), str2.begin(), ::tolower);
@@ -400,7 +403,7 @@ bool NeedToUpdate(std::vector<sFile>& FilesList)
 			size1 = full.size();
 			size2 = str2.size();
 
-			Msg("%u %u",size1,size2);
+			//Msg("%u %u",size1,size2);
 
 			if ((size1==size2) && (!str2.compare(full)))
 			{
@@ -467,7 +470,6 @@ bool XRDOWNLOADER_API CheckForUpdates()
 	return NeedToUpdate(Files);
 }
 
-
 void RunProgramm(std::string Path, std::string Arg, bool hidden = false)
 {
 	STARTUPINFO si;
@@ -514,6 +516,8 @@ std::string GetFileNameFromPath(std::string Path)
 
 void DownloadFiles::StartDownload()
 {
+	all_done = false;
+
 	std::string ModDir = WithoutSlashAndText(WithoutSlashAndText(GetProgrammPath()));
 	std::string Downloads = ModDir + "\\downloads\\";
 
@@ -546,14 +550,17 @@ void DownloadFiles::StartDownload()
 		
 		Msg("loading to %s",DownloadHere.c_str());
 
+		
 		DownloadFile *dl = new DownloadFile(Urls[i], DownloadHere);
 		DFile = (void*)dl;
+		isinprogress = true;
 		dl->StartDownload();
+		isinprogress = false;
 		dl->~DownloadFile();
 
 		Msg("loaded");
 	}
-
+	all_done = true;
 	
 	Out.close();
 }
@@ -570,13 +577,16 @@ int DownloadFiles::GetProgress()
 
 	float f = ((float)idx / (float)totalfiles)*(float)100;
 
-	if (DFile != nullptr)
+	if (isinprogress && DFile)
 	{
 		DownloadFile *ldr = (DownloadFile*)DFile;
 		f+=  ((float)ldr->GetProgress())/(float)totalfiles;
 	}
 
-	return f;
+	if (all_done)
+		return 100;
+	else
+		return f;
 }
 
 void AddMapDependencies(std::vector<std::string>& Filess, std::vector<std::string>& Urlss, std::vector<bool> &Compr, std::string mapname)
@@ -658,10 +668,12 @@ void AddMapDependencies(std::vector<std::string>& Filess, std::vector<std::strin
 
 		for (int j=0; j < Files.size(); j++)
 		{
-			if (Files[j].Name == Maps[idx].Dependencies[i] && !FileExists(Files[j].Name))
+			std::string path = ModDir + "\\" + Files[j].Location + "\\" + Files[j].Name + '.' + Files[j].Ext;
+
+			if (Files[j].Name == Maps[idx].Dependencies[i] && !FileExists(path))
 			{
 				Urlss.push_back(Files[j].Url);
-				Filess.push_back(ModDir+ "\\" + Files[j].Location + "\\" + Files[j].Name + '.' + Files[j].Ext);
+				Filess.push_back(path);
 				Compr.push_back(Files[j].Compressed);
 			}
 		}

@@ -14,6 +14,8 @@
 #include "RegistryFuncs.h"
 #include "hudmanager.h"
 
+#include "..\TSMP_BuildConfig.h"
+
 BOOL g_start_total_res = TRUE;
 xrServer::EConnect g_connect_server_err = xrServer::ErrConnect;
 extern bool bIsDedicatedServer;
@@ -262,6 +264,7 @@ CMainMenu* Men;
 
 bool TSMP_HasNewUpdates()
 {
+#ifdef TSMP_CLIENT
 	bool b = CheckForUpdates();
 
 	if (b)
@@ -270,6 +273,9 @@ bool TSMP_HasNewUpdates()
 		Msg("TSMP is up to date");
 
 	return b;
+#else
+	return false;
+#endif
 }
 
 void TSMP_Update(std::string level="none")
@@ -282,10 +288,6 @@ void TSMP_Update(std::string level="none")
 
 	bool DownloadMap = (level == "none") ? false : true;
 
-	if(g_pGameLevel)
-		DEL_INSTANCE(g_pGameLevel);
-
-	Console->Execute("main_menu on");
 	Men->SwitchToMultiplayerMenu();
 
 	DownloadFiles* xrdownloader = new DownloadFiles();
@@ -302,7 +304,7 @@ void TSMP_Update(std::string level="none")
 	{
 		Msg("ThUI started");
 
-		std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
 		Men->OnMainMenuMessageBox("«агрузка ресурсов. ѕосле загрузки игра перезапуститс€ и вы сможете играть на сервере.");
 
@@ -324,6 +326,7 @@ void TSMP_Update(std::string level="none")
 		xrldr->~DownloadFiles();
 
 		Men->OnDownloadMapEnd();
+		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
 		RunUpdater(LastConnectParams);
 		Console->Execute("quit");
@@ -339,6 +342,7 @@ void TSMP_Update(std::string level="none")
 		XRDW->StartDownload();
 		Msg("ThD downloaded");
 		Msg("ThD finished");
+		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 	};
 
 	std::thread thread_D(ThD, xrdownloader);
@@ -354,10 +358,11 @@ struct LevelLoadFinalizer
 	{
 		Men = MainMenu();
 		bool NoMap = false;
+		shared_str ln = Level().name();
 
 		if (g_pGameLevel && !g_start_total_res)
 		{
-			shared_str ln = Level().name();
+			
 			Msg("! Failed to start client. Check the connection or level existance.");
 			DEL_INSTANCE(g_pGameLevel);
 			Console->Execute("main_menu on");
@@ -384,20 +389,15 @@ struct LevelLoadFinalizer
 					MainMenu()->SwitchToMultiplayerMenu();
 					Msg("cant find level %s", ln.c_str());
 				//	MainMenu()->OnLoadError(ln.c_str());
-					NoMap = true;
-
 					
+#ifdef TSMP_CLIENT
+						TSMP_Update(ln.c_str());
+#endif					
 			}
 				break;
 			}
 
-			if(NoMap)
-				TSMP_Update(ln.c_str());
-			else
-			{
-				if (TSMP_HasNewUpdates())
-					TSMP_Update();
-			}
+
 		}
 
 		return true;

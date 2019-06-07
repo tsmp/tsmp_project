@@ -338,7 +338,11 @@ public:
 		if (GameID() != GAME_SINGLE) 
 		{
 			Msg("For this game type Demo Record is disabled.");
-			return;
+
+			if(args[0]!='9')
+				return;
+
+			Msg("ok");
 		};
 		#endif
 		Console->Hide	();

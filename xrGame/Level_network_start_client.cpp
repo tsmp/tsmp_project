@@ -9,6 +9,8 @@
 #include "PhysicsGamePars.h"
 #include "ai_space.h"
 
+#include "..\TSMP_BuildConfig.h"
+
 extern	pureFrame*				g_pNetProcessor;
 extern bool bIsDedicatedServer;
 
@@ -51,6 +53,9 @@ bool	CLevel::net_start_client2				()
 	return true;
 }
 
+extern bool TSMP_HasNewUpdates();
+//void TSMP_Update(std::string level = "none");
+
 bool	CLevel::net_start_client3				()
 {
 	if(connected_to_server){
@@ -63,19 +68,29 @@ bool	CLevel::net_start_client3				()
 
 		// Determine internal level-ID
 		int						level_id = pApp->Level_ID(level_name);
-		if (level_id<0)	{
+
+		bool Upd = false;
+#ifdef TSMP_CLIENT
+		Upd = TSMP_HasNewUpdates();
+#endif
+
+		if (level_id<0 || Upd)	{
 			Disconnect			();
 			pApp->LoadEnd		();
 			connected_to_server = FALSE;
 			m_name				= level_name;
+
+			if (Upd&& (level_id > 0))
+				m_name = "none";
+
 			m_connect_server_err = xrServer::ErrNoLevel;
 			return				false;
 		}
+
 		pApp->Level_Set			(level_id);
 		m_name					= level_name;
 		// Load level
 		R_ASSERT2				(Load(level_id),"Loading failed.");
-
 	}
 	return true;
 }

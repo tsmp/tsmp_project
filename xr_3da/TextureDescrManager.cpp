@@ -115,7 +115,13 @@ void CTextureDescrMngr::LoadTHM()
 	{		
 		IReader *F = FS.r_open(lst[it].c_str());
 
-		strcpy_s(fn, strrchr(lst[it].c_str(), '\\')+1);
+		FS.update_path(fn, "$game_textures$", "");
+	
+		std::string ss = fn;
+		std::string s(lst[it].begin() + ss.size(), lst[it].end());
+
+			strcpy_s(fn, s.c_str());
+
 		fix_texture_thm_name(fn);
 
 		R_ASSERT(F->find_chunk(THM_CHUNK_TYPE));

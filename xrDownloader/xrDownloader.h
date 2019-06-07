@@ -37,11 +37,13 @@ private:
 	void* DFile;
 	int idx;
 	int totalfiles;
+	bool isinprogress;
+	bool all_done;
 	std::vector<std::string> Urls;
 	std::vector<std::string> Paths;
 	std::vector<bool> Compressions;
 public:
-	void AddElement(std::string url, std::string path, bool compressed) { Urls.push_back(url); Paths.push_back(path); Compressions.push_back(compressed); }
+	void AddElement(std::string url, std::string path, bool compressed) { Urls.push_back(url); Paths.push_back(path); Compressions.push_back(compressed); all_done = false; }
 	void StartDownload();
 	int GetProgress();
 };
