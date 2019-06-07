@@ -2,6 +2,7 @@
 #include "build.h"
 #include "common_compilers\xrThread.h"
 #include "xrSyncronize.h"
+#include <random>
 
 xrCriticalSection	task_CS
 #ifdef PROFILE_CRITICAL_SECTIONS
@@ -69,7 +70,8 @@ void CBuild::Light()
 		mem_Compact		();
 
 		// Randomize deflectors
-		std::random_shuffle	(g_deflectors.begin(),g_deflectors.end());
+		auto rng = std::default_random_engine{};
+		shuffle	(g_deflectors.begin(),g_deflectors.end(),rng);
 		for					(u32 dit = 0; dit<g_deflectors.size(); dit++)	task_pool.push_back(dit);
 
 		// Main process (4 threads)

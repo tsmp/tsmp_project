@@ -48,11 +48,19 @@ public:
 		_world_operator_ptr,
 		_condition_evaluator_ptr
 	>												CProblemSolver;
-	typedef CProblemSolver							inherited;
-	typedef typename inherited::_edge_type			_action_id_type;
-	typedef GraphEngineSpace::CWorldProperty		CWorldProperty;
-	typedef GraphEngineSpace::CWorldState			CWorldState;
-	typedef _world_operator							_world_operator;
+
+	typedef CProblemSolver inherited;
+	typedef typename inherited::_edge_type _action_id_type;
+	typedef typename inherited::_condition_type _condition_type;
+	typedef typename inherited::COperator COperator;
+	typedef typename inherited::CConditionEvaluator CConditionEvaluator;
+	typedef typename inherited::_value_type _value_type;
+	typedef typename inherited::_edge_type _edge_type;
+	typedef typename inherited::_operator_ptr _operator_ptr;
+
+	typedef GraphEngineSpace::CWorldProperty CWorldProperty;
+	typedef GraphEngineSpace::CWorldState CWorldState;
+	typedef _world_operator _world_operator; //Fuck this shit!
 
 protected:
 	bool						m_initialized;
@@ -87,7 +95,7 @@ public:
 	virtual						~CActionPlanner			();
 	virtual	void				setup					(_object_type *object);
 	virtual	void				update					();
-	IC		COperator			&action					(const _action_id_type &action_id);
+	IC		COperator & action					(const _action_id_type &action_id);
 	IC		CConditionEvaluator	&evaluator				(const _condition_type &evaluator_id);
 	IC		_action_id_type		current_action_id		() const;
 	IC		COperator			&current_action			();

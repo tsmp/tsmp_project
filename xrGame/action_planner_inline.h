@@ -113,9 +113,9 @@ void CPlanner::update				()
 }
 
 TEMPLATE_SPECIALIZATION
-IC	typename CPlanner::COperator &CPlanner::action	(const _action_id_type &action_id)
+IC	typename CPlanner::COperator & CPlanner::action	(const _action_id_type & action_id)
 {
-	return					(*get_operator(action_id));
+	return(*get_operator(action_id));
 }
 
 TEMPLATE_SPECIALIZATION
