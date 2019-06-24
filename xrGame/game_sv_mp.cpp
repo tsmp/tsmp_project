@@ -434,7 +434,9 @@ void game_sv_mp::net_Export_State		(NET_Packet& P, ClientID id_to)
 void	game_sv_mp::RespawnPlayer			(ClientID id_who, bool NoSpectator)
 {
 	xrClientData* xrCData	=	m_server->ID_to_client(id_who);
-	if (!xrCData || !xrCData->owner) return;
+	
+	if (!xrCData || !xrCData->owner) 
+		return;
 
 	CSE_Abstract* pOwner = xrCData->owner;
 	CSE_ALifeCreatureActor	*pA	=	smart_cast<CSE_ALifeCreatureActor*>(pOwner);

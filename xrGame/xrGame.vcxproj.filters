@@ -2065,9 +2065,6 @@
     <Filter Include="UI\Common\Statistics">
       <UniqueIdentifier>{05665fe2-481c-4ff1-8608-428d70073f2e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="UI\Common\_Debug Fonts">
-      <UniqueIdentifier>{dc5428fc-1b6c-4e29-938f-a2d84bc3e886}</UniqueIdentifier>
-    </Filter>
     <Filter Include="UI\Common\OptionsItem">
       <UniqueIdentifier>{84587c5b-6985-45a1-8857-4c2a0a8fc5c1}</UniqueIdentifier>
     </Filter>
@@ -2091,12 +2088,6 @@
     </Filter>
     <Filter Include="UI\Common\OutfitInfo">
       <UniqueIdentifier>{d4bc60f8-1a55-415d-b82e-ae79da2449e4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="UI\Common\TimeWnd">
-      <UniqueIdentifier>{cb6e99b0-094e-4418-9283-f67bdeb2babf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="UI\Common\SleepWnd">
-      <UniqueIdentifier>{0124f3c5-ecf5-46c9-944f-e3c4afc709a8}</UniqueIdentifier>
     </Filter>
     <Filter Include="UI\Common\InventoryUtilities">
       <UniqueIdentifier>{ec4d3a6c-f876-4d28-9718-fdda385274c2}</UniqueIdentifier>
@@ -6108,9 +6099,6 @@
     <ClInclude Include="ui\UIStalkersRankingWnd.h">
       <Filter>UI\Common\Statistics</Filter>
     </ClInclude>
-    <ClInclude Include="ui\UIDebugFonts.h">
-      <Filter>UI\Common\_Debug Fonts</Filter>
-    </ClInclude>
     <ClInclude Include="ui\UIOptionsItem.h">
       <Filter>UI\Common\OptionsItem</Filter>
     </ClInclude>
@@ -6158,12 +6146,6 @@
     </ClInclude>
     <ClInclude Include="ui\UIOutfitInfo.h">
       <Filter>UI\Common\OutfitInfo</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UITimeWnd.h">
-      <Filter>UI\Common\TimeWnd</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UISleepWnd.h">
-      <Filter>UI\Common\SleepWnd</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIInventoryUtilities.h">
       <Filter>UI\Common\InventoryUtilities</Filter>
@@ -9179,9 +9161,6 @@
     <ClCompile Include="ui\UIStalkersRankingWnd.cpp">
       <Filter>UI\Common\Statistics</Filter>
     </ClCompile>
-    <ClCompile Include="ui\UIDebugFonts.cpp">
-      <Filter>UI\Common\_Debug Fonts</Filter>
-    </ClCompile>
     <ClCompile Include="ui\UIOptionsItem.cpp">
       <Filter>UI\Common\OptionsItem</Filter>
     </ClCompile>
@@ -9229,12 +9208,6 @@
     </ClCompile>
     <ClCompile Include="ui\UIOutfitInfo.cpp">
       <Filter>UI\Common\OutfitInfo</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UITimeWnd.cpp">
-      <Filter>UI\Common\TimeWnd</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UISleepWnd.cpp">
-      <Filter>UI\Common\SleepWnd</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIInventoryUtilities.cpp">
       <Filter>UI\Common\InventoryUtilities</Filter>

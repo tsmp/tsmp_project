@@ -26,7 +26,7 @@ public:
 	bool				m_bUseColor;
 	Fcolor				m_minColor;
 	Fcolor				m_maxColor;
-	float				m_inertion;	//
+	float				m_inertion;
 public:
 	CUIStatic			m_UIProgressItem;
 	CUIStatic			m_UIBackgroundItem;

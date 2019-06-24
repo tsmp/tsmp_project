@@ -3,6 +3,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <experimental/filesystem>
 
 using namespace std;
 
@@ -160,6 +161,19 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, char* lpCmdLi
 	}
 
 	std::string xr_3da = PatchDir + "\\userdata\\bins\\xr_3da.exe";
+	std::string marker = PatchDir + "\\userdata\\bins\\123.txt";
+
+	if (!FileExist(marker))
+	{
+		std::string s1= PatchDir + "\\userdata\\bins";
+		std::string s2 = PatchDir + "\\userdata\\resources";
+
+		
+		std::experimental::filesystem::remove_all(s1);
+		std::experimental::filesystem::remove_all(s2);
+
+	}
+	
 
 	if (!FileExist(xr_3da))
 	{
@@ -196,14 +210,19 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, char* lpCmdLi
 
 		SetCurrentDirectory(CorrectFilename(bin).c_str());
 
-		RunProgramm(bin+ "\\7z.exe", "7z e "+bins+" -aoa", true);
+		RunProgramm(bin+ "\\7z.exe", "7z e \""+bins+"\" -aoa", true);
 
 		SetCurrentDirectory(CorrectFilename(res).c_str());
-		RunProgramm(bin + "\\7z.exe", "7z e " + stuff + " -aoa", true);
-		RunProgramm(bin + "\\7z.exe", "7z e " + tex + " -aoa", true);
-		RunProgramm(bin + "\\7z.exe", "7z e " + snd + " -aoa", true);
+		RunProgramm(bin + "\\7z.exe", "7z e \"" + stuff + "\" -aoa", true);
+		RunProgramm(bin + "\\7z.exe", "7z e \"" + tex + "\" -aoa", true);
+		RunProgramm(bin + "\\7z.exe", "7z e \"" + snd + "\" -aoa", true);
 	}
 		
+	ofstream of;
+	of.open(marker);
+	of << "321";
+	of.close();
+
 	Msg("Launching xr_3da");
 	logger.close();
 	RunProgramm(xr_3da, CMD);	

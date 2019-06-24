@@ -112,7 +112,7 @@ protected:
 public:
 	game_sv_GameState*		game;
 
-	void					CheckPlayerName			(string1024 &sName);
+	void CheckPlayerName(string1024& sName);
 	void					Export_game_type		(IClient* CL);
 	void					Perform_game_export		();
 	

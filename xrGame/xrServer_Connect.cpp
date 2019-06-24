@@ -234,12 +234,13 @@ void xrServer::AttachNewClient(IClient* CL)
 			moddllinfo.fileinfo.compression = FZ_COMPRESSION_NO_COMPRESSION; //Используемый тип компрессии
 			moddllinfo.procname = "ModLoad";  //Имя процедуры в dll мода, которая должна быть вызвана; должна иметь тип FZDllModFun
 			
-			if(strstr(Core.Params, "-tsmp_debug"))
+			if (strstr(Core.Params, "-tsmp_debug"))
 				moddllinfo.procarg1 = "tsmp_debug"; //Аргументы для передачи в процедуру
-			else 
+			else
 				moddllinfo.procarg1 = "tsmp"; //Аргументы для передачи в процедуру
-			
+
 			ip_address Address;
+
 			DWORD dwPort = 0;
 
 			Level().GetServerAddress(Address, &dwPort);
