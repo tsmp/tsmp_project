@@ -1,8 +1,5 @@
-/*
- *		Filtered Image Rescaling
- *
- *		  by Dale Schumacher
- */
+// Filtered Image Rescaling
+// by Dale Schumacher
 
 #include "stdafx.h"
 #pragma hdrstop

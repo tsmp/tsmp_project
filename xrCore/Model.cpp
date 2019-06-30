@@ -1,9 +1,8 @@
-/****************************************************************************
- *  This file is part of PPMd project                                       *
- *  Written and distributed to public domain by Dmitry Shkarin 1997,        *
- *  1999-2001                                                               *
- *  Contents: PPMII model description and encoding/decoding routines        *
- ****************************************************************************/
+// *  This file is part of PPMd project                                       *
+// *  Written and distributed to public domain by Dmitry Shkarin 1997,        *
+// *  1999-2001                                                               *
+// *  Contents: PPMII model description and encoding/decoding routines        *
+
 #include <string.h>
 #include "PPMd.h"
 #pragma hdrstop

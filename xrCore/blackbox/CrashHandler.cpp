@@ -1,16 +1,5 @@
-/*----------------------------------------------------------------------
-"Debugging Applications" (Microsoft Press)
-Copyright (c) 1997-2000 John Robbins -- All rights reserved.
-
-CONDITIONAL COMPILATION :
-    WORK_AROUND_SRCLINE_BUG - Define this symbol to work around the
-                              SymGetLineFromAddr bug; this bug causes PDB
-                              file lookups to fail after the first lookup.
-                              This bug is fixed in DBGHELP.DLL, but I
-                              still keep the workaround for users
-                              who might need to use the old IMAGEHLP.DLL
-                              versions.
-----------------------------------------------------------------------*/
+// "Debugging Applications" (Microsoft Press)
+// Copyright (c) 1997-2000 John Robbins -- All rights reserved.
 
 #include "stdafx_.h"
 #include "BugslayerUtil.h"

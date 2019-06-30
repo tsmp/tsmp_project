@@ -1,16 +1,8 @@
-/*
-  This is a version (aka dlmalloc) of malloc/free/realloc written by
-  Doug Lea and released to the public domain, as explained at
-  http://creativecommons.org/licenses/publicdomain.  Send questions,
-  comments, complaints, performance data, etc to dl@cs.oswego.edu
+// DougLeaMemoryAllocator v 2.8.3 Thu Sep 22 11:16:15 2005  Doug Lea  (dl at gee)
+// ftp://gee.cs.oswego.edu/pub/misc/malloc.c
+       
 
-* Version 2.8.3 Thu Sep 22 11:16:15 2005  Doug Lea  (dl at gee)
-
-   Note: There may be an updated version of this malloc obtainable at
-           ftp://gee.cs.oswego.edu/pub/misc/malloc.c
-         Check before installing!
-
-* Quickstart
+/* Quickstart
 
   This library is all in one file to simplify the most common usage:
   ftp it, compile it (-O3), and link it into another program. All of
