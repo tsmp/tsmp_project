@@ -14,8 +14,8 @@ bool TimeCompare(u32 First, u32 Second)
 {
 	if (First - Second <= MinValueHitTime)
 		return true;
-	else
-		return false;
+	
+	return false;
 }
 
 HitProcessor::~HitProcessor() 
@@ -149,7 +149,8 @@ struct Weapon
 	bool Drob;
 };
 
-static std::vector<Weapon> WPN = {
+static std::vector<Weapon> WPN = 
+{
 { "mp_wpn_knife"			, 1.80 , 120.00		, 1.80, 120.00	, false },
 { "mp_wpn_pm"				, 0.55 , 70.00		, 0.47, 91.00	, false },
 { "mp_wpn_fort"				, 0.55 , 77.00		, 0.47, 100.10	, false },

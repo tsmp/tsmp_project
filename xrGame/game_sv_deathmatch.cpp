@@ -1173,9 +1173,7 @@ void	game_sv_Deathmatch::OnPlayerHitPlayer		(u16 id_hitter, u16 id_hitted, NET_P
 			strcpy(HIT.StrPlayerName, ps_hitter->getName());	
 
 			hit_proc.AddHit(HIT);
-		}
-		else 
-			Msg("! cant get weapon");	
+		}	
 	}
 
 	OnPlayerHitPlayer_Case(ps_hitter, ps_hitted, &HitS);
@@ -1184,8 +1182,8 @@ void	game_sv_Deathmatch::OnPlayerHitPlayer		(u16 id_hitter, u16 id_hitted, NET_P
 	{
 		ps_hitted->lasthitter = ps_hitter->GameID;
 		ps_hitted->lasthitweapon = HitS.weaponID;
-	};
-	//---------------------------------------
+	}
+
 	HitS.Write_Packet(P);
 };
 

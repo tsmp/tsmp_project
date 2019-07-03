@@ -121,9 +121,9 @@ BOOL CWeaponMagazinedWGrenade::net_Spawn(CSE_Abstract* DC)
 {
 	BOOL l_res = inherited::net_Spawn(DC);
 
-#ifdef TSMP_CLIENT
 	return l_res;
-#else
+
+	/*
 
 	UpdateGrenadeVisibility(!!iAmmoElapsed);
 	m_bPending = false;
@@ -162,7 +162,8 @@ BOOL CWeaponMagazinedWGrenade::net_Spawn(CSE_Abstract* DC)
 	}
 
 	return l_res;
-#endif
+
+	*/
 }
 
 void CWeaponMagazinedWGrenade::switch2_Idle() 

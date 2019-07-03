@@ -58,8 +58,8 @@ void CActor::OnEvent		(NET_Packet& P, u16 type)
 
 			if (!IsGameTypeSingle() && !g_Alive())
 			{
-				Msg("! WARNING: dead player [%d][%s] can't take items [%d][%s]"
-					, ID(), Name(), _GO->ID(), _GO->cNameSect().c_str());
+			//	Msg("! WARNING: dead player [%d][%s] can't take items [%d][%s]"
+			//		, ID(), Name(), _GO->ID(), _GO->cNameSect().c_str());
 				break;
 			}
 			
@@ -138,7 +138,7 @@ void CActor::OnEvent		(NET_Packet& P, u16 type)
 
 			if (!IsGameTypeSingle() && !g_Alive())
 			{
-				Msg("! WARNING: dead player tries to rize inventory action");
+				//Msg("! WARNING: dead player tries to rize inventory action");
 				break;
 			}
 									
@@ -177,8 +177,8 @@ void CActor::OnEvent		(NET_Packet& P, u16 type)
 
 			if (!IsGameTypeSingle() && !g_Alive())
 			{
-				Msg("! WARNING: dead player [%d][%s] can't use items [%d][%s]",
-					ID(), Name(), Obj->ID(), Obj->cNameSect().c_str());
+				//Msg("! WARNING: dead player [%d][%s] can't use items [%d][%s]",
+				//	ID(), Name(), Obj->ID(), Obj->cNameSect().c_str());
 				break;
 			}
 

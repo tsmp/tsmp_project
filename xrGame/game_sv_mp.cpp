@@ -819,16 +819,16 @@ void	game_sv_mp::SpawnWeapon4Actor		(u16 actorId,  LPCSTR N, u8 Addons)
 	E->ID_Parent = actorId;
 
 	E->s_flags.assign		(M_SPAWN_OBJECT_LOCAL);	// flags
-	/////////////////////////////////////////////////////////////////////////////////
+	
+													/////////////////////////////////////////////////////////////////////////////////
 	//если это оружие - спавним его с полным магазином
 	CSE_ALifeItemWeapon		*pWeapon	=	smart_cast<CSE_ALifeItemWeapon*>(E);
+	
 	if (pWeapon)
 	{
 		pWeapon->a_elapsed = pWeapon->get_ammo_magsize();
-
 		pWeapon->m_addon_flags.assign(Addons);
-	};
-	/////////////////////////////////////////////////////////////////////////////////
+	}
 
 	spawn_end				(E,m_server->GetServerClient()->ID);
 };
