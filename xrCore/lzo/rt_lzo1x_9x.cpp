@@ -92,7 +92,7 @@
     (((* (lzo_uint32p) &b[p]) ^ ((* (lzo_uint32p) &b[p])>>10)) & (SWD_HSIZE-1))
 #endif
 
-#include "rt_lzo_mchw.ch"
+#include "rt_lzo_mchw.h"
 
 
 /* this is a public functions, but there is no prototype in a header file */

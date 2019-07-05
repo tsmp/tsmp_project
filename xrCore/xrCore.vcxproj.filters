@@ -61,9 +61,6 @@
     <Filter Include="Compression\ppmd\stream">
       <UniqueIdentifier>{6c284560-e568-4fb2-bd78-66313574bb0e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Compression\rt">
-      <UniqueIdentifier>{db20154c-05f3-4955-9759-25555b9d9df5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Compression\lz">
       <UniqueIdentifier>{50382979-a060-4f77-b1b6-b43ba56f040f}</UniqueIdentifier>
     </Filter>
@@ -207,34 +204,34 @@
     <ClCompile Include="Model.cpp">
       <Filter>Compression\ppmd\core</Filter>
     </ClCompile>
-    <ClCompile Include="rt_compressor.cpp">
-      <Filter>Compression\rt</Filter>
-    </ClCompile>
-    <ClCompile Include="rt_compressor9.cpp">
-      <Filter>Compression\rt</Filter>
-    </ClCompile>
     <ClCompile Include="LzHuf.cpp">
       <Filter>Compression\lz</Filter>
     </ClCompile>
-    <ClCompile Include="rt_lzo1x_1.cpp">
-      <Filter>Compression\lzo</Filter>
-    </ClCompile>
-    <ClCompile Include="rt_lzo1x_9x.cpp">
-      <Filter>Compression\lzo</Filter>
-    </ClCompile>
-    <ClCompile Include="rt_lzo1x_d1.cpp">
-      <Filter>Compression\lzo</Filter>
-    </ClCompile>
-    <ClCompile Include="rt_lzo1x_d2.cpp">
-      <Filter>Compression\lzo</Filter>
-    </ClCompile>
-    <ClCompile Include="rt_lzo1x_d3.cpp">
-      <Filter>Compression\lzo</Filter>
-    </ClCompile>
-    <ClCompile Include="rt_lzo_init.cpp">
-      <Filter>Compression\lzo</Filter>
-    </ClCompile>
     <ClCompile Include="xrSyncronize.cpp" />
+    <ClCompile Include="lzo\rt_lzo_init.cpp">
+      <Filter>Compression\lzo</Filter>
+    </ClCompile>
+    <ClCompile Include="lzo\rt_lzo1x_1.cpp">
+      <Filter>Compression\lzo</Filter>
+    </ClCompile>
+    <ClCompile Include="lzo\rt_lzo1x_9x.cpp">
+      <Filter>Compression\lzo</Filter>
+    </ClCompile>
+    <ClCompile Include="lzo\rt_lzo1x_d1.cpp">
+      <Filter>Compression\lzo</Filter>
+    </ClCompile>
+    <ClCompile Include="lzo\rt_lzo1x_d2.cpp">
+      <Filter>Compression\lzo</Filter>
+    </ClCompile>
+    <ClCompile Include="lzo\rt_lzo1x_d3.cpp">
+      <Filter>Compression\lzo</Filter>
+    </ClCompile>
+    <ClCompile Include="lzo\rt_compressor.cpp">
+      <Filter>Compression\lzo</Filter>
+    </ClCompile>
+    <ClCompile Include="lzo\rt_compressor9.cpp">
+      <Filter>Compression\lzo</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FTimer.h">
@@ -468,40 +465,40 @@
     <ClInclude Include="compression_ppmd_stream_inline.h">
       <Filter>Compression\ppmd\stream</Filter>
     </ClInclude>
-    <ClInclude Include="rt_compressor.h">
-      <Filter>Compression\rt</Filter>
-    </ClInclude>
     <ClInclude Include="lzhuf.h">
       <Filter>Compression\lz</Filter>
     </ClInclude>
-    <ClInclude Include="rt_config1x.h">
-      <Filter>Compression\lzo</Filter>
-    </ClInclude>
-    <ClInclude Include="rt_lzo1x.h">
-      <Filter>Compression\lzo</Filter>
-    </ClInclude>
-    <ClInclude Include="rt_lzo_conf.h">
-      <Filter>Compression\lzo</Filter>
-    </ClInclude>
-    <ClInclude Include="rt_lzo_config.h">
-      <Filter>Compression\lzo</Filter>
-    </ClInclude>
-    <ClInclude Include="rt_lzo_dict.h">
-      <Filter>Compression\lzo</Filter>
-    </ClInclude>
-    <ClInclude Include="rt_lzo_ptr.h">
-      <Filter>Compression\lzo</Filter>
-    </ClInclude>
-    <ClInclude Include="rt_lzoconf.h">
-      <Filter>Compression\lzo</Filter>
-    </ClInclude>
-    <ClInclude Include="rt_lzodefs.h">
-      <Filter>Compression\lzo</Filter>
-    </ClInclude>
-    <ClInclude Include="rt_miniacc.h">
-      <Filter>Compression\lzo</Filter>
-    </ClInclude>
     <ClInclude Include="xrSyncronize.h" />
+    <ClInclude Include="lzo\rt_config1x.h">
+      <Filter>Compression\lzo</Filter>
+    </ClInclude>
+    <ClInclude Include="lzo\rt_lzo_conf.h">
+      <Filter>Compression\lzo</Filter>
+    </ClInclude>
+    <ClInclude Include="lzo\rt_lzo_config.h">
+      <Filter>Compression\lzo</Filter>
+    </ClInclude>
+    <ClInclude Include="lzo\rt_lzo_dict.h">
+      <Filter>Compression\lzo</Filter>
+    </ClInclude>
+    <ClInclude Include="lzo\rt_lzo_ptr.h">
+      <Filter>Compression\lzo</Filter>
+    </ClInclude>
+    <ClInclude Include="lzo\rt_lzo1x.h">
+      <Filter>Compression\lzo</Filter>
+    </ClInclude>
+    <ClInclude Include="lzo\rt_lzoconf.h">
+      <Filter>Compression\lzo</Filter>
+    </ClInclude>
+    <ClInclude Include="lzo\rt_lzodefs.h">
+      <Filter>Compression\lzo</Filter>
+    </ClInclude>
+    <ClInclude Include="lzo\rt_miniacc.h">
+      <Filter>Compression\lzo</Filter>
+    </ClInclude>
+    <ClInclude Include="lzo\rt_compressor.h">
+      <Filter>Compression\lzo</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="xrCore.rc">

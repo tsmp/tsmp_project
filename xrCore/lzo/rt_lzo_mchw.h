@@ -118,7 +118,7 @@ LZO_COMPRESS_T;
 #  define getbyte(c)  ((c).ip < (c).in_end ? *((c).ip)++ : (-1))
 #endif
 
-#include "rt_lzo_swd.ch"
+#include "rt_lzo_swd.h"
 
 
 /***********************************************************************

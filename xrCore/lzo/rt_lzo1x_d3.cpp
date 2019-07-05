@@ -98,7 +98,7 @@ lzo1x_decompress_dict_safe ( const lzo_bytep in,  lzo_uint  in_len,
                              const lzo_bytep dict, lzo_uint dict_len)
 
 
-#include "rt_lzo1x_d.ch"
+#include "rt_lzo1x_d.h"
 
 
 /*

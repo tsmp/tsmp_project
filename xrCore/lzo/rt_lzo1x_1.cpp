@@ -46,4 +46,4 @@
 
 #define DO_COMPRESS     lzo1x_1_compress
 
-#include "rt_lzo1x_c.ch"
+#include "rt_lzo1x_c.h"

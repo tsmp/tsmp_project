@@ -163,7 +163,7 @@ __lzo_init_v2(unsigned v, int s1, int s2, int s3, int s4, int s5,
 
 
 #if !defined(__LZO_IN_MINILZO)
-#include "rt_lzo_dll.ch"
+#include "rt_lzo_dll.h"
 #endif
 
 

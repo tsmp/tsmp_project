@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #pragma hdrstop
 
-/* lzo1x_d1.c -- LZO1X decompression
+/* lzo1x_d2.c -- LZO1X decompression with overrun testing
 
    This file is part of the LZO real-time data compression library.
 
@@ -39,7 +39,7 @@
 
 #include "rt_config1x.h"
 
-#undef LZO_TEST_OVERRUN
-#define DO_DECOMPRESS       lzo1x_decompress
+#define LZO_TEST_OVERRUN
+#define DO_DECOMPRESS       lzo1x_decompress_safe
 
-#include "rt_lzo1x_d.ch"
+#include "rt_lzo1x_d.h"

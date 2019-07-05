@@ -34,7 +34,7 @@
  */
 
 
-#include "rt_lzo1_d.ch"
+#include "rt_lzo1_d.h"
 
 
 #undef __COPY4
