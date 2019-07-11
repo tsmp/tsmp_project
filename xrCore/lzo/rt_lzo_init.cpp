@@ -151,22 +151,14 @@ __lzo_init_v2(unsigned v, int s1, int s2, int s3, int s4, int s5,
         (s7 == -1 || s7 == (int) sizeof(char *)) &&
         (s8 == -1 || s8 == (int) sizeof(lzo_voidp)) &&
         (s9 == -1 || s9 == (int) sizeof(lzo_callback_t));
+
     if (!r)
         return LZO_E_ERROR;
 
     r = _lzo_config_check();
+
     if (r != LZO_E_OK)
         return r;
 
     return r;
 }
-
-
-#if !defined(__LZO_IN_MINILZO)
-#include "rt_lzo_dll.h"
-#endif
-
-
-/*
-vi:ts=4:et
-*/

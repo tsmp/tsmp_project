@@ -282,7 +282,6 @@
     <ClCompile Include="lzo\rt_lzo1x_1.cpp" />
     <ClCompile Include="lzo\rt_lzo1x_9x.cpp" />
     <ClCompile Include="lzo\rt_lzo1x_d1.cpp" />
-    <ClCompile Include="lzo\rt_lzo1x_d2.cpp" />
     <ClCompile Include="lzo\rt_lzo1x_d3.cpp" />
     <ClCompile Include="lzo\rt_lzo_init.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -466,15 +465,6 @@
   <ItemGroup>
     <ClInclude Include="FTimer.h" />
     <ClInclude Include="lzo\rt_compressor.h" />
-    <ClInclude Include="lzo\rt_config1x.h" />
-    <ClInclude Include="lzo\rt_lzo1x.h" />
-    <ClInclude Include="lzo\rt_lzoconf.h" />
-    <ClInclude Include="lzo\rt_lzodefs.h" />
-    <ClInclude Include="lzo\rt_lzo_conf.h" />
-    <ClInclude Include="lzo\rt_lzo_config.h" />
-    <ClInclude Include="lzo\rt_lzo_dict.h" />
-    <ClInclude Include="lzo\rt_lzo_ptr.h" />
-    <ClInclude Include="lzo\rt_miniacc.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="xrCore.h" />
