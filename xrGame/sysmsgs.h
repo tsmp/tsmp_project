@@ -13,6 +13,7 @@ struct SMyUserData
 using FZSysmsgPayloadWriter			= void*;
 using FZSysMsgSender				= void*;
 using FZSysMsgsProcessClientModDll	= void*;
+using FZSysMsgsProcessClientMap		= void*;
 
 typedef bool(__stdcall *FZSysMsgsInit)();
 typedef bool(__stdcall *FZSysMsgsFlags)();

@@ -56,7 +56,8 @@ extern	int		g_sv_mp_RadioAntiSpam;
 extern	int		g_sv_mp_RadioMaxMsgs;
 extern	std::string	g_sv_mp_loader_ip;
 extern	std::string	g_sv_mp_loader_port;
-extern	int		g_sv_mp_ModLoaderEnabled;
+extern	int		g_sv_mp_LoaderEnabled;
+extern	int		g_sv_mp_LoaderMap;
 extern	int		g_sv_mp_DisablerEnabled;
 extern 	int		g_sv_mp_LogHitsEnabled;
 extern volatile	int		g_sv_mp_CheckHitsEnabled;
@@ -1839,7 +1840,8 @@ void register_mp_console_commands()
 	CMD4(CCC_SV_Integer,	"tsmp_nickname_change_mode"	,	(int*)&g_sv_mp_nickname_change_mode, 1, 3);
 	CMD4(CCC_SV_Integer,	"tsmp_vote_time"			,	(int*)&g_sv_mp_fVoteTime, 15, 180);
 	CMD1(CCC_WeaponDisable, "tsmp_weapon_disable");
-	CMD4(CCC_SV_Integer,	"tsmp_loader_enabled"		,	(int*)&g_sv_mp_ModLoaderEnabled, 0, 1);
+	CMD4(CCC_SV_Integer,	"tsmp_loader_enabled"		,	(int*)&g_sv_mp_LoaderEnabled, 0, 1);
+	CMD4(CCC_SV_Integer,	"tsmp_loader_map"			,	(int*)& g_sv_mp_LoaderMap, 0, 1);
 	CMD1(CCC_TSMP_SetIp,	"tsmp_loader_reconnect_ip");
 
 	CMD4(CCC_SV_Integer,    "tsmp_removehabartime",         (int*)&g_sv_mp_RemoveHabarTimeSec, 1, 3600);

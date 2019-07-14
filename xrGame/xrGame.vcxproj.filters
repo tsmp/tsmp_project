@@ -6519,6 +6519,9 @@
     </ClInclude>
     <ClInclude Include="StdAfx.h" />
     <ClInclude Include="pch_script.h" />
+    <ClInclude Include="TSMP_Loader.h">
+      <Filter>TSMP</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="damage_manager.cpp">
@@ -9620,6 +9623,9 @@
     </ClCompile>
     <ClCompile Include="pch_script.cpp" />
     <ClCompile Include="StdAfx.cpp" />
+    <ClCompile Include="TSMP_Loader.cpp">
+      <Filter>TSMP</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuildStep Include="graph_abstract.h">

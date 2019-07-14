@@ -148,9 +148,7 @@ public:
 	void 					SendConnectResult		(IClient* CL, u8 res, u8 res1, char* ResultStr);
 
 	void 					AttachNewClient			(IClient* CL);
-
-	void					UnloadDll();
-	static void	__stdcall				SendCB(void* msg, unsigned int len, void* userdata);
+	
 	virtual void			OnBuildVersionRespond				(IClient* CL, NET_Packet& P);
 
 protected:

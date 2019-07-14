@@ -1,12 +1,6 @@
 // xrServer.cpp: implementation of the xrServer class.
-//
-//////////////////////////////////////////////////////////////////////
+
 #include <string>
-
-//#include "game_sv_base.h"
-//#include "game_sv_mp.h"
-
-//BOOL DBGM=false;
 
 #include "pch_script.h"
 #include "xrServer.h"
@@ -18,9 +12,7 @@
 #include "ai_space.h"
 #include "../IGame_Persistent.h"
 
-
 #include "../XR_IOConsole.h"
-//#include "script_engine.h"
 #include "ui/UIInventoryUtilities.h"
 
 extern bool bIsDedicatedServer;
@@ -63,23 +55,18 @@ xrServer::xrServer():IPureServer(Device.GetTimerGlobal(), bIsDedicatedServer)
 	m_aDelayedPackets.clear();
 }
 
+extern void UnloadSysmsgs();
+
 xrServer::~xrServer()
 {
-	UnloadDll();
+	UnloadSysmsgs();
 
 	while (net_Players.size())
-	{
-		
 		client_Destroy(net_Players[0]);
-		
-	}
 	
 	while (net_Players_disconnected.size())
-	{
-	
 		client_Destroy(net_Players_disconnected[0]);
-
-	}		
+		
 	m_aUpdatePackets.clear();
 	m_aDelayedPackets.clear();
 }

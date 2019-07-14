@@ -357,6 +357,7 @@
     <ClInclude Include="damage_manager_inline.h" />
     <ClInclude Include="DamageSource.h" />
     <ClInclude Include="TSMP_HitProcessor.h" />
+    <ClInclude Include="TSMP_Loader.h" />
     <ClInclude Include="TSMP_Timers.h" />
     <ClInclude Include="wrapper_abstract.h" />
     <ClInclude Include="wrapper_abstract_inline.h" />
@@ -1930,6 +1931,7 @@
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)$(ProjectName)_script.pch</PrecompiledHeaderOutputFile>
     </ClCompile>
     <ClCompile Include="TSMP_HitProcessor.cpp" />
+    <ClCompile Include="TSMP_Loader.cpp" />
     <ClCompile Include="TSMP_Timers.cpp" />
     <ClCompile Include="visual_memory_manager.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch_script.h</PrecompiledHeaderFile>

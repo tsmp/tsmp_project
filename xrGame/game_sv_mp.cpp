@@ -39,7 +39,8 @@ int			g_sv_mp_RadioAntiSpam			= 0;
 int			g_sv_mp_RadioMaxMsgs			= 7;
 int			g_sv_mp_RadioInterval			= 60;
 int			g_sv_mp_RadioMuteInterval		= 10;
-int			g_sv_mp_ModLoaderEnabled		= 1;
+int			g_sv_mp_LoaderEnabled			= 0;
+int			g_sv_mp_LoaderMap				= 1;
 int			g_sv_mp_DisablerEnabled			= 0;
 int			g_sv_mp_LogHitsEnabled			= 0;
 
