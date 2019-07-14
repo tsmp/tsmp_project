@@ -3,6 +3,7 @@
 #include "TSMP_Loader.h"
 #include "sysmsgs.h"
 #include "Level.h"
+#include "..\xrdownloader\xrdownloader.h"
 
 extern std::string g_sv_mp_loader_ip;
 extern int g_sv_mp_LoaderEnabled;
@@ -88,10 +89,10 @@ void DownloadingMod(xrServer* server, ClientID ID)
 	moddllinfo.fileinfo.filename = "";
 	moddllinfo.fileinfo.url = "";
 	moddllinfo.fileinfo.crc32 = 0x274A4EBD;
-	moddllinfo.fileinfo.progress_msg = "In Progress"; //Сообщение, выводимое пользователю во время закачки
-	moddllinfo.fileinfo.error_already_has_dl_msg = "Error happens";  //Сообщение, выводимое пользователю при возникновении ошибки во время закачки
-	moddllinfo.fileinfo.compression = FZ_COMPRESSION_NO_COMPRESSION; //Используемый тип компрессии
-	moddllinfo.procname = "ModLoad";  //Имя процедуры в dll мода, которая должна быть вызвана; должна иметь тип FZDllModFun
+	moddllinfo.fileinfo.progress_msg = "In Progress";
+	moddllinfo.fileinfo.error_already_has_dl_msg = "Error happens";
+	moddllinfo.fileinfo.compression = FZ_COMPRESSION_NO_COMPRESSION;
+	moddllinfo.procname = "ModLoad";
 
 	if (strstr(Core.Params, "-tsmp_debug"))
 		moddllinfo.procarg1 = "tsmp_debug"; //Аргументы для передачи в процедуру
@@ -130,15 +131,30 @@ void DownloadingMap(xrServer* server, ClientID ID)
 
 	FZMapInfo mapinfo = {};
 
-	mapinfo.fileinfo.filename = "military_kuznya_1.0.xdb.map";
-	mapinfo.fileinfo.url = "http://82.202.249.152/compressed_maps_shoc/military_kuznya.cab";
-	mapinfo.fileinfo.compression = FZ_COMPRESSION_CAB_COMPRESSION;
-	mapinfo.fileinfo.crc32 = 936722695;
-	mapinfo.fileinfo.progress_msg = "In Progress"; //Сообщение, выводимое пользователю во время закачки
+	u32 compr, crc_;
+
+	FillMapParams(
+		mapinfo.fileinfo.filename
+		, mapinfo.fileinfo.url
+		, compr
+		, crc_
+		, Level().name().c_str()
+	);
+
+	mapinfo.fileinfo.compression = compr;
+	mapinfo.fileinfo.crc32 = crc_;
+
+	//mapinfo.fileinfo.filename = "military_kuznya_1.0.xdb.map";
+	//mapinfo.fileinfo.url = "http://82.202.249.152/compressed_maps_shoc/military_kuznya.cab";
+	//mapinfo.fileinfo.compression = FZ_COMPRESSION_CAB_COMPRESSION;
+	//mapinfo.fileinfo.crc32 = 936722695;
+	mapinfo.fileinfo.progress_msg = "Идет загрузка карты. Пожалуйста подождите. Map is downloading. Wait please.";
 	mapinfo.fileinfo.error_already_has_dl_msg = "Error happened";
 
+	std::string lvl = Level().name().c_str();
+
 	mapinfo.flags = FZ_MAPLOAD_MANDATORY_RECONNECT;
-	mapinfo.mapname = "military_kuznya";
+	mapinfo.mapname = lvl.data();
 	mapinfo.mapver = "1.0";
 	mapinfo.reconnect_addr.ip = g_sv_mp_loader_ip.data();
 	mapinfo.reconnect_addr.port = dwPort;

@@ -119,6 +119,130 @@ void DownloadFile::SetProgress(double progr, double from)
 
 int DownloadFile::GetProgress() { return (int)(Downloaded/Total*(double)100); };
 
+void ReadFile(std::string Path, std::vector<std::string>& St)
+{
+	std::string s, s1;
+	std::ifstream file(Path);
+
+	while (true)
+	{
+		std::getline(file, s);
+		if (s == s1) break;
+		St.push_back(s);
+		s1 = s;
+	}
+
+	file.close();
+}
+
+bool MapListParsed = false;
+
+struct MapServer
+{
+	std::string Name;
+	std::string File;
+	std::string Url;
+	u32 Crc;
+	u32 Compression;
+
+	void Clear() { Name.clear(); File.clear(); Url.clear(); Crc = 0; Compression = 0; }
+};
+
+std::vector<MapServer> maps;
+
+void ParseMapListServer(std::vector<std::string>& all )
+{
+	MapServer map;
+
+	for (int i = 0; i < all.size(); i++)
+	{
+		std::string str = all[i];
+
+		if (strchr(str.c_str(), '[') && strchr(str.c_str(), ']'))
+		{
+			map.Clear();
+
+			std::string mapname(str.begin() + 1, str.end() - 1);
+			map.Name = mapname;
+		}
+
+		if (strstr(str.c_str(), "name="))
+		{
+			std::string mapfl(str.begin() + 5, str.end());
+			map.File = mapfl;
+		}
+
+		if (strstr(str.c_str(), "url="))
+		{
+			std::string maplink(str.begin() + 4, str.end());
+			map.Url = maplink;
+		}
+
+		if (strstr(str.c_str(), "crc="))
+		{
+			std::string crc_str(str.begin() + 4, str.end());
+			map.Crc = stoul(crc_str);
+		}
+
+		if (strstr(str.c_str(), "compr="))
+		{
+			std::string crc_str(str.begin() + 6, str.end());
+			map.Compression = stoul(crc_str);
+			maps.push_back(map);
+		}
+	}
+}
+
+void FillMapParams(char* FileName, char* Url, unsigned &Compression, unsigned &CRC, const char* current_map)
+{
+	if (!MapListParsed)
+	{
+		string_path p;
+		FS.update_path(p, "$fs_root$", "");
+		std::string Root = p;
+		std::string List = Root + "\\appdata\\tsmp_maplist.txt";
+
+		if (FileExists(List))
+		{
+			std::vector<std::string> Vec;
+			ReadFile(List, Vec);
+			ParseMapListServer(Vec);
+			MapListParsed = true;
+			Msg("maplist loaded");
+			//for (int i = 0; i < VecMaps.size(); i++)
+			//	Msg("%s %s %s %u %u",VecMaps[i].Name.c_str(), VecMaps[i].File.c_str(), VecMaps[i].Url.c_str(), VecMaps[i].Compression, VecMaps[i].Crc );
+		}
+		else
+		{
+			Msg("! no maplist"); 
+			FileName = "military_kuznya_1.0.xdb.map";
+			Url = "http://82.202.249.152/compressed_maps_shoc/military_kuznya.cab";
+			Compression = 2;
+			CRC = 936722695;
+		}
+	}
+	
+	std::string str = current_map;
+
+	for (int i = 0; i < maps.size(); i++)
+	{
+		//Msg("%s %s", str.c_str(), maps[i].Name.c_str());
+
+		if (maps[i].Name == str)
+		{
+			FileName = maps[i].File.data();
+			Msg("%s",FileName);
+			Url = maps[i].Url.data();
+			Msg("%s", Url);
+			Compression = maps[i].Compression;
+			Msg("%u", Compression);
+			CRC= maps[i].Crc;
+			Msg("%u", CRC);
+			Msg("found in map list");
+		}
+	}		
+}
+
 void ParseMaplist(std::vector<std::string>& all, std::vector<Map>& maps)
 {
 	Map map;
@@ -234,21 +358,7 @@ void ParseFilelist(std::vector<std::string> & Vec, std::vector<sFile>& FilesVec)
 	Msg("%u lines, %u files",Vec.size(), FilesVec.size());
 }
 
-void ReadFile(std::string Path, std::vector<std::string> &St)
-{
-	std::string s, s1;
-	std::ifstream file(Path);
 
-	while (true)
-	{
-		std::getline(file, s);
-		if (s == s1) break;
-		St.push_back(s);
-		s1 = s;
-	}
-
-	file.close();
-}
 
 void ScanFiles(std::vector<std::string> &Vec)
 {	

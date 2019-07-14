@@ -51,6 +51,8 @@ public:
 void XRDOWNLOADER_API FillDownloadList(DownloadFiles* ldr,std::string mapname);
 void XRDOWNLOADER_API RunUpdater(std::string args);
 
+void XRDOWNLOADER_API FillMapParams(char* FileName, char*Url,unsigned &Compression,unsigned &CRC, const char* current_map);
+
 class XRDOWNLOADER_API DownloadFile
 {
 private:
