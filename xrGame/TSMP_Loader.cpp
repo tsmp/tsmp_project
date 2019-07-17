@@ -131,18 +131,21 @@ void DownloadingMap(xrServer* server, ClientID ID)
 
 	FZMapInfo mapinfo = {};
 
-	u32 compr, crc_;
+	u32 cmpr, crc2;
+	std::string Filename, URL,LName;
+	LName = Level().name().c_str();
 
-	FillMapParams(
-		mapinfo.fileinfo.filename
-		, mapinfo.fileinfo.url
-		, compr
-		, crc_
-		, Level().name().c_str()
+	FillMapParams(Filename,URL
+		, cmpr
+		, crc2
+		, LName
 	);
 
-	mapinfo.fileinfo.compression = compr;
-	mapinfo.fileinfo.crc32 = crc_;
+	mapinfo.fileinfo.compression = cmpr;
+	mapinfo.fileinfo.crc32 = crc2;
+	mapinfo.fileinfo.url = const_cast<char*>(URL.c_str());
+	mapinfo.fileinfo.filename = const_cast<char*>(Filename.c_str());
+	mapinfo.mapname = const_cast<char*>(LName.c_str());
 
 	//mapinfo.fileinfo.filename = "military_kuznya_1.0.xdb.map";
 	//mapinfo.fileinfo.url = "http://82.202.249.152/compressed_maps_shoc/military_kuznya.cab";
@@ -151,10 +154,8 @@ void DownloadingMap(xrServer* server, ClientID ID)
 	mapinfo.fileinfo.progress_msg = "Идет загрузка карты. Пожалуйста подождите. Map is downloading. Wait please.";
 	mapinfo.fileinfo.error_already_has_dl_msg = "Error happened";
 
-	std::string lvl = Level().name().c_str();
 
 	mapinfo.flags = FZ_MAPLOAD_MANDATORY_RECONNECT;
-	mapinfo.mapname = lvl.data();
 	mapinfo.mapver = "1.0";
 	mapinfo.reconnect_addr.ip = g_sv_mp_loader_ip.data();
 	mapinfo.reconnect_addr.port = dwPort;

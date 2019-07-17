@@ -271,6 +271,12 @@ void CHangingLamp::TurnOff	()
 //					   Fvector p_in_object_space, float impulse, ALife::EHitType hit_type)
 void	CHangingLamp::Hit					(SHit* pHDS)
 {
+	if (!pHDS->who)
+	{
+		Msg("! hanging lamp !who");
+		return;
+	}
+
 	SHit	HDS = *pHDS;
 	callback(GameObject::eHit)(
 		lua_game_object(), 

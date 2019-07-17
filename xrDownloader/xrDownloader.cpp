@@ -193,14 +193,14 @@ void ParseMapListServer(std::vector<std::string>& all )
 	}
 }
 
-void FillMapParams(char* FileName, char* Url, unsigned &Compression, unsigned &CRC, const char* current_map)
+void FillMapParams(std::string& FileName, std::string& Url, unsigned& Compression, unsigned& CRC, std::string current_map)
 {
 	if (!MapListParsed)
 	{
 		string_path p;
-		FS.update_path(p, "$fs_root$", "");
+		FS.update_path(p, "$app_data_root$", "");
 		std::string Root = p;
-		std::string List = Root + "\\appdata\\tsmp_maplist.txt";
+		std::string List = Root + "\\tsmp_maplist.txt";
 
 		if (FileExists(List))
 		{
@@ -209,8 +209,6 @@ void FillMapParams(char* FileName, char* Url, unsigned &Compression, unsigned &C
 			ParseMapListServer(Vec);
 			MapListParsed = true;
 			Msg("maplist loaded");
-			//for (int i = 0; i < VecMaps.size(); i++)
-			//	Msg("%s %s %s %u %u",VecMaps[i].Name.c_str(), VecMaps[i].File.c_str(), VecMaps[i].Url.c_str(), VecMaps[i].Compression, VecMaps[i].Crc );
 		}
 		else
 		{
@@ -226,18 +224,12 @@ void FillMapParams(char* FileName, char* Url, unsigned &Compression, unsigned &C
 
 	for (int i = 0; i < maps.size(); i++)
 	{
-		//Msg("%s %s", str.c_str(), maps[i].Name.c_str());
-
 		if (maps[i].Name == str)
 		{
-			FileName = maps[i].File.data();
-			Msg("%s",FileName);
-			Url = maps[i].Url.data();
-			Msg("%s", Url);
+			FileName = maps[i].File;
+			Url = maps[i].Url;
 			Compression = maps[i].Compression;
-			Msg("%u", Compression);
 			CRC= maps[i].Crc;
-			Msg("%u", CRC);
 			Msg("found in map list");
 		}
 	}		
