@@ -1,6 +1,6 @@
 #pragma once
 
-constexpr auto TSMP_VERSION = "tsmp 1.5.4";
+constexpr auto TSMP_VERSION = "tsmp 1.5.5";
 //#define TSMP_CLIENT
 
 #define DEDICATED_SERVER

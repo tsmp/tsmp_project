@@ -633,6 +633,8 @@ void game_sv_GameState::OnHit (u16 id_hitter, u16 id_hitted, NET_Packet& P)
 	};
 }
 
+constexpr auto u16_size = sizeof(u16);
+
 void game_sv_GameState::OnEvent (NET_Packet &tNetPacket, u16 type, u32 time, ClientID sender )
 {
 	switch (type)
@@ -668,19 +670,29 @@ void game_sv_GameState::OnEvent (NET_Packet &tNetPacket, u16 type, u32 time, Cli
 
 	case GAME_EVENT_ON_HIT:
 	{
-		u16		id_dest = tNetPacket.r_u16();
-		u16     id_src = tNetPacket.r_u16();
-		CSE_Abstract*	e_src = get_entity_from_eid(id_src);
+		u16	id_dest = tNetPacket.r_u16(); // кому хит
+		u16 id_src = tNetPacket.r_u16(); // от кого прилетел
 
-		if (!e_src)  // && !IsGameTypeSingle() added by andy because of Phantom does not have server entity
+		CSE_Abstract* e_src = get_entity_from_eid(id_src);
+
+		if (!e_src)
 		{
-			if (IsGameTypeSingle()) break;
+			if (IsGameTypeSingle()) 
+				break; // added by andy because of Phantom does not have server entity					
 
-			game_PlayerState* ps = get_eid(id_src);
-			if (!ps)				break;
-			id_src = ps->GameID;
+			game_PlayerState* ps_hitter = get_eid(id_src);		
+
+			if (!ps_hitter)
+				break;
+
+			id_src = ps_hitter->GameID;			
+			
+			u32 FullSize = tNetPacket.B.count; // размер пакета
+			tNetPacket.B.count = tNetPacket.r_pos - u16_size; // поставим позицию для записи на место старого id
+			tNetPacket.w_u16(id_src); // обновим id на актуальный чтобы не было вылета клиентов и сервера
+			tNetPacket.B.count = FullSize; // вернем пакету нормальный размер	
 		}
-
+		
 		OnHit(id_src, id_dest, tNetPacket);
 		m_server->SendBroadcast(BroadcastCID, tNetPacket, net_flags(TRUE, TRUE));
 		break;
