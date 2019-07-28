@@ -154,8 +154,6 @@ namespace CPU
 		u64			start, end;
 		u32			dwStart, dwTest;
 
-		SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS);
-
 		// Detect Freq
 		dwTest = timeGetTime();
 		do { dwStart = timeGetTime(); } while (dwTest == dwStart);
@@ -182,9 +180,7 @@ namespace CPU
 			qpc_overhead += QPC() - start - dummy;
 		}
 		qpc_overhead /= 256;
-
-		SetPriorityClass(GetCurrentProcess(), NORMAL_PRIORITY_CLASS);
-
+		
 		clk_per_second -= clk_overhead;
 		clk_per_milisec = clk_per_second / 1000;
 		clk_per_microsec = clk_per_milisec / 1000;

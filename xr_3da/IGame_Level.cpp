@@ -58,6 +58,10 @@ extern CStatTimer				tscreate;
 
 BOOL IGame_Level::Load			(u32 dwNum) 
 {
+	LPCSTR prior = "-priority ";
+	if (!strstr(Core.Params, prior) == NULL) SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_HIGHEST);
+
+
 	// Initialize level data
 	pApp->Level_Set				( dwNum );
 	string_path					temp;

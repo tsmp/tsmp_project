@@ -600,7 +600,8 @@ BOOL IPureClient::Connect	(LPCSTR options)
 			if (res != S_OK) return FALSE;
 		}
 	} 
-	
+	SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_NORMAL);
+
 	net_TimeDelta	= 0;	
 	return TRUE;
 }
