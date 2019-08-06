@@ -107,10 +107,10 @@ void DownloadingMod(xrServer* server, ClientID ID)
 
 	std::string procargs2 = "-srv " + g_sv_mp_loader_ip + " -srvport " + std::to_string(dwPort);
 	
-	char ar[30];
-	strcpy(ar, procargs2.c_str());
+	//char ar[30];
+	//strcpy(ar, procargs2.c_str());
 
-	moddllinfo.procarg2 = ar; //Аргументы для передачи в процедуру
+	moddllinfo.procarg2 = procargs2.data(); //Аргументы для передачи в процедуру
 	moddllinfo.dsign = "";
 	moddllinfo.name_lock = "123";  //Цифровая подпись для загруженной DLL - проверяется перед тем, как передать управление в функцию мода
 	moddllinfo.reconnect_addr.ip = "127.0.0.1";  //IP-адрес и порт для реконнекта. Если IP нулевой, то параметры реконнекта автоматически берутся игрой из тех, во время которых произошел дисконнект.

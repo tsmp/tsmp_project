@@ -1598,6 +1598,35 @@ public:
 	}
 };
 
+class CCC_SvEventMsg : public IConsole_Command
+{
+public:
+	CCC_SvEventMsg(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = false; };
+
+	virtual void	Execute(LPCSTR args)
+	{
+		if (!OnServer())
+			return;
+
+		if (Level().Server && Level().Server->game)
+		{
+			game_sv_mp* game = smart_cast<game_sv_mp*>(Level().Server->game);
+			
+			if (game)
+			{
+				NET_Packet NetP;
+				game->GenerateGameMessage(NetP);
+
+				NetP.w_u32(GAME_EVENT_SERVER_STRING_MESSAGE);
+				NetP.w_stringZ(args);
+
+				game->u_EventSend(NetP);
+			}
+		}
+	}
+};
+
+
 class CCC_SvChatNew : public IConsole_Command 
 {
 public:
@@ -1865,6 +1894,7 @@ void register_mp_console_commands()
 	CMD1(CCC_Name,			"name");
 	CMD1(CCC_SvStatus,		"sv_status");
 	CMD1(CCC_SvChat,		"chat");
+	CMD1(CCC_SvEventMsg,	"event_msg");
 	CMD1(CCC_SvChatNew,		"chat_new");
 	CMD1(CCC_SvChatTSMP,	"chat_tsmp");
 	CMD1(CCC_SvChatNewSetName, "chat_new_set_name");
