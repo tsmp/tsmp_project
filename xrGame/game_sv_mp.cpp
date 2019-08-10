@@ -662,6 +662,7 @@ void	game_sv_mp::SpawnWeaponForActor		(u16 actorId,  LPCSTR N, bool isScope, boo
 		if(isSilencer)
 			addon_flags |= CSE_ALifeItemWeapon::eWeaponAddonSilencer;
 
+		Msg("spawn 11");
 		SpawnWeapon4Actor(actorId, N, addon_flags);
 }
 

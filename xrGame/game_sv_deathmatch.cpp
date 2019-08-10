@@ -974,6 +974,7 @@ void game_sv_Deathmatch::SpawnWeaponsForActor(CSE_Abstract *pE, game_PlayerState
 	if (!(ps->team < s16(TeamList.size()))) 
 		return;
 
+	Msg("spawn 22");
 	for (u32 i = 0; i<ps->pItemList.size(); i++)
 	{
 		u16 ItemID			= ps->pItemList[i];
@@ -1119,23 +1120,9 @@ void	game_sv_Deathmatch::OnPlayerHitPlayer		(u16 id_hitter, u16 id_hitted, NET_P
 
 	if (!ps_hitter || !ps_hitted) return;
 
-	/*
-	CObject* pNewObject = nullptr;
-	CActor* pActor = nullptr;
-
-	pNewObject = Level().Objects.net_Find(ps_hitter->GameID);
-
-	if(pNewObject)
-		pActor = smart_cast<CActor*>(pNewObject);
-
-	if (pActor && pActor->isLookout())
-		return;
-		*/
-
-	SHit	HitS;
+	SHit HitS;
 	HitS.Read_Packet(P);
-
-	HitS.whoID	= ps_hitter->GameID;
+	HitS.whoID = ps_hitter->GameID;
 
 	if (g_sv_mp_LogHitsEnabled)
 	{
@@ -1167,7 +1154,7 @@ void	game_sv_Deathmatch::OnPlayerHitPlayer		(u16 id_hitter, u16 id_hitted, NET_P
 					HIT.iPlayerID =l_pC->ID.value();
 					break;
 				}
-			};
+			}
 
 			strcpy(HIT.StrWeaponName, pWeapon->cName().c_str());
 			strcpy(HIT.StrPlayerName, ps_hitter->getName());	

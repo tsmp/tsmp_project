@@ -1,9 +1,6 @@
 #pragma once
 #include "StdAfx.h"
 
-
-bool TimeCompare(u32 First, u32 Second);
-
 class HitProcessor
 {
 public:
@@ -22,7 +19,8 @@ public:
 		bool operator==(const HitInfo &HI)
 		{
 			return HI.iPlayerID == iPlayerID
-				&& TimeCompare(uTime, HI.uTime);
+				&& uTime == HI.uTime
+				&& iBoneID == HI.iBoneID;
 		}
 	};	
 
