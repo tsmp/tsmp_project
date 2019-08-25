@@ -43,17 +43,14 @@ protected:
 	bool							m_bRankUp_Allowed;
 
 	TEAM_DATA_LIST					TeamList;
+public:
 	CItemMgr*						m_strWeaponsData;
-
+protected:
 	//-------------------------------------------------------
 	bool			m_bVotingActive;
 	bool			m_bVotingReal;
 	u32				m_uVoteStartTime;	
 	shared_str		m_pVoteCommand;
-	bool			m_WeaponDisablerState[100];
-
-	std::string		m_WeaponDisablerItems[100];
-	int				m_WeaponDisablerItemsCount;
 	
 	virtual		void				LoadRanks				();
 	virtual		void				Player_AddExperience	(game_PlayerState* ps, float Exp);
@@ -75,8 +72,7 @@ protected:
 	virtual		void				SetSkin					(CSE_Abstract* E, u16 Team, u16 ID);
 				bool				GetPosAngleFromActor	(ClientID id, Fvector& Pos, Fvector &Angle);				
 				void				AllowDeadBodyRemove		(ClientID id, u16 GameID);
-				void				SpawnWeapon4Actor		(u16 actorId,  LPCSTR N, u8 Addons );
-				void				Tsmp_weapon_disabler	(LPCSTR DATA);
+				
 				bool				Tsmp_is_map_registered  (std::string MapName, std::string GameTypeStr);
 				void				SpawnWeaponForActor		(u16 actorId,  LPCSTR N, bool isScope, bool isGrenadeLauncher, bool isSilencer);
 
@@ -90,6 +86,7 @@ protected:
 public:
 									game_sv_mp				();
 				virtual				~game_sv_mp				();
+				void				SpawnWeapon4Actor(u16 actorId, LPCSTR N, u8 Addons);
 	virtual		void				Create					(shared_str &options);
 	virtual		void				OnPlayerConnect			(ClientID id_who);
 	virtual		void				OnPlayerDisconnect		(ClientID id_who, LPSTR Name, u16 GameID);

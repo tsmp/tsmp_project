@@ -41,7 +41,6 @@ int			g_sv_mp_RadioInterval			= 60;
 int			g_sv_mp_RadioMuteInterval		= 10;
 int			g_sv_mp_LoaderEnabled			= 0;
 int			g_sv_mp_LoaderMap				= 1;
-int			g_sv_mp_DisablerEnabled			= 0;
 int			g_sv_mp_LogHitsEnabled			= 0;
 
 int			g_sv_mp_nickname_change_mode	= 3;
@@ -125,32 +124,25 @@ void game_sv_mp::OnRoundStart()
 {
 	inherited::OnRoundStart();
 	
-	if( g_pGameLevel && Level().game )
-	{
-		Game().m_WeaponUsageStatistic->Clear();
-	}
+	if(g_pGameLevel && Level().game)
+		Game().m_WeaponUsageStatistic->Clear();	
 	
 	m_CorpseList.clear();
-	
-	m_WeaponDisablerItemsCount = 0;
-	int ii;
-	for (ii = 0; ii < 100; ii++)	m_WeaponDisablerState[ii] = true;
-	for (ii = 0; ii < 100; ii++)	m_WeaponDisablerItems[ii] = "";
 
-
-	switch_Phase		(GAME_PHASE_INPROGRESS);
+	switch_Phase(GAME_PHASE_INPROGRESS);
 	++m_round;
 	m_round_start_time	= Level().timeServer();
-	timestamp			(m_round_start_time_str);
+	timestamp(m_round_start_time_str);
 
 	// clear "ready" flag
-	u32		cnt		= get_players_count	();
-	for		(u32 it=0; it<cnt; ++it)	
+	u32	cnt	= get_players_count	();
+
+	for(u32 it=0; it<cnt; ++it)	
 	{
-		game_PlayerState*	ps	=	get_it	(it);
+		game_PlayerState* ps = get_it(it);
 		ps->resetFlag(GAME_PLAYER_FLAG_READY+GAME_PLAYER_FLAG_VERY_VERY_DEAD);
 		ps->m_online_time = Level().timeServer();
-	};
+	}
 
 	// 1. We have to destroy all player-entities and entities
 	m_server->SLS_Clear	();
@@ -662,169 +654,20 @@ void	game_sv_mp::SpawnWeaponForActor		(u16 actorId,  LPCSTR N, bool isScope, boo
 		if(isSilencer)
 			addon_flags |= CSE_ALifeItemWeapon::eWeaponAddonSilencer;
 
-		Msg("spawn 11");
 		SpawnWeapon4Actor(actorId, N, addon_flags);
 }
 
-void	game_sv_mp::Tsmp_weapon_disabler(LPCSTR DATA)
+void game_sv_mp::SpawnWeapon4Actor(u16 actorId,  LPCSTR Name, u8 Addons)
 {
-	//Msg("disabler");
-	std::string String1 = DATA;
-	std::string String2;
-
-	bool bIsAllOk = false;
-
-	if (String1.find(' ') != std::string::npos)
-	{
-		bIsAllOk = true;
-
-		char *s = new char[String1.size() + 1];
-
-		strcpy(s, String1.c_str());
-
-		char *p = strtok(s, " ");
-		int iii = 0;
-		while (p != NULL) 
-		{
-			if (iii == 0) String1 = p;
-			else String2 = p;
-			p = strtok(NULL, " ");
-			iii++;
-		}
-
-		delete[] s;
-	}
-
-	if (!(String2 == "1" || String2 == "0")) bIsAllOk = false;
-
-	if (!bIsAllOk)
-	{
-		Msg("! error in weapon disabler");
+	if (!Name) 
 		return;
-	}
 
-	int iI,iIdx=0;
-	bool bFound = false;
-
-	for (iI = 0; (iI < m_WeaponDisablerItemsCount)&&(!bFound); iI++)
-	{
-		if (String1 == m_WeaponDisablerItems[iI])
-		{
-			iIdx = iI;
-			bFound = true;
-		}
-	}
-
-	if (bFound)
-	{
-		if (String2 == "1") m_WeaponDisablerState[iIdx] = true;
-		else m_WeaponDisablerState[iIdx] = false;
-		return;
-	}
-
-	if (String2 == "1") m_WeaponDisablerState[m_WeaponDisablerItemsCount] = true;
-	if (String2 == "0") m_WeaponDisablerState[m_WeaponDisablerItemsCount] = false;
-	m_WeaponDisablerItems[m_WeaponDisablerItemsCount] = String1;
-	m_WeaponDisablerItemsCount++;
-};
-
-void	game_sv_mp::SpawnWeapon4Actor		(u16 actorId,  LPCSTR N, u8 Addons)
-{
-	std::string StrIng = N;	
-
-	if (!N) return;
-
-	if (g_sv_mp_DisablerEnabled == 1)
-	{
-		bool podstvol = false; 
-
-		for (int i = 0; i < m_WeaponDisablerItemsCount; i++)
-		{
-			if ((m_WeaponDisablerItems[i] == StrIng) && (m_WeaponDisablerState[i]))
-			{
-				/*
-				std::string Messs = "! " + StrIng + " запрещен для покупки на данном сервере (disabled on this server)";
-			
-				NET_Packet			PPP;
-				GenerateGameMessage(PPP);
-				PPP.w_u32(GAME_EVENT_SERVER_STRING_MESSAGE);
-				PPP.w_stringZ(Messs.c_str());
-				m_server->SendTo(m_server->GetServerClient()->ID, PPP);
-
-				*/
-
-				return;
-			}
-
-			if ((m_WeaponDisablerItems[i] == "podstvol") && (m_WeaponDisablerState[i]))
-			{
-				podstvol = true;
-				if (StrIng == "mp_wpn_addon_grenade_launcher") return;
-				if (StrIng == "mp_wpn_addon_grenade_launcher_m203") return;
-				if (StrIng == "mp_ammo_vog-25") return;
-				if (StrIng == "mp_ammo_vog-25p") return;
-				if (StrIng == "mp_ammo_m209") return;
-			}
-
-			if ((m_WeaponDisablerItems[i] == "granati") && (m_WeaponDisablerState[i]))
-			{
-				if (StrIng == "mp_grenade_f1") return;
-				if (StrIng == "mp_grenade_rgd5") return;
-				if (StrIng == "mp_grenade_gd-05") return;
-			}
-
-			if ((m_WeaponDisablerItems[i] == "hard_weapon") && (m_WeaponDisablerState[i]))
-			{
-				if (StrIng == "mp_ammo_og-7b") return;
-				if (StrIng == "mp_wpn_rpg7_missile") return;
-				if (StrIng == "mp_wpn_rpg7") return;
-				if (StrIng == "mp_wpn_rg-6") return;
-			}
-
-
-		}
-
-		/*
-		 генерируем значения аддонов на оружие	
-		
-			0 - пусто 
-			1 - прицел 
-			2 - подствол 
-			3 - прицел+подствол 
-			4 - глушитель 
-			5 - прицел+глушитель 
-			6 - подствол+глушитель 
-			7 - прицел+подствол+глушитель
-		*/
-		
-		if (podstvol)
-		{
-
-			switch (Addons)
-			{
-			case 2:
-				Addons = 0;
-				break;
-			case 3:
-				Addons = 1;
-				break;
-			case 7:
-				Addons = 5;
-				break;
-			default:
-				break;
-			}
-		}
-	}
-
-	CSE_Abstract			*E	=	spawn_begin	(N);
+	CSE_Abstract *E	= spawn_begin(Name);
 	E->ID_Parent = actorId;
-
-	E->s_flags.assign		(M_SPAWN_OBJECT_LOCAL);	// flags
+	E->s_flags.assign(M_SPAWN_OBJECT_LOCAL);
 	
-													/////////////////////////////////////////////////////////////////////////////////
 	//если это оружие - спавним его с полным магазином
-	CSE_ALifeItemWeapon		*pWeapon	=	smart_cast<CSE_ALifeItemWeapon*>(E);
+	CSE_ALifeItemWeapon	*pWeapon = smart_cast<CSE_ALifeItemWeapon*>(E);
 	
 	if (pWeapon)
 	{
@@ -832,7 +675,7 @@ void	game_sv_mp::SpawnWeapon4Actor		(u16 actorId,  LPCSTR N, u8 Addons)
 		pWeapon->m_addon_flags.assign(Addons);
 	}
 
-	spawn_end				(E,m_server->GetServerClient()->ID);
+	spawn_end(E,m_server->GetServerClient()->ID);
 };
 
 void game_sv_mp::OnDestroyObject			(u16 eid_who)

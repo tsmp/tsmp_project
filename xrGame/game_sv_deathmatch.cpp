@@ -36,6 +36,8 @@ BOOL	g_sv_dm_bDMIgnore_Money_OnBuy	= FALSE;
 extern bool bIsDedicatedServer;
 extern int g_sv_mp_LogHitsEnabled;
 
+extern void TSMP_ShopProcessor_BuyItems(game_PlayerState* ps, u16 ActorID, game_sv_Deathmatch* game);
+
 BOOL game_sv_Deathmatch::IsDamageBlockIndEnabled() { return g_sv_dm_bDamageBlockIndicators; };
 BOOL game_sv_Deathmatch::IsAnomaliesEnabled() { return g_sv_dm_bAnomaliesEnabled; };
 
@@ -965,7 +967,7 @@ void game_sv_Deathmatch::OnPlayerBuyFinished(ClientID id_who, NET_Packet& P)
 
 void game_sv_Deathmatch::SpawnWeaponsForActor(CSE_Abstract *pE, game_PlayerState *ps)
 {
-	CSE_ALifeCreatureActor *pA	=	smart_cast<CSE_ALifeCreatureActor*>(pE);
+	CSE_ALifeCreatureActor *pA	= smart_cast<CSE_ALifeCreatureActor*>(pE);
 	R_ASSERT2(pA, "Owner not a Actor");
 
 	if (!pA) 
@@ -974,13 +976,18 @@ void game_sv_Deathmatch::SpawnWeaponsForActor(CSE_Abstract *pE, game_PlayerState
 	if (!(ps->team < s16(TeamList.size()))) 
 		return;
 
-	Msg("spawn 22");
+	// ?? Game().m_WeaponUsageStatistic->OnWeaponBought(ps, *m_strWeaponsData->GetItemName(ItemID & 0x00FF));
+
+	TSMP_ShopProcessor_BuyItems(ps,pA->ID, this);
+	
+	/*
 	for (u32 i = 0; i<ps->pItemList.size(); i++)
 	{
 		u16 ItemID			= ps->pItemList[i];
 		SpawnWeapon4Actor	(pA->ID, *m_strWeaponsData->GetItemName(ItemID& 0x00FF), u8((ItemID & 0xFF00)>>0x08));
-		Game().m_WeaponUsageStatistic->OnWeaponBought(ps, *m_strWeaponsData->GetItemName(ItemID& 0x00FF));
+		
 	}
+	*/
 	
 	Player_AddMoney(ps, ps->LastBuyAcount);
 };

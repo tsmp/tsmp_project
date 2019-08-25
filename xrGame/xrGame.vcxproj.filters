@@ -9626,6 +9626,9 @@
     <ClCompile Include="TSMP_Loader.cpp">
       <Filter>TSMP</Filter>
     </ClCompile>
+    <ClCompile Include="TSMP_ShopProcessor.cpp">
+      <Filter>TSMP</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuildStep Include="graph_abstract.h">

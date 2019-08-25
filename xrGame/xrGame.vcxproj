@@ -1935,6 +1935,7 @@
     </ClCompile>
     <ClCompile Include="TSMP_HitProcessor.cpp" />
     <ClCompile Include="TSMP_Loader.cpp" />
+    <ClCompile Include="TSMP_ShopProcessor.cpp" />
     <ClCompile Include="TSMP_Timers.cpp" />
     <ClCompile Include="visual_memory_manager.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch_script.h</PrecompiledHeaderFile>

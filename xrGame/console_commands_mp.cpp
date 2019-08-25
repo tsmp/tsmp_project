@@ -1656,6 +1656,7 @@ public:
 	}
 };
 
+extern void TSMP_ShopProcessor_AddItem(std::string Args);
 
 class CCC_WeaponDisable : public IConsole_Command 
 {
@@ -1667,7 +1668,7 @@ public:
 		if (!OnServer())
 			return;
 
-		Level().Server->game->Tsmp_weapon_disabler(args);
+		TSMP_ShopProcessor_AddItem(args);
 	}
 };
 
