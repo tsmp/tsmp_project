@@ -59,6 +59,7 @@ extern	std::string	g_sv_mp_loader_port;
 extern	int		g_sv_mp_LoaderEnabled;
 extern	int		g_sv_mp_LoaderMap;
 extern	int		g_sv_mp_DisablerEnabled;
+extern	int		g_TsmpBuyVeriferEnabled;
 extern 	int		g_sv_mp_LogHitsEnabled;
 extern volatile	int		g_sv_mp_CheckHitsEnabled;
 extern volatile	int		g_sv_mp_AutoBanHitCheaters;
@@ -1859,6 +1860,7 @@ void register_mp_console_commands()
 	CMD4(CCC_SV_Integer,	"tsmp_radio_antispam"		,	(int*)&g_sv_mp_RadioAntiSpam, 0, 1);
 
 	CMD4(CCC_SV_Integer,	"tsmp_weapon_disabler_enabled", (int*)&g_sv_mp_DisablerEnabled, 0, 1);
+	CMD4(CCC_SV_Integer,	"tsmp_buy_verifer_enabled"	,		(int*)&g_TsmpBuyVeriferEnabled, 0, 1);
 	CMD4(CCC_SV_Integer,	"tsmp_weapon_hits_log"		,	(int*)&g_sv_mp_LogHitsEnabled, 0, 1);
 	CMD4(CCC_SV_Integer,	"tsmp_weapon_hits_autoban"	,	(int*)&g_sv_mp_AutoBanHitCheaters, 0, 1);
 	CMD4(CCC_SV_Integer,	"tsmp_weapon_hits_show"	,	    (int*)&g_sv_mp_ShowHits, 0, 1);	
