@@ -13,6 +13,7 @@
 #include "Text_Console.h"
 #include <process.h>
 #include "..\TSMP_BuildConfig.h"
+#include "..\TSMP_GUI\TSMP_GUI.h"
 
 #define TRIVIAL_ENCRYPTOR_DECODER
 #include "trivial_encryptor.h"
@@ -151,6 +152,11 @@ void execUserScript()
 	Console->ExecuteScript(Console->ConfigFile);
 }
 
+void ConsoleForGui(LPCSTR Arg)
+{
+	Console->Execute(Arg);
+}
+
 void Startup()
 {
 	execUserScript();
@@ -179,6 +185,10 @@ void Startup()
 	// Destroy LOGO
 	DestroyWindow(logoWindow);
 	logoWindow = NULL;
+
+	
+	thread_spawn(Create_Window, "Wnd", 0, &ConsoleForGui);
+	
 
 	// Main cycle
 	Memory.mem_usage();
@@ -410,6 +420,8 @@ int APIENTRY WinMain_impl(HINSTANCE hInstance, HINSTANCE hPrevInstance, char *lp
 	InitEngine();
 	InitConsole();
 
+	
+
 	if (strstr(Core.Params, "-r2a"))
 		Console->Execute("renderer renderer_r2a");
 	else
@@ -428,6 +440,7 @@ int APIENTRY WinMain_impl(HINSTANCE hInstance, HINSTANCE hPrevInstance, char *lp
 	Engine.External.Initialize();
 	Console->Execute("stat_memory");
 	Startup();
+
 	Core._destroy();
 
 	char *_args[3];
