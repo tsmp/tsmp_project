@@ -2,9 +2,14 @@
 #include "resource.h"
 #include <Windows.h>
 #include <string>
+#include "..\xrCore\xrCore.h"
+#include "..\xrCore\log.h"
+
+#pragma comment(lib,"xrCore.lib")
 
 static HWND hWindow = 0;
 static HWND hText = 0;
+static HWND hLog = 0;
 
 typedef void (*void_f)(LPCSTR);
 
@@ -50,6 +55,8 @@ static INT_PTR CALLBACK WndProc(HWND hw, UINT msg, WPARAM wp, LPARAM lp)
 	return TRUE;
 }
 
+u32 LogSize;
+
 static void _process_messages(void)
 {
 	MSG msg;
@@ -59,6 +66,23 @@ static void _process_messages(void)
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 	}
+
+	if (LogSize != LogFile->size())
+	{
+		for (; LogSize < LogFile->size(); LogSize++)
+		{
+			const char* S = *(*LogFile)[LogSize];
+
+			if (0 == S)	
+				S = "";	
+			
+			SendMessage(hLog, LB_ADDSTRING, 0, (LPARAM)S);
+		}
+
+		SendMessage(hLog, LB_SETTOPINDEX, LogSize - 1, 0);
+	}
+
+	Sleep(100);
 }
 
 HMODULE GetCurrentModuleHandle() 
@@ -83,6 +107,10 @@ void InitWindow()
 	}
 
 	hText = GetDlgItem(hWindow, IDC_EDIT1);
+	hLog = GetDlgItem(hWindow, IDC_LOG);
+
+	HANDLE hicon = LoadImage(GetCurrentModuleHandle(), MAKEINTRESOURCE(IDI_ICON1), IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR | LR_DEFAULTSIZE);
+	SendMessageW(hWindow, WM_SETICON, ICON_BIG, (LPARAM)hicon);
 
 	SetWindowPos(hWindow, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
 
@@ -92,6 +120,7 @@ void InitWindow()
 
 void Create_Window(void *v)
 {
+	LogSize = 0;
 	ConsoleExecPointer = v;
 	InitWindow();
 }
