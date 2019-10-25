@@ -202,7 +202,9 @@ void CRenderDevice::Run			()
 	mt_csEnter.Enter			();
 	mt_bMustExit				= FALSE;
 
+#ifndef DEDICATED_SERVER
 	thread_spawn				(mt_Thread,"X-RAY Secondary thread",0,0);
+#endif
 
 	// Message cycle
     PeekMessage					( &msg, NULL, 0U, 0U, PM_NOREMOVE );

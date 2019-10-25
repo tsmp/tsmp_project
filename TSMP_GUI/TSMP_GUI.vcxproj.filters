@@ -42,5 +42,8 @@
     <Image Include="..\xr_3da\stalker.ico">
       <Filter>Файлы ресурсов</Filter>
     </Image>
+    <Image Include="stalker.ico">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
   </ItemGroup>
 </Project>
