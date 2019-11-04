@@ -339,6 +339,16 @@ IReader* open_chunk(void* ptr, u32 ID)
 
 void CLocatorAPI::ProcessArchive(LPCSTR _path, LPCSTR base_path)
 {
+#ifdef TSMP_MINI
+	string_path pathq{ 0 };
+	FS_Path* pFSRoot = FS.get_path("$fs_root$");
+	strconcat(sizeof(pathq), pathq, pFSRoot->m_Path, "gamedata");
+	base_path = pathq;
+#endif
+
+	Msg("Process archive %s %s", _path, base_path);
+
+
 	// find existing archive
 	shared_str path				= _path;
 
