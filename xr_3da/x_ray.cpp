@@ -33,7 +33,6 @@ ENGINE_API bool g_dedicated_server = false;
 static CTimer phase_timer;
 extern ENGINE_API BOOL g_appLoaded = FALSE;
 
-//#define RUSSIAN_BUILD
 //#define NO_SINGLE
 //#define NO_MULTI_INSTANCES
 
@@ -186,9 +185,9 @@ void Startup()
 	DestroyWindow(logoWindow);
 	logoWindow = NULL;
 
-	
+#ifdef DEDICATED_SERVER
 	thread_spawn(Create_Window, "Wnd", 0, &ConsoleForGui);
-	
+#endif	
 
 	// Main cycle
 	Memory.mem_usage();

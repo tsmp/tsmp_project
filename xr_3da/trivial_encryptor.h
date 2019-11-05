@@ -13,10 +13,6 @@
 
 //#define trivial_encryptor	temp_stuff
 
-/**/
-#define RUSSIAN_BUILD
-/**/
-
 class trivial_encryptor {
 private:
 	typedef u8					type;
@@ -44,10 +40,13 @@ private:
 		}
 	};
 
+
+	
+
 public:
-	static	u32					m_table_iterations;
-	static	u32					m_table_seed;
-	static	u32					m_encrypt_seed;
+	static u32 m_table_iterations, m_table_seed, m_encrypt_seed;
+
+
 
 #ifdef TRIVIAL_ENCRYPTOR_ENCODER
 #	ifdef TRIVIAL_ENCRYPTOR_DECODER
@@ -66,6 +65,13 @@ public:
 private:
 	IC	static void	initialize		()
 	{
+		if (strstr(Core.Params, "-ww"))
+		{
+			m_table_iterations = 1024;
+			m_table_seed = 6011979;
+			m_encrypt_seed = 24031979;
+		}
+
 	#ifndef TRIVIAL_ENCRYPTOR_ENCODER
 		type					*m_alphabet = (type*)_alloca(sizeof(type)*alphabet_size);
 	#endif // TRIVIAL_ENCRYPTOR_ENCODER
@@ -139,16 +145,6 @@ private:
 #	endif // TRIVIAL_ENCRYPTOR_DECODER
 #endif // TRIVIAL_ENCRYPTOR_ENCODER
 
-#ifdef RUSSIAN_BUILD
-	u32	trivial_encryptor::m_table_iterations	= 2048;
-	u32	trivial_encryptor::m_table_seed			= 20091958;
-	u32	trivial_encryptor::m_encrypt_seed		= 20031955;
-#else // RUSSIAN_BUILD
-	u32	trivial_encryptor::m_table_iterations	= 1024;
-	u32	trivial_encryptor::m_table_seed			= 6011979;
-	u32	trivial_encryptor::m_encrypt_seed		= 24031979;
-#endif // RUSSIAN_BUILD
-
 #ifdef TRIVIAL_ENCRYPTOR_ENCODER
 	trivial_encryptor::type	trivial_encryptor::m_alphabet[trivial_encryptor::alphabet_size];
 #endif // TRIVIAL_ENCRYPTOR_ENCODER
@@ -156,5 +152,9 @@ private:
 #ifdef TRIVIAL_ENCRYPTOR_DECODER
 	trivial_encryptor::type	trivial_encryptor::m_alphabet_back[trivial_encryptor::alphabet_size];
 #endif // TRIVIAL_ENCRYPTOR_DECODER
+
+	u32	trivial_encryptor::m_table_iterations = 2048;
+	u32	trivial_encryptor::m_table_seed = 20091958;
+	u32	trivial_encryptor::m_encrypt_seed = 20031955;
 
 #endif // TRIVIAL_ENCRYPTOR_H

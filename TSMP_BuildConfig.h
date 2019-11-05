@@ -5,4 +5,4 @@ constexpr auto TSMP_VERSION = "tsmp 1.5.9";
 
 //#define DEDICATED_SERVER
 
-#define TSMP_MINI
+//#define TSMP_MINI
