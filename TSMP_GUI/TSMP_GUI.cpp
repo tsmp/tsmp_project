@@ -40,12 +40,15 @@ static INT_PTR CALLBACK WndProc(HWND hw, UINT msg, WPARAM wp, LPARAM lp)
 		break;
 	
 	case WM_CLOSE:
-		ExitProcess(0);
+	{
+		if (MessageBox(0, "Завершить работу сервера?", "Выход", MB_OKCANCEL) == 1)
+			ExitProcess(0);
+	}
 		break;
 	case WM_COMMAND:
-		if (LOWORD(wp) == IDCANCEL)
+		if (LOWORD(wp) == IDCANCEL)		
 			ExitProcess(0);
-
+		
 		if (LOWORD(wp) == IDC_BUTTON1)
 			OnMyButtonClick();
 		
