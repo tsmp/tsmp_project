@@ -38,6 +38,7 @@ static INT_PTR CALLBACK WndProc(HWND hw, UINT msg, WPARAM wp, LPARAM lp)
 	{
 	case WM_DESTROY:
 		break;
+	
 	case WM_CLOSE:
 		ExitProcess(0);
 		break;
@@ -47,7 +48,7 @@ static INT_PTR CALLBACK WndProc(HWND hw, UINT msg, WPARAM wp, LPARAM lp)
 
 		if (LOWORD(wp) == IDC_BUTTON1)
 			OnMyButtonClick();
-
+		
 		break;
 	default:
 		return FALSE;
@@ -57,6 +58,19 @@ static INT_PTR CALLBACK WndProc(HWND hw, UINT msg, WPARAM wp, LPARAM lp)
 
 u32 LogSize;
 
+void AddLogLine(const char* Line)
+{
+	DWORD StartPos, EndPos;
+	SendMessage(hLog, EM_GETSEL, reinterpret_cast<WPARAM>(&StartPos), reinterpret_cast<WPARAM>(&EndPos));
+
+	int outLength = GetWindowTextLength(hLog);
+	SendMessage(hLog, EM_SETSEL, outLength, outLength);
+
+	SendMessage(hLog, EM_REPLACESEL, TRUE, reinterpret_cast<LPARAM>(Line));
+	SendMessage(hLog, EM_REPLACESEL, TRUE, reinterpret_cast<LPARAM>("\r\n"));
+	SendMessage(hLog, EM_SETSEL, StartPos, EndPos);
+}
+
 static void _process_messages(void)
 {
 	MSG msg;
@@ -64,6 +78,10 @@ static void _process_messages(void)
 	if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 	{
 		TranslateMessage(&msg);
+
+		if (msg.message == WM_KEYDOWN && msg.wParam == VK_RETURN)
+			OnMyButtonClick();
+
 		DispatchMessage(&msg);
 	}
 
@@ -76,13 +94,11 @@ static void _process_messages(void)
 			if (0 == S)	
 				S = "";	
 			
-			SendMessage(hLog, LB_ADDSTRING, 0, (LPARAM)S);
+			AddLogLine(S);
 		}
-
-		SendMessage(hLog, LB_SETTOPINDEX, LogSize - 1, 0);
 	}
 
-	Sleep(100);
+	Sleep(10);
 }
 
 HMODULE GetCurrentModuleHandle() 
@@ -108,6 +124,8 @@ void InitWindow()
 
 	hText = GetDlgItem(hWindow, IDC_EDIT1);
 	hLog = GetDlgItem(hWindow, IDC_LOG);
+
+	SendMessage(hLog, EM_SETLIMITTEXT, -1, 0);
 
 	HANDLE hicon = LoadImage(GetCurrentModuleHandle(), MAKEINTRESOURCE(IDI_ICON1), IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR | LR_DEFAULTSIZE);
 	SendMessageW(hWindow, WM_SETICON, ICON_BIG, (LPARAM)hicon);
