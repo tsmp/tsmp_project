@@ -1,42 +1,26 @@
-
 #include "stdafx.h"
-    
 #include "NET_Common.h"
 #include "NET_Compressor.h"
 
+#pragma pack(push)
+#pragma pack(1)
 
-//==============================================================================
-
-#pragma pack( push )
-#pragma pack( 1 )
-struct
-MultipacketHeader
+struct MultipacketHeader
 {
     u8  tag;
     u16 unpacked_size;
 };
+
 #pragma pack( pop )
 
+static NET_Compressor gCompressor;
+static const unsigned MaxMultipacketSize = 32768;
 
-//==============================================================================
+XRNETSERVER_API int psNET_GuaranteedPacketMode  = NET_GUARANTEEDPACKET_DEFAULT;
 
-static NET_Compressor   gCompressor;
-static const unsigned   MaxMultipacketSize          = 32768;
+MultipacketSender::MultipacketSender() {}
 
-XRNETSERVER_API int     psNET_GuaranteedPacketMode  = NET_GUARANTEEDPACKET_DEFAULT;
-
-
-//------------------------------------------------------------------------------
-
-MultipacketSender::MultipacketSender()
-{
-}
-
-
-//------------------------------------------------------------------------------
-
-void
-MultipacketSender::SendPacket( const void* packet_data, u32 packet_sz, u32 flags, u32 timeout )
+void MultipacketSender::SendPacket(const void * packet_data, u32 packet_sz, u32 flags, u32 timeout)
 {
     _buf_cs.Enter();
 
@@ -78,10 +62,7 @@ MultipacketSender::SendPacket( const void* packet_data, u32 packet_sz, u32 flags
 }
 
 
-//------------------------------------------------------------------------------
-
-void            
-MultipacketSender::FlushSendBuffer( u32 timeout )
+void MultipacketSender::FlushSendBuffer(u32 timeout)
 {
     _buf_cs.Enter();
     
@@ -92,10 +73,7 @@ MultipacketSender::FlushSendBuffer( u32 timeout )
 }
 
 
-//------------------------------------------------------------------------------
-
-void            
-MultipacketSender::_FlushSendBuffer( u32 timeout, Buffer* buf )
+void MultipacketSender::_FlushSendBuffer( u32 timeout, Buffer* buf )
 {
     // expected to be called between '_buf_cs' enter/leave
 
@@ -116,28 +94,7 @@ MultipacketSender::_FlushSendBuffer( u32 timeout, Buffer* buf )
 
         header->tag             = NET_TAG_MERGED;
         header->unpacked_size   = (u16)buf->buffer.B.count;
-
-
-        // dump/log if needed
 		
-	    if( strstr( Core.Params,"-dump_traffic") ) 
-        {
-            static bool first_time  = true;
-            FILE*       dump        = fopen( "raw-out-traffic.bins", (first_time)?"wb":"ab" );
-
-            if( first_time )
-            {
-                fwrite( "BINS", 4, 1, dump );
-                first_time = false;
-            }
-
-            u16 sz = u16(buf->buffer.B.count);
-            
-            fwrite( &sz, sizeof(u16), 1, dump );
-            fwrite( buf->buffer.B.data, buf->buffer.B.count, 1, dump );
-            fclose( dump );
-        }
-
 
         // do send
         
@@ -157,24 +114,6 @@ void MultipacketReciever::RecievePacket(const void *packet_data, u32 packet_sz, 
     gCompressor.Decompress( data, sizeof(data), 
                            (u8*)packet_data+sizeof(MultipacketHeader), packet_sz-sizeof(MultipacketHeader) 
                          );
-
-    if( strstr( Core.Params,"-dump_traffic") ) 
-    {
-        static bool first_time  = true;
-        FILE*       dump        = fopen( "raw-in-traffic.bins", (first_time)?"wb":"ab" );
-
-        if( first_time )
-        {
-            fwrite( "BINS", 4, 1, dump );
-            first_time = false;
-        }
-
-        u16 sz = header->unpacked_size;
-        
-        fwrite( &sz, sizeof(u16), 1, dump );
-        fwrite( data, header->unpacked_size, 1, dump );
-        fclose( dump );
-    }
 
 
     bool    is_multi_packet = header->tag == NET_TAG_MERGED;
@@ -201,4 +140,3 @@ void XRNETSERVER_API DumpNetCompressorStats(bool brief)
 {
 	gCompressor.DumpStats(brief);
 }
-

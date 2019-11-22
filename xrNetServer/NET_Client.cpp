@@ -3,7 +3,6 @@
 #include "net_client.h"
 #include "net_server.h"
 #include "net_messages.h"
-#include "NET_Log.h"
 
 #pragma warning(disable:4577)
 
@@ -13,7 +12,6 @@
 #include "dxerr9.h"
 #pragma warning(pop)
 
-static INetLog *pClNetLog = nullptr; 
 static u32 LastTimeCreate = 0;
 
 #define BASE_PORT_LAN_SV	5445
@@ -209,20 +207,7 @@ void  IPureClient::_Recieve( const void *data, u32 data_size, u32 param)
 	else
 	{
 		if (net_Connected == EnmConnectionCompleted)
-		{
-			// one of the messages - decompress it
-
-			if (psNET_Flags.test(NETFLAG_LOG_CL_PACKETS))
-			{
-				if (!pClNetLog)
-					pClNetLog = xr_new<INetLog>("logs\\net_cl_log.log", timeServer());
-
-				if (pClNetLog)
-					pClNetLog->LogData(timeServer(), const_cast<void*>(data), data_size, TRUE);
-			}
-
-			OnMessage(const_cast<void*>(data), data_size);
-		}
+			OnMessage(const_cast<void*>(data), data_size);		
 	}
 }
 
@@ -239,14 +224,10 @@ IPureClient::IPureClient(CTimer* timer): net_Statistic(timer)
 	net_Time_LastUpdate		= 0;
 	net_TimeDelta			= 0;
 	net_TimeDelta_Calculated = 0;
-
-	pClNetLog = nullptr;
 }
 
 IPureClient::~IPureClient	()
 {
-	xr_delete(pClNetLog); 
-	pClNetLog = nullptr;
 	psNET_direct_connect = FALSE;
 }
 
@@ -797,15 +778,6 @@ void	IPureClient::SendTo_LL(void* data, u32 size, u32 dwFlags, u32 dwTimeout)
 {
 	if(net_Disconnected)	
 	    return;
-
-	if(psNET_Flags.test(NETFLAG_LOG_CL_PACKETS)) 
-	{
-		if( !pClNetLog) 
-		    pClNetLog = xr_new<INetLog>("logs\\net_cl_log.log", timeServer());
-
-		if( pClNetLog ) 
-		    pClNetLog->LogData(timeServer(), data, size);
-	}
 
 	DPN_BUFFER_DESC	desc;
 

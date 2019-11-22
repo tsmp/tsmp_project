@@ -2,14 +2,11 @@
 #include "dxerr9.h"
 #include "NET_Common.h"
 #include "net_server.h"
-#include "NET_Log.h"
 
 #pragma warning(push)
 #pragma warning(disable:4995)
 #include <malloc.h>
 #pragma warning(pop)
-
-static	INetLog *pSvNetLog = nullptr;
 
 #define BASE_PORT_LAN_SV	5445
 #define BASE_PORT			0
@@ -253,15 +250,6 @@ void IPureServer::_Recieve(const void *data, u32 data_size, u32 param)
 
 	csMessage.Enter();
 
-	if (psNET_Flags.test(NETFLAG_LOG_SV_PACKETS))
-	{
-		if (!pSvNetLog)
-			pSvNetLog = xr_new<INetLog>("logs\\net_sv_log.log", TimeGlobal(device_timer));
-
-		if (pSvNetLog)
-			pSvNetLog->LogPacket(TimeGlobal(device_timer), &packet, TRUE);
-	}
-
 	u32	result = OnMessage(packet, id);
 
 	csMessage.Leave();
@@ -283,7 +271,6 @@ IPureServer::IPureServer(CTimer *timer, BOOL Dedicated) : m_bDedicated(Dedicated
 	SV_Client			= nullptr;
 	NET					= nullptr;
 	net_Address_device	= nullptr;
-	pSvNetLog			= nullptr;
 }
 
 IPureServer::~IPureServer()
@@ -294,9 +281,6 @@ IPureServer::~IPureServer()
 	BannedAddresses.clear();
 
 	SV_Client = nullptr;
-
-	xr_delete(pSvNetLog);
-
 	psNET_direct_connect = FALSE;
 }
 
@@ -682,15 +666,6 @@ void IPureServer::SendTo_Buf(ClientID id, void* data, u32 size, u32 dwFlags, u32
 
 void IPureServer::SendTo_LL(ClientID ID/*DPNID ID*/, void* data, u32 size, u32 dwFlags, u32 dwTimeout)
 {
-	if (psNET_Flags.test(NETFLAG_LOG_SV_PACKETS))
-	{
-		if (!pSvNetLog) 
-			pSvNetLog = xr_new<INetLog>("logs\\net_sv_log.log", TimeGlobal(device_timer));
-		
-		if (pSvNetLog) 
-			pSvNetLog->LogData(TimeGlobal(device_timer), data, size);
-	}
-
 	// send it
 	DPN_BUFFER_DESC		desc;
 	desc.dwBufferSize = size;

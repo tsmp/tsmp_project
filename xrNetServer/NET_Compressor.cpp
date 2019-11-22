@@ -271,12 +271,7 @@ NET_Compressor::NET_Compressor()
 
 NET_Compressor::~NET_Compressor()
 {
-#if 1//def DEBUG
-//	if( strstr(Core.Params,"-dump_traffic") ) 
-//	{
-//		fclose( OriginalTrafficDump );
-//		fclose( CompressedTrafficDump );
-//	}
+
 	if( CompressionDump )
 	{
 	    fclose( CompressionDump );
@@ -287,24 +282,7 @@ NET_Compressor::~NET_Compressor()
         fclose( RawTrafficDump );
         RawTrafficDump = NULL;
     }
-#endif // DEBUG
 }
-
-/*
-void NET_Compressor::Initialize	()
-{
-	CS.Enter		();
-
-#if 1//def DEBUG
-	if( strstr(Core.Params,"-dump_traffic") ) 
-	{
-		OriginalTrafficDump     = fopen( "x:/network_out_original.dat", "wb" );
-		CompressedTrafficDump   = fopen( "x:/network_out_compressed.dat", "wb" );
-	}
-#endif // DEBUG
-
-	CS.Leave		();
-}*/
 
 u16 NET_Compressor::compressed_size	(const u32 &count)
 {
@@ -350,14 +328,6 @@ u16 NET_Compressor::Compress(BYTE* dest, const u32 &dest_size, BYTE* src, const 
 	VERIFY(src);
 	VERIFY(count);
 
-#if 1//def DEBUG
-//	if( strstr(Core.Params,"-dump_traffic") ) 
-//	{
-//		fwrite( src,count,1,OriginalTrafficDump );
-//		fflush( OriginalTrafficDump );
-//	}
-#endif // DEBUG
-
 #if !NET_USE_COMPRESSION
 
 	CopyMemory(dest,src,count);
@@ -396,25 +366,6 @@ u16 NET_Compressor::Compress(BYTE* dest, const u32 &dest_size, BYTE* src, const 
 
 		*((u32*)(dest + 1))	= crc;
         #endif // NET_USE_COMPRESSION_CRC
-
-        #if NET_LOG_COMPRESSION
-        Msg( "#compress %u->%u  %02X (%08X)", count, compressed_size, *dest, *((u32*)(src+1)) );
-        #endif
-        #if NET_DUMP_COMPRESSION
-        #if NET_USE_LZO_COMPRESSION
-        static const char*  compressor_name = "LZO";
-        #else
-        static const char*  compressor_name = "PPMd";
-        #endif
-
-		if( !CompressionDump )
-		    CompressionDump = fopen( "net-compression.log", "w+b" );
-        
-        fprintf( CompressionDump, "%s compress %2.0f%% %u->%u\r\n",
-                 compressor_name,
-                 100.0f*float(compressed_size)/float(count), count, compressed_size
-               );
-        #endif // NET_DUMP_COMPRESSION
 	}
 	else 
 	{
@@ -425,53 +376,22 @@ u16 NET_Compressor::Compress(BYTE* dest, const u32 &dest_size, BYTE* src, const 
 		
 		compressed_size	= count + 1;
 		CopyMemory( dest+1, src, count );
-
-        #if NET_LOG_COMPRESSION
-        Msg( "#compress/as-is %u->%u  %02X", count, compressed_size, *dest );
-        #endif
 	}
+
 	if(g_net_compressor_gather_stats && b_compress_packet)
 		_p->compressed_size		+= compressed_size;
-
-    #if 1//def DEBUG
-//	if( strstr(Core.Params,"-dump_traffic")) 
-//	{
-//		fwrite(dest,compressed_size,1,CompressedTrafficDump);
-//		fflush(CompressedTrafficDump);
-//	}	
-    #endif // DEBUG
-
-    #ifdef DEBUG
-/*
-	BYTE			*src_back = (BYTE*)_alloca(count);
-	Decompress		(src_back,count,dest,compressed_size);
-	BYTE			*I = src_back;
-	BYTE			*E = src_back + count;
-	BYTE			*J = src;
-	for ( ; I != E; ++I, ++J)
-		VERIFY		(*I == *J);
-
-*/
-//	CS.Leave		();
-    #endif // DEBUG
 
 	return (u16(compressed_size));
 	
 #endif // if !NET_USE_COMPRESSION
 }
 
-
-
 u16 NET_Compressor::Decompress	(BYTE* dest, const u32 &dest_size, BYTE* src, const u32 &count)
 {
 	VERIFY(dest);
 	VERIFY(src);
 	VERIFY(count);
-
-    #if NET_LOG_COMPRESSION
-    Msg( "#decompress %u  %02X (%08X)", count, src[0], *((u32*)(src+1)) );
-    #endif
-
+	
     #if NET_USE_COMPRESSSION
     if( src[0] != NET_TAG_COMPRESSED  &&  src[0] != NET_TAG_NONCOMPRESSED )
     {
@@ -510,7 +430,7 @@ u16 NET_Compressor::Decompress	(BYTE* dest, const u32 &dest_size, BYTE* src, con
 	boost::crc_32_type	temp;
 	temp.process_block	(src + offset,src + count);
 	u32					crc = temp.checksum();
-//	Msg					("decompressed %d -> ? [0x%08x]",count,crc);
+
     if( crc != *((u32*)(src + 1)) )
         Msg( "!CRC mismatch" );
         
