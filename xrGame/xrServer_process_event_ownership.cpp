@@ -22,32 +22,19 @@ void xrServer::Process_event_ownership(NET_Packet& P, ClientID sender, u32 time,
 	Msg("sv ownership id_parent %s id_entity %s [%d]",ent_name_safe(id_parent).c_str(), ent_name_safe(id_entity).c_str(), Device.dwFrame);
 	#endif
 
-	if(!e_entity)		return;
-
-	if (!e_parent)
-	{
-		Msg("! error e_parrent, ignoring");
+	if(!e_entity || !e_parent)
 		return;
-	}
-
-//	R_ASSERT			(/*e_entity &&*/ e_parent)
-
-	if (0xffff != e_entity->ID_Parent)
-	{
-		Msg("sv !ownership (entity already has parent) new_parent %s id_parent %s id_entity %s [%d]",ent_name_safe(e_entity->ID_Parent).c_str(), ent_name_safe(id_parent).c_str(), ent_name_safe(id_entity).c_str(), Device.dwFrame);
+		
+	if(0xffff != e_entity->ID_Parent)  // !ownership (entity already has parent)
 		return;
-	}
-
+	
 	xrClientData*		c_parent		= e_parent->owner;
 	xrClientData*		c_entity		= e_entity->owner;
 	xrClientData*		c_from			= ID_to_client	(sender);
 
-	if ( (GetServerClient() != c_from) && (c_parent != c_from) )
-	{
-		// trust only ServerClient or new_ownerClient
+	if((GetServerClient() != c_from) && (c_parent != c_from)) // trust only ServerClient or new_ownerClient
 		return;
-	}
-
+	
 	// Game allows ownership of entity
 	if (game->OnTouch	(id_parent,id_entity, bForced))
 	{
@@ -56,11 +43,9 @@ void xrServer::Process_event_ownership(NET_Packet& P, ClientID sender, u32 time,
 		e_parent->children.push_back(id_entity);
 
 		if (bForced)
-		{
 			ReplaceOwnershipHeader(P);
-		}
+		
 		// Signal to everyone (including sender)
 		SendBroadcast		(BroadcastCID,P,MODE);
 	}
-
 }

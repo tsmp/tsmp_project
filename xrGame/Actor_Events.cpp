@@ -56,13 +56,9 @@ void CActor::OnEvent		(NET_Packet& P, u16 type)
 
 			CGameObject* _GO = smart_cast<CGameObject*>(O);
 
-			if (!IsGameTypeSingle() && !g_Alive())
-			{
-			//	Msg("! WARNING: dead player [%d][%s] can't take items [%d][%s]"
-			//		, ID(), Name(), _GO->ID(), _GO->cNameSect().c_str());
+			if (!IsGameTypeSingle() && !g_Alive()) // dead player cant take items
 				break;
-			}
-			
+						
 			if( inventory().CanTakeItem(smart_cast<CInventoryItem*>(_GO)) )
 			{
 				O->H_SetParent(smart_cast<CObject*>(this));
@@ -81,13 +77,8 @@ void CActor::OnEvent		(NET_Packet& P, u16 type)
 				};
 				
 				//добавить отсоединенный аддон в инвентарь
-				if(pGameSP)
-				{
-					if(pGameSP->MainInputReceiver() == pGameSP->InventoryMenu)
-					{
-						pGameSP->InventoryMenu->AddItemToBag(smart_cast<CInventoryItem*>(O));
-					}
-				}
+				if(pGameSP && pGameSP->MainInputReceiver() == pGameSP->InventoryMenu)
+					pGameSP->InventoryMenu->AddItemToBag(smart_cast<CInventoryItem*>(O));				
 				
 				SelectBestWeapon(O);
 			} 
@@ -136,12 +127,9 @@ void CActor::OnEvent		(NET_Packet& P, u16 type)
 			s32 ZoomRndSeed = P.r_s32();
 			s32 ShotRndSeed = P.r_s32();
 
-			if (!IsGameTypeSingle() && !g_Alive())
-			{
-				//Msg("! WARNING: dead player tries to rize inventory action");
+			if (!IsGameTypeSingle() && !g_Alive()) // dead player tries to rize inventory action");
 				break;
-			}
-									
+												
 			if (flags & CMD_START)
 			{
 				if (cmd == kWPN_ZOOM)
@@ -175,12 +163,8 @@ void CActor::OnEvent		(NET_Packet& P, u16 type)
 				break;
 			}
 
-			if (!IsGameTypeSingle() && !g_Alive())
-			{
-				//Msg("! WARNING: dead player [%d][%s] can't use items [%d][%s]",
-				//	ID(), Name(), Obj->ID(), Obj->cNameSect().c_str());
-				break;
-			}
+			if (!IsGameTypeSingle() && !g_Alive()) // dead player cant use items
+				break;			
 
 			switch (type)
 			{
