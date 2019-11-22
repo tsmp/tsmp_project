@@ -11,6 +11,8 @@
 #include <malloc.h>
 #pragma warning(pop)
 
+#include "..\TSMP_BuildConfig.h"
+
 //#define trivial_encryptor	temp_stuff
 
 class trivial_encryptor {
@@ -65,13 +67,6 @@ public:
 private:
 	IC	static void	initialize		()
 	{
-		if (strstr(Core.Params, "-ww"))
-		{
-			m_table_iterations = 1024;
-			m_table_seed = 6011979;
-			m_encrypt_seed = 24031979;
-		}
-
 	#ifndef TRIVIAL_ENCRYPTOR_ENCODER
 		type					*m_alphabet = (type*)_alloca(sizeof(type)*alphabet_size);
 	#endif // TRIVIAL_ENCRYPTOR_ENCODER
@@ -153,8 +148,14 @@ private:
 	trivial_encryptor::type	trivial_encryptor::m_alphabet_back[trivial_encryptor::alphabet_size];
 #endif // TRIVIAL_ENCRYPTOR_DECODER
 
+#ifdef WW_ARCHIVES
+	u32	trivial_encryptor::m_table_iterations = 1024;
+	u32	trivial_encryptor::m_table_seed = 6011979;
+	u32	trivial_encryptor::m_encrypt_seed = 24031979;
+#else
 	u32	trivial_encryptor::m_table_iterations = 2048;
 	u32	trivial_encryptor::m_table_seed = 20091958;
 	u32	trivial_encryptor::m_encrypt_seed = 20031955;
+#endif
 
 #endif // TRIVIAL_ENCRYPTOR_H

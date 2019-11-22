@@ -58,9 +58,10 @@ public:
 	CCC_Quit(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = TRUE; };
 	virtual void Execute(LPCSTR args) 
 	{
-		Console->Hide();
-		Engine.Event.Defer("KERNEL:disconnect");
-		Engine.Event.Defer("KERNEL:quit");
+		ExitProcess(1);
+		//Console->Hide();
+		//Engine.Event.Defer("KERNEL:disconnect");
+		//Engine.Event.Defer("KERNEL:quit");
 	}
 };
 
