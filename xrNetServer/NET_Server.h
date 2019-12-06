@@ -2,6 +2,7 @@
 
 #include "net_shared.h"
 #include "NET_Common.h"
+#include "..\TSMP_BuildConfig.h"
 
 struct SClientConnectData
 {
@@ -9,11 +10,14 @@ struct SClientConnectData
 	string64 name;
 	string64 pass;
 	u32	process_id;
+
+#ifndef NO_TSMP_ID
 	string64 new_code;
+#endif
 
 	SClientConnectData()
 	{
-		name[0] = pass[0] = new_code[0] = 0;
+		name[0] = pass[0] = 0;
 		process_id = 0;
 	}
 };

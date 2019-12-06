@@ -373,7 +373,9 @@ BOOL IPureClient::Connect	(LPCSTR options)
 			SClientConnectData			cl_data;
 			cl_data.process_id			= GetCurrentProcessId();
 
+#ifndef NO_TSMP_ID
 			strcpy_s(cl_data.new_code, "tsmp");		
+#endif
 
 			strcpy_s( cl_data.name, user_name_str );
 			strcpy_s( cl_data.pass, user_pass );
