@@ -1527,7 +1527,7 @@ public:
 		}
 		else
 			strcpy(NewName, args);
-	
+			
 		NET_Packet				P;
 		Game().u_EventGen		(P,GE_GAME_EVENT,Game().local_player->GameID);
 		P.w_u16					(GAME_EVENT_PLAYER_NAME);
@@ -1549,9 +1549,7 @@ public:
 			return;
 
 		if(Level().Server && Level().Server->game) 
-		{
-			Console->Execute		("cfg_load all_server_settings");
-		}
+			Console->Execute("cfg_load all_server_settings");		
 	}
 
 	virtual void Info(TInfo& I){strcpy(I,"Shows current server settings"); }

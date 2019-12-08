@@ -726,33 +726,49 @@ void game_sv_GameState::OnEvent (NET_Packet &tNetPacket, u16 type, u32 time, Cli
 
 bool game_sv_GameState::NewPlayerName_Exists( void* pClient, LPCSTR NewName )
 {
-	if ( !pClient || !NewName ) return false;
-	IClient* CL = (IClient*)pClient;
-	if ( !CL->name || xr_strlen( CL->name.c_str() ) == 0 ) return false;
+	if ( !pClient || !NewName ) 
+		return false;
+
+	IClient* OurClient = (IClient*)pClient;	
+	CStringTable st;
+
+	if (st.HasTranslation(NewName))
+		return true;	
 
 	u32	cnt	= get_players_count();
+
 	for ( u32 it = 0; it < cnt; ++it )	
 	{
-		IClient*	pIC	= m_server->client_Get(it);
-		if ( !pIC || pIC == CL ) continue;
+		IClient* pIC = m_server->client_Get(it);
+
+		if ( !pIC || pIC == OurClient ) 
+			continue;
+
 		string64 xName;
-		strcpy( xName, pIC->name.c_str() );
-		if ( !xr_strcmp(NewName, xName) ) return true;
-	};
+		strcpy(xName, pIC->name.c_str());
+
+		if (!xr_strcmp(NewName, xName))
+			return true;
+	}
+
 	return false;
 }
 
-void game_sv_GameState::NewPlayerName_Generate( void* pClient, LPSTR NewPlayerName )
+void game_sv_GameState::NewPlayerName_Generate(void* pClient, LPSTR NewPlayerName)
 {
-	if ( !pClient || !NewPlayerName ) return;
+	if (!pClient || !NewPlayerName) 
+		return;
+
 	NewPlayerName[21] = 0;
+
 	for ( int i = 1; i < 100; ++i )
 	{
 		string64 NewXName;
-		sprintf_s( NewXName, "%s_%d", NewPlayerName, i );
-		if ( !NewPlayerName_Exists( pClient, NewXName ) )
+		sprintf_s(NewXName, "%s_%d", NewPlayerName, i);
+
+		if (!NewPlayerName_Exists(pClient, NewXName))
 		{
-			strcpy( NewPlayerName, NewXName );
+			strcpy(NewPlayerName, NewXName);
 			return;
 		}
 	}
@@ -760,13 +776,15 @@ void game_sv_GameState::NewPlayerName_Generate( void* pClient, LPSTR NewPlayerNa
 
 void game_sv_GameState::NewPlayerName_Replace( void* pClient, LPCSTR NewPlayerName )
 {
-	if ( !pClient || !NewPlayerName ) return;
+	if (!pClient || !NewPlayerName) 
+		return;
+
 	IClient* CL = (IClient*)pClient;
-	if ( !CL->name || xr_strlen( CL->name.c_str() ) == 0 ) return;
+
+	if (!CL->name || xr_strlen( CL->name.c_str()) == 0)
+		return;
 	
 	CL->name._set( NewPlayerName );
-	
-	//---------------------------------------------------------
 	NET_Packet P;
 	P.w_begin( M_CHANGE_SELF_NAME );
 	P.w_stringZ( NewPlayerName );	
@@ -781,14 +799,15 @@ void game_sv_GameState::OnSwitchPhase(u32 old_phase, u32 new_phase)
 
 void game_sv_GameState::AddDelayedEvent(NET_Packet &tNetPacket, u16 type, u32 time, ClientID sender )
 {
-//	OnEvent(tNetPacket,type,time,sender);
 	m_event_queue->Create(tNetPacket,type,time,sender);
 }
 
-void game_sv_GameState::ProcessDelayedEvent		()
+void game_sv_GameState::ProcessDelayedEvent()
 {
-	GameEvent* ge = NULL;
-	while ((ge = m_event_queue->Retreive()) != 0) {
+	GameEvent* ge = nullptr;
+
+	while ((ge = m_event_queue->Retreive()) != 0) 
+	{
 		OnEvent(ge->P,ge->type,ge->time,ge->sender);
 		m_event_queue->Release();
 	}

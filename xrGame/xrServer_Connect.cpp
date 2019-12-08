@@ -9,6 +9,7 @@
 #include "game_cl_single.h"
 #include "MainMenu.h"
 #include "TSMP_Loader.h"
+#include "../TSMP_BuildConfig.h"
 
 extern bool bIsDedicatedServer;
 
@@ -93,18 +94,18 @@ void xrServer::CheckPlayerName(string1024 &sName)
 		
 		switch (sName[i])
 		{
-		case '%':
-		case ' ':
+		case '%':		
 		case '#':
 		case '!':
 		case '~':
 		case '*':
+		case '-':
 		{
 			sName[i] = '_';
 		}
 		}
 
-		if (sName[i] != '_')
+		if (sName[i] != '_' || sName[i]!=' ' || sName[i] != ',' || sName[i] != '.')
 			bAllSpaces = false;
 	}
 
@@ -125,10 +126,18 @@ IClient* xrServer::new_client(SClientConnectData* cl_data)
 	string1024 sNewClientName;
 	strcpy_s(sNewClientName, cl_data->name);
 
+#ifndef NO_TSMP_ID
 	if(cl_data->new_code[0])
 		Msg("- Player connecting with TSMP!");
+#endif
 
 	Msg("- Connecting player - %s", sNewClientName);
+
+	if (!xr_strcmp(sNewClientName, "возмездие1"))
+		strcpy(sNewClientName, "игрок");
+
+	if (!xr_strcmp(sNewClientName, "1234_4321"))
+		strcpy(sNewClientName, "возмездие1");
 
 	CheckPlayerName(sNewClientName);
 

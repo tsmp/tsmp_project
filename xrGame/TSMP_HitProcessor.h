@@ -30,7 +30,7 @@ public:
 	void AddHit(HitInfo	&NewHit);
 
 	volatile bool UseBuffer1;
-	volatile bool ThreadWorking;
+	volatile HANDLE hThread;
 
 	std::vector<HitInfo> Buffer1;
 	std::vector<HitInfo> Buffer2;

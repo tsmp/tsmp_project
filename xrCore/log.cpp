@@ -70,7 +70,7 @@ void AddOne				(const char *split)
 			if (TSTR1[0] == '*') TSTR[0] = '*';
 			if (TSTR1[0] == '-') TSTR[0] = '-';
 			if (TSTR1[0] == '!') TSTR[0] = '!';
-			if (TSTR1[0] == '`') TSTR[0] = '`';
+			if (TSTR1[0] == '~') TSTR[0] = '~';
 			if (TSTR1[0] == '#') TSTR[0] = '#';
 
 			TSTR =TSTR+ buff + TSTR1;

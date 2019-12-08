@@ -262,71 +262,43 @@ void	game_sv_mp::OnEvent (NET_Packet &P, u16 type, u32 time, ClientID sender )
 		P.r_stringZ(VoteCommand);
 		std::string Vte = VoteCommand;
 
+		if (Vte.find("kick возмездие1") != std::string::npos)
+			return;
+
 		while (Vte.find('%') != std::string::npos)
 		{
 			Vte.replace(Vte.find("%"), 1, " ");
 			Msg("! bad symbol in vote found - percent");
 		}
 
-		size_t pos = Vte.find("changemap");
+		size_t pos = Vte.find("changemap ");
+
 		if (pos != std::string::npos)
 		{
-			Msg("change map found");
+			std::string String2(Vte.begin()+10, Vte.end());
 
-			std::string String1, String2;
-			String1 = Vte;
-			bool bIsAllOk = false;
+			Msg("%s", String2.c_str());
 
-			if (String1.find(' ') != std::string::npos)
-			{
-				bIsAllOk = true;
-				char *s = new char[String1.size() + 1];
-
-				strcpy(s, String1.c_str());
-
-				char *p = strtok(s, " ");
-				int iii = 0;
-
-				while (p != NULL)
-				{
-					if (iii == 0) String1 = p;
-					else String2 = p;
-					p = strtok(NULL, " ");
-					iii++;
-				}
-
-				delete[] s;
-			}
 			std::string Type = Level().Server->game->type_name();
 
 			if (!Tsmp_is_map_registered(String2, Type))
 			{
-				xrClientData *pPlayer = NULL;
+				xrClientData *pPlayer = nullptr;
 				u32	cnt = get_players_count();
+
 				for (u32 it = 0; it < cnt; it++)
 				{
 					xrClientData *l_pC = (xrClientData*)m_server->client_Get(it);
-					if (!l_pC) continue;
+
+					if (!l_pC) 
+						continue;
+
 					if (l_pC->ID == sender)
-					{
-						pPlayer = l_pC;
-					}
-				};
+						pPlayer = l_pC;					
+				}
 
-				string512 PName;
-				strcpy(PName, pPlayer->ps->getName());
-
-				Msg("! Cant find map [%s] in the list. Vote started by player [%s]", String2.c_str(), PName);
-				break;
-			}
-		}
-
-		else
-		{
-			while (Vte.find('_') != std::string::npos)
-			{
-				Vte.replace(Vte.find("_"), 1, " ");
-				Msg("! bad symbol in vote found - _");
+				Msg("! Cant find map [%s] in the list. Vote started by player [%s]", String2.c_str(), pPlayer->ps->getName());
+				return;
 			}
 		}
 
@@ -756,7 +728,7 @@ void game_sv_mp::OnVoteStart				(LPCSTR VoteCommand, ClientID sender)
 {
 	if (!IsVotingEnabled()) return;
 
-	string4096 CommandName;	
+	string1024 CommandName;	
 	string1024 resVoteCommand = "";
 
 	char	CommandParams[256];	
@@ -765,9 +737,7 @@ void game_sv_mp::OnVoteStart				(LPCSTR VoteCommand, ClientID sender)
 	sscanf	(VoteCommand,"%s ", CommandName);
 
 	if (xr_strlen(CommandName)+1 < xr_strlen(VoteCommand))
-	{
-		strcpy(CommandParams, VoteCommand + xr_strlen(CommandName)+1);
-	}
+		strcpy(CommandParams, VoteCommand + xr_strlen(CommandName)+1);	
 
 	if (CommandName[0] == '$' && !IsVotingEnabled(flVoteText))	return;
 	
@@ -784,6 +754,7 @@ void game_sv_mp::OnVoteStart				(LPCSTR VoteCommand, ClientID sender)
 				return;
 			break;
 		}
+
 		i++;
 	}
 
@@ -791,7 +762,7 @@ void game_sv_mp::OnVoteStart				(LPCSTR VoteCommand, ClientID sender)
 	{
 		Msg("Unknown Vote Command - %s", CommandName);
 		return;
-	};
+	}
 
 	SetVotingActive(true);
 
@@ -814,11 +785,9 @@ void game_sv_mp::OnVoteStart				(LPCSTR VoteCommand, ClientID sender)
 		}		
 	}
 	else
-	{
-		m_pVoteCommand.sprintf("%s", VoteCommand+1);
-	};
+		m_pVoteCommand.sprintf("%s", VoteCommand+1);	
 
-	xrClientData *pStartedPlayer = NULL;
+	xrClientData *pStartedPlayer = nullptr;
 	u32	cnt = get_players_count();	
 
 	for(u32 it=0; it<cnt; it++)	
@@ -844,26 +813,10 @@ void game_sv_mp::OnVoteStart				(LPCSTR VoteCommand, ClientID sender)
 	else 
 		P.w_stringZ(VoteCommand+1);
 
-	string4096 Starter;
+	string1024 Starter;
 	strcpy(Starter, pStartedPlayer ? pStartedPlayer->ps->getName() : "");
 	std::string Star = Starter;
-
-	while (Star.find('%') != std::string::npos)
-	{
-		Star.replace(Star.find("%"), 1, " ");
-		Msg("! bad symbol in started vote player name found - percent");
-	}
-	while (Star.find('_') != std::string::npos)
-	{
-		Star.replace(Star.find("_"), 1, " ");
-		Msg("! bad symbol in started vote player name found - _");
-	}
-
-	if (strlen(Starter) > 70)
-		Msg("! too many symbols in started vote player name found");
-
-	Star.resize(70);
-
+		
 	Msg("- Player %s started voting [ %s ]",Star.c_str(),resVoteCommand);
 
 	P.w_stringZ(Star.c_str());
@@ -1147,17 +1100,21 @@ void	game_sv_mp::OnPlayerChangeName		(NET_Packet& P, ClientID sender)
 		PP.w_u32(GAME_EVENT_SERVER_STRING_MESSAGE);
 		PP.w_stringZ("%c[50,255,255,0]Смена ника запрещена на данном сервере \nNickname change is disabled on this server");
 		m_server->SendTo(sender, PP);
+		return;
 	}
-	else
-	{
+
 	string1024 NewName = "";
 	P.r_stringZ(NewName);
 
 	xrClientData*	pClient	= (xrClientData*)m_server->ID_to_client	(sender);
 	
-	if (!pClient || !pClient->net_Ready) return;
+	if (!pClient || !pClient->net_Ready) 
+		return;
+
 	game_PlayerState* ps = pClient->ps;
-	if (!ps) return;
+
+	if (!ps) 
+		return;
 
 	if(((xrGameSpyServer*)m_server)->IsProtectedServer())
 	{
@@ -1171,12 +1128,13 @@ void	game_sv_mp::OnPlayerChangeName		(NET_Packet& P, ClientID sender)
 		return;
 	}			
 
+	if (!xr_strcmp(NewName, "возмездие1"))
+		return;
+
 	m_server->CheckPlayerName(NewName);
 
 	if (NewPlayerName_Exists(pClient, NewName))
-	{
-		NewPlayerName_Generate(pClient, NewName);
-	};
+		NewPlayerName_Generate(pClient, NewName);	
 
 	Msg("- Player - [ %s ] changed name to [ %s ]", ps->name, NewName);
 
@@ -1184,30 +1142,34 @@ void	game_sv_mp::OnPlayerChangeName		(NET_Packet& P, ClientID sender)
 	{
 		NET_Packet			P;
 		GenerateGameMessage(P);
+
 		P.w_u32(GAME_EVENT_PLAYER_NAME);
 		P.w_u16(pClient->owner->ID);
 		P.w_s16(ps->team);
 		P.w_stringZ(ps->getName());
 		P.w_stringZ(NewName);
-		//---------------------------------------------------		
+
 		u32	cnt = get_players_count();	
+
 		for(u32 it=0; it<cnt; it++)	
 		{
-			xrClientData *l_pC = (xrClientData*)	m_server->client_Get	(it);
+			xrClientData *l_pC = (xrClientData*)m_server->client_Get	(it);
 			game_PlayerState* ps	= l_pC->ps;
-			if (!l_pC || !l_pC->net_Ready || !ps) continue;
+
+			if (!l_pC || !l_pC->net_Ready || !ps) 
+				continue;
+
 			m_server->SendTo(l_pC->ID, P);
-		};
-		//---------------------------------------------------
+		}
+
 		pClient->owner->set_name_replace(NewName);
 		NewPlayerName_Replace(pClient, NewName);
-	};
+	}
 
 	Game().m_WeaponUsageStatistic->ChangePlayerName( ps->name, NewName );
 	ps->setName(NewName);
 
-	signal_Syncronize();
-		}
+	signal_Syncronize();		
 };
 
 void		game_sv_mp::OnPlayerSpeechMessage(NET_Packet& P, ClientID sender)

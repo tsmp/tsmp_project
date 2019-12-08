@@ -201,11 +201,7 @@ void game_cl_GameState::TranslateGameMessage	(u32 msg, NET_Packet& P)
 			CommonMessageOut(Text);
 
 			Msg("%s connected", PlayerName);
-			
-			{
-				Console->Execute("sv_listplayers");
-			}
-
+			Console->Execute("sv_listplayers");
 
 		}break;
 	case GAME_EVENT_PLAYER_DISCONNECTED:

@@ -58,6 +58,8 @@ public:
 	CCC_Quit(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = TRUE; };
 	virtual void Execute(LPCSTR args) 
 	{
+		Console->Execute("cfg_save");
+		Console->Execute("flush");
 		ExitProcess(1);
 		//Console->Hide();
 		//Engine.Event.Defer("KERNEL:disconnect");

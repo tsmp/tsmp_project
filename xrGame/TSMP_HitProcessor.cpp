@@ -11,7 +11,14 @@ constexpr auto MinHitsToProcess = 50;;
 HitProcessor::~HitProcessor()
 {
 	Msg("- Destroying hit processor");
-	ThreadWorking = false;
+
+	if (hThread)
+	{
+		Msg("- Destroying hit processing thread");
+		TerminateThread(hThread, 0);
+	}
+	else
+		Msg("! hit processing thread handle = 0");
 
 	Buffer1.clear();
 	Buffer2.clear();
@@ -67,7 +74,10 @@ void ProcessHits(HitProcessor* P, std::vector<HitProcessor::HitInfo> Buffer)
 		{
 			string128 Message;
 
-			sprintf_s(Message,sizeof(Message), "# %s [%s] HT %i HP %i+%0.2f - | BT %i | HIM %0.2f | K_AP %0.2f"
+			sprintf_s(
+				Message
+				,sizeof(Message)
+				, "# %s [%s] HT %i HP %i+%0.2f - | BT %i | HIM %0.2f | K_AP %0.2f"
 				, CurrentHit.StrPlayerName
 				, CurrentHit.StrWeaponName
 				, CurrentHit.iHitType
@@ -92,25 +102,19 @@ void ProcessHits(HitProcessor* P, std::vector<HitProcessor::HitInfo> Buffer)
 	Buffer.reserve(MinHitsToProcess);
 }
 
-void HitProcessingThread(void* P)
+DWORD WINAPI  HitProcessingThread(void* P)
 {
 	HitProcessor* HP = (HitProcessor*)P;
 
-	HP->ThreadWorking = true;
-	SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_LOWEST);
-
 	while (true)
 	{
-		if (!HP->ThreadWorking)
+		if (HP)
 		{
-			Msg("- Stopping hitprocessing thread");
-			break;
+			if (HP->UseBuffer1)
+				ProcessHits(HP, HP->Buffer1);
+			else
+				ProcessHits(HP, HP->Buffer2);
 		}
-
-		if (HP->UseBuffer1)
-			ProcessHits(HP, HP->Buffer1);
-		else
-			ProcessHits(HP, HP->Buffer2);
 
 		Sleep(20000);
 	}
@@ -121,12 +125,14 @@ HitProcessor::HitProcessor()
 	Msg("- Starting hit processor");
 
 	UseBuffer1 = true;
-	ThreadWorking = false;
+	hThread = nullptr;
 
 	Buffer1.reserve(MinHitsToProcess);
 	Buffer2.reserve(MinHitsToProcess);
 
-	thread_spawn(HitProcessingThread, "hits-processing thread", 0, this);
+	Msg("- Starting hit processing thread");
+	hThread = CreateThread(0,0,&HitProcessingThread,this,0,0);
+	SetThreadPriority(hThread, THREAD_PRIORITY_LOWEST);
 }
 
 struct Weapon
