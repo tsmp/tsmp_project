@@ -6,6 +6,8 @@
 #include "..\xrdownloader\xrdownloader.h"
 
 extern std::string g_sv_mp_loader_ip;
+extern std::string TSMP_Loader_Mod_Name;
+
 extern int g_sv_mp_LoaderEnabled;
 extern int g_sv_mp_LoaderMap;
 
@@ -94,10 +96,7 @@ void DownloadingMod(xrServer* server, ClientID ID)
 	moddllinfo.fileinfo.compression = FZ_COMPRESSION_NO_COMPRESSION;
 	moddllinfo.procname = "ModLoad";
 
-	if (strstr(Core.Params, "-tsmp_debug"))
-		moddllinfo.procarg1 = "tsmp_debug"; //Аргументы для передачи в процедуру
-	else
-		moddllinfo.procarg1 = "tsmp"; //Аргументы для передачи в процедуру
+	moddllinfo.procarg1 = TSMP_Loader_Mod_Name.data();
 
 	ip_address Address;
 
@@ -107,9 +106,6 @@ void DownloadingMod(xrServer* server, ClientID ID)
 
 	std::string procargs2 = "-srv " + g_sv_mp_loader_ip + " -srvport " + std::to_string(dwPort);
 	
-	//char ar[30];
-	//strcpy(ar, procargs2.c_str());
-
 	moddllinfo.procarg2 = procargs2.data(); //Аргументы для передачи в процедуру
 	moddllinfo.dsign = "";
 	moddllinfo.name_lock = "123";  //Цифровая подпись для загруженной DLL - проверяется перед тем, как передать управление в функцию мода

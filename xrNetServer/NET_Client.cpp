@@ -3,6 +3,7 @@
 #include "net_client.h"
 #include "net_server.h"
 #include "net_messages.h"
+#include "..\TSMP_BuildConfig.h"
 
 #pragma warning(disable:4577)
 

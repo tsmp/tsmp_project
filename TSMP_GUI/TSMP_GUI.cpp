@@ -9,6 +9,7 @@
 
 static HWND hWindow = 0;
 static HWND hText = 0;
+static HWND hButton = 0;
 static HWND hLog = 0;
 
 typedef void (*void_f)(LPCSTR);
@@ -32,18 +33,57 @@ void OnMyButtonClick()
 	ExecConsole(text.c_str());
 }
 
+void ScaleInterface(long Left, long Top, long Right, long Bottom)
+{
+	static const long ButtonHeight = 50;
+	static const long ButtonWidth = 70;
+	static const long BottomOut = 50;
+	static const long RightOut = 30;
+
+	static const long ElementInterval = 20;
+	
+	long ButX = Right - RightOut - ButtonWidth;
+	long ButY = Bottom - BottomOut - ButtonHeight;
+	long ButXX = ButtonWidth;
+	long ButYY = ButtonHeight;
+
+	long TexX = ElementInterval;
+	long TexY = ButY;
+	long TexXX = ButX-ElementInterval-TexX;
+	long TexYY = Bottom-BottomOut-TexY;
+
+	long LogX = ElementInterval;
+	long LogY = ElementInterval;
+	long LogXX = Right - RightOut - LogX;
+	long LogYY = ButY-ElementInterval - LogY;
+	
+	SetWindowPos(hButton, HWND_TOP, ButX, ButY, ButXX, ButYY, 0);
+	SetWindowPos(hText, HWND_TOP, TexX, TexY, TexXX, TexYY, 0);
+	SetWindowPos(hLog, HWND_TOP, LogX, LogY, LogXX, LogYY, 0);
+
+	Msg("Upd");
+}
+
 static INT_PTR CALLBACK WndProc(HWND hw, UINT msg, WPARAM wp, LPARAM lp)
 {
 	switch (msg)
 	{
 	case WM_DESTROY:
 		break;
-	
+
 	case WM_CLOSE:
 	{
 		if (MessageBox(0, "Завершить работу сервера?", "Выход", MB_OKCANCEL) == 1)
 			ExitProcess(0);
 	}
+	break;
+	case WM_SIZE:
+		//if (!(LOWORD(wp) == SIZE_MAXHIDE || LOWORD(wp) == SIZE_MINIMIZED))
+		{
+			RECT rct;
+			GetWindowRect(hWindow, &rct);
+			ScaleInterface(rct.left, rct.top, rct.right, rct.bottom);
+		}			
 		break;
 	case WM_COMMAND:
 		if (LOWORD(wp) == IDCANCEL)		
@@ -127,6 +167,7 @@ void InitWindow()
 
 	hText = GetDlgItem(hWindow, IDC_EDIT1);
 	hLog = GetDlgItem(hWindow, IDC_LOG);
+	hButton = GetDlgItem(hWindow, IDC_BUTTON1);
 
 	SendMessage(hLog, EM_SETLIMITTEXT, -1, 0);
 
@@ -134,6 +175,10 @@ void InitWindow()
 	SendMessageW(hWindow, WM_SETICON, ICON_BIG, (LPARAM)hicon);
 
 	SetWindowPos(hWindow, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+
+	RECT rct;
+	GetWindowRect(hWindow, &rct);
+	ScaleInterface(rct.left, rct.top, rct.right, rct.bottom);
 
 	while (true)
 		_process_messages();

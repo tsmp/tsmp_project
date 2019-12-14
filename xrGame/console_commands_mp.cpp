@@ -55,6 +55,7 @@ extern	int		g_sv_mp_RadioMuteInterval;
 extern	int		g_sv_mp_RadioAntiSpam;
 extern	int		g_sv_mp_RadioMaxMsgs;
 extern	std::string	g_sv_mp_loader_ip;
+extern std::string TSMP_Loader_Mod_Name;
 extern	std::string	g_sv_mp_loader_port;
 extern	int		g_sv_mp_LoaderEnabled;
 extern	int		g_sv_mp_LoaderMap;
@@ -682,6 +683,21 @@ public:
 	virtual void Execute(LPCSTR args_)
 	{
 		g_sv_mp_loader_ip = args_;
+
+#pragma todo("tsmp: переписать")
+	}
+
+	virtual void Info(TInfo& I) { strcpy(I, "Set reconnect IP for clients who use downloader"); }
+};
+
+class CCC_TSMP_ModName : public IConsole_Command
+{
+public:
+	CCC_TSMP_ModName(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = false; };
+
+	virtual void Execute(LPCSTR args_)
+	{
+		TSMP_Loader_Mod_Name = args_;
 
 #pragma todo("tsmp: переписать")
 	}
@@ -1868,6 +1884,7 @@ void register_mp_console_commands()
 	CMD4(CCC_SV_Integer,	"tsmp_loader_enabled"		,	(int*)&g_sv_mp_LoaderEnabled, 0, 1);
 	CMD4(CCC_SV_Integer,	"tsmp_loader_map"			,	(int*)& g_sv_mp_LoaderMap, 0, 1);
 	CMD1(CCC_TSMP_SetIp,	"tsmp_loader_reconnect_ip");
+	CMD1(CCC_TSMP_ModName,	"tsmp_loader_mod_name");
 
 	CMD4(CCC_SV_Integer,    "tsmp_removehabartime",         (int*)&g_sv_mp_RemoveHabarTimeSec, 1, 3600);
 	CMD4(CCC_SV_Integer,    "tsmp_removehabardroptime",     (int*)&g_sv_mp_RemoveDropHabarTimeSec, 1, 3600);

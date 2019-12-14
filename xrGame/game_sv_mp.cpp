@@ -46,6 +46,7 @@ int			g_sv_mp_LogHitsEnabled			= 0;
 int			g_sv_mp_nickname_change_mode	= 3;
 std::string		g_sv_mp_loader_ip =  "0.0.0.0" ;
 std::string		g_sv_mp_loader_port = "4554" ;
+std::string		TSMP_Loader_Mod_Name = "tsmp";
 
 extern xr_token	round_end_result_str[];
 extern bool bIsDedicatedServer;

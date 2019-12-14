@@ -236,8 +236,7 @@ bool CInventory::DropItem(CGameObject *pObj)
 	else
 		Msg("! CInventory::Drop item not found in inventory!!!");
 
-	pIItem->m_pCurrentInventory = nullptr;
-
+	pIItem->m_pCurrentInventory = nullptr;	
 	m_pOwner->OnItemDrop(smart_cast<CInventoryItem*>(pObj));
 
 	CalcTotalWeight();

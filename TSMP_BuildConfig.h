@@ -1,13 +1,13 @@
 #pragma once
 
-constexpr auto TSMP_VERSION = "tsmp 1.5.9";
+constexpr auto TSMP_VERSION = "tsmp 1.6.0 test";
 
 //#define TSMP_CLIENT
 
-#define DEDICATED_SERVER
+//#define DEDICATED_SERVER
 
 //#define WW_ARCHIVES
 
 //#define TSMP_MINI
 
-#define NO_TSMP_ID
+//#define NO_TSMP_ID
