@@ -1103,29 +1103,25 @@ void	game_sv_Deathmatch::OnPlayerHitPlayer_Case	(game_PlayerState* ps_hitter, ga
 	}	
 };
 
-void	game_sv_Deathmatch::OnPlayerHitPlayer		(u16 id_hitter, u16 id_hitted, NET_Packet& P)
+void game_sv_Deathmatch::OnPlayerHitPlayer(u16 id_hitter, u16 id_hitted, NET_Packet& P)
 {
-	CSE_Abstract*		e_hitter		= get_entity_from_eid	(id_hitter	);
-	CSE_Abstract*		e_hitted		= get_entity_from_eid	(id_hitted	);
+	CSE_Abstract* e_hitter = get_entity_from_eid(id_hitter);
+	CSE_Abstract* e_hitted = get_entity_from_eid(id_hitted);
 
-	if (!e_hitter || !e_hitted) return;
-	if (e_hitted->m_tClassID != CLSID_OBJECT_ACTOR) return;
+	if (!e_hitter || !e_hitted) 
+		return;
+	
+	if (e_hitted->m_tClassID != CLSID_OBJECT_ACTOR) 
+		return;
 
 	game_PlayerState *ps_hitter = nullptr;
 	game_PlayerState *ps_hitted = nullptr;
-
-	try
-	{
-		ps_hitter = get_eid(id_hitter);
-		ps_hitted = get_eid(id_hitted);
-	}
-	catch (...)
-	{
-		Msg("! error, Cant get eid");
+	
+	ps_hitter = get_eid(id_hitter);
+	ps_hitted = get_eid(id_hitted);
+	
+	if (!ps_hitter || !ps_hitted)
 		return;
-	}
-
-	if (!ps_hitter || !ps_hitted) return;
 
 	SHit HitS;
 	HitS.Read_Packet(P);
@@ -1179,7 +1175,7 @@ void	game_sv_Deathmatch::OnPlayerHitPlayer		(u16 id_hitter, u16 id_hitted, NET_P
 	}
 
 	HitS.Write_Packet(P);
-};
+}
 
 
 void	game_sv_Deathmatch::LoadTeams			()
