@@ -760,8 +760,8 @@ bool game_sv_GameState::NewPlayerName_Exists( void* pClient, LPCSTR NewName )
 
 		if (!xr_strcmp(NewName, xName))
 		{
-			return true;
 			Level().Server->clients_Unlock();
+			return true;			
 		}
 	}
 
