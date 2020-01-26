@@ -85,7 +85,7 @@ void InitConsole()
 
 	Console->Initialize();
 
-#ifdef TSMP_CLIENT
+#if defined (TSMP_CLIENT) || defined (TSMP_MINI)
 	strcpy_s(Console->ConfigFile, "user.ltx");
 #else
 	strcpy_s(Console->ConfigFile, "tsmp_user.ltx");

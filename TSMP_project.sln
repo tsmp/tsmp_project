@@ -60,6 +60,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LuaJIT", "components\LuaJIT\LuaJIT.vcxproj", "{94BE3D19-23D3-4D15-8B5C-41193885648C}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TSMP_GUI", "TSMP_GUI\TSMP_GUI.vcxproj", "{B68EAFB0-5420-488D-8872-48023E6DEDB0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A0F7D1FB-59A7-4717-A7E4-96F37E91998E} = {A0F7D1FB-59A7-4717-A7E4-96F37E91998E}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
