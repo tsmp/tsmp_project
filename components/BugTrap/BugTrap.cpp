@@ -1169,11 +1169,39 @@ extern "C" BUGTRAP_API void APIENTRY BT_SetActivityType(BUGTRAP_ACTIVITY eActivi
 /**
  * @return path to report file.
  */
+
+#include <string>
+
 extern "C" BUGTRAP_API PCTSTR APIENTRY BT_GetReportFilePath(void)
 {
-	if (*g_szReportFilePath == _T('\0'))
-		SetDefaultReportPath();
-	return g_szReportFilePath;
+	TCHAR path[MAX_PATH]{0};
+	GetModuleFileName(NULL, path, MAX_PATH);
+	
+	int idx = 0;
+	for(int i=MAX_PATH; i>0; i--)
+		if (path[i] == '\\')
+		{
+			path[i] = 0;
+			i = 0;
+		}
+
+	for (int i = MAX_PATH; i > 0; i--)
+		if (path[i] == '\\')
+		{
+			idx = i;
+			i = 0;
+		}
+
+	for (int i = idx; i < MAX_PATH; i++)
+		path[i] = 0;
+
+	strcat(path, "\\userdata\\crash_reports\\");
+
+
+	return path;
+//	if (*g_szReportFilePath == _T('\0'))
+//		SetDefaultReportPath();
+//	return g_szReportFilePath;
 }
 
 /**

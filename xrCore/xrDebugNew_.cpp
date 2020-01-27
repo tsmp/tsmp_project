@@ -2,8 +2,9 @@
 #pragma hdrstop
 
 #include "xrdebug.h"
+#include "..\TSMP_BuildConfig.h"
 
-#include "..\components\dx9sdk\include\dxerr9.h"
+//#include "dxerr.h"
 
 #pragma warning(push)
 #pragma warning(disable:4995)
@@ -11,45 +12,44 @@
 #include <direct.h>
 #pragma warning(pop)
 
-#pragma comment(lib,"legacy_stdio_definitions.lib")
-
 extern bool shared_str_initialized;
+// KD: we don't need BugTrap since it provides _only_ nice ui window and e-mail sending
 
-#ifdef __BORLANDC__
-    #	include "d3d9.h"
-    #	include "d3dx9.h"
-    #	include "D3DX_Wrapper.h"
-    #	pragma comment(lib,"EToolsB.lib")
+//    #   define USE_BUG_TRAP
+#ifdef _WIN64
     #	define DEBUG_INVOKE	DebugBreak()
-        static BOOL			bException	= TRUE;
-    #   define USE_BUG_TRAP
 #else
-    #   define USE_BUG_TRAP
     #	define DEBUG_INVOKE	__asm int 3
-        static BOOL			bException	= FALSE;
 #endif
 
-#ifndef _M_AMD64
-#	ifndef __BORLANDC__
-#		pragma comment(lib,"dxerr9.lib")
-#	endif
-#endif
+static bool bException = false;
+
+
+
+#pragma warning(push)
+#pragma warning( disable : 4091) 
 
 #include <dbghelp.h>						// MiniDump flags
 
+#pragma warning(pop)
+
 #ifdef USE_BUG_TRAP
-#	include "../components/bugtrap/bugtrap.h"						// for BugTrap functionality
-    #ifndef __BORLANDC__
+#ifdef _WIN64
+#	include "bugtrap.h"						// for BugTrap functionality
+#	pragma comment(lib,"BugTrap-x64.lib")		// Link to x64 dll
+#else
+#	include "bugtrap.h"						// for BugTrap functionality
+  
         #	pragma comment(lib,"BugTrap.lib")		// Link to ANSI DLL
-    #else
-        #	pragma comment(lib,"BugTrapB.lib")		// Link to ANSI DLL
-    #endif
+
+#endif
 #endif // USE_BUG_TRAP
 
 #include <new.h>							// for _set_new_mode
 #include <signal.h>							// for signals
 
-#if 0//def DEBUG
+#if 1//def DEBUG
+#	define USE_OWN_MINI_DUMP
 #	define USE_OWN_ERROR_MESSAGE_WINDOW
 #else // DEBUG
 #	define USE_OWN_MINI_DUMP
@@ -135,29 +135,39 @@ void gather_info		(const char *expression, const char *description, const char *
 	LPCSTR				endline = "\n";
 	LPCSTR				prefix = "[error]";
 	bool				extended_description = (description && !argument0 && strchr(description,'\n'));
-	for (int i=0; i<2; ++i) {
+	
+	for (int i=0; i<2; ++i) 
+	{
 		if (!i)
 			buffer		+= sprintf(buffer,"%sFATAL ERROR%s%s",endline,endline,endline);
+	
 		buffer			+= sprintf(buffer,"%sExpression    : %s%s",prefix,expression,endline);
 		buffer			+= sprintf(buffer,"%sFunction      : %s%s",prefix,function,endline);
 		buffer			+= sprintf(buffer,"%sFile          : %s%s",prefix,file,endline);
 		buffer			+= sprintf(buffer,"%sLine          : %d%s",prefix,line,endline);
-		
-		if (extended_description) {
+		if (extended_description) 
+		{
 			buffer		+= sprintf(buffer,"%s%s%s",endline,description,endline);
-			if (argument0) {
-				if (argument1) {
-					buffer	+= sprintf(buffer,"%s%s",argument0,endline);
+			
+			if (argument0) 
+			{
+				if (argument1) 
+				{
+					buffer	+= sprintf(buffer,"%s%s",argument0,endline); //-V576
 					buffer	+= sprintf(buffer,"%s%s",argument1,endline);
 				}
 				else
 					buffer	+= sprintf(buffer,"%s%s",argument0,endline);
 			}
 		}
-		else {
+		else 
+		{
 			buffer		+= sprintf(buffer,"%sDescription   : %s%s",prefix,description,endline);
-			if (argument0) {
-				if (argument1) {
+		
+			if (argument0) 
+			{
+				if (argument1) 
+				{
 					buffer	+= sprintf(buffer,"%sArgument 0    : %s%s",prefix,argument0,endline);
 					buffer	+= sprintf(buffer,"%sArgument 1    : %s%s",prefix,argument1,endline);
 				}
@@ -167,11 +177,15 @@ void gather_info		(const char *expression, const char *description, const char *
 		}
 
 		buffer			+= sprintf(buffer,"%s",endline);
-		if (!i) {
-			if (shared_str_initialized) {
+		
+		if (!i) 
+		{
+			if (shared_str_initialized) 
+			{
 				Msg		("%s",assertion_info);
 				FlushLog();
 			}
+			
 			buffer		= assertion_info;
 			endline		= "\r\n";
 			prefix		= "";
@@ -183,22 +197,25 @@ void gather_info		(const char *expression, const char *description, const char *
 	memory_monitor::flush_each_time	(false);
 #endif // USE_MEMORY_MONITOR
 
-	if (!IsDebuggerPresent() && !strstr(GetCommandLine(),"-no_call_stack_assert")) {
+	if (!IsDebuggerPresent() && !strstr(GetCommandLine(),"-no_call_stack_assert")) 
+	{
 		if (shared_str_initialized)
-			Msg			("stack trace:\n");
+			Msg			("%s stack trace:\n", TSMP_VERSION);
 
 #ifdef USE_OWN_ERROR_MESSAGE_WINDOW
-		buffer			+= sprintf(buffer,"stack trace:%s%s",endline,endline);
+		buffer			+= sprintf(buffer,"See log file and minidump for detailed information\r\n");
+//		buffer			+= sprintf(buffer,"stack trace:%s%s",endline,endline);
 #endif // USE_OWN_ERROR_MESSAGE_WINDOW
 
 		BuildStackTrace	();		
 
-		for (int i=2; i<g_stackTraceCount; ++i) {
+		for (int i=2; i<g_stackTraceCount; ++i) 
+		{
 			if (shared_str_initialized)
 				Msg		("%s",g_stackTrace[i]);
 
 #ifdef USE_OWN_ERROR_MESSAGE_WINDOW
-			buffer		+= sprintf(buffer,"%s%s",g_stackTrace[i],endline);
+//			buffer		+= sprintf(buffer,"%s%s",g_stackTrace[i],endline);
 #endif // USE_OWN_ERROR_MESSAGE_WINDOW
 		}
 
@@ -245,41 +262,40 @@ void xrDebug::backend	(const char *expression, const char *description, const ch
 	if (get_on_dialog())
 		get_on_dialog()	(true);
 
-#ifdef XRCORE_STATIC
-	MessageBox			(NULL,assertion_info,"X-Ray error",MB_OK|MB_ICONERROR|MB_SYSTEMMODAL);
-#else
-#	ifdef USE_OWN_ERROR_MESSAGE_WINDOW
-		int					result = 
-			MessageBox(
-				GetTopWindow(NULL),
-				assertion_info,
-				"Fatal Error",
-				MB_CANCELTRYCONTINUE|MB_ICONERROR|MB_SYSTEMMODAL
-			);
 
-		switch (result) {
-			case IDCANCEL : {
-				DEBUG_INVOKE;
-				break;
-			}
-			case IDTRYAGAIN : {
-				error_after_dialog	= false;
-				break;
-			}
-			case IDCONTINUE : {
+#	ifdef USE_OWN_ERROR_MESSAGE_WINDOW
+	//	ShowWindow(GetTopWindow(NULL), SW_MINIMIZE);
+	//	ShowCursor(TRUE);
+	//	int					result = 
+	//		MessageBox(
+	//			GetTopWindow(NULL),
+	//			assertion_info,
+	//			"Fatal Error",
+	//			MB_CANCELTRYCONTINUE|MB_ICONERROR|MB_SYSTEMMODAL
+	//		);
+
+	//	switch (result) {
+	//		case IDCANCEL : {
+	//			DEBUG_INVOKE;
+	//			break;
+	//		}
+	//		case IDTRYAGAIN : {
+	//			error_after_dialog	= false;
+	//			break;
+	//		}
+	//		case IDCONTINUE : {
 				error_after_dialog	= false;
 				ignore_always	= true;
-				break;
-			}
-			default : NODEFAULT;
-		}
+	//			break;
+	//		}
+	//		default : NODEFAULT;
+	//	}
 #	else // USE_OWN_ERROR_MESSAGE_WINDOW
 #		ifdef USE_BUG_TRAP
 			BT_SetUserMessage	(assertion_info);
 #		endif // USE_BUG_TRAP
-		DEBUG_INVOKE;
+		//DEBUG_INVOKE;
 #	endif // USE_OWN_ERROR_MESSAGE_WINDOW
-#endif
 
 	if (get_on_dialog())
 		get_on_dialog()	(false);
@@ -292,15 +308,15 @@ LPCSTR xrDebug::error2string	(long code)
 	LPCSTR				result	= 0;
 	static	string1024	desc_storage;
 
-#ifdef _M_AMD64
+/*#ifdef _M_AMD64
 #else
-	result				= DXGetErrorDescription9	(code);
+	result				= DXGetErrorDescription	(code);
 #endif
 	if (0==result) 
-	{
+	{*/
 		FormatMessage	(FORMAT_MESSAGE_FROM_SYSTEM,0,code,0,desc_storage,sizeof(desc_storage)-1,0);
 		result			= desc_storage;
-	}
+//	}
 	return		result	;
 }
 
@@ -597,7 +613,7 @@ void format_message	(LPSTR buffer, const u32 &buffer_size)
 		NULL
 	);
 
-	sprintf		(buffer,"[error][%8d]    : %s",error_code,message);
+	sprintf		(buffer,"[error][%8d]    : %s",error_code, (LPSTR)&message);
     LocalFree	(message);
 }
 
@@ -606,14 +622,16 @@ LONG WINAPI UnhandledFilter	(_EXCEPTION_POINTERS *pExceptionInfo)
 	string256				error_message;
 	format_message			(error_message,sizeof(error_message));
 
-	if (!error_after_dialog && !strstr(GetCommandLine(),"-no_call_stack_assert")) {
+	if (!error_after_dialog && !strstr(GetCommandLine(),"-no_call_stack_assert")) 
+	{
 		CONTEXT				save = *pExceptionInfo->ContextRecord;
 		BuildStackTrace		(pExceptionInfo);
 		*pExceptionInfo->ContextRecord = save;
 
 		if (shared_str_initialized)
-			Msg				("stack trace:\n");
+			Msg				("%s stack trace:\n" , TSMP_VERSION);
 		copy_to_clipboard	("stack trace:\r\n\r\n");
+
 
 		string4096			buffer;
 		for (int i=0; i<g_stackTraceCount; ++i) {
@@ -635,16 +653,15 @@ LONG WINAPI UnhandledFilter	(_EXCEPTION_POINTERS *pExceptionInfo)
 	if (shared_str_initialized)
 		FlushLog			();
 
-#ifndef USE_OWN_ERROR_MESSAGE_WINDOW
-#	ifdef USE_OWN_MINI_DUMP
+#ifdef USE_OWN_MINI_DUMP
 		save_mini_dump		(pExceptionInfo);
-#	endif // USE_OWN_MINI_DUMP
-#else // USE_OWN_ERROR_MESSAGE_WINDOW
+#endif // USE_OWN_MINI_DUMP
+#ifdef USE_OWN_ERROR_MESSAGE_WINDOW
 	if (!error_after_dialog) {
 		if (Debug.get_on_dialog())
 			Debug.get_on_dialog()	(true);
 
-		MessageBox			(NULL,"Fatal error occured\n\nPress OK to abort program execution","Fatal error",MB_OK|MB_ICONERROR|MB_SYSTEMMODAL);
+	//	MessageBox			(NULL,"Fatal error occured\n\nPress OK to abort program execution","Fatal error",MB_OK|MB_ICONERROR|MB_SYSTEMMODAL);
 	}
 #endif // USE_OWN_ERROR_MESSAGE_WINDOW
 
@@ -668,28 +685,10 @@ LONG WINAPI UnhandledFilter	(_EXCEPTION_POINTERS *pExceptionInfo)
 }
 #endif
 
-//////////////////////////////////////////////////////////////////////
-#ifdef M_BORLAND
-	namespace std{
-		extern new_handler _RTLENTRY _EXPFUNC set_new_handler( new_handler new_p );
-	};
 
-	static void __cdecl def_new_handler() 
-    {
-		FATAL		("Out of memory.");
-    }
-
-    void	xrDebug::_initialize		(const bool &dedicated)
-    {
-		handler							= 0;
-		m_on_dialog						= 0;
-        std::set_new_handler			(def_new_handler);	// exception-handler for 'out of memory' condition
-//		::SetUnhandledExceptionFilter	(UnhandledFilter);	// exception handler to all "unhandled" exceptions
-    }
-#else
     typedef int		(__cdecl * _PNH)( size_t );
     _CRTIMP int		__cdecl _set_new_mode( int );
-   // _CRTIMP _PNH	__cdecl _set_new_handler( _PNH );
+//    _CRTIMP _PNH	__cdecl _set_new_handler( _PNH );
 
 #ifndef USE_BUG_TRAP
 	void _terminate		()
@@ -771,7 +770,7 @@ LONG WINAPI UnhandledFilter	(_EXCEPTION_POINTERS *pExceptionInfo)
 		string4096						function_;
 		string4096						file_;
 		size_t							converted_chars = 0;
-//		errno_t							err = 
+
 		if (expression)
 			wcstombs_s	(
 				&converted_chars, 
@@ -851,11 +850,6 @@ LONG WINAPI UnhandledFilter	(_EXCEPTION_POINTERS *pExceptionInfo)
 		handler_base					("illegal instruction");
 	}
 
-//	static void storage_access_handler		(int signal)
-//	{
-//		handler_base					("illegal storage access");
-//	}
-
 	static void termination_handler			(int signal)
 	{
 		handler_base					("termination with exit code 3");
@@ -871,7 +865,6 @@ LONG WINAPI UnhandledFilter	(_EXCEPTION_POINTERS *pExceptionInfo)
 		signal							(SIGFPE,		floating_point_handler);
 		signal							(SIGILL,		illegal_instruction_handler);
 		signal							(SIGINT,		0);
-//		signal							(SIGSEGV,		storage_access_handler);
 		signal							(SIGTERM,		termination_handler);
 
 		_set_invalid_parameter_handler	(&invalid_parameter_handler);
@@ -881,27 +874,9 @@ LONG WINAPI UnhandledFilter	(_EXCEPTION_POINTERS *pExceptionInfo)
 		std::set_new_handler			(&std_out_of_memory_handler);
 
 		_set_purecall_handler			(&pure_call_handler);
-
-#if 0// should be if we use exceptions
-		std::set_unexpected				(_terminate);
-#endif
-
+		
 #ifdef USE_BUG_TRAP
 		SetupExceptionHandler			(dedicated);
 #endif // USE_BUG_TRAP
 		previous_filter					= ::SetUnhandledExceptionFilter(UnhandledFilter);	// exception handler to all "unhandled" exceptions
-
-#if 0
-		struct foo {static void	recurs	(const u32 &count)
-		{
-			if (!count)
-				return;
-
-			_alloca			(4096);
-			recurs			(count - 1);
-		}};
-		foo::recurs			(u32(-1));
-		std::terminate		();
-#endif // 0
 	}
-#endif
