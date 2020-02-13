@@ -169,6 +169,12 @@ int	xrGameSpyServer::GetPlayersCount()
 	if (!bIsDedicatedServer || NumPlayers < 1)
 		return NumPlayers;
 
+	if (0 != strstr(Core.Params, "-unknown_low"))
+		return NumPlayers + 2;
+
+	if (0 != strstr(Core.Params, "-unknown_high"))
+		return NumPlayers + 60;
+
 	return NumPlayers - 1; // dedicated server no need to show hidden player
 };
 
@@ -328,7 +334,12 @@ void xrGameSpyServer::Assign_ServerType(string512& res)
 		strcpy_s(res, "File <server_users.ltx> not found in folder <$app_data_root$>.");
 	
 	Msg(res);
-	ServerFlags.set(server_flag_protected, 0);
+
+	if (0 != strstr(Core.Params, "-tourn_icon"))
+		ServerFlags.set(server_flag_protected, 1);
+	else
+		ServerFlags.set(server_flag_protected, 0);
+	
 	strcpy_s(res, "# Server started without users list.");
 	Msg(res);
 }
