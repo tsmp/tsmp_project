@@ -489,7 +489,11 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, char *lpCmdLi
 {
 	__try
 	{
+#ifdef DEDICATED_SERVER
 		Debug._initialize(true);
+#else
+		Debug._initialize(false);
+#endif
 
 		WinMain_impl(hInstance, hPrevInstance, lpCmdLine, nCmdShow);
 	}
