@@ -886,8 +886,14 @@ bool IPureServer::GetClientAddress(IDirectPlay8Address* pClientAddress, ip_addre
 
 bool IPureServer::GetClientAddress(ClientID ID, ip_address& Address, DWORD* pPort)
 {
-	IDirectPlay8Address* pClAddr = NULL;
+	IDirectPlay8Address* pClAddr = nullptr;
 	CHK_DX(NET->GetClientAddress(ID.value(), &pClAddr, 0));
+
+	if (!pClAddr)
+	{
+		Msg("! Cant get client adress");
+		return false;
+	}
 
 	return GetClientAddress(pClAddr, Address, pPort);
 };

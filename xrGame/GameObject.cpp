@@ -44,7 +44,8 @@ CGameObject::CGameObject		()
 	m_dwCrPr_ActivationStep		= 0;
 	m_spawn_time				= 0;
 
-	m_ai_location				= !bIsDedicatedServer ? xr_new<CAI_ObjectLocation>() : 0;
+	m_ai_location = // !bIsDedicatedServer ? 
+		xr_new<CAI_ObjectLocation>(); //: 0;
 	m_server_flags.one			();
 
 	m_callbacks					= xr_new<CALLBACK_MAP>();
@@ -84,7 +85,7 @@ void CGameObject::reinit	()
 {
 	m_visual_callback.clear	();
 
-	if (!bIsDedicatedServer)
+	//if (!bIsDedicatedServer)
         ai_location().reinit	();
 
 	// clear callbacks	
@@ -260,11 +261,11 @@ BOOL CGameObject::net_Spawn		(CSE_Abstract*	DC)
 	}
 
 	reload						(*cNameSect());
-	if(!bIsDedicatedServer)
+	//if(!bIsDedicatedServer)
 		CScriptBinder::reload	(*cNameSect());
 	
 	reinit						();
-	if(!bIsDedicatedServer)
+	//if(!bIsDedicatedServer)
 		CScriptBinder::reinit	();
 #ifdef DEBUG
 	if(ph_dbg_draw_mask1.test(ph_m1_DbgTrackObject)&&stricmp(PH_DBG_ObjectTrack(),*cName())==0)
@@ -777,7 +778,7 @@ void CGameObject::shedule_Update	(u32 dt)
 	// Msg							("-SUB-:[%x][%s] CGameObject::shedule_Update",smart_cast<void*>(this),*cName());
 	inherited::shedule_Update	(dt);
 	
-	if(!bIsDedicatedServer)
+	//if(!bIsDedicatedServer)
 		CScriptBinder::shedule_Update(dt);
 }
 
@@ -840,7 +841,7 @@ u32	CGameObject::ef_detector_type		() const
 void CGameObject::net_Relcase			(CObject* O)
 {
 	inherited::net_Relcase		(O);
-	if(!bIsDedicatedServer)
+	//if(!bIsDedicatedServer)
 		CScriptBinder::net_Relcase	(O);
 }
 

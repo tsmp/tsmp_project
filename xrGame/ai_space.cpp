@@ -38,8 +38,8 @@ CAI_Space::CAI_Space				()
 
 void CAI_Space::init				()
 {
-	if (bIsDedicatedServer)
-		return;
+	//if (bIsDedicatedServer)
+	//	return;
 
 	VERIFY					(!m_ef_storage);
 	m_ef_storage			= xr_new<CEF_Storage>();
