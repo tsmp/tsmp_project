@@ -94,11 +94,9 @@ protected:
 	virtual		void				Check_ForClearRun		(game_PlayerState* ps);
 
 	u32								m_dwWarmUp_CurTime;
-	
+	bool							m_bInWarmUp;
 
 				void	__stdcall	net_Relcase				(CObject* O);
-public:
-				bool							m_bInWarmUp;
 
 public:
 									game_sv_Deathmatch		();

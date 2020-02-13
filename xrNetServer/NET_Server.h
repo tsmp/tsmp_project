@@ -19,10 +19,6 @@ struct SClientConnectData
 	{
 		name[0] = pass[0] = 0;
 		process_id = 0;
-
-#ifndef NO_TSMP_ID
-		new_code[0]=0;
-#endif
 	}
 };
 

@@ -306,6 +306,6 @@ void TSMP_ShopProcessor_BuyItems(game_PlayerState* ps, u16 ActorID, game_sv_Deat
 		game->SpawnWeapon4Actor(ActorID, *Name,Addons );
 	}
 
-	if (g_TsmpBuyVeriferEnabled && !game->m_bInWarmUp)
+	if (g_TsmpBuyVeriferEnabled)
 		CheckItemsCounts(ItemsToBuy,RankCountRestrictions[ps->rank],ps->rank,ps);
 }

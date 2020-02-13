@@ -734,12 +734,9 @@ public:
 	{
 		if (!OnServer())	
 			return;
-
-		Msg("------------------------");
-
-		Level().Server->clients_Lock();
-		u32	cnt = Level().Server->game->get_players_count();
 		
+		u32	cnt = Level().Server->game->get_players_count();
+		Msg("------------------------");
 		Msg("- Total Players : %d", cnt);
 
 		for(u32 it=0; it<cnt; it++)	
@@ -761,8 +758,6 @@ public:
 				, Address.to_string().c_str()
 				, l_pC->ps->ping);
 		};
-
-		Level().Server->clients_Unlock();
 		Msg("------------------------");
 	};
 

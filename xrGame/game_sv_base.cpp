@@ -87,9 +87,9 @@ LPCSTR				game_sv_GameState::get_player_name_id				(ClientID id)
 		return "unknown";
 }
 
-u32	game_sv_GameState::get_players_count() 
-{ 
-	return m_server->client_Count(); 
+u32					game_sv_GameState::get_players_count		()
+{
+	return				m_server->client_Count();
 }
 
 u16					game_sv_GameState::get_id_2_eid				(ClientID id)
@@ -101,36 +101,31 @@ u16					game_sv_GameState::get_id_2_eid				(ClientID id)
 	return E->ID;
 }
 
-game_PlayerState* game_sv_GameState::get_eid (u16 id) //if exist
+game_PlayerState*	game_sv_GameState::get_eid (u16 id) //if exist
 {
 	CSE_Abstract* entity = get_entity_from_eid(id);
 
-	if (entity
-		&& entity->owner 
-		&& entity->owner->ps 
-		&& entity->owner->ps->GameID == id
-		)
-		return entity->owner->ps;
-
-	Level().Server->clients_Lock();
-	u32 cnt	= get_players_count();
-	
-	for (u32 it=0; it<cnt; ++it)	
+	if (entity)
 	{
-		game_PlayerState* ps = get_it (it);
-		
-		if (!ps) 
-			continue;
-		
-		if (ps->HasOldID(id))
+		if (entity->owner)
 		{
-			Level().Server->clients_Unlock();
-			return ps;
+			if(entity->owner->ps)
+			{
+				if (entity->owner->ps->GameID == id)
+					return entity->owner->ps;
+			}
 		}
 	}
 
-	Level().Server->clients_Unlock();
-	return nullptr;
+	u32		cnt		= get_players_count	();
+	
+	for		(u32 it=0; it<cnt; ++it)	
+	{
+		game_PlayerState*	ps	=	get_it	(it);
+		if (!ps) continue;
+		if (ps->HasOldID(id)) return ps;
+	};
+	return NULL;
 }
 
 void* game_sv_GameState::get_client (u16 id) //if exist
@@ -256,26 +251,21 @@ void game_sv_GameState::net_Export_State						(NET_Packet& P, ClientID to)
 
 	P.w_u16				(u16(p_count));
 	game_PlayerState*	Base	= get_id(to);
-
 	for (u32 p_it=0; p_it<get_players_count(); ++p_it)
 	{
-		string64 p_name;
-		xrClientData* C = (xrClientData*) m_server->client_Get(p_it);
-		game_PlayerState* A = get_it(p_it);
-
-		if (!C->net_Ready || (A->IsSkip() && C->ID != to)) 
-			continue;
-
-		if (0==C)
-			strcpy(p_name,"Unknown");
+		string64	p_name;
+		xrClientData*	C		=	(xrClientData*)	m_server->client_Get	(p_it);
+		game_PlayerState* A		=	get_it			(p_it);
+		if (!C->net_Ready || (A->IsSkip() && C->ID != to)) continue;
+		if (0==C)	strcpy(p_name,"Unknown");
 		else 
 		{
-			CSE_Abstract* C_e = C->owner;
-			
-			if (0==C_e)	
-				strcpy(p_name,"Unknown");
-			else
-				strcpy(p_name,C_e->name_replace());			
+			CSE_Abstract* C_e		= C->owner;
+			if (0==C_e)		strcpy(p_name,"Unknown");
+			else 
+			{
+				strcpy	(p_name,C_e->name_replace());
+			}
 		}
 
 		A->setName(p_name);
@@ -285,8 +275,8 @@ void game_sv_GameState::net_Export_State						(NET_Packet& P, ClientID to)
 			A->setFlag(GAME_PLAYER_FLAG_LOCAL);
 
 		ClientID clientID = get_it_2_id	(p_it);
-		P.w_clientID(clientID);
-		A->net_Export(P, TRUE);
+		P.w_clientID			(clientID);
+		A->net_Export			(P, TRUE);
 		
 		A->flags__ = tmp_flags;
 	}
@@ -296,20 +286,20 @@ void game_sv_GameState::net_Export_State						(NET_Packet& P, ClientID to)
 
 void game_sv_GameState::net_Export_Update(NET_Packet& P, ClientID id_to, ClientID id)
 {
-	game_PlayerState* A	= get_id(id);
-
+	game_PlayerState* A		= get_id		(id);
 	if (A)
 	{
 		u16 bk_flags = A->flags__;
-		
-		if (id==id_to)
+		if (id==id_to)	
+		{
 			A->setFlag(GAME_PLAYER_FLAG_LOCAL);
-		
-		P.w_clientID(id);
-		A->net_Export(P);
-		A->flags__= bk_flags;
-	}
-}
+		}
+
+		P.w_clientID	(id);
+		A->net_Export	(P);
+		A->flags__		= bk_flags;
+	};
+};
 
 void game_sv_GameState::net_Export_GameTime						(NET_Packet& P)
 {
@@ -745,7 +735,6 @@ bool game_sv_GameState::NewPlayerName_Exists( void* pClient, LPCSTR NewName )
 	if (st.HasTranslation(NewName))
 		return true;	
 
-	Level().Server->clients_Lock();
 	u32	cnt	= get_players_count();
 
 	for ( u32 it = 0; it < cnt; ++it )	
@@ -759,13 +748,9 @@ bool game_sv_GameState::NewPlayerName_Exists( void* pClient, LPCSTR NewName )
 		strcpy(xName, pIC->name.c_str());
 
 		if (!xr_strcmp(NewName, xName))
-		{
 			return true;
-			Level().Server->clients_Unlock();
-		}
 	}
 
-	Level().Server->clients_Unlock();
 	return false;
 }
 
