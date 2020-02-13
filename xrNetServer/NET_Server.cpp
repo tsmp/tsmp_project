@@ -699,7 +699,7 @@ void IPureServer::SendTo_LL(ClientID ID/*DPNID ID*/, void* data, u32 size, u32 d
 	if (SUCCEEDED(_hr) || (DPNERR_CONNECTIONLOST == _hr))	
 		return;
 
-	Msg("! DirectPlay internal error: %s",Debug.error2string((long)_hr));
+	R_CHK(_hr);
 }
 
 void IPureServer::SendTo(ClientID ID/*DPNID ID*/, NET_Packet& P, u32 dwFlags, u32 dwTimeout)
