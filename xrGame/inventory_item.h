@@ -233,7 +233,7 @@ public:
 protected:
 	IC	CInventoryOwner&		inventory_owner				() const;
 
-private:
+public:
 	CPhysicsShellHolder*		m_object;
 
 public:

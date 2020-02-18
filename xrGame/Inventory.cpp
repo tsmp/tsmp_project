@@ -727,6 +727,13 @@ void CInventory::UpdateDropItem(PIItem pIItem)
 		if (OnServer())
 		{
 			NET_Packet P;
+
+			if (!pIItem->m_object)
+			{
+				Msg("! Error: CInventory::UpdateDropItem PhysicsShellHolder is nullptr");
+				return;
+			}
+
 			pIItem->object().u_EventGen(P, GE_OWNERSHIP_REJECT, pIItem->object().H_Parent()->ID());
 			P.w_u16(u16(pIItem->object().ID()));
 			pIItem->object().u_EventSend(P);
@@ -988,6 +995,7 @@ bool CInventory::InBelt(PIItem pIItem) const
 
 	return false;
 }
+
 bool CInventory::InRuck(PIItem pIItem) const
 {
 	if (Get(pIItem->object().ID(), true)) 

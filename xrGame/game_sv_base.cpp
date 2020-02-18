@@ -105,12 +105,20 @@ game_PlayerState* game_sv_GameState::get_eid (u16 id) //if exist
 {
 	CSE_Abstract* entity = get_entity_from_eid(id);
 
-	if (entity
-		&& entity->owner 
-		&& entity->owner->ps 
-		&& entity->owner->ps->GameID == id
-		)
-		return entity->owner->ps;
+	__try
+	{
+		if (entity
+			&& entity->owner
+			&& entity->owner->ps
+			&& entity->owner->ps->GameID == id
+			)
+			return entity->owner->ps;
+	}
+	__except (EXCEPTION_EXECUTE_HANDLER)
+	{
+		Msg("! Error: game_sv_GameState::get_eid access violation");
+	}
+
 
 	Level().Server->clients_Lock();
 	u32 cnt	= get_players_count();
@@ -756,7 +764,17 @@ bool game_sv_GameState::NewPlayerName_Exists( void* pClient, LPCSTR NewName )
 			continue;
 
 		string64 xName;
-		strcpy(xName, pIC->name.c_str());
+		
+		__try
+		{
+			strcpy(xName, pIC->name.c_str());
+		}
+		__except (EXCEPTION_EXECUTE_HANDLER)
+		{
+			Msg("! Error: game_sv_GameState::NewPlayerName_Exists access violation");
+			Level().Server->clients_Unlock();
+			return false;
+		}
 
 		if (!xr_strcmp(NewName, xName))
 		{
