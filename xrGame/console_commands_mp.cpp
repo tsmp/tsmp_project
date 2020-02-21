@@ -66,6 +66,7 @@ extern volatile	int		g_sv_mp_CheckHitsEnabled;
 extern volatile	int		g_sv_mp_AutoBanHitCheaters;
 extern volatile	int		g_sv_mp_ShowHits;
 extern	int		g_sv_mp_nickname_change_mode;
+extern int g_tsmp_movement_checks;
 
         int     g_sv_mp_RemoveHabarTimeSec = 10;
         int     g_sv_mp_RemoveDropHabarTimeSec = 15;
@@ -1890,6 +1891,7 @@ void register_mp_console_commands()
 	CMD4(CCC_SV_Integer,	"tsmp_loader_map"			,	(int*)& g_sv_mp_LoaderMap, 0, 1);
 	CMD1(CCC_TSMP_SetIp,	"tsmp_loader_reconnect_ip");
 	CMD1(CCC_TSMP_ModName,	"tsmp_loader_mod_name");
+	CMD4(CCC_SV_Integer,	"tsmp_movement_check"		,	(int*)&g_tsmp_movement_checks, 0, 1);
 
 	CMD4(CCC_SV_Integer,    "tsmp_removehabartime",         (int*)&g_sv_mp_RemoveHabarTimeSec, 1, 3600);
 	CMD4(CCC_SV_Integer,    "tsmp_removehabardroptime",     (int*)&g_sv_mp_RemoveDropHabarTimeSec, 1, 3600);

@@ -42,6 +42,7 @@ int			g_sv_mp_RadioMuteInterval		= 10;
 int			g_sv_mp_LoaderEnabled			= 0;
 int			g_sv_mp_LoaderMap				= 1;
 int			g_sv_mp_LogHitsEnabled			= 0;
+int			g_tsmp_movement_checks			= 1;
 
 int			g_sv_mp_nickname_change_mode	= 3;
 std::string		g_sv_mp_loader_ip =  "0.0.0.0" ;
