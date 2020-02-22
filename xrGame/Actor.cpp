@@ -1001,7 +1001,7 @@ void CActor::UpdateCL	()
 								event_switch = false;
 
 
-								Msg("%s Warning: Ошибка передвижения, возможно плохое соединение с сервером.", this->Name());
+								Msg("! %s Warning: Ошибка передвижения, возможно плохое соединение с сервером.", this->Name());
 							}
 						}
 					}
