@@ -127,19 +127,19 @@ void CSoundRender_Source::load(LPCSTR name)
 	fname				= N;
 
 	strconcat			(sizeof(fn),fn,N,".ogg");
-	if (!FS.exist("$level$",fn))	FS.update_path	(fn,"$game_sounds$",fn);
 
-#ifdef _EDITOR
-	if (!FS.exist(fn)){ 
+	if (!FS.exist("$level$",fn))	
+		FS.update_path	(fn,"$game_sounds$",fn);
+
+
+	if (!FS.exist(fn))
+	{ 
+		Msg("! Can't find sound '%s'", name);
 		FS.update_path	(fn,"$game_sounds$","$no_sound.ogg");
     }
-#endif
+
 	LoadWave			(fn);		//.R_ASSERT(wave);
 	SoundRender->cache.cat_create	(CAT, dwBytesTotal);
-
-//	if (dwTimeTotal<100)					{
-//		Msg	("! WARNING: Invalid wave length (must be at least 100ms), file: %s",fn);
-//	}
 }
 
 void CSoundRender_Source::unload()
