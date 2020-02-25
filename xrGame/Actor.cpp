@@ -856,14 +856,43 @@ float CActor::currentFOV()
 		return g_fov;
 }
 
-
-
 #include "climableobject.h "
 
-//float STEP1 = 0.03f;
-//float STEPR = 0.0f;
+float STEP1 = 10.0f;
+float STEPR = 0.0f;
 
 extern int g_tsmp_movement_checks;
+
+bool isUnderMap(CActor* who)
+{
+	int Count = 0;
+	STEPR += Device.fTimeDelta;
+
+	if (STEPR > STEP1)
+	{
+		STEPR -= STEP1;
+
+		for (u32 I = 4; I <= 7; I++)
+		{
+			if (!who) 
+				continue;
+			
+			Fbox box;
+			Fvector local, world;
+			
+			box.set(who->character_physics_support()->movement()->Box());
+			box.getpoint(I, local);
+			who->XFORM().transform(world, Fvector(local));
+			
+			collide::rq_result RQ;
+			
+			if (!Level().ObjectSpace.RayPick(world, Fvector().set(0.f, -1.f, 0.f), 1000.f, collide::rqtBoth, RQ, who))
+				Count++;
+		}		
+	}
+
+	return Count == 4;
+}
 
 bool hovering_checker(CActor* who)
 {
@@ -924,15 +953,15 @@ bool hovering_checker(CActor* who)
 			Level().ObjectSpace.RayPick(tmp3, Fvector().set(0.f, -1.f, 0.f), 1000.f, collide::rqtBoth, RQ3, who);
 
 			Level().ObjectSpace.RayPick(who->Position(), Fvector().set(0.f, -1.f, 0.f), 1000.f, collide::rqtBoth, RQ, who);
-
+			
 			const float JumpHeight = 1.6f;
 
 			if (
-				RQ0.range >= JumpHeight 
-				&& RQ1.range >= JumpHeight 
-				&& RQ2.range >= JumpHeight 
-				&& RQ3.range >= JumpHeight 
-				&& RQ.range >= JumpHeight
+					JumpHeight <= RQ.range
+				&& 	JumpHeight <= RQ0.range 
+				&&	JumpHeight <= RQ1.range
+				&&	JumpHeight <= RQ2.range
+				&&	JumpHeight <= RQ3.range					
 				)
 				return true;
 			
@@ -942,15 +971,27 @@ bool hovering_checker(CActor* who)
 	return false;
 }
 
-
 #include "game_sv_mp.h"
-float pdup = 1.f;
 bool event_switch = false;
 
 void CActor::UpdateCL	()
 {
 	if (OnServer() && g_Alive())
 	{
+		if (isUnderMap(this))
+		{
+			Msg("! Player: %s is under map",this->Name());
+			game_sv_mp* sv_game = smart_cast<game_sv_mp*>(Level().Server->game);
+
+			if (sv_game)
+			{			
+				xrClientData* C = (xrClientData*)sv_game->get_client(this->ID());
+
+				if(C)
+					sv_game->KillPlayer(C->ID, this->ID());
+			}
+		}
+
 		if ((mstate_real & (mcFall)) && !(mstate_real & (mcJump | mcLanding | mcLanding2)))
 		{
 			mstate_real &= ~mcFall;
@@ -961,15 +1002,26 @@ void CActor::UpdateCL	()
 		float Vel_xz_abs = _abs(Vel_.x) + _abs(Vel_.z);
 
 		game_PlayerState* ps = Game().GetPlayerByGameID(ID());
+		
 
-		if (g_tsmp_movement_checks && ps && (Vel_.y >= 15 || Vel_xz_abs >= 50 || hovering_checker(this)))
+		if (Vel_.y >= 15)
+			Msg("! CActor::UpdateCL %s Vel.y > 15 vel: %f",this->Name(), Vel_.y);
+
+		if (Vel_xz_abs >= 50)
+			Msg("! CActor::UpdateCL %s Vel_xz_abs >= 50 Vel_xz_abs: %f", this->Name(), Vel_xz_abs);
+
+		//if (g_tsmp_movement_checks && ps && (Vel_.y >= 15 || Vel_xz_abs >= 50 ||  hovering_checker(this)))
+
+		if (g_tsmp_movement_checks && ps && hovering_checker(this))
 		{
+			Msg("! CActor::UpdateCL %s Hovering checker",this->Name());
+
 			game_sv_mp* tmp_sv_game = smart_cast<game_sv_mp*>(Level().Server->game);
 
 			if (tmp_sv_game)
 			{
 				xrClientData* l_pC = (xrClientData*)tmp_sv_game->get_client(ps->GameID);
-
+				
 				if (l_pC)
 				{
 					event_switch = true;
@@ -1001,7 +1053,7 @@ void CActor::UpdateCL	()
 								event_switch = false;
 
 
-								Msg("! %s Warning: Ошибка передвижения, возможно плохое соединение с сервером.", this->Name());
+								//Msg("! %s Warning: Ошибка передвижения, возможно плохое соединение с сервером.", this->Name());
 							}
 						}
 					}
