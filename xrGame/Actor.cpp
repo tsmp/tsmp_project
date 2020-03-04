@@ -856,212 +856,248 @@ float CActor::currentFOV()
 		return g_fov;
 }
 
-#include "climableobject.h "
 
-float STEP1 = 10.0f;
-float STEPR = 0.0f;
-
-extern int g_tsmp_movement_checks;
-
-bool isUnderMap(CActor* who)
-{
-	int Count = 0;
-	STEPR += Device.fTimeDelta;
-
-	if (STEPR > STEP1)
-	{
-		STEPR -= STEP1;
-
-		for (u32 I = 4; I <= 7; I++)
-		{
-			if (!who) 
-				continue;
-			
-			Fbox box;
-			Fvector local, world;
-			
-			box.set(who->character_physics_support()->movement()->Box());
-			box.getpoint(I, local);
-			who->XFORM().transform(world, Fvector(local));
-			
-			collide::rq_result RQ;
-			
-			if (!Level().ObjectSpace.RayPick(world, Fvector().set(0.f, -1.f, 0.f), 1000.f, collide::rqtBoth, RQ, who))
-				Count++;
-		}		
-	}
-
-	return Count == 4;
-}
+#include "climableobject.h"
 
 bool hovering_checker(CActor* who)
 {
 	for (u32 I = 0; I < Level().Objects.o_count(); I++)
 	{
-		if (!who)
-			continue;
-		
+		if (!who)  
+			return false;
+
 		CObject* _O = Level().Objects.o_get_by_iterator(I);
-		
+
 		if (!_O) 
 			continue;
-		
-		CClimableObject* climable = smart_cast<CClimableObject*>	(_O);
-		
+
+		CClimableObject* climable = smart_cast<CClimableObject*>(_O);
+
 		if (!climable) 
 			continue;
-		
+
 		Fvector ladder_up;
 		climable->UpperPoint(ladder_up);
-		
-		if (ladder_up.distance_to(who->Position()) < 3.f)
-			return false;		
+
+		if (ladder_up.distance_to(who->Position()) <= 3.f) 
+			return false;
 	}
 
-	//STEPR += Device.fTimeDelta;
-	//Msg("stepr = %f",STEPR);
+	Fvector Vel = who->character_physics_support()->movement()->GetVelocity();
+	float abss = _abs(Vel.x) + _abs(Vel.z);
 
-	//while (STEPR > STEP1)
+	if (Vel.y >= 0.1f && abss <= 0.1f &&
+		!(who->MovingState() & mcClimb) &&
+		!(who->MovingState() & mcJump) &&
+		((who->MovingState() & mcFall) || (who->MovingState() & mcLanding)))
 	{
-		Fvector Vel_y = who->character_physics_support()->movement()->GetVelocity();
-		float abs_ = _abs(Vel_y.x) + _abs(Vel_y.z);
-		
-		if (who && Vel_y.y > 0.1f && abs_ < 0.1f && !(who->MovingState() & mcClimb))
+
+		Fvector point0, point1, point2, point3;
+		Fvector tmp0, tmp1, tmp2, tmp3;
+		collide::rq_result RQ, RQ0, RQ1, RQ2, RQ3;
+
+		Fbox box;
+		box.set(who->character_physics_support()->movement()->Box());
+		box.scale(-.08f);
+
+		box.getpoint(0, point0);
+		who->XFORM().transform(tmp0, Fvector(point0));
+		Level().ObjectSpace.RayPick(tmp0, Fvector().set(0.f, -1.f, 0.f), 1000.f, collide::rqtBoth, RQ0, who);
+
+		box.getpoint(1, point1);
+		who->XFORM().transform(tmp1, Fvector(point1));
+		Level().ObjectSpace.RayPick(tmp1, Fvector().set(0.f, -1.f, 0.f), 1000.f, collide::rqtBoth, RQ1, who);
+
+		box.getpoint(2, point2);
+		who->XFORM().transform(tmp2, Fvector(point2));
+		Level().ObjectSpace.RayPick(tmp2, Fvector().set(0.f, -1.f, 0.f), 1000.f, collide::rqtBoth, RQ2, who);
+
+		box.getpoint(3, point3);
+		who->XFORM().transform(tmp3, Fvector(point3));
+		Level().ObjectSpace.RayPick(tmp3, Fvector().set(0.f, -1.f, 0.f), 1000.f, collide::rqtBoth, RQ3, who);
+
+		Level().ObjectSpace.RayPick(who->Position(), Fvector().set(0.f, -1.f, 0.f), 1000.f, collide::rqtBoth, RQ, who);
+
+		const float MaxH = 1.6f;
+
+		if (
+				RQ0.range >= MaxH 
+			&&	RQ1.range >= MaxH 
+			&&	RQ2.range >= MaxH
+			&&	RQ3.range >= MaxH
+			&&	RQ.range >= MaxH)
 		{
-			Fvector point0, point1, point2, point3;
-			Fvector tmp0, tmp1, tmp2, tmp3;
-			collide::rq_result RQ, RQ0, RQ1, RQ2, RQ3;
-
-			Fbox box;
-			box.set(who->character_physics_support()->movement()->Box());
-			box.scale(-.1f);
-
-			box.getpoint(0, point0);
-			who->XFORM().transform(tmp0, Fvector(point0));
-			Level().ObjectSpace.RayPick(tmp0, Fvector().set(0.f, -1.f, 0.f), 1000.f, collide::rqtBoth, RQ0, who);
-
-			box.getpoint(1, point1);
-			who->XFORM().transform(tmp1, Fvector(point1));
-			Level().ObjectSpace.RayPick(tmp1, Fvector().set(0.f, -1.f, 0.f), 1000.f, collide::rqtBoth, RQ1, who);
-
-			box.getpoint(2, point2);
-			who->XFORM().transform(tmp2, Fvector(point2));
-			Level().ObjectSpace.RayPick(tmp2, Fvector().set(0.f, -1.f, 0.f), 1000.f, collide::rqtBoth, RQ2, who);
-
-			box.getpoint(3, point3);
-			who->XFORM().transform(tmp3, Fvector(point3));
-			Level().ObjectSpace.RayPick(tmp3, Fvector().set(0.f, -1.f, 0.f), 1000.f, collide::rqtBoth, RQ3, who);
-
-			Level().ObjectSpace.RayPick(who->Position(), Fvector().set(0.f, -1.f, 0.f), 1000.f, collide::rqtBoth, RQ, who);
-			
-			const float JumpHeight = 1.6f;
-
-			if (
-					JumpHeight <= RQ.range
-				&& 	JumpHeight <= RQ0.range 
-				&&	JumpHeight <= RQ1.range
-				&&	JumpHeight <= RQ2.range
-				&&	JumpHeight <= RQ3.range					
-				)
-				return true;
-			
+			Msg("rq0: %f rq1: %f rq2: %f rq3: %f rq: %f", RQ0.range, RQ1.range, RQ2.range, RQ3.range, RQ.range);
+			return true;
 		}
-		//STEPR -= STEP1;
 	}
 	return false;
 }
 
-#include "game_sv_mp.h"
-bool event_switch = false;
+int WarnLvl = 0;
+
+bool Under_map(CActor* who)
+{
+	for (u32 I = 4; I < 8; I++)
+	{
+		if (!who) 
+			continue;
+
+		Fbox box;
+		Fvector local, world;
+
+		box.set(who->character_physics_support()->movement()->Box());
+		box.getpoint(I, local);
+		who->XFORM().transform(world, Fvector(local));
+
+		collide::rq_result RQ;
+
+		if (!Level().ObjectSpace.RayPick(world, Fvector().set(0.f, -1.f, 0.f), 1000.f, collide::rqtBoth, RQ, who))
+		{
+			WarnLvl += I;
+			if (WarnLvl == 22)
+			{
+				WarnLvl = 0;
+				return true;
+			}
+		}
+		else
+			WarnLvl = 0;
+	}
+	return false;
+}
+
+float pdup = 1.f;
+
+
+extern int		g_sv_protection_from_jump_hack;
+extern int		g_sv_protection_from_speed_hack;
+extern int		g_sv_protection_from_elevator_bug;
+extern int		g_sv_protection_from_bunny_hopping;
+extern int		g_sv_protection_from_under_map;
+
 
 void CActor::UpdateCL	()
 {
+	/*
+	if (!g_dedicated_server && g_Alive() && this == Level().CurrentControlEntity())
+	{
+		CGameFont* F = UI()->Font()->pFontDI;
+		F->SetAligment(CGameFont::alCenter);
+		F->OutSetI(0.f, -0.8f);
+		F->SetColor(0xffffffff);
+		string128 buf;
+		strcpy(buf, "");
+		if (isActorAccelerated(mstate_real, IsZoomAimingMode()))		strcat(buf, "Accel ");
+		if (mstate_real & mcCrouch)	strcat(buf, "Crouch ");
+		if (mstate_real & mcFwd)		strcat(buf, "Fwd ");
+		if (mstate_real & mcBack)		strcat(buf, "Back ");
+		if (mstate_real & mcLStrafe)	strcat(buf, "LStrafe ");
+		if (mstate_real & mcRStrafe)	strcat(buf, "RStrafe ");
+		if (mstate_real & mcJump)		strcat(buf, "Jump ");
+		if (mstate_real & mcSprint)	strcat(buf, "Sprint ");
+		if (mstate_real & mcFall)		strcat(buf, "Fall ");
+		if (mstate_real & mcTurn)		strcat(buf, "Turn ");
+		if (mstate_real & mcLanding)	strcat(buf, "Landing ");
+		if (mstate_real & mcLLookout)	strcat(buf, "LLookout ");
+		if (mstate_real & mcRLookout)	strcat(buf, "RLookout ");
+		F->OutNext("MSTATE:     [%s]", buf);
+		collide::rq_result RQ_1;
+		Level().ObjectSpace.RayPick(Position(), Fvector().set(0.f, -1.f, 0.f), 1000.f, collide::rqtBoth, RQ_1, this);
+		F->OutNext("RANGE:     [%f]", RQ_1.range);
+		//if (((mstate_real & mcFall) && !(mstate_real & mcSprint) && !(mstate_real & mcFwd) && character_physics_support()->movement()->GetXZVelocityActual() >= 10))
+			F->OutNext("Velocityxz: [%f]", character_physics_support()->movement()->GetXZVelocityActual());
+	}
+	*/
+
 	if (OnServer() && g_Alive())
 	{
-		if (isUnderMap(this))
+		xrClientData* l_pC = (xrClientData*)Level().Server->game->get_client(ID());
+
+		if (l_pC)
 		{
-			Msg("! Player: %s is under map",this->Name());
-			game_sv_mp* sv_game = smart_cast<game_sv_mp*>(Level().Server->game);
-
-			if (sv_game)
-			{			
-				xrClientData* C = (xrClientData*)sv_game->get_client(this->ID());
-
-				if(C)
-					sv_game->KillPlayer(C->ID, this->ID());
-			}
-		}
-
-		if ((mstate_real & (mcFall)) && !(mstate_real & (mcJump | mcLanding | mcLanding2)))
-		{
-			mstate_real &= ~mcFall;
-			mstate_wishful &= ~mcFall;
-		}
-
-		Fvector Vel_ = character_physics_support()->movement()->GetVelocity();
-		float Vel_xz_abs = _abs(Vel_.x) + _abs(Vel_.z);
-
-		game_PlayerState* ps = Game().GetPlayerByGameID(ID());
-		
-
-		if (Vel_.y >= 15)
-			Msg("! CActor::UpdateCL %s Vel.y > 15 vel: %f",this->Name(), Vel_.y);
-
-		if (Vel_xz_abs >= 50)
-			Msg("! CActor::UpdateCL %s Vel_xz_abs >= 50 Vel_xz_abs: %f", this->Name(), Vel_xz_abs);
-
-		//if (g_tsmp_movement_checks && ps && (Vel_.y >= 15 || Vel_xz_abs >= 50 ||  hovering_checker(this)))
-
-		if (g_tsmp_movement_checks && ps && hovering_checker(this))
-		{
-			Msg("! CActor::UpdateCL %s Hovering checker",this->Name());
-
-			game_sv_mp* tmp_sv_game = smart_cast<game_sv_mp*>(Level().Server->game);
-
-			if (tmp_sv_game)
+			//телепорт если мы за\под картой
+			if (Under_map(this)  && g_sv_protection_from_under_map )
 			{
-				xrClientData* l_pC = (xrClientData*)tmp_sv_game->get_client(ps->GameID);
-				
-				if (l_pC)
+				Level().Server->game->assign_RP(l_pC->owner, l_pC->ps);
+
+				NET_Packet		Pa;
+				Pa.w_begin(M_GAMEMESSAGE);
+				Pa.w_u32(GAME_EVENT_SERVER_STRING_MESSAGE);
+				Pa.w_stringZ("Warning: Вы провалились под карту и были телепортированы на поле боя.");
+				Msg("! %s - провалился под карту и был телепортирован на поле боя.", this->Name());
+				Level().Server->SendTo(l_pC->ID, Pa, net_flags(TRUE, TRUE));
+				m_bInInterpolation = false;
+			}
+
+			//фикс анимации бега впрыжке
+			if ((mstate_real & (mcFall)))
+			{
+				mstate_real &= ~mcSprint;
+				mstate_wishful &= ~mcSprint;
+			}
+
+			//фикс левитации
+			if ((mstate_real & (mcFall)) && !(mstate_real & (mcJump | mcLanding | mcLanding2)))
+			{
+				if (character_physics_support()->movement()->Environment() == CPHMovementControl::peOnGround
+					|| character_physics_support()->movement()->Environment() == CPHMovementControl::peAtWall)
 				{
-					event_switch = true;
-					collide::rq_result RQ;
-					Fvector result, dir;
-					dir = Fvector().set(0, -1, 0);
-					result = XFORM().c;
-
-					if (Level().ObjectSpace.RayPick(result, dir, 1000.f,
-						collide::rqtBoth, RQ, this))
-					{
-						if (RQ.range > .05f)
-						{
-							result.add(Fvector(dir).mul(RQ.range));
-
-							if (event_switch)
-							{
-								NET_Packet	P;
-								tmp_sv_game->u_EventGen(P, GE_MOVE_ACTOR, ps->GameID);
-								P.w_vec3(result);
-								P.w_vec3(Fvector().set(-r_torso.pitch, r_model_yaw, 0));
-								Level().Server->SendTo(l_pC->ID, P, net_flags(TRUE, TRUE));
-
-								NET_Packet		Pa;
-								Pa.w_begin(M_GAMEMESSAGE);
-								Pa.w_u32(GAME_EVENT_SERVER_STRING_MESSAGE);
-								Pa.w_stringZ("Warning: Ошибка передвижения, возможно плохое соединение с сервером.");
-								Level().Server->SendTo(l_pC->ID, Pa, net_flags(TRUE, TRUE));
-								event_switch = false;
-
-
-								//Msg("! %s Warning: Ошибка передвижения, возможно плохое соединение с сервером.", this->Name());
-							}
-						}
-					}
+					mstate_real &= ~mcFall;
+					mstate_wishful &= ~mcFall;
 				}
+			}
+
+			//фиксы лифта, спидхака, распрыжки, высоких прыжков
+			Fvector Vel_ = character_physics_support()->movement()->GetVelocity();
+			float Vel_xz_abs = abs(Vel_.x) + abs(Vel_.z);
+			collide::rq_result RQ_;
+
+			bool jump_hack = g_sv_protection_from_jump_hack ? Vel_.y >= 40.f : 0; // 15
+			bool speed_hack = g_sv_protection_from_speed_hack ? Vel_xz_abs >= 150.f : 0;
+			bool elevator_bug = g_sv_protection_from_elevator_bug ? hovering_checker(this) : 0;
+			bool bunny_hopping = g_sv_protection_from_bunny_hopping ? ((mstate_real & mcFall) &&
+				!(mstate_real & mcSprint) &&
+				!(mstate_real & mcRStrafe) &&
+				!(mstate_real & mcLStrafe) &&
+				(mstate_old & mcJump) &&
+				!(mstate_real & mcFwd) &&
+				character_physics_support()->movement()->GetXZVelocityActual() >= 9.f &&
+				Level().ObjectSpace.RayPick(Position(), Fvector().set(0.f, -1.f, 0.f), 1000.f, collide::rqtBoth, RQ_, this) && RQ_.range <= 1.1f) : 0;
+
+			if (jump_hack 
+				|| speed_hack
+				|| elevator_bug
+				|| bunny_hopping)
+			{
+				if (jump_hack) Msg("! Player [%s] jump hack ? Vel_.y: %f", Name(), Vel_.y);
+				if (speed_hack) Msg("! Player [%s] спидхак ? Vel_xz_abs: %f", Name(), Vel_xz_abs);
+				if (elevator_bug) Msg("! Player [%s] лифт ?", Name());
+				if (bunny_hopping) Msg("! Player [%s] Распрыг?", Name());
+
+				NET_Packet	P;
+				Level().Server->game->u_EventGen(P, GE_MOVE_ACTOR, ID());
+				P.w_vec3(Position());
+				P.w_vec3(Fvector().set(-r_torso.pitch, r_torso.yaw, 0));
+				Level().Server->SendTo(l_pC->ID, P, net_flags(TRUE, TRUE));
+				StopAnyMove();
+
+				NET_Packet Pa;
+				Pa.w_begin(M_GAMEMESSAGE);
+				Pa.w_u32(GAME_EVENT_SERVER_STRING_MESSAGE);
+
+				if (bunny_hopping)
+					Pa.w_stringZ("Warning: Распрыг запрещен.");
+				else
+					Pa.w_stringZ("Warning: Ошибка передвижения, возможно плохое соединение с сервером.");
+				
+				Level().Server->SendTo(l_pC->ID, Pa, net_flags(TRUE, TRUE));
+
+				ForceTransform(Fmatrix(XFORM()).translate(Position()));
+				m_bInInterpolation = false;
 			}
 		}
 	}
-
 
 	if(m_feel_touch_characters>0)
 	{

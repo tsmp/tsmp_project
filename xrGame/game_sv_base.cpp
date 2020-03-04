@@ -12,6 +12,7 @@
 #include "../XR_IOConsole.h"
 #include "../xr_ioc_cmd.h"
 #include "string_table.h"
+#include "Actor.h"
 
 #include "debug_renderer.h"
 
@@ -468,15 +469,19 @@ void	game_sv_GameState::assign_RP				(CSE_Abstract* E, game_PlayerState* ps_who)
 
 	u8					l_uc_team = u8(-1);
 	CSE_Spectator		*tpSpectator = smart_cast<CSE_Spectator*>(E);
+
 	if (tpSpectator)
 		l_uc_team = tpSpectator->g_team();
-	else {
-		CSE_ALifeCreatureAbstract	*tpTeamed = smart_cast<CSE_ALifeCreatureAbstract*>(E);
+	else 
+	{
+		CSE_ALifeCreatureAbstract *tpTeamed = smart_cast<CSE_ALifeCreatureAbstract*>(E);
+
 		if (tpTeamed)
 			l_uc_team = tpTeamed->g_team();
 		else
 			R_ASSERT2(tpTeamed,"Non-teamed object is assigning to respawn point!");
 	}
+
 	xr_vector<RPoint>&	rp	= rpoints[l_uc_team];
 	//-----------------------------------------------------------
 	xr_vector<u32>	xrp;//	= rpoints[l_uc_team];
@@ -485,6 +490,7 @@ void	game_sv_GameState::assign_RP				(CSE_Abstract* E, game_PlayerState* ps_who)
 		if (rp[i].TimeToUnfreeze < Level().timeServer())
 			xrp.push_back(i);
 	}
+
 	u32 rpoint = 0;
 	if (xrp.size() && !tpSpectator)
 	{
@@ -504,12 +510,15 @@ void	game_sv_GameState::assign_RP				(CSE_Abstract* E, game_PlayerState* ps_who)
 
 		rpoint = ::Random.randI((int)rp.size());
 	}
+
 	//-----------------------------------------------------------
 	RPoint&				r	= rp[rpoint];
+
 	if (!tpSpectator)
 	{
 		r.TimeToUnfreeze	= Level().timeServer() + g_sv_base_dwRPointFreezeTime;
 	};
+
 	E->o_Position.set	(r.P);
 	E->o_Angle.set		(r.A);
 }

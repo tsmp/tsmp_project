@@ -50,6 +50,12 @@ extern	int		TSMP_Timer1Enabled;
 extern	int		TSMP_Timer2Enabled;
 extern	int		TSMP_Timer3Enabled;
 
+extern int g_sv_protection_from_jump_hack;
+extern int g_sv_protection_from_speed_hack;
+extern int g_sv_protection_from_elevator_bug;
+extern int g_sv_protection_from_bunny_hopping;
+extern int g_sv_protection_from_under_map;
+
 extern	int		g_sv_mp_RadioInterval;
 extern	int		g_sv_mp_RadioMuteInterval;
 extern	int		g_sv_mp_RadioAntiSpam;
@@ -1822,6 +1828,12 @@ void register_mp_console_commands()
 
 	CMD4(CCC_Integer,		"sv_wait_for_players_ready",	&g_sv_Wait_For_Players_Ready, 0, 1);
 #endif
+
+	CMD4(CCC_Integer, "sv_protection_from_jump_hack", &g_sv_protection_from_jump_hack, 0, 1);
+	CMD4(CCC_Integer, "sv_protection_from_speed_hack", &g_sv_protection_from_speed_hack, 0, 1);
+	CMD4(CCC_Integer, "sv_protection_from_elevator_bug", &g_sv_protection_from_elevator_bug, 0, 1);
+	CMD4(CCC_Integer, "sv_protection_from_bunny_hopping", &g_sv_protection_from_bunny_hopping, 0, 1);
+	CMD4(CCC_Integer, "sv_protection_from_under_map", &g_sv_protection_from_under_map, 0, 1);
 
 	CMD1(CCC_StartTeamMoney,"sv_startteammoney");		
 

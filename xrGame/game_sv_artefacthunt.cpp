@@ -359,7 +359,31 @@ void	game_sv_ArtefactHunt::assign_RP(CSE_Abstract* E, game_PlayerState* ps_who)
 		R_ASSERT2					(rpID.size()>0, "No free Respawn Points!");
 		u32 PointID					= ::Random.randI(rpID.size());
 		RPoint&	r					= rps[rpID[PointID]];
-		SetRP						(E, &r);		
+		SetRP						(E, &r);	
+
+		CObject* pObj = Level().Objects.net_Find(ps_who->GameID);
+
+		if (pObj)
+		{
+			CActor* pAct = smart_cast<CActor*>(pObj);
+			if (pAct && pAct->g_Alive())
+			{
+
+				NET_Packet	P;
+				u_EventGen(P, GE_MOVE_ACTOR, ps_who->GameID);
+				P.w_vec3(r.P);
+				P.w_vec3(r.A);
+				m_server->SendTo(E->owner->ID, P, net_flags(TRUE, TRUE));
+
+				Fmatrix	M = pAct->XFORM();
+				M.translate(r.P);
+				pAct->ForceTransform(M);
+
+				E->o_Position.set(r.P);
+				E->o_Angle.set(r.A);
+			}
+		}
+
 	}
 };
 

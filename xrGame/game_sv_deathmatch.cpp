@@ -806,6 +806,30 @@ void game_sv_Deathmatch::assign_RP(CSE_Abstract *E, game_PlayerState *ps_who)
 	RPoint&	r	= rp[m_dwLastRPoint];
 	E->o_Position.set	(r.P);
 	E->o_Angle.set		(r.A);	
+
+	CObject* pObj = Level().Objects.net_Find(ps_who->GameID);
+
+	if (pObj)
+	{
+		CActor* pAct = smart_cast<CActor*>(pObj);
+		if (pAct && pAct->g_Alive())
+		{
+
+			NET_Packet	P;
+			u_EventGen(P, GE_MOVE_ACTOR, ps_who->GameID);
+			P.w_vec3(r.P);
+			P.w_vec3(r.A);
+			m_server->SendTo(E->owner->ID, P, net_flags(TRUE, TRUE));
+
+			Fmatrix	M = pAct->XFORM();
+			M.translate(r.P);
+			pAct->ForceTransform(M);
+
+
+			E->o_Position.set(r.P);
+			E->o_Angle.set(r.A);
+		}
+	}
 };
 
 bool	game_sv_Deathmatch::IsBuyableItem			(LPCSTR	ItemName)

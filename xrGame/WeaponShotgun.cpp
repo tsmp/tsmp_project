@@ -168,6 +168,12 @@ void CWeaponShotgun::switch2_Fire2()
 				Log("state_time", m_dwStateTime);
 				Log("item_sect", cNameSect().c_str());
 				Log("H_Parent", H_Parent()->cNameSect().c_str());
+
+				CActor* act = smart_cast<CActor*>(H_Parent());
+				
+				if(act)
+					Log("Actor! %s", act->Name());
+
 			}
 
 			E->g_fireParams		(this, p1,d);
