@@ -39,6 +39,7 @@ public:
 	{
 		BOOL					m_has_admin_rights;
 		u32						m_dwLoginTime;
+		shared_str				m_login;
 	}m_admin_rights;
 
 	struct 

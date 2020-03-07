@@ -728,11 +728,17 @@ void CInventory::UpdateDropItem(PIItem pIItem)
 		{
 			NET_Packet P;
 
-			if (!pIItem->m_object)
+			__try
 			{
-				Msg("! Error: CInventory::UpdateDropItem PhysicsShellHolder is nullptr");
+				if (!pIItem->object().H_Parent()->ID())
+					Msg("id is null"); // pIItem->object() выдавал адрес к которому нельзя обратится, пробуем это проверить
+			}
+			__except(EXCEPTION_EXECUTE_HANDLER)
+			{
+				Msg("! Error: CInventory::UpdateDropItem m_object is not valid ptr");
 				return;
 			}
+	
 
 			pIItem->object().u_EventGen(P, GE_OWNERSHIP_REJECT, pIItem->object().H_Parent()->ID());
 			P.w_u16(u16(pIItem->object().ID()));

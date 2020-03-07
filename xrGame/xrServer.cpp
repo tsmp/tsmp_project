@@ -482,6 +482,8 @@ u32 xrServer::OnDelayedMessage	(NET_Packet& P, ClientID sender)			// Non-Zero me
 				Console->Execute	(buff);
 				SetLogCB			(NULL);
 
+				Msg("# radmin %s is running command: %s", CL->m_admin_rights.m_login.c_str(), buff);
+
 				NET_Packet			P_answ;			
 				for(u32 i=0; i<_tmp_log.size(); ++i)
 				{
@@ -734,6 +736,7 @@ u32 xrServer::OnMessage	(NET_Packet& P, ClientID sender)			// Non-Zero means bro
 			{
 				CL->m_admin_rights.m_has_admin_rights = TRUE;
 				CL->m_admin_rights.m_dwLoginTime = Device.dwTimeGlobal;
+				CL->m_admin_rights.m_login = user;
 
 				Msg("# Player [%s] logged as remote administrator with login [%s].", ps1->getName(), user.c_str());
 			}
