@@ -311,6 +311,20 @@ void	game_sv_mp::OnEvent (NET_Packet &P, u16 type, u32 time, ClientID sender )
 			}
 		}
 
+		size_t pos2 = Vte.find("changeweather ");
+
+		if (pos2 != std::string::npos)
+		{
+			if (!(Vte.find("rain") != std::string::npos
+				|| Vte.find("night") != std::string::npos
+				|| Vte.find("clear") != std::string::npos
+				|| Vte.find("cloudy") != std::string::npos))
+			{
+				Msg("! Unknown weather type in voting");
+				return;
+			}
+		}
+
 		if (strlen(VoteCommand) > 70)
 			Msg("! too many symbols in vote found");
 
