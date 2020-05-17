@@ -67,6 +67,14 @@ public:
 private:
 	IC	static void	initialize		()
 	{
+		if (strstr(Core.Params, "-ww"))
+		{
+			m_table_iterations = 1024;
+			m_table_seed = 6011979;
+			m_encrypt_seed = 24031979;
+		}
+
+
 	#ifndef TRIVIAL_ENCRYPTOR_ENCODER
 		type					*m_alphabet = (type*)_alloca(sizeof(type)*alphabet_size);
 	#endif // TRIVIAL_ENCRYPTOR_ENCODER
