@@ -1031,7 +1031,7 @@ void CActor::UpdateCL	()
 			}
 
 			//фикс анимации бега впрыжке
-			if ((mstate_real & (mcFall)))
+			if ((mstate_real & (mcFall)) && !g_dedicated_server)
 			{
 				mstate_real &= ~mcSprint;
 				mstate_wishful &= ~mcSprint;
