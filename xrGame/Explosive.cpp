@@ -126,6 +126,11 @@ void CExplosive::Load(CInifile *ini,LPCSTR section)
 		effector.effect_sect_name = ini->r_string(section, "effect_sect_name");
 	else
 		effector.effect_sect_name = ini->r_string("explode_effector", "effect_sect_name");
+
+	if (ini->line_exist(section, "effector_radius"))
+		m_effector_radius = ini->r_float(section, "effector_radius");
+	else
+		m_effector_radius = 30.f;
 	
 	m_wallmark_manager.m_owner = cast_game_object();
 	m_bHideInExplosion = TRUE;
@@ -284,6 +289,7 @@ float CExplosive::ExplosionEffect(collide::rq_results& storage, CExplosive*exp_o
 	return effect/TEST_RAYS_PER_OBJECT;
 	
 }
+
 float CExplosive::TestPassEffect(const	Fvector	&source_p,	const	Fvector	&dir,float range,float ef_radius,collide::rq_results& storage, CObject* blasted_obj)
 {
 	float sq_ef_radius=ef_radius*ef_radius;
@@ -390,7 +396,7 @@ void CExplosive::Explode()
 		if (pActor)
 		{
 			float dist_to_actor = pActor->Position().distance_to(pos);
-			float max_dist = EFFECTOR_RADIUS;
+			float max_dist = m_effector_radius;
 
 			if (dist_to_actor < max_dist)
 				AddEffector(pActor, effExplodeHit, effector.effect_sect_name, (max_dist - dist_to_actor) / max_dist);
@@ -433,10 +439,12 @@ STOP_PROFILE
 	// Explode Effector	//////////////
 	CGameObject* GO = smart_cast<CGameObject*>(Level().CurrentEntity());
 	CActor* pActor = smart_cast<CActor*>(GO);
+
 	if(pActor)
 	{
 		float dist_to_actor = pActor->Position().distance_to(pos);
-		float max_dist		= EFFECTOR_RADIUS;
+		float max_dist = m_effector_radius;
+
 		if (dist_to_actor < max_dist)
 			AddEffector	(pActor, effExplodeHit, effector.effect_sect_name, (max_dist - dist_to_actor) / max_dist );
 	}

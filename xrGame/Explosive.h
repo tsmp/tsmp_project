@@ -115,7 +115,8 @@ protected:
 	//Время, через которое надо сделать взрывчатку невиимой, если она не становится невидимой во время взрыва
 	float						m_fExplodeHideDurationMax;
 	//флаг состояния взрыва
-	enum{
+	enum
+	{
 		flExploding				=1<<0	,
 		flExplodEventSent		=1<<1	,
 		flReadyToExplode		=1<<2	,
@@ -127,12 +128,11 @@ protected:
 	BOOL						m_bHideInExplosion;
 	bool						m_bAlreadyHidden;
 	virtual void				HideExplosive	();
-	//bool						m_bExploding;
-	//bool						m_bExplodeEventSent;
 
 	//////////////////////////////////////////////
 	//для разлета осколков
-	float						m_fFragmentSpeed;
+	float m_fFragmentSpeed;
+	float m_effector_radius;
 	
 	//звуки
 	ref_sound					sndExplode;
@@ -158,13 +158,11 @@ protected:
 	virtual void				UpdateExplosionParticles ();	
 
 	// эффектор
-	struct {
-/*		float 					time;
-		float 					amplitude;	
-		float 					period_number;
-		shared_str				file_name;*/
-		shared_str				effect_sect_name;
+	struct 
+	{
+		shared_str effect_sect_name;
 	} effector;
+
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };
 
