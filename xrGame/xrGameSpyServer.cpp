@@ -103,6 +103,8 @@ xrGameSpyServer::EConnect xrGameSpyServer::Connect(shared_str &session_name)
 	{
 		F->r_string(str, sizeof(str));
 
+		str[16] = '\0';
+
 		if (sizeof(str))
 			MapNameRus._set(str);
 
