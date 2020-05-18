@@ -59,6 +59,12 @@ struct SArtefactActivation{
 	void						PhDataUpdate					(dReal step);
 };
 
+int g_sv_mp_RemoveArtTimeSec = 60;
+
+bool CArtefact::NeedToDestroyObject() const
+{
+	return TimePassedAfterIndependant()>g_sv_mp_RemoveArtTimeSec*1000;
+}
 
 CArtefact::CArtefact(void) 
 {

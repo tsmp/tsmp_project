@@ -1344,7 +1344,7 @@ bool CWeapon::NeedToDestroyObject()	const
 	if (H_Parent()) return false;
 	if (g_iWeaponRemove == -1) return false;
 	if (g_iWeaponRemove == 0) return true;
-	return (TimePassedAfterIndependant() > m_dwWeaponRemoveTime);
+	return (TimePassedAfterIndependant() > g_sv_mp_RemoveHabarTimeSec*1000);
 }
 
 ALife::_TIME_ID	 CWeapon::TimePassedAfterIndependant()	const

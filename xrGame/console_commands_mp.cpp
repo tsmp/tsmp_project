@@ -28,6 +28,8 @@ extern	int		g_iCorpseRemove;
 extern	BOOL	g_bCollectStatisticData;
 extern	BOOL	g_SV_Disable_Auth_Check;
 
+extern int g_sv_mp_RemoveArtTimeSec;
+
 extern  int		g_sv_mp_iDumpStatsPeriod;
 extern	BOOL	g_SV_Force_Artefact_Spawn;
 extern	int		g_Dump_Update_Write;
@@ -74,8 +76,7 @@ extern volatile	int		g_sv_mp_ShowHits;
 extern	int		g_sv_mp_nickname_change_mode;
 extern int g_tsmp_movement_checks;
 
-        int     g_sv_mp_RemoveHabarTimeSec = 10;
-        int     g_sv_mp_RemoveDropHabarTimeSec = 15;
+        int     g_sv_mp_RemoveHabarTimeSec = 20;
 		
 extern	u32		g_sv_dm_dwForceRespawn			;
 extern	s32		g_sv_dm_dwFragLimit				;
@@ -1903,10 +1904,10 @@ void register_mp_console_commands()
 	CMD4(CCC_SV_Integer,	"tsmp_loader_map"			,	(int*)& g_sv_mp_LoaderMap, 0, 1);
 	CMD1(CCC_TSMP_SetIp,	"tsmp_loader_reconnect_ip");
 	CMD1(CCC_TSMP_ModName,	"tsmp_loader_mod_name");
-	CMD4(CCC_SV_Integer,	"tsmp_movement_check"		,	(int*)&g_tsmp_movement_checks, 0, 1);
+	//CMD4(CCC_SV_Integer,	"tsmp_movement_check"		,	(int*)&g_tsmp_movement_checks, 0, 1);
 
-	CMD4(CCC_SV_Integer,    "tsmp_removehabartime",         (int*)&g_sv_mp_RemoveHabarTimeSec, 1, 3600);
-	CMD4(CCC_SV_Integer,    "tsmp_removehabardroptime",     (int*)&g_sv_mp_RemoveDropHabarTimeSec, 1, 3600);
+	CMD4(CCC_SV_Integer,    "tsmp_remove_habar_time",         (int*)&g_sv_mp_RemoveHabarTimeSec, 1, 7200);
+	CMD4(CCC_SV_Integer, "tsmp_remove_art_drop_time", (int*)&g_sv_mp_RemoveArtTimeSec, 1, 7200);
 
 
 

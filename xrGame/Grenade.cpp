@@ -12,7 +12,7 @@
 #include "game_cl_base.h"
 #include "xrserver_objects_alife.h"
 
-// #define GRENADE_REMOVE_TIME		30000;
+ #define GRENADE_REMOVE_TIME		30000;
 
 extern int g_sv_mp_RemoveHabarTimeSec;
 
@@ -44,7 +44,7 @@ void CGrenade::Load(LPCSTR section)
 	else
 		m_dwGrenadeRemoveTime = g_sv_mp_RemoveHabarTimeSec * 1000;*/
 
-	m_dwGrenadeRemoveTime = g_sv_mp_RemoveHabarTimeSec * 1000;
+	m_dwGrenadeRemoveTime = GRENADE_REMOVE_TIME;
 
 	m_grenade_detonation_threshold_hit=READ_IF_EXISTS(pSettings,r_float,section,"detonation_threshold_hit",default_grenade_detonation_threshold_hit);
 }

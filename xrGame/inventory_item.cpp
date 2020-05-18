@@ -27,6 +27,8 @@
 #	include "debug_renderer.h"
 #endif
 
+extern int g_sv_mp_RemoveHabarTimeSec;
+
 extern bool bIsDedicatedServer;
 
 //#define ITEM_REMOVE_TIME 30000
@@ -154,7 +156,7 @@ void CInventoryItem::Load(LPCSTR section)
 
 
 	//время убирания объекта с уровня
-	m_dwItemRemoveTime			= READ_IF_EXISTS(pSettings, r_u32, section,"item_remove_time", g_sv_mp_RemoveDropHabarTimeSec * 1000);
+	m_dwItemRemoveTime			= READ_IF_EXISTS(pSettings, r_u32, section,"item_remove_time", g_sv_mp_RemoveHabarTimeSec * 1000);
 
 	m_flags.set					(FAllowSprint,READ_IF_EXISTS	(pSettings, r_bool, section,"sprint_allowed",			TRUE));
 	m_fControlInertionFactor	= READ_IF_EXISTS(pSettings, r_float,section,"control_inertion_factor",	1.0f);
@@ -1063,9 +1065,11 @@ void CInventoryItem::modify_holder_params	(float &range, float &fov) const
 	fov			*= m_holder_fov_modifier;
 }
 
+
+
 bool CInventoryItem::NeedToDestroyObject()	const
 {
-	return (TimePassedAfterIndependant() > m_dwItemRemoveTime);
+	return (TimePassedAfterIndependant() > u64(g_sv_mp_RemoveHabarTimeSec*1000));
 }
 
 ALife::_TIME_ID	 CInventoryItem::TimePassedAfterIndependant()	const
