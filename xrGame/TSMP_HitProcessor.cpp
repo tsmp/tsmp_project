@@ -4,7 +4,7 @@
 
 volatile int g_sv_mp_CheckHitsEnabled = 0;
 volatile int g_sv_mp_AutoBanHitCheaters = 0;
-volatile int g_sv_mp_ShowHits = 1;
+volatile int g_sv_mp_ShowHits = 0;
 
 constexpr auto MinHitsToProcess = 50;;
 

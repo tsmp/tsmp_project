@@ -51,7 +51,7 @@ int g_sv_protection_from_bunny_hopping = 1;
 int g_sv_protection_from_under_map = 1;
 
 
-int			g_sv_mp_nickname_change_mode	= 3;
+int			g_sv_mp_nickname_change_mode	= 2;
 std::string		g_sv_mp_loader_ip =  "0.0.0.0" ;
 std::string		g_sv_mp_loader_port = "4554" ;
 std::string		TSMP_Loader_Mod_Name = "tsmp";
@@ -166,6 +166,7 @@ void game_sv_mp::OnRoundStart()
 	u_EventSend(P);
 
 	Console->Execute("cfg_load all_server_settings");
+	Msg("on round start");
 
 	signal_Syncronize();
 }
@@ -317,10 +318,11 @@ void	game_sv_mp::OnEvent (NET_Packet &P, u16 type, u32 time, ClientID sender )
 		{
 			if (!(Vte.find("rain") != std::string::npos
 				|| Vte.find("night") != std::string::npos
+				|| Vte.find("nigth") != std::string::npos // какой гений в gsc так написал?))
 				|| Vte.find("clear") != std::string::npos
 				|| Vte.find("cloudy") != std::string::npos))
 			{
-				Msg("! Unknown weather type in voting");
+				Msg("! Unknown weather type in voting: %s ",Vte.c_str());
 				return;
 			}
 		}
