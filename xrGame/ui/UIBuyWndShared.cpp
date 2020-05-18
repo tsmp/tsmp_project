@@ -92,13 +92,18 @@ const u32	CItemMgr::GetItemsCount	() const
 	return m_items.size();
 }
 
-const shared_str&	CItemMgr::GetItemName		(u32 Idx) const
+const shared_str& CItemMgr::GetItemName(u32 Idx, bool* notFound) const
 {
 	//R_ASSERT(Idx<m_items.size());
+
 	if (!(Idx < m_items.size()))
 	{
-		Msg("! error Idx<m_items.size()");
+		if (notFound)
+			*notFound = true;
+
+		Msg("! ERROR: cant get item index, invalid value [%u], max value [%u]", Idx, m_items.size());
 		return (m_items.begin() + 1)->first;
 	}
-	else return (m_items.begin() + Idx)->first;
+	else 
+		return (m_items.begin() + Idx)->first;
 }

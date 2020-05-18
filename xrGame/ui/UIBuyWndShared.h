@@ -39,5 +39,5 @@ public:
 	const u32				GetItemIdx		(const shared_str& sect_name) const;
 	void					Dump			() const;
 	const u32				GetItemsCount	() const;
-	const shared_str&		GetItemName		(u32 Idx) const;
+	const shared_str& GetItemName(u32 Idx, bool* notFound = nullptr) const;
 };

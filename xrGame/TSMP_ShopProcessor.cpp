@@ -294,7 +294,25 @@ void TSMP_ShopProcessor_BuyItems(game_PlayerState* ps, u16 ActorID, game_sv_Deat
 
 	for (u16 ItemID : ps->pItemList)
 	{
-		shared_str Name = game->m_strWeaponsData->GetItemName(ItemID & 0x00FF);
+		bool notFoundIdx = false;
+		shared_str Name = game->m_strWeaponsData->GetItemName(ItemID & 0x00FF, &notFoundIdx);
+
+		if (notFoundIdx)
+		{
+			u32 idx = ItemID & 0x00FF;
+			u32 maxIdx = game->m_strWeaponsData->GetItemsCount();
+
+			std::string str;
+			str += "chat_tsmp Внимание! У игрока ";
+			str += std::string(ps->name);
+			str += " геймдата отличается от нормальной! Он пытался купить предмет с индексом ";
+			str += std::to_string(idx);
+			str += ". Максимальный индекс предметов - ";
+			str += std::to_string(maxIdx);
+			
+			Console->Execute(str.c_str());
+			continue;
+		}
 
 		if (NotAllowedToBuy(Name.c_str()))
 			continue;
