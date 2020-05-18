@@ -165,8 +165,8 @@ void game_sv_mp::OnRoundStart()
 	P.w_u32				(GAME_EVENT_ROUND_STARTED);
 	u_EventSend(P);
 
-	Console->Execute("cfg_load all_server_settings");
-	Msg("on round start");
+	Console->Execute("sv_status");
+	Msg("- Round start");
 
 	signal_Syncronize();
 }
