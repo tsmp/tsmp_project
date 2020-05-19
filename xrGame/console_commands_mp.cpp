@@ -683,6 +683,194 @@ public:
 	virtual void Info(TInfo& I) { strcpy(I, "Ban Player by ClientID"); }
 };
 
+
+class CCC_TSMP_SetMoneyCount : public IConsole_Command
+{
+public:
+	CCC_TSMP_SetMoneyCount(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = false; };
+
+	virtual void Execute(LPCSTR args_)
+	{
+		if (!g_pGameLevel || !Level().Server)
+			return;
+
+		string4096 buff;
+		strcpy(buff, args_);
+
+		u32 len = xr_strlen(buff);
+
+		if (0 == len)
+			return;
+
+		string1024				digits;
+		LPSTR					p = buff + len - 1;
+
+		while (isdigit(*p))
+		{
+			if (p == buff)
+				break;
+
+			--p;
+		}
+
+		R_ASSERT(p >= buff);
+		strcpy(digits, p);
+
+		*p = 0;
+
+		if (!xr_strlen(buff))
+		{
+			Msg("incorrect parameter passed. bad money count");
+			return;
+		}
+
+		u32 money_count = atol(digits);
+
+		if (money_count == 0)
+		{
+			Msg("incorrect parameters passed.  ID and count required");
+			return;
+		}
+
+		string1024 s_id;
+		strcpy(s_id, buff);
+
+		u32 id = static_cast<u32>(atoll(s_id));
+
+		if (id == 0)
+		{
+			Msg("invalid id");
+			return;
+		}
+
+		Msg("Received id %u", id);
+
+		u32	cnt = Level().Server->game->get_players_count();
+
+		for (u32 it = 0; it < cnt; it++)
+		{
+			xrClientData* l_pC = (xrClientData*)Level().Server->client_Get(it);
+
+			if (!l_pC)
+				continue;
+
+			if (l_pC->ID.value() == id)
+			{
+				u64 temp = (u64)money_count;
+
+				if (temp > (u64)MAXLONG)
+					Msg("! cant set too much money");
+				else
+					l_pC->ps->money_for_round = (s32)money_count;
+
+				return;
+			}
+		}
+
+		Msg("client with this id not found");
+	};
+
+	virtual void Info(TInfo& I) { strcpy(I, "Set money count by ClientID"); }
+};
+
+class CCC_TSMP_RankUp : public IConsole_Command
+{
+public:
+	CCC_TSMP_RankUp(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = false; };
+
+	virtual void Execute(LPCSTR args_)
+	{
+		if (!g_pGameLevel || !Level().Server)
+			return;
+
+		string1024 s_id;
+		strcpy(s_id, args_);
+
+		u32 id = static_cast<u32>(atoll(s_id));
+
+		if (id == 0)
+		{
+			Msg("invalid id");
+			return;
+		}
+
+		Msg("Received id %u", id);
+
+		u32	cnt = Level().Server->game->get_players_count();
+
+		for (u32 it = 0; it < cnt; it++)
+		{
+			xrClientData* l_pC = (xrClientData*)Level().Server->client_Get(it);
+
+			if (!l_pC)
+				continue;
+
+			if (l_pC->ID.value() == id)
+			{
+				if (l_pC->ps->rank < 4)
+					l_pC->ps->rank++;
+				else
+					Msg("! cant increase rank");				
+
+				return;
+			}
+		}
+
+		Msg("client with this id not found");
+	};
+
+	virtual void Info(TInfo& I) { strcpy(I, "Increase player rank by ClientID"); }
+};
+
+class CCC_TSMP_RankDown : public IConsole_Command
+{
+public:
+	CCC_TSMP_RankDown(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = false; };
+
+	virtual void Execute(LPCSTR args_)
+	{
+		if (!g_pGameLevel || !Level().Server)
+			return;
+
+		string1024 s_id;
+		strcpy(s_id, args_);
+
+		u32 id = static_cast<u32>(atoll(s_id));
+
+		if (id == 0)
+		{
+			Msg("invalid id");
+			return;
+		}
+
+		Msg("Received id %u", id);
+
+		u32	cnt = Level().Server->game->get_players_count();
+
+		for (u32 it = 0; it < cnt; it++)
+		{
+			xrClientData* l_pC = (xrClientData*)Level().Server->client_Get(it);
+
+			if (!l_pC)
+				continue;
+
+			if (l_pC->ID.value() == id)
+			{
+				if (l_pC->ps->rank>0)
+					l_pC->ps->rank--;
+				else
+					Msg("! cant decrease rank");
+
+				return;
+			}
+		}
+
+		Msg("client with this id not found");
+	};
+
+	virtual void Info(TInfo& I) { strcpy(I, "Decrease player rank bu ClientID"); }
+};
+
 class CCC_TSMP_SetIp : public IConsole_Command 
 {
 public:
@@ -1904,6 +2092,10 @@ void register_mp_console_commands()
 	CMD4(CCC_SV_Integer,	"tsmp_loader_map"			,	(int*)& g_sv_mp_LoaderMap, 0, 1);
 	CMD1(CCC_TSMP_SetIp,	"tsmp_loader_reconnect_ip");
 	CMD1(CCC_TSMP_ModName,	"tsmp_loader_mod_name");
+
+	CMD1(CCC_TSMP_RankUp, "tsmp_rank_up");
+	CMD1(CCC_TSMP_RankDown, "tsmp_rank_down");
+	CMD1(CCC_TSMP_SetMoneyCount, "tsmp_set_money");
 	//CMD4(CCC_SV_Integer,	"tsmp_movement_check"		,	(int*)&g_tsmp_movement_checks, 0, 1);
 
 	CMD4(CCC_SV_Integer,    "tsmp_remove_habar_time",         (int*)&g_sv_mp_RemoveHabarTimeSec, 1, 7200);
