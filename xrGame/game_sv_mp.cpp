@@ -1306,24 +1306,28 @@ void		game_sv_mp::OnPlayerGameMenu(NET_Packet& P, ClientID sender)
 			break;
 	}
 }
-void		game_sv_mp::OnPlayerSelectSpectator(NET_Packet& P, ClientID sender)
-{
-	xrClientData*	pClient	= (xrClientData*)m_server->ID_to_client	(sender);
 
-	if (!pClient || !pClient->net_Ready) return;
+void game_sv_mp::OnPlayerSelectSpectator(NET_Packet& P, ClientID sender)
+{
+	const xrClientData* pClient = (xrClientData*)m_server->ID_to_client(sender);
+
+	if (!pClient || !pClient->net_Ready) 
+		return;
+
 	game_PlayerState* ps = pClient->ps;
-	if (!ps) return;
+
+	if (!ps) 
+		return;
 	
 	KillPlayer(sender, ps->GameID);
 	ps->setFlag(GAME_PLAYER_FLAG_SPECTATOR);
-	//-------------------------------------------
-	if (pClient->owner)
+
+	if (pClient->owner && smart_cast<CSE_ALifeCreatureActor*>(pClient->owner))
 	{
-		CSE_ALifeCreatureActor	*pA	=	smart_cast<CSE_ALifeCreatureActor*>(pClient->owner);
-		if (pA)
-		{
-			SpawnPlayer(sender, "spectator");
-		};
+		AllowDeadBodyRemove(sender, ps->GameID);
+		m_CorpseList.push_back(ps->GameID);
+
+		SpawnPlayer(sender, "spectator");
 	}
 }
 
