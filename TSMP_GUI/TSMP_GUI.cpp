@@ -128,7 +128,7 @@ static void _process_messages(void)
 		DispatchMessage(&msg);
 	}
 
-	if (LogSize != LogFile->size())
+	if (LogFile && LogSize != LogFile->size())
 	{
 		for (; LogSize < LogFile->size(); LogSize++)
 		{
