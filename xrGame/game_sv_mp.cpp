@@ -81,32 +81,25 @@ void	game_sv_mp::Update()
 	inherited::Update();
 
 	// remove corpses if their number exceed limit
-	for (u32 i = 0; i < m_CorpseList.size(); )
+	while(m_CorpseList.size()>g_dwMaxCorpses)
 	{
-		if (m_CorpseList.size() <= g_dwMaxCorpses) break;
-
-		u16 CorpseID = m_CorpseList[i];
-
-		CSE_Abstract* pCorpseObj = get_entity_from_eid(CorpseID);
+		u16 CorpseID = m_CorpseList[0];
+		const CSE_Abstract* pCorpseObj = get_entity_from_eid(CorpseID);
 
 		if (!pCorpseObj)
 		{
-			m_CorpseList.erase(m_CorpseList.begin() + i);
-			Msg("corpse [%d] not found [%d]", CorpseID, Device.dwFrame);
+			m_CorpseList.erase(m_CorpseList.begin());
+			Msg("! WARNING: corpse [%d] not found [%d]", CorpseID, Device.dwFrame);
 			continue;
-		}
+		}	
 
-		if (!pCorpseObj->children.empty())
-		{
-			Msg("corpse [%d] childern not empty [%d]", CorpseID, Device.dwFrame);
-			i++;
-			continue;
-		}
-
-		NET_Packet			P;
+		NET_Packet P;
 		u_EventGen(P, GE_DESTROY, CorpseID);
 		Level().Send(P, net_flags(TRUE, TRUE));
-		m_CorpseList.erase(m_CorpseList.begin() + i);
+		
+		//не нужно, когда на сервер прилетит GE_DESTROY, оно удалится из списка
+		//m_CorpseList.erase(m_CorpseList.begin() + i);
+		
 		Msg("corpse [%d] send destroy [%d]", CorpseID, Device.dwFrame);
 	}
 
