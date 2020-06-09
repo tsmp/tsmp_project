@@ -201,26 +201,23 @@ void		xrServer::client_Destroy	(IClient* C)
 			};
 
 			{
+				DelayedPackestCS.Enter();
+
 				DelayedPacket pp;
 				pp.SenderID = C->ID;
 
 				xr_deque<DelayedPacket>::iterator it;
-			
-				do{
-					it						=std::find(m_aDelayedPackets.begin(),m_aDelayedPackets.end(),pp);
-					if(it!=m_aDelayedPackets.end())
-					{
-						
-						m_aDelayedPackets.erase	(it);
-						Msg("removing packet from delayed event storage");
-					}
-					else
-					{						
-						break;
-					}
-				}while(true);
+				it = std::find(m_aDelayedPackets.begin(), m_aDelayedPackets.end(), pp);
 
-			
+				while (it != m_aDelayedPackets.end())
+				{
+					m_aDelayedPackets.erase(it);
+					Msg("removing packet from delayed event storage");
+
+					it = std::find(m_aDelayedPackets.begin(), m_aDelayedPackets.end(), pp);
+				}
+
+				DelayedPackestCS.Leave();
 			}
 			
 
