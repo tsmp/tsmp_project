@@ -86,9 +86,9 @@
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">X:\include\dx9sdk\include;X:\include;$(IncludePath)</IncludePath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">X:\libraries;$(LibraryPath)</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">X:\libraries;$(LibraryPath)</LibraryPath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">X:\components\libvorbis\include;X:\components\loki;X:\xrLua\src;X:\components\luabind;X:\xrOpenAL\include\AL;X:\components\eax\Include;X:\components;X:\components\dx9sdk\include;X:\xrCore;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)\components\dx9sdk\include;$(IncludePath)</IncludePath>
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)\components\libvorbis\include;$(SolutionDir)\components\loki;$(SolutionDir)\xrLua\src;$(SolutionDir)\components\luabind;$(SolutionDir)\xrOpenAL\include\AL;$(SolutionDir)\components\eax\Include;$(SolutionDir)\components;$(SolutionDir)\components\dx9sdk\include;$(SolutionDir)\xrCore;$(IncludePath)</IncludePath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">X:\components\libs;X:\components\dx9sdk\lib;X:\output\libraries\;$(LibraryPath)</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)\output\libraries_Release;$(SolutionDir)\components\dx9sdk\lib;$(LibraryPath)</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)\components\dx9sdk\lib64;$(SolutionDir)\output\libraries_x64_release;$(LibraryPath)</LibraryPath>
     <ExecutablePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">X:\output\binaries\;$(ExecutablePath)</ExecutablePath>
     <ExecutablePath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">X:\output\binaries\;$(ExecutablePath)</ExecutablePath>
@@ -229,6 +229,7 @@
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <ImportLibrary>$(SolutionDir)\output\libraries_$(Configuration)\$(ProjectName).lib</ImportLibrary>
       <TargetMachine>NotSet</TargetMachine>
+      <AdditionalDependencies>legacy_stdio_definitions.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
