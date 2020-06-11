@@ -117,12 +117,21 @@ void CConsole::OnFrame()
 {
 	u32 mm_timer = Device.dwTimeContinual;
 	float fDelta = (mm_timer - last_mm_timer) / 1000.0f;
-	if (fDelta>.06666f) fDelta = .06666f;
+
+	if (fDelta > .06666f)
+		fDelta = .06666f;
+
 	last_mm_timer = mm_timer;
 
 	cur_time += fDelta;
-	rep_time += fDelta*fAccel;
-	if (rep_time > 0.9f) { rep_time -= 0.9f; bRepeat = true;	fAccel += 0.2f; }
+	rep_time += fDelta * fAccel;
+
+	if (rep_time > 0.2f)
+	{
+		rep_time -= 0.2f;
+		bRepeat = true;
+		fAccel += 0.2f;
+	}
 }
 
 void out_font(CGameFont* pFont, LPCSTR text, float& pos_y)
@@ -200,7 +209,15 @@ void CConsole::OnRender()
 	pFont->OutI(-1.f, fMaxY - LDIST, "%s", buf);
 
 	float ypos = fMaxY - LDIST - LDIST;
-	for (int i = LogFile->size() - 1 - scroll_delta; i >= 0; i--)
+
+	static int last_log_size;
+
+	if (scroll_delta)
+		scroll_delta += (LogFile->size() - last_log_size);
+
+	int startPos = LogFile->size() - 1 - scroll_delta;
+
+	for (int i = startPos; i >= 0; i--)
 	{
 		ypos -= LDIST;
 		if (ypos<-1.f)	break;
@@ -233,6 +250,7 @@ void CConsole::OnRender()
 		}
 	}
 	pFont->OnRender();
+	last_log_size = LogFile->size();
 }
 
 
@@ -259,11 +277,13 @@ void CConsole::OnPressKey(int dik, BOOL bHold)
 		break;
 	case DIK_PRIOR:
 		scroll_delta++;
-		if (scroll_delta > int(LogFile->size()) - 1) scroll_delta = LogFile->size() - 1;
+		if (scroll_delta > int(LogFile->size()) - 1) 
+			scroll_delta = LogFile->size() - 1;
 		break;
 	case DIK_NEXT:
 		scroll_delta--;
-		if (scroll_delta<0) scroll_delta = 0;
+		if (scroll_delta<0)
+			scroll_delta = 0;
 		break;
 	case DIK_LEFT:
 		if (n_char > 0) n_char--;
@@ -388,6 +408,7 @@ void CConsole::OnPressKey(int dik, BOOL bHold)
 		break;
 	case DIK_RETURN:
 		strcpy(command, editor);
+		scroll_delta = 0;
 		ExecuteCommand();
 		editor[0] = '\0';
 		break;
@@ -472,7 +493,6 @@ void CConsole::ExecuteCommand()
 	char	converted[MAX_LEN];
 	int		i, j, len;
 
-	scroll_delta = 0;
 	cmd_delta = 0;
 	old_cmd_delta = 0;
 

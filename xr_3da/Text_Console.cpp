@@ -14,6 +14,7 @@ CTextConsole::CTextConsole()
 	m_dwStartLine = 0;
 	m_bNeedUpdate = false;
 	m_dwLastUpdateTime = 0;
+	lastStatisticsUpdate = 0;
 }
 
 CTextConsole::~CTextConsole() {	m_pMainWnd = NULL; };
@@ -132,6 +133,7 @@ void	CTextConsole::Initialize	()
 	ShowWindow(m_hConsoleWnd, SW_SHOW); 
 	UpdateWindow(m_hConsoleWnd);	
 	server_info.ResetData();
+	lastStatisticsUpdate = Device.dwTimeGlobal;
 };
 
 void	CTextConsole::Destroy		()
@@ -207,7 +209,14 @@ void	CTextConsole::DrawLog(HDC hDC, RECT* pRect)
 
 	int YPos = Height - tm.tmHeight - tm.tmHeight;
 
-	for ( int i = LogFile->size() - 1 - scroll_delta; i >= 0; i-- ) 
+	static int last_log_size;
+
+	if (scroll_delta)
+		scroll_delta += (LogFile->size() - last_log_size);
+
+	int startPos = LogFile->size() - 1 - scroll_delta;
+
+	for (int i = startPos; i >= 0; i--)
 	{
 		YPos -= tm.tmHeight;
 		if ( YPos < y_top_max )	break;
@@ -247,10 +256,13 @@ void	CTextConsole::DrawLog(HDC hDC, RECT* pRect)
 		}
 	}
 
-	if ( g_pGameLevel && ( Device.dwFrame % 5 == 0 ) )
+	last_log_size = LogFile->size();
+
+	if ( g_pGameLevel && (Device.dwTimeGlobal - lastStatisticsUpdate > 800))
 	{
 		server_info.ResetData();
 		g_pGameLevel->GetLevelInfo( &server_info );
+		lastStatisticsUpdate = Device.dwTimeGlobal;
 	}
 
 	YPos = 5;

@@ -30,6 +30,7 @@ private:
 
 	bool	m_bNeedUpdate;
 	u32		m_dwLastUpdateTime;
+	u32 lastStatisticsUpdate;
 
 	CServerInfo server_info;
 
