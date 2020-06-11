@@ -387,7 +387,9 @@ void CConsole::OnPressKey(int dik, BOOL bHold)
 		else		strcpy_s(append, "-");
 		break;
 	case DIK_RETURN:
+		strcpy(command, editor);
 		ExecuteCommand();
+		editor[0] = '\0';
 		break;
 	case DIK_INSERT:
 		if (OpenClipboard(0))
@@ -474,37 +476,37 @@ void CConsole::ExecuteCommand()
 	cmd_delta = 0;
 	old_cmd_delta = 0;
 
-	len = xr_strlen(editor);
+	len = xr_strlen(command);
 	for (i = 0; i<len; i++) {
-		if ((editor[i] == '\n') || (editor[i] == '\t')) editor[i] = ' ';
+		if ((command[i] == '\n') || (command[i] == '\t')) command[i] = ' ';
 	}
 	j = 0;
 	for (i = 0; i<len; i++) {
-		switch (editor[i]) {
+		switch (command[i]) {
 		case ' ':
-			if (editor[i + 1] == ' ') continue;
+			if (command[i + 1] == ' ') continue;
 			if (i == len - 1) goto outloop;
 			break;
 		}
-		converted[j++] = editor[i];
+		converted[j++] = command[i];
 	}
 outloop:
 	converted[j] = 0;
-	if (converted[0] == ' ')	strcpy_s(editor, &(converted[1]));
-	else					strcpy_s(editor, converted);
-	if (editor[0] == 0)		return;
-	if (RecordCommands)		Log("~", editor);
+	if (converted[0] == ' ')	strcpy_s(command, &(converted[1]));
+	else					strcpy_s(command, converted);
+	if (command[0] == 0)		return;
+	if (RecordCommands)		Log("~", command);
 
 	// split into cmd/params
-	editor[j++] = ' ';
-	editor[len = j] = 0;
+	command[j++] = ' ';
+	command[len = j] = 0;
 	for (i = 0; i<len; i++) 
 	{
-		if (editor[i] != ' ') first_word[i] = editor[i];
+		if (command[i] != ' ') first_word[i] = command[i];
 		else 
 		{
 			// last 'word' - exit
-			strcpy_s(last_word, editor + i + 1);
+			strcpy_s(last_word, command + i + 1);
 			break;
 		}
 	}
@@ -536,7 +538,7 @@ outloop:
 	}
 	else
 		Log("! Unknown command: ", first_word);
-	editor[0] = 0;
+	command[0] = 0;
 }
 
 void CConsole::Show()
@@ -598,7 +600,7 @@ void CConsole::SelectCommand()
 
 void CConsole::Execute(LPCSTR cmd)
 {
-	strncpy(editor, cmd, MAX_LEN - 1); editor[MAX_LEN - 1] = 0;
+	strncpy(command, cmd, MAX_LEN - 1); command[MAX_LEN - 1] = 0;
 	RecordCommands = false;
 	ExecuteCommand();
 	RecordCommands = true;

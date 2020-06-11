@@ -47,6 +47,7 @@ private:
 protected:
 	int				scroll_delta;
 	char			editor[MAX_LEN];
+	char			command[MAX_LEN];
 	CGameFont		*pFont;
 
 public:
