@@ -174,24 +174,29 @@ bool CInventory::DropItem(CGameObject *pObj)
 {
 	CInventoryItem *pIItem = smart_cast<CInventoryItem*>(pObj);
 
-	VERIFY(pIItem);
-
 	if (!pIItem)
-		return false;
-
-	if (!(pIItem->m_pCurrentInventory))
 	{
-		Msg("! Cant get inventory to drop item");
+		Msg("! ERROR: item not found, cant drop it");
+		return false;
+	}		
+
+	if (!pIItem->m_pCurrentInventory)
+	{
+		Msg("! ERROR, Cant get inventory to drop item");
 		return false;
 	}
 
-	if (!(pIItem->m_pCurrentInventory == this))
+	if (pIItem->m_pCurrentInventory != this)
 	{
-		Msg("! Player tries to drop items he doesnt own");
+		Msg("! ERROR: Player tries to drop items he doesnt own");
 		return false;
 	}
 
-	VERIFY(pIItem->m_eItemPlace != eItemPlaceUndefined);
+	if (pIItem->m_eItemPlace == eItemPlaceUndefined)
+	{
+		Msg("! ERROR: Cant drop item from undefined place");
+		return false;
+	}
 
 	pIItem->object().processing_activate();
 
@@ -199,32 +204,43 @@ bool CInventory::DropItem(CGameObject *pObj)
 	{
 	case eItemPlaceBelt:
 	{
-		R_ASSERT(InBelt(pIItem));
+		//R_ASSERT(InBelt(pIItem));
 
-		m_belt.erase(std::find(m_belt.begin(), m_belt.end(), pIItem));
+		auto iter = std::find(m_belt.begin(), m_belt.end(), pIItem);
+
+		if (iter != m_belt.end())		
+			m_belt.erase(iter);		
+		else		
+			Msg("! ERROR: CInventory::Drop item not found in belt...");
+		
 		pIItem->object().processing_deactivate();
 		break;
 	}
 
 	case eItemPlaceRuck:
 	{
-		R_ASSERT(InRuck(pIItem));
-		m_ruck.erase(std::find(m_ruck.begin(), m_ruck.end(), pIItem));
+		//R_ASSERT(InRuck(pIItem));
+
+		auto iter = std::find(m_ruck.begin(), m_ruck.end(), pIItem);
+		
+		if (iter != m_ruck.end())
+			m_ruck.erase(iter);
+		else
+			Msg("! ERROR: CInventory::Drop item not found in ruck...");
+
 		break;
 	}
 
 	case eItemPlaceSlot:
-	{
-		R_ASSERT(InSlot(pIItem));
+		{
+			if (InSlot(pIItem))
+				m_slots[pIItem->GetSlot()].m_pIItem = nullptr;
+			else
+				Msg("! ERROR: Cant drop item from the slot, because it isnt in the slot!");
 
-		if (m_iActiveSlot == pIItem->GetSlot())
-			Activate(NO_ACTIVE_SLOT);
-
-		m_slots[pIItem->GetSlot()].m_pIItem = nullptr;
-
-		pIItem->object().processing_deactivate();
-		break;
-	}
+			pIItem->object().processing_deactivate();
+			break;
+		}
 	default:
 		NODEFAULT;
 	};
@@ -234,7 +250,7 @@ bool CInventory::DropItem(CGameObject *pObj)
 	if (it != m_all.end())
 		m_all.erase(it);
 	else
-		Msg("! CInventory::Drop item not found in inventory!!!");
+		Msg("! ERROR, cant drop item, because item not found in inventory!!!");
 
 	pIItem->m_pCurrentInventory = nullptr;	
 	m_pOwner->OnItemDrop(smart_cast<CInventoryItem*>(pObj));
