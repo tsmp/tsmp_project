@@ -47,6 +47,8 @@ public:
 	virtual void	OnFrame				(void);
 
 	virtual void	IR_OnKeyboardPress		(int dik);
+	virtual void	IR_OnKeyboardHold(int dik);
+	virtual void	IR_OnKeyboardRelease(int dik);
 };
 
 //extern ENGINE_API CTextConsole* TextConsole;

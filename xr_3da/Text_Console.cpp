@@ -10,7 +10,7 @@ CTextConsole::CTextConsole()
 	m_hConsoleWnd = NULL;
 	m_hLogWnd = NULL;
 	m_hLogWndFont = NULL;
-	m_bScrollLog = true;
+	m_bScrollLog = false;
 	m_dwStartLine = 0;
 	m_bNeedUpdate = false;
 	m_dwLastUpdateTime = 0;
@@ -268,13 +268,29 @@ void	CTextConsole::OnRender			(void) {};
 
 void CTextConsole::IR_OnKeyboardPress(int dik)
 {
-	m_bNeedUpdate = true;
+	m_bScrollLog = true;
 	CConsole::IR_OnKeyboardPress(dik);
+}
+
+void CTextConsole::IR_OnKeyboardHold(int dik)
+{
+	m_bScrollLog = true;
+	CConsole::IR_OnKeyboardHold(dik);
+}
+
+void CTextConsole::IR_OnKeyboardRelease(int dik)
+{
+	m_bScrollLog = false;
+	CConsole::IR_OnKeyboardRelease(dik);
 }
 
 void	CTextConsole::OnFrame			(void)
 {
 	inherited::OnFrame();
+
+	if (m_bScrollLog)
+		m_bNeedUpdate = true;
+
 	if (!m_bNeedUpdate && m_dwLastUpdateTime+1000/g_svTextConsoleUpdateRate>Device.dwTimeGlobal) return;
 	InvalidateRect(m_hConsoleWnd, NULL, FALSE);
 	SetCursor(LoadCursor( NULL, IDC_ARROW ));	
