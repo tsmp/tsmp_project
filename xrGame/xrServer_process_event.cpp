@@ -332,7 +332,8 @@ void xrServer::Process_event	(NET_Packet& P, ClientID sender)
 		break;
 
 	default:
-		R_ASSERT2	(0,"Game Event not implemented!!!");
+		//R_ASSERT2	(0,"Game Event not implemented!!!");
+		Msg("! Game event [%u] is not implemented!", type);
 		break;
 	}
 }
