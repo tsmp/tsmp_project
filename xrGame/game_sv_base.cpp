@@ -579,9 +579,10 @@ void game_sv_GameState::u_EventSend(NET_Packet& P, u32 dwFlags)
 
 void game_sv_GameState::Update		()
 {
-	for (u32 it=0; it<m_server->client_Count(); ++it) {
-		xrClientData*	C			= (xrClientData*)	m_server->client_Get(it);
-		C->ps->ping					= u16(C->stats.getPing());
+	for (u32 it = 0; it < m_server->client_Count(); ++it)
+	{
+		xrClientData *C = (xrClientData *)m_server->client_Get(it);
+		UpdateClientPing(C);
 	}
 	
 	if (!bIsDedicatedServer)
@@ -966,6 +967,41 @@ shared_str game_sv_GameState::level_name		(const shared_str &server_options) con
 
 	return				
 		(_GetItem(*server_options,0,l_name,'/'));
+}
+
+void game_sv_GameState::UpdateClientPing(xrClientData *client)
+{
+	u16 actualPing = u16(client->stats.getPing());
+
+	bool bNeedToUpdate = !client->ps->lastPingUpdateTime // first update
+		|| !actualPing
+		|| actualPing != client->ps->ping
+		|| client == m_server->GetServerClient();
+
+	if (bNeedToUpdate)
+	{
+		client->ps->ping = actualPing;
+		client->ps->lastPingUpdateTime = Level().timeServer();
+	}
+	else
+	{
+		// после 30 сек бездействия клиент отключается, если 25 сек не обновляется пинг - то он скорее всего вылетел
+		// если игрок зайдет повторно, у него сохранится в статистике последнее время обновления пинга, в таком случае
+		// не выводим ничего 
+		if ((client->ps->lastPingUpdateTime + 40000) < Level().timeServer())
+			return;
+
+		if ((client->ps->lastPingUpdateTime + 25000) < Level().timeServer())
+		{
+			Msg("! WARNING client [%s] crashed? Server time [%u], last ping [%u], update time [%u]"
+				, client->ps->getName()
+				, Level().timeServer()
+				, client->ps->ping
+				, client->ps->lastPingUpdateTime);
+
+			client->ps->lastPingUpdateTime = Level().timeServer() + 10000;
+		}
+	}
 }
 
 void game_sv_GameState::on_death	(CSE_Abstract *e_dest, CSE_Abstract *e_src)

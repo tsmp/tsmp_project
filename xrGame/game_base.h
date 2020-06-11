@@ -55,6 +55,7 @@ struct	game_PlayerState
 	u16			flags__;
 
 	u16			ping;
+	u32 lastPingUpdateTime;
 
 	u16			GameID;
 

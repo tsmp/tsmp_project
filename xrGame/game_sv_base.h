@@ -16,6 +16,7 @@ enum ERoundEnd_Result
 	eRoundEnd_Force			= u32(-1)
 };
 
+class xrClientData;
 class CSE_Abstract;
 class xrServer;
 // [OLES] Policy:
@@ -123,6 +124,8 @@ public:
 #ifdef DEBUG
 	virtual		void				OnRender				();
 #endif
+
+	void UpdateClientPing(xrClientData *client);
 	
 	virtual		void				OnSwitchPhase			(u32 old_phase, u32 new_phase);	
 				CSE_Abstract*		spawn_begin				(LPCSTR N);
