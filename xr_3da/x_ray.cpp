@@ -185,9 +185,9 @@ void Startup()
 	DestroyWindow(logoWindow);
 	logoWindow = NULL;
 
-#ifdef DEDICATED_SERVER
-	thread_spawn(Create_Window, "Wnd", 0, &ConsoleForGui);
-#endif	
+//#ifdef DEDICATED_SERVER
+//	thread_spawn(Create_Window, "Wnd", 0, &ConsoleForGui);
+//#endif	
 
 	// Main cycle
 	Memory.mem_usage();
