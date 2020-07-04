@@ -258,7 +258,7 @@ void	CTextConsole::DrawLog(HDC hDC, RECT* pRect)
 
 	last_log_size = LogFile->size();
 
-	if ( g_pGameLevel && (Device.dwTimeGlobal - lastStatisticsUpdate > 800))
+	if ( g_pGameLevel && (Device.dwTimeGlobal - lastStatisticsUpdate > 3000))
 	{
 		server_info.ResetData();
 		g_pGameLevel->GetLevelInfo( &server_info );

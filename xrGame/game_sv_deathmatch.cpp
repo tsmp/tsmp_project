@@ -1151,6 +1151,7 @@ void game_sv_Deathmatch::OnPlayerHitPlayer(u16 id_hitter, u16 id_hitted, NET_Pac
 	HitS.Read_Packet(P);
 	HitS.whoID = ps_hitter->GameID;
 
+#ifndef NO_HIT_PROCESSOR
 	if (g_sv_mp_LogHitsEnabled)
 	{
 		CObject* pWeapon = Level().Objects.net_Find(HitS.weaponID);
@@ -1189,6 +1190,7 @@ void game_sv_Deathmatch::OnPlayerHitPlayer(u16 id_hitter, u16 id_hitted, NET_Pac
 			hit_proc.AddHit(HIT);
 		}	
 	}
+#endif
 
 	OnPlayerHitPlayer_Case(ps_hitter, ps_hitted, &HitS);
 

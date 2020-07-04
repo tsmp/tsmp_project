@@ -6,6 +6,7 @@
 #include "Hit.h"
 #include "../pure_relcase.h"
 #include "TSMP_HitProcessor.h"
+#include "..\TSMP_BuildConfig.h"
 
 class	game_sv_Deathmatch			: public game_sv_mp,private pure_relcase
 {
@@ -37,7 +38,9 @@ protected:
 
 	shared_str							m_sBaseWeaponCostSection;
 
+#ifndef NO_HIT_PROCESSOR
 	HitProcessor hit_proc;
+#endif
 		
 	xr_vector<game_TeamState>		teams;//dm,tdm,ah	
 
