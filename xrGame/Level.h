@@ -404,7 +404,7 @@ IC bool					OnClient()	{ return Level().IsClient();}
 
 	bool				IsGameTypeSingle();
 
-class  CPHWorld;
+#include "PHWorld.h"
 extern CPHWorld*				ph_world;
 extern BOOL						g_bDebugEvents;
 
