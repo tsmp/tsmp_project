@@ -822,6 +822,97 @@ public:
 	virtual void Info(TInfo& I) { strcpy(I, "Increase player rank by ClientID"); }
 };
 
+
+class CCC_TSMP_MuteChat : public IConsole_Command
+{
+public:
+	CCC_TSMP_MuteChat(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = false; };
+
+	virtual void Execute(LPCSTR args_)
+	{
+		if (!g_pGameLevel || !Level().Server)
+			return;
+
+		string1024 s_id;
+		strcpy(s_id, args_);
+
+		u32 id = static_cast<u32>(atoll(s_id));
+
+		if (id == 0)
+		{
+			Msg("invalid id");
+			return;
+		}
+
+		Msg("Received id %u", id);
+
+		u32	cnt = Level().Server->game->get_players_count();
+
+		for (u32 it = 0; it < cnt; it++)
+		{
+			xrClientData* l_pC = (xrClientData*)Level().Server->client_Get(it);
+
+			if (!l_pC)
+				continue;
+
+			if (l_pC->ID.value() == id)
+			{
+				l_pC->bMutedChat = true;
+				return;
+			}
+		}
+
+		Msg("client with this id not found");
+	};
+
+	virtual void Info(TInfo& I) { strcpy(I, "Mute chat for player by ClientID"); }
+};
+
+class CCC_TSMP_UnMuteChat : public IConsole_Command
+{
+public:
+	CCC_TSMP_UnMuteChat(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = false; };
+
+	virtual void Execute(LPCSTR args_)
+	{
+		if (!g_pGameLevel || !Level().Server)
+			return;
+
+		string1024 s_id;
+		strcpy(s_id, args_);
+
+		u32 id = static_cast<u32>(atoll(s_id));
+
+		if (id == 0)
+		{
+			Msg("invalid id");
+			return;
+		}
+
+		Msg("Received id %u", id);
+
+		u32	cnt = Level().Server->game->get_players_count();
+
+		for (u32 it = 0; it < cnt; it++)
+		{
+			xrClientData* l_pC = (xrClientData*)Level().Server->client_Get(it);
+
+			if (!l_pC)
+				continue;
+
+			if (l_pC->ID.value() == id)
+			{
+				l_pC->bMutedChat = false;
+				return;
+			}
+		}
+
+		Msg("client with this id not found");
+	};
+
+	virtual void Info(TInfo& I) { strcpy(I, "Unmute chat for player by ClientID"); }
+};
+
 class CCC_TSMP_RankDown : public IConsole_Command
 {
 public:
@@ -2093,6 +2184,8 @@ void register_mp_console_commands()
 	CMD1(CCC_TSMP_SetIp,	"tsmp_loader_reconnect_ip");
 	CMD1(CCC_TSMP_ModName,	"tsmp_loader_mod_name");
 
+	CMD1(CCC_TSMP_MuteChat, "tsmp_mute_chat");
+	CMD1(CCC_TSMP_UnMuteChat, "tsmp_unmute_chat");
 	CMD1(CCC_TSMP_RankUp, "tsmp_rank_up");
 	CMD1(CCC_TSMP_RankDown, "tsmp_rank_down");
 	CMD1(CCC_TSMP_SetMoneyCount, "tsmp_set_money");

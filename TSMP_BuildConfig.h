@@ -4,7 +4,7 @@ constexpr auto TSMP_VERSION = "tsmp 1.6.4";
 
 //#define TSMP_CLIENT
 
-#define DEDICATED_SERVER
+//#define DEDICATED_SERVER
 
 //#define WW_ARCHIVES
 
@@ -14,4 +14,4 @@ constexpr auto TSMP_VERSION = "tsmp 1.6.4";
 
 //#define MP_LOGGING
 
-#define NO_HIT_PROCESSOR
+//#define NO_HIT_PROCESSOR

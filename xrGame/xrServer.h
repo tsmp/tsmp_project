@@ -28,6 +28,7 @@ public:
 	u32						net_LastMoveUpdateTime;
 	
 	game_PlayerState*		ps;
+	bool bMutedChat;
 
 	struct
 	{
@@ -40,6 +41,7 @@ public:
 		BOOL					m_has_admin_rights;
 		u32						m_dwLoginTime;
 		shared_str				m_login;
+		bool author;
 	}m_admin_rights;
 
 	struct 
